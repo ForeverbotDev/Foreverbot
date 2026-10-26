@@ -97,10 +97,4 @@ python3 test_deep_quality.py      # 81 Database & Classic+ dungeon tests
 python3 test_howto_guide_suite.py # 115 How-To guide prompt tests
 ```
 
----
 
-## 📄 Documentation & PDF Guides
-
-- **[Foreverbot_Command_Ideas.pdf](Foreverbot_Command_Ideas.pdf)** — 23-slide deck with 5 prompt ideas per command.
-- **[Foreverbot_How_To_Guide.pdf](Foreverbot_How_To_Guide.pdf)** — 12-slide landscape presentation guide.
-- **[wow_forever_bot_guide.pdf](wow_forever_bot_guide.pdf)** — 3-page visual companion & feature breakdown.
