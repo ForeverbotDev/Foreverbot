@@ -97,4 +97,8 @@ python3 test_deep_quality.py      # 81 Database & Classic+ dungeon tests
 python3 test_howto_guide_suite.py # 115 How-To guide prompt tests
 ```
 
+---
 
+## 📄 Official Guide
+
+- **[Your-Azeroth-Companion-Bot-Command-Guide.pdf](Your-Azeroth-Companion-Bot-Command-Guide.pdf)** — Visual slide guide & command companion deck.
