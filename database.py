@@ -553,6 +553,17 @@ class WoWForeverDB:
             conn.close()
             return [], None
 
+        if cleaned.lower() == "dm":
+            cursor.execute("""
+                SELECT * FROM dungeons
+                WHERE name LIKE '%Dire Maul%' OR name LIKE '%Deadmines%'
+                ORDER BY level_min ASC
+                LIMIT ?
+            """, (limit,))
+            rows = cursor.fetchall()
+            conn.close()
+            return [dict(r) for r in rows], "Dire Maul & The Deadmines"
+
         alias_target = ZONE_ALIASES.get(cleaned.lower(), cleaned)
         if alias_target != cleaned:
             did_you_mean = alias_target
