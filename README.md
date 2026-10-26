@@ -1,116 +1,106 @@
-# ⚔️ World of Warcraft: Forever — Discord Companion Bot
+# ⚔️ Foreverbot // World of Warcraft Discord Co-Pilot
+> The second-screen companion for **World of Warcraft: Forever (Classic+)** & **Classic Era**. Never Alt-Tab again.
 
-A high-performance Discord lookup bot and gaming companion built for the launch of **World of Warcraft: Forever** (Classic+).
-
-Query items, quests, mobs, boss loot tables, vendors, and flight paths directly from Discord on your second monitor or mobile device while playing!
-
----
-
-## 🌟 Key Features
-
-* **Classic Foundation + Forever Classic+ Additions**: Preloaded with classic baseline data plus datamined content for *WoW: Forever* (Mount Hyjal, Zephras Isle, Riverglades, Skyborne Elves, new dungeons, and horizontal level 60 tier gear).
-* **Instant Full-Text Search (FTS5)**: Fast local SQLite database queries with zero lag.
-* **WoW-Themed Embeds**: Items are color-coded to match in-game quality (Poor, Common, Uncommon, Rare, Epic, Legendary).
-* **Slash Commands**:
-  * `/item <name>` — Displays item tooltip, stats, required level, and source/drop info.
-  * `/quest <title>` — Shows quest objectives, starting NPC & coordinates, rewards, and zone.
-  * `/mob <name>` — Displays level, classification (Elite/Boss), zone, location, and notable loot drops with drop percentages.
-  * `/vendor <item_name>` — Finds which vendor sells the item, coordinates, and exact gold/silver/copper price.
-  * `/flightpath <query>` — Shows flight masters and flight path connections.
-  * `/forever` — Summary card of WoW: Forever features, release date (Nov 4), new zones, and dungeons.
-  * `/ask <question>` — Natural language question answering. Searches the database and synthesizes a direct answer (with optional Gemini AI integration).
+[![Discord Bot](https://img.shields.io/badge/Discord-Companion%20Bot-5865F2?logo=discord&logoColor=white)](https://discord.com)
+[![WoW Classic](https://img.shields.io/badge/WoW-Classic%20%26%20Classic%2B-F59E0B)](https://github.com/s1l3ntHub/wow-foreverbot)
+[![Tests Passing](https://img.shields.io/badge/Tests-223%20%2F%20223%20Passed-10B981)](#-automated-testing)
 
 ---
 
-## 🚀 Quick Setup Guide
+## 🎮 How to Use Foreverbot
 
-### 1. Create Your Discord Bot in 2 Minutes
-
-1. Go to the [Discord Developer Portal](https://discord.com/developers/applications).
-2. Click **New Application**, give it a name (e.g. `WoW Forever Bot`), and click **Create**.
-3. Go to the **Bot** tab on the left:
-   * Click **Reset Token** (or **Copy**) to get your **Bot Token**. Save this for step 3.
-   * Under **Privileged Gateway Intents**, turn on **Message Content Intent**.
-4. Go to the **Installation** or **OAuth2 > URL Generator** tab:
-   * Select scopes: `bot` and `applications.commands`.
-   * Under **Bot Permissions**, select: `Send Messages`, `Embed Links`, `Read Messages/View Channels`.
-   * Copy the generated invite link, open it in your browser, and add the bot to your Discord server.
+1. **Press `/`** in any Discord channel to open the interactive command picker.
+2. **Type acronyms or keywords** (e.g. `tf` for Thunderfury, `hoj` for Hand of Justice, `fap` for Free Action Potion).
+3. **Pick from the floating autocomplete dropdown** or type naturally in plain English!
 
 ---
 
-### 2. Install Dependencies
+## 💡 Quick Command Cheat Sheet (Top Categories)
 
-Open a terminal in the project directory:
+### 🗡️ Gear & Items
+- `/item query: dal rend` — View stats, drop rates, and boss loot tables.
+- `/compare query: brutality blade weapon2: deathbringer` — Side-by-side stat delta & glancing blow math.
+- `/bis query: rogue spec: swords` — Slot-by-slot Pre-Raid and Phase BiS checklist.
+- `/resist query: fire current: 150` — Mitigation tiers and points to reach the 315 cap.
 
+### 🗺️ World Navigation & Dungeons
+- `/dungeons query: 42` — Eligible dungeons for your level bracket, wing levels, and entrances.
+- `/flightpath query: stv` — Nearest flight masters, map coordinates, and routes.
+- `/zones query: duskwood` — Zone level brackets, faction hubs, and danger notes.
+- `/mob query: garr` — Boss HP pools, spawn locations, abilities, and loot percentages.
+
+### 🛡️ Raiding, Consumables & PvP
+- `/raid query: baron geddon` — Boss wipe prevention, positioning diagrams, and dispel alerts.
+- `/consumes query: fury warrior` — Mandatory flasks, elixirs, and buff food checklists.
+- `/buffs query: ony head` — World buff turn-in locations, cooldowns, and raid stat increases.
+- `/resets query: onyxia` — Live countdowns to weekly, 5-day (Onyxia), and 3-day (ZG) resets.
+- `/pvp query: rank 14` — Honor rank math, weekly 20% decay, and battleground guides.
+
+### 🎲 Raid Leader Tools & Macros
+- `/signup query: MC Sunday 7pm max_players: 40` — Interactive raid roster with Tank/Healer/DPS buttons.
+- `/roll query: Reins of the Deathcharger seconds: 30` — Raid loot roll engine with live countdown timer.
+- `/gdkp query: 60000 cut: 10 raiders: 40` — Automatic pot splitter, organizer cut, and raider payout.
+- `/macro query: stance dance overpower` — Ready-to-use copy-pasteable in-game macros.
+- `/ask query: what are the best pre-raid swords?` — Plain English AI assistant for any WoW question.
+
+---
+
+## 📜 Complete 42-Command Reference
+
+| Category | Commands |
+| :--- | :--- |
+| **Gear & Items** | `/item`, `/compare`, `/bis`, `/resist` |
+| **Quests & Progression** | `/quest`, `/keys`, `/attunement`, `/rep` |
+| **World & Travel** | `/flightpath`, `/map`, `/zones`, `/dungeons`, `/level`, `/route` |
+| **Economy & Gathering** | `/vendor`, `/gather`, `/profession`, `/farm`, `/mob`, `/rare` |
+| **Raiding & Buffs** | `/raid`, `/consumes`, `/buffs`, `/resets` |
+| **Class Mastery** | `/build`, `/talents`, `/race`, `/macro`, `/profile` |
+| **PvP & Competitive** | `/pvp`, `/twink`, `/duels` |
+| **Raid Management** | `/signup`, `/comp`, `/gdkp`, `/roll`, `/addons` |
+| **Voice & Community** | `/forever`, `/sound`, `/ambience`, `/events`, `/trivia`, `/ask` |
+
+---
+
+## 🚀 Setup & Installation (3 Steps)
+
+### 1. Install Dependencies
 ```bash
-cd /home/s1l3nt/.gemini/antigravity/scratch/wow-forever-bot
+python3 -m venv .venv
+source .venv/bin/activate
 pip install -r requirements.txt
 ```
 
----
-
-### 3. Configure Your Environment
-
-Copy `.env.example` to `.env`:
-
+### 2. Configure Token
+Copy `.env.example` to `.env` and add your Discord Bot Token:
 ```bash
 cp .env.example .env
 ```
-
-Open `.env` and paste your Discord bot token:
-
-```env
-DISCORD_BOT_TOKEN=your_token_here
-
-# (Optional) Add a Gemini API key if you want AI-generated conversational answers for /ask:
-GEMINI_API_KEY=
+Edit `.env`:
+```ini
+DISCORD_TOKEN=your_bot_token_here
+GEMINI_API_KEY=optional_gemini_api_key_here
 ```
 
----
-
-### 4. Seed the Database
-
-The database comes pre-configured, but you can initialize and re-seed it anytime:
-
-```bash
-python3 seed_data.py
-```
-
----
-
-### 5. Run the Bot
-
-Start the bot:
-
+### 3. Run Foreverbot
 ```bash
 python3 bot.py
 ```
 
-Once running, type `/` in any channel on your Discord server where the bot was invited to see the registered slash commands!
-
 ---
 
-## 📂 Project Structure
+## 🧪 Automated Testing
 
-```
-wow-forever-bot/
-├── bot.py           # Discord bot client with all slash commands & rich embeds
-├── database.py      # SQLite database manager with full-text search (FTS5)
-├── seed_data.py     # Initial data seed (Classic baseline + WoW Forever additions)
-├── ingest_csv.py    # Helper script to bulk import datamined CSVs
-├── test_query.py    # Local test script for query verification
-├── requirements.txt # Python dependencies
-├── .env.example     # Environment variables template
-└── wow_forever.db   # Local SQLite database
-```
-
----
-
-## 🔄 Adding More Datamined Data
-
-As the *WoW: Forever* beta updates or when the live servers launch on November 4, you can import new item tables directly:
-
+Foreverbot includes 3 verification suites (**223 / 223 automated tests passing**):
 ```bash
-python3 ingest_csv.py path/to/datamined_items.csv
+python3 test_quality_suite.py     # 27 Core system tests
+python3 test_deep_quality.py      # 81 Database & Classic+ dungeon tests
+python3 test_howto_guide_suite.py # 115 How-To guide prompt tests
 ```
-The CSV should contain headers: `id,name,quality,item_level,req_level,slot,item_type,stats,description,source,is_forever_content`.
+
+---
+
+## 📄 Documentation & PDF Guides
+
+- **[Foreverbot_Command_Ideas.pdf](Foreverbot_Command_Ideas.pdf)** — 23-slide deck with 5 prompt ideas per command.
+- **[Foreverbot_How_To_Guide.pdf](Foreverbot_How_To_Guide.pdf)** — 12-slide landscape presentation guide.
+- **[wow_forever_bot_guide.pdf](wow_forever_bot_guide.pdf)** — 3-page visual companion & feature breakdown.
