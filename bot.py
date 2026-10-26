@@ -767,13 +767,12 @@ async def dungeons_command(interaction: discord.Interaction, query: Optional[str
             description=(
                 "Type `/dungeons 42` or `/dungeons zf` to find specific instances.\n\n"
                 "**Level Brackets:**\n"
-                "• **13–24:** Ragefire Chasm (13-18), Deadmines (17-26), Wailing Caverns (17-24)\n"
-                "• **22–32:** SFK (22-30), Sunken Citadel (22-26), BFD (24-32), Stockade (24-32)\n"
-                "• **29–39:** Gnomer (29-38), RFK (29-38), SM Graveyard (29-35), SM Library (33-39)\n"
-                "• **36–46:** SM Armory (36-42), SM Cathedral (38-45), RFD (37-46), Uldaman (41-51)\n"
-                "• **44–55:** Zul'Farrak (44-54), Maraudon (46-55), Sunken Temple (50-60)\n"
-                "• **52–60:** Hateforge (52-56), Stillglade (54-58), BRD (52-60), LBRS/UBRS (55-60)\n"
-                "• **Endgame 60:** Stratholme, Scholomance, Dire Maul, Roots of Nordrassil, Karazhan Crypts"
+                "• **13–24:** Hall of Thanes (13-18), Ruins of Lordaeron (15-20), Ragefire Chasm (13-18), Deadmines (17-26), Wailing Caverns (17-24)\n"
+                "• **22–33:** SFK (22-30), Sunken Citadel (22-26), BFD (24-32), Stockade (24-32), Excavation Site (24-29), Dalaran (28-33)\n"
+                "• **29–46:** Drowned City (35-40), Krol'dok (40-45), Gnomer (29-38), RFK (29-38), SM (29-45), RFD (37-46), Uldaman (41-51)\n"
+                "• **44–55:** Zul'Farrak (44-54), Maraudon (46-55), Alcaz Island (48-53), Sunken Temple (50-60)\n"
+                "• **52–60:** Blackmaw Hold (55-60), Shaper's Terrace (58-60), Hateforge (52-56), Stillglade (54-58), BRD (52-60), LBRS/UBRS (55-60)\n"
+                "• **Endgame 60:** Stratholme, Scholomance, Dire Maul, Roots of Nordrassil, Karazhan Crypts, Temporal Rift"
             ),
             color=0x9B59B6
         )
@@ -833,7 +832,7 @@ async def dungeons_command(interaction: discord.Interaction, query: Optional[str
         If this query relates to a WoW dungeon, raid, wing, chamber, boss, or encounter:
         Provide an ultra-condensed breakdown (maximum 3-4 bullet points):
         - **Dungeon & Location:** [Dungeon name, parent zone, entrance coords, recommended level]
-        - **Area / Context:** [Specific room, wing, or chamber context, e.g. Hall of the Thanes in Blackrock Depths, noting lore or Classic+ features]
+        - **Area / Context:** [Specific room, wing, or chamber context, e.g. The Grim Guzzler or Shadowforge City in Blackrock Depths, noting lore or Classic+ features]
         - **Key Bosses:** [Key bosses in this room or instance]
         - **Notable Drops:** [Iconic loot items]
 
