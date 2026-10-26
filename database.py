@@ -839,18 +839,47 @@ class WoWForeverDB:
 
     def search_items(self, query: str, limit: int = 5) -> Tuple[List[Dict[str, Any]], Optional[str]]:
         cleaned = clean_query(query)
+        q_raw = query.strip().lower()
+        q_clean = cleaned.lower()
         conn = get_connection(self.db_path)
         cursor = conn.cursor()
         did_you_mean = None
+        rows = []
 
-        cursor.execute("""
-            SELECT * FROM items
-            WHERE name LIKE ? OR description LIKE ? OR stats LIKE ?
-            ORDER BY is_forever_content DESC, quality DESC
-            LIMIT ?
-        """, (f"%{cleaned}%", f"%{cleaned}%", f"%{cleaned}%", limit))
-        rows = cursor.fetchall()
+        # 1. Direct Alias Check
+        if q_raw in ITEM_AUTOCOMPLETE_ALIASES:
+            cursor.execute("SELECT * FROM items WHERE name = ?", (ITEM_AUTOCOMPLETE_ALIASES[q_raw],))
+            rows = cursor.fetchall()
+        elif q_clean in ITEM_AUTOCOMPLETE_ALIASES:
+            cursor.execute("SELECT * FROM items WHERE name = ?", (ITEM_AUTOCOMPLETE_ALIASES[q_clean],))
+            rows = cursor.fetchall()
 
+        # 2. Substring search
+        if not rows:
+            cursor.execute("""
+                SELECT * FROM items
+                WHERE name LIKE ? OR description LIKE ? OR stats LIKE ?
+                ORDER BY is_forever_content DESC, quality DESC
+                LIMIT ?
+            """, (f"%{cleaned}%", f"%{cleaned}%", f"%{cleaned}%", limit))
+            rows = cursor.fetchall()
+
+        # 3. Multi-token AND search (e.g. "dal rend", "hand ragnaros")
+        if not rows:
+            tokens = [re.sub(r"[^\w]", "", w) for w in q_clean.split()]
+            tokens = [t for t in tokens if len(t) >= 2 and t not in STOP_WORDS]
+            if len(tokens) >= 2:
+                clauses = " AND ".join(["name LIKE ?" for _ in tokens])
+                params = [f"%{t}%" for t in tokens] + [limit]
+                cursor.execute(f"""
+                    SELECT * FROM items
+                    WHERE {clauses}
+                    ORDER BY is_forever_content DESC, quality DESC
+                    LIMIT ?
+                """, params)
+                rows = cursor.fetchall()
+
+        # 4. Fuzzy fallback
         if not rows and self.item_names:
             fuzzy = self.find_fuzzy_match(cleaned, self.item_names)
             if fuzzy:

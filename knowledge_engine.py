@@ -2050,22 +2050,24 @@ def get_pvp_info(query: str) -> Optional[Dict[str, Any]]:
     q = query.strip().lower()
 
     alias_map = {
-        "rank": "ranks", "ranks": "ranks", "honor": "ranks", "title": "ranks", "r14": "ranks", "rank 14": "ranks",
+        "rank": "ranks", "ranks": "ranks", "honor": "ranks", "title": "ranks", "r14": "ranks", "rank 14": "ranks", "rank 10": "ranks",
         "decay": "decay", "math": "decay", "rp": "decay", "calculation": "decay",
         "wsg": "wsg", "warsong": "wsg", "warsong gulch": "wsg", "flag": "wsg",
         "ab": "ab", "arathi": "ab", "arathi basin": "ab", "basin": "ab",
         "av": "av", "alterac": "av", "alterac valley": "av", "valley": "av", "drek": "av", "vanndar": "av"
     }
 
-    target = alias_map.get(q, q)
+    # 1. Match full word boundary aliases
+    for alias_k, target_val in alias_map.items():
+        if re.search(r'\b' + re.escape(alias_k) + r'\b', q):
+            return PVP_SYSTEM_DATA[target_val]
+
+    # 2. Check exact keys
+    words = set(re.findall(r'\b\w+\b', q))
     for k, v in PVP_SYSTEM_DATA.items():
-        if k in target or target in k:
+        if k in words:
             return v
 
-    keys = list(PVP_SYSTEM_DATA.keys())
-    matches = difflib.get_close_matches(target, keys, n=1, cutoff=0.55)
-    if matches:
-        return PVP_SYSTEM_DATA[matches[0]]
     return None
 
 

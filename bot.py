@@ -13,6 +13,7 @@ from discord import app_commands
 from discord.ext import commands
 from dotenv import load_dotenv
 from database import WoWForeverDB, DB_PATH, extract_level_from_text
+import knowledge_engine as ke
 from knowledge_engine import (
     get_level_advice, ATTUNEMENTS, TRAVEL_ROUTES, GAMEPLAY_MECHANICS,
     get_gathering_info, get_profession_info, GATHERING_NODES, PROFESSIONS_DATA,
@@ -189,10 +190,10 @@ def handle_after_zone(question: str) -> Optional[Dict[str, Any]]:
     import re
     from knowledge_engine import get_zone_info, get_level_advice
     from database import ZONE_ALIASES
-    m = re.search(r"\b(?:after|past)\s+([a-zA-Z\s\'-]+)", question.lower())
+    m = re.search(r"\b(?:after|past|leave)\s+(?:the\s+)?([a-zA-Z\s\'-]+)", question.lower())
     if not m:
         return None
-    raw_zone = m.group(1).replace("zone", "").replace("questing", "").replace("leveling", "").strip()
+    raw_zone = m.group(1).replace("zone", "").replace("questing", "").replace("leveling", "").replace("?", "").strip()
     zone_info = get_zone_info(raw_zone, ZONE_ALIASES)
     if not zone_info:
         return None
@@ -734,9 +735,40 @@ async def map_autocomplete(interaction: discord.Interaction, current: str) -> Li
 # -------------------------------------------------------------
 # Slash Command: /zones (WoW: Forever World Overview)
 # -------------------------------------------------------------
-@bot.tree.command(name="zones", description="View new & expanded zones in WoW: Forever (Condensed)")
-@app_commands.describe(query="Optional zone search or filter (e.g. 'Hyjal', 'Karazhan', 'Grim Batol')")
+@bot.tree.command(name="zones", description="View zone details, level brackets, hubs, and new Forever zones")
+@app_commands.describe(query="Optional zone search or filter (e.g. 'Duskwood', 'STV', 'Hyjal')")
 async def zones_command(interaction: discord.Interaction, query: Optional[str] = None):
+    if query:
+        q = query.strip().lower()
+        matched_zone = None
+        for z_name, z_info in ke.ZONES_DATA.items():
+            if q == z_name.lower() or q in z_name.lower() or z_name.lower() in q:
+                matched_zone = (z_name, z_info)
+                break
+        
+        # Check common aliases
+        if not matched_zone and q in ["stv", "stranglethorn", "stranglethorn vale"]:
+            matched_zone = ("Stranglethorn Vale", ke.ZONES_DATA.get("Stranglethorn Vale"))
+
+        if matched_zone and matched_zone[1]:
+            z_name, z_info = matched_zone
+            badge = "🌟 [Forever Classic+]" if z_info.get("is_forever") else "⚔️ [Classic Era]"
+            desc = [
+                f"• **Level:** {z_info.get('level')} • **Faction:** {z_info.get('faction')}",
+                f"• **Continent:** {z_info.get('continent')}",
+                f"• **Towns & Hubs:** {z_info.get('hubs')}",
+                f"• **Borders:** {z_info.get('borders')}",
+                f"• **Notable POIs:** {z_info.get('pois')}"
+            ]
+            embed = discord.Embed(
+                title=f"{badge} {z_name}",
+                description="\n".join(desc),
+                color=0x1ABC9C if not z_info.get("is_forever") else 0xF59E0B
+            )
+            embed.set_footer(text="World of Warcraft: Forever Companion")
+            await interaction.response.send_message(embed=embed)
+            return
+
     embed = discord.Embed(
         title="🗺️ WoW: Forever — New & Expanded Zones",
         description=(
@@ -2970,7 +3002,7 @@ async def ask_command(interaction: discord.Interaction, query: str):
 
     # 5.12. PvP System & Honor Decay Check
     pvp_data = get_pvp_info(question)
-    if pvp_data and any(w in q_lower for w in ["pvp", "honor", "decay", "rank 14", "r14", "wsg", "arathi", "alterac", "ab", "av", "high warlord", "grand marshal"]):
+    if pvp_data and any(re.search(r'\b' + re.escape(w) + r'\b', q_lower) for w in ["pvp", "honor", "decay", "rank 14", "r14", "wsg", "arathi", "alterac", "ab", "av", "high warlord", "grand marshal"]):
         embed = discord.Embed(title=f"⚔️ {pvp_data['title']}", color=0xC0392B)
         embed.description = f"{pvp_data['description']}\n\n💡 *Tip:* {pvp_data.get('tip', '')}"
         embed.set_footer(text="World of Warcraft: Forever Companion • PvP Honor System")
