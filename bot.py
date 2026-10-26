@@ -324,10 +324,8 @@ async def item_command(interaction: discord.Interaction, query: str):
 
 @item_command.autocomplete("query")
 async def item_autocomplete(interaction: discord.Interaction, current: str) -> List[app_commands.Choice[str]]:
-    current_l = current.lower()
-    matches = [i for i in db.item_names if current_l in i.lower()]
-    matches.sort(key=lambda x: (not x.lower().startswith(current_l), x.lower()))
-    return [app_commands.Choice(name=m[:100], value=m[:100]) for m in matches[:25]]
+    choices = db.autocomplete_items(current, limit=25)
+    return [app_commands.Choice(name=c["name"], value=c["value"]) for c in choices]
 
 
 

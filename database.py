@@ -211,6 +211,118 @@ ZONE_ALIASES = {
     "mooncloth": "Mooncloth"
 }
 
+ITEM_AUTOCOMPLETE_ALIASES = {
+    "tf": "Thunderfury, Blessed Blade of the Windseeker",
+    "thunderfury": "Thunderfury, Blessed Blade of the Windseeker",
+    "hand of rag": "Sulfuras, Hand of Ragnaros",
+    "rag": "Sulfuras, Hand of Ragnaros",
+    "sulfuras": "Sulfuras, Hand of Ragnaros",
+    "hoj": "Hand of Justice",
+    "fap": "Free Action Potion",
+    "lap": "Living Action Potion",
+    "sgc": "Savage Gladiator Chain",
+    "edgies": "Edgemaster's Handguards",
+    "edgemasters": "Edgemaster's Handguards",
+    "dft": "Drake Fang Talisman",
+    "bre": "Bonereaver's Edge",
+    "cts": "Chromatically Tempered Sword",
+    "cht": "Core Hound Tooth",
+    "bb": "Brutality Blade",
+    "mcp": "Manual Crowd Pummeler",
+    "pummeler": "Manual Crowd Pummeler",
+    "rejuv": "Rejuvenating Gem",
+    "rejuv gem": "Rejuvenating Gem",
+    "tear": "Neltharion's Tear",
+    "nelth tear": "Neltharion's Tear",
+    "crusader": "Formula: Enchant Weapon - Crusader",
+    "mongoose": "Elixir of the Mongoose",
+    "lotus": "Black Lotus",
+    "gfpp": "Greater Fire Protection Potion",
+    "gnpp": "Greater Nature Protection Potion",
+    "gfrpp": "Greater Frost Protection Potion",
+    "gfrostpp": "Greater Frost Protection Potion",
+    "gspp": "Greater Shadow Protection Potion",
+    "gapp": "Greater Arcane Protection Potion",
+    "titans": "Flask of the Titans",
+    "flask of titans": "Flask of the Titans",
+    "supreme power": "Flask of Supreme Power",
+    "distilled wisdom": "Flask of Distilled Wisdom",
+    "mom": "Might of Menethil",
+    "ashbringer": "Corrupted Ashbringer",
+    "kots": "Kiss of the Spider",
+    "viskag": "Vis'kag the Bloodletter",
+    "lokamir": "Lok'amir il Romathis",
+    "rhok": "Rhok'delar, Longbow of the Ancient Keepers",
+    "rhokdelar": "Rhok'delar, Longbow of the Ancient Keepers",
+    "lokdelar": "Lok'delar, Stave of the Ancient Keepers",
+    "skull": "Skull of Impending Doom",
+    "agm": "Arena Grand Master",
+    "cloudkeeper": "Cloudkeeper Legplates",
+    "cloudkeepers": "Cloudkeeper Legplates",
+    "lip": "Limited Immunity Potion",
+    "sapper": "Goblin Sapper Charge",
+    "sappers": "Goblin Sapper Charge",
+    "dynamite": "Dense Dynamite",
+    "grenade": "Iron Grenade",
+    "iron grenade": "Iron Grenade",
+    "holy water": "Stratholme Holy Water",
+    "truestrike": "Truestrike Shoulders",
+    "devilsaur": "Devilsaur Gauntlets",
+    "bloodvine": "Bloodvine Vest",
+    "wolfshead": "Wolfshead Helm",
+    "warden": "Warden Staff",
+    "tuf": "The Unstoppable Force",
+    "unstoppable force": "The Unstoppable Force",
+    "immovable object": "The Immovable Object",
+    "don julio": "Don Julio's Band",
+    "blackhands": "Blackhand's Breadth",
+    "blackhand": "Blackhand's Breadth",
+    "eye of the beast": "Eye of the Beast",
+    "swarmguard": "Badge of the Swarmguard",
+    "slayers crest": "The Slayer's Crest",
+    "slayer": "The Slayer's Crest",
+    "onyxia tooth": "Onyxia Tooth Pendant",
+    "prestors": "Prestor's Talisman of Conquery",
+    "barbed choker": "Barbed Choker",
+    "dark edge": "Dark Edge of Insanity",
+    "shadowflame": "Staff of the Shadow Flame",
+    "ashkandi": "Ashkandi, Greatsword of the Brotherhood",
+    "deathbringer": "Deathbringer",
+    "spinal reaper": "Spinal Reaper",
+    "dal rend": "Dal'Rend's Sacred Charge",
+    "dalrends": "Dal'Rend's Sacred Charge",
+    "lionheart": "Lionheart Helm",
+    "ironfoe": "Ironfoe",
+}
+
+FEATURED_ITEM_NAMES = [
+    "Thunderfury, Blessed Blade of the Windseeker",
+    "Sulfuras, Hand of Ragnaros",
+    "Ironfoe",
+    "Hand of Justice",
+    "Lionheart Helm",
+    "Edgemaster's Handguards",
+    "Savage Gladiator Chain",
+    "Dal'Rend's Sacred Charge",
+    "Ravager",
+    "Whirlwind Axe",
+    "Free Action Potion",
+    "Living Action Potion",
+    "Tidal Charm",
+    "Skull of Impending Doom",
+    "Black Lotus",
+    "Briarwood Reed",
+    "Deathcharger's Reins",
+    "Onyxia Hide Backpack",
+    "Arcanite Reaper",
+    "Bonereaver's Edge",
+    "Chromatically Tempered Sword",
+    "Ashkandi, Greatsword of the Brotherhood",
+    "Crown of the Skyborne Ascendant",
+    "Zephras Tidal Cleaver",
+    "Signet of the Unopened Portal",
+]
+
 
 def clean_query(raw_query: str) -> str:
     """Strips natural language filler words and question prefixes."""
@@ -449,8 +561,16 @@ class WoWForeverDB:
         conn = get_connection(self.db_path)
         cursor = conn.cursor()
 
-        cursor.execute("SELECT name FROM items")
-        self.item_names = [r[0] for r in cursor.fetchall()]
+        cursor.execute("SELECT id, name, quality, slot, item_type, req_level, is_forever_content FROM items")
+        self.item_records = [dict(r) for r in cursor.fetchall()]
+        self.item_names = [r["name"] for r in self.item_records]
+        self.item_records_by_name = {r["name"].lower(): r for r in self.item_records}
+        self._alnum_to_name = {re.sub(r"[^\w]", "", r["name"].lower()): r["name"] for r in self.item_records}
+        self._item_words = {}
+        for r in self.item_records:
+            for w in re.sub(r"[^\w\s]", " ", r["name"]).split():
+                if len(w) >= 4:
+                    self._item_words[w.lower()] = r
 
         cursor.execute("SELECT title FROM quests")
         self.quest_titles = [r[0] for r in cursor.fetchall()]
@@ -470,6 +590,132 @@ class WoWForeverDB:
         self.dungeon_names = list(set([r[0] for r in dung_rows] + [r[1] for r in dung_rows]))
 
         conn.close()
+
+    def autocomplete_items(self, current: str, limit: int = 25) -> List[Dict[str, str]]:
+        """Provides instant, floating autocomplete choices in Discord as the user types.
+        Returns a list of dicts: [{'name': display_label, 'value': item_name}, ...]
+        Narrows down with acronyms, normalized search, token matching, and typo tolerance.
+        """
+        curr_clean = current.strip().lower()
+
+        # 1. Empty query -> return featured iconic items
+        if not curr_clean:
+            results = []
+            seen = set()
+            for feat in FEATURED_ITEM_NAMES:
+                rec = self.item_records_by_name.get(feat.lower())
+                if rec and rec["name"] not in seen:
+                    seen.add(rec["name"])
+                    results.append(self._format_autocomplete_choice(rec))
+                    if len(results) >= limit:
+                        break
+            return results
+
+        # 2. Check acronym / alias map
+        alias_norm = re.sub(r"[^\w\s]", "", curr_clean).strip()
+        alias_target = ITEM_AUTOCOMPLETE_ALIASES.get(curr_clean) or ITEM_AUTOCOMPLETE_ALIASES.get(alias_norm)
+
+        # 3. Normalized matching & scoring
+        query_alnum = re.sub(r"[^\w]", "", curr_clean)
+        query_tokens = [w for w in re.sub(r"[^\w\s]", " ", curr_clean).split() if w]
+
+        scored_matches = []  # list of (priority, item_record)
+
+        for rec in self.item_records:
+            name_raw = rec["name"]
+            name_lower = name_raw.lower()
+            name_alnum = re.sub(r"[^\w]", "", name_lower)
+            searchable = f"{name_lower} {rec.get('quality', '').lower()} {rec.get('slot', '').lower()} {rec.get('item_type', '').lower()}"
+
+            # Check if this item is the target of the alias
+            if alias_target and (alias_target.lower() in name_lower or name_lower in alias_target.lower()):
+                scored_matches.append((0, rec))
+                continue
+
+            # Exact prefix of item name (Priority 1)
+            if name_lower.startswith(curr_clean) or (query_alnum and name_alnum.startswith(query_alnum)):
+                scored_matches.append((1, rec))
+                continue
+
+            # Word boundary start in item name (e.g. "sacred" in "Dal'Rend's Sacred Charge") (Priority 2)
+            words = name_lower.split()
+            if any(w.startswith(curr_clean) for w in words):
+                scored_matches.append((2, rec))
+                continue
+
+            # Substring in item name (Priority 3)
+            if curr_clean in name_lower or (query_alnum and query_alnum in name_alnum):
+                scored_matches.append((3, rec))
+                continue
+
+            # All query tokens present in name or metadata (e.g. "ironfoe mace", "lionheart plate") (Priority 4)
+            if query_tokens and all(tok in searchable for tok in query_tokens):
+                scored_matches.append((4, rec))
+                continue
+
+            # Any query token matches (Priority 5)
+            if len(query_tokens) > 1 and any(len(tok) >= 3 and tok in name_lower for tok in query_tokens):
+                scored_matches.append((5, rec))
+                continue
+
+        # If few or no matches, try fuzzy matching with difflib
+        if len(scored_matches) < 5 and query_alnum and len(query_alnum) >= 3:
+            fuzzy_keys = difflib.get_close_matches(query_alnum, list(self._alnum_to_name.keys()), n=5, cutoff=0.55)
+            for f_key in fuzzy_keys:
+                real_name = self._alnum_to_name[f_key]
+                rec = self.item_records_by_name.get(real_name.lower())
+                if rec and not any(r[1]["name"] == rec["name"] for r in scored_matches):
+                    scored_matches.append((6, rec))
+
+            fuzzy_words = difflib.get_close_matches(query_alnum, list(self._item_words.keys()), n=5, cutoff=0.6)
+            for f_w in fuzzy_words:
+                rec = self._item_words[f_w]
+                if rec and not any(r[1]["name"] == rec["name"] for r in scored_matches):
+                    scored_matches.append((6, rec))
+
+        # Sort by priority, then by quality weight, then alphabetically
+        QUALITY_WEIGHTS = {"Legendary": 0, "Epic": 1, "Rare": 2, "Uncommon": 3, "Common": 4, "Poor": 5}
+        scored_matches.sort(key=lambda x: (
+            x[0],
+            QUALITY_WEIGHTS.get(x[1].get("quality"), 9),
+            x[1]["name"].lower()
+        ))
+
+        # Format up to limit items
+        results = []
+        seen = set()
+        for _, rec in scored_matches:
+            if rec["name"] not in seen:
+                seen.add(rec["name"])
+                results.append(self._format_autocomplete_choice(rec))
+                if len(results) >= limit:
+                    break
+
+        return results
+
+    def _format_autocomplete_choice(self, rec: Dict[str, Any]) -> Dict[str, str]:
+        """Formats an item record into a clean Discord Choice label (max 100 chars)."""
+        badge = "🌟 " if rec.get("is_forever_content") else ""
+        name = rec["name"]
+
+        tags = []
+        if rec.get("quality"):
+            tags.append(rec["quality"])
+        if rec.get("slot") and rec["slot"] not in ["Inventory", "Container"]:
+            tags.append(rec["slot"])
+        if rec.get("item_type"):
+            tags.append(rec["item_type"])
+
+        tag_str = f" [{', '.join(tags)}]" if tags else ""
+
+        display = f"{badge}{name}{tag_str}"
+        if len(display) > 100:
+            display = f"{badge}{name}"[:100]
+
+        return {
+            "name": display[:100],
+            "value": name[:100]
+        }
 
     def find_fuzzy_match(self, query: str, candidates: List[str], cutoff: float = 0.78) -> Optional[str]:
         """Finds typo-tolerant match using high-confidence sequence matching without false positives."""

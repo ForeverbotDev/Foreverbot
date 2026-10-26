@@ -226,6 +226,47 @@ def run_deep_tests():
     check(tid, "Raid comp analysis checks Sunder, Windfury, CoR, Tranq Shot", len(comp_analysis["covered"]) >= 4); tid += 1
 
     # =========================================================
+    # SECTION 6: FLOATING SEARCH & AUTOCOMPLETE NARROWING
+    # =========================================================
+    print("\n--- SECTION 6: Floating Autocomplete Search & Narrowing ---")
+
+    # 1. Empty query returns featured iconic items
+    empty_choices = db.autocomplete_items("", limit=25)
+    check(tid, "Empty query returns 25 featured items in floating search", len(empty_choices) == 25 and any("Thunderfury" in c["value"] for c in empty_choices)); tid += 1
+
+    # 2. Multi-word space normalization
+    dal_choices = db.autocomplete_items("dal rend", limit=5)
+    check(tid, "Typing 'dal rend' narrows down to Dal'Rend swords", len(dal_choices) > 0 and any("Dal'Rend" in c["value"] for c in dal_choices)); tid += 1
+
+    lion_choices = db.autocomplete_items("lion heart", limit=5)
+    check(tid, "Typing 'lion heart' narrows down to Lionheart Helm", len(lion_choices) > 0 and any("Lionheart Helm" in c["value"] for c in lion_choices)); tid += 1
+
+    # 3. Common Acronyms
+    fap_choices = db.autocomplete_items("fap", limit=5)
+    check(tid, "Acronym 'fap' resolves to Free Action Potion", len(fap_choices) > 0 and "Free Action Potion" in fap_choices[0]["value"]); tid += 1
+
+    hoj_choices = db.autocomplete_items("hoj", limit=5)
+    check(tid, "Acronym 'hoj' resolves to Hand of Justice", len(hoj_choices) > 0 and "Hand of Justice" in hoj_choices[0]["value"]); tid += 1
+
+    tf_choices = db.autocomplete_items("tf", limit=5)
+    check(tid, "Acronym 'tf' resolves to Thunderfury", len(tf_choices) > 0 and "Thunderfury" in tf_choices[0]["value"]); tid += 1
+
+    mcp_choices = db.autocomplete_items("mcp", limit=5)
+    check(tid, "Acronym 'mcp' resolves to Manual Crowd Pummeler", len(mcp_choices) > 0 and "Manual Crowd Pummeler" in mcp_choices[0]["value"]); tid += 1
+
+    edgies_choices = db.autocomplete_items("edgies", limit=5)
+    check(tid, "Nickname 'edgies' resolves to Edgemaster's Handguards", len(edgies_choices) > 0 and "Edgemaster's Handguards" in edgies_choices[0]["value"]); tid += 1
+
+    # 4. Typo tolerance in autocomplete
+    thudner_choices = db.autocomplete_items("thudner", limit=5)
+    check(tid, "Typo 'thudner' offers Thunderfury in floating dropdown", len(thudner_choices) > 0 and any("Thunderfury" in c["value"] for c in thudner_choices)); tid += 1
+
+    # 5. Discord Character Limit & Formatting Validation
+    all_sample_choices = empty_choices + dal_choices + fap_choices
+    valid_lengths = all(len(c["name"]) <= 100 and len(c["value"]) <= 100 and len(c["name"]) > 0 for c in all_sample_choices)
+    check(tid, "All floating choices satisfy Discord 100-character constraint", valid_lengths); tid += 1
+
+    # =========================================================
     # SUMMARY
     # =========================================================
     print("\n" + "=" * 70)
