@@ -5,6 +5,7 @@ condensed gaming-focused embeds, and 100% accurate Classic and Classic+ data.
 """
 
 import os
+import difflib
 import asyncio
 from typing import Optional, List, Dict, Any
 import discord

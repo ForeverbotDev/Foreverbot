@@ -9,6 +9,7 @@ Provides deep, 100% accurate, authoritative data on:
 """
 
 import re
+import difflib
 from datetime import datetime, timezone, timedelta
 from typing import Dict, Any, List, Optional
 
@@ -2497,10 +2498,10 @@ GOLD_FARMS = {
 }
 
 
-def get_gold_farm_info(query: str) -> Optional[Dict[str, Any]]:
+def get_gold_farm_info(query: Optional[str] = "dm east") -> Optional[Dict[str, Any]]:
     """Retrieves gold farming guide."""
     if not query:
-        return None
+        query = "dm east"
     q = query.lower().strip()
     alias_map = {
         "dm east": "dm east", "dme": "dm east", "jump run": "dm east", "thorium": "dm east", "arcane crystal": "dm east",
