@@ -230,7 +230,7 @@ def is_travel_query(text: str) -> bool:
 @app_commands.describe(query="Item name (e.g. 'Ironfoe', 'Wool Cloth', 'Ravager', 'Skyborne')")
 async def item_command(interaction: discord.Interaction, query: str):
     name = query
-    await interaction.response.defer()
+    await interaction.response.defer(ephemeral=True)
     items, did_you_mean = db.search_items(name, limit=1)
     if items:
         item = items[0]
@@ -336,7 +336,7 @@ async def item_autocomplete(interaction: discord.Interaction, current: str) -> L
 @app_commands.describe(query="Quest title or keywords (e.g. 'Mankrik', 'Nordrassil', 'Green Hills')")
 async def quest_command(interaction: discord.Interaction, query: str):
     title = query
-    await interaction.response.defer()
+    await interaction.response.defer(ephemeral=True)
     quests, did_you_mean = db.search_quests(title, limit=1)
     if quests:
         quest = quests[0]
@@ -424,7 +424,7 @@ async def quest_autocomplete(interaction: discord.Interaction, current: str) -> 
 @app_commands.describe(query="Mob or boss name (e.g. 'Emperor Dagran', 'Herod', 'Ragnaros')")
 async def mob_command(interaction: discord.Interaction, query: str):
     name = query
-    await interaction.response.defer()
+    await interaction.response.defer(ephemeral=True)
     mobs, did_you_mean = db.search_creatures(name, limit=1)
     if mobs:
         mob = mobs[0]
@@ -510,7 +510,7 @@ async def mob_autocomplete(interaction: discord.Interaction, current: str) -> Li
 @app_commands.describe(query="Item name (e.g. 'Bronze Tube', 'Heavy Leather', 'Rucksack')")
 async def vendor_command(interaction: discord.Interaction, query: str):
     item_name = query
-    await interaction.response.defer()
+    await interaction.response.defer(ephemeral=True)
     vendors, did_you_mean = db.search_vendors(item_name, limit=4)
     if vendors:
         target = did_you_mean if did_you_mean else item_name
@@ -571,7 +571,7 @@ async def vendor_autocomplete(interaction: discord.Interaction, current: str) ->
 @bot.tree.command(name="flightpath", description="Find flight masters and routes by zone (Condensed)")
 @app_commands.describe(query="Zone or city (e.g. 'Westfall', 'STV', 'Crossroads')")
 async def flightpath_command(interaction: discord.Interaction, query: str):
-    await interaction.response.defer()
+    await interaction.response.defer(ephemeral=True)
     nodes, did_you_mean = db.search_flightpaths(query, limit=3)
     if nodes:
         target = did_you_mean if did_you_mean else query
@@ -631,7 +631,7 @@ async def flightpath_autocomplete(interaction: discord.Interaction, current: str
 @app_commands.describe(query="Zone name, city, or abbreviation (e.g. 'Westfall', 'Tanaris', 'STV')")
 async def map_command(interaction: discord.Interaction, query: Optional[str] = None):
     zone = query
-    await interaction.response.defer()
+    await interaction.response.defer(ephemeral=True)
     if not zone or not zone.strip():
         embed = discord.Embed(
             title="🗺️ Azeroth World Map & Zone Directory",
@@ -765,7 +765,7 @@ async def zones_command(interaction: discord.Interaction, query: Optional[str] =
                 color=0x1ABC9C if not z_info.get("is_forever") else 0xF59E0B
             )
             embed.set_footer(text="World of Warcraft: Forever Companion")
-            await interaction.response.send_message(embed=embed)
+            await interaction.response.send_message(embed=embed, ephemeral=True)
             return
 
     embed = discord.Embed(
@@ -779,7 +779,7 @@ async def zones_command(interaction: discord.Interaction, query: Optional[str] =
         color=0x1ABC9C
     )
     embed.set_footer(text="World of Warcraft: Forever • Launching Nov 4, 2026")
-    await interaction.response.send_message(embed=embed)
+    await interaction.response.send_message(embed=embed, ephemeral=True)
 
 
 # -------------------------------------------------------------
@@ -788,7 +788,7 @@ async def zones_command(interaction: discord.Interaction, query: Optional[str] =
 @bot.tree.command(name="dungeons", description="Find dungeons by level (e.g. 42), name, or zone (Condensed & Relevant)")
 @app_commands.describe(query="Level (e.g. 42), dungeon name (e.g. ZF), or zone")
 async def dungeons_command(interaction: discord.Interaction, query: Optional[str] = None):
-    await interaction.response.defer()
+    await interaction.response.defer(ephemeral=True)
     # If empty query: Show concise bracket cheat sheet
     if not query or not query.strip():
         embed = discord.Embed(
@@ -947,7 +947,7 @@ async def dungeons_autocomplete(interaction: discord.Interaction, current: str) 
 @app_commands.describe(query="Level (1-60, e.g. 42)")
 async def level_command(interaction: discord.Interaction, query: int):
     level = query
-    await interaction.response.defer()
+    await interaction.response.defer(ephemeral=True)
     if level < 1 or level > 60:
         await interaction.followup.send("Please choose a level between 1 and 60!", ephemeral=True)
         return
@@ -980,7 +980,7 @@ async def level_command(interaction: discord.Interaction, query: int):
 @app_commands.describe(query="Ore vein, herb name, or leather (e.g. 'Copper', 'Black Lotus', 'Thorium', 'Fadeleaf')")
 async def gather_command(interaction: discord.Interaction, query: str):
     node = query
-    await interaction.response.defer()
+    await interaction.response.defer(ephemeral=True)
     info = get_gathering_info(node)
     if info:
         embed = discord.Embed(
@@ -1038,7 +1038,7 @@ async def gather_autocomplete(interaction: discord.Interaction, current: str) ->
 @app_commands.describe(query="Profession name (e.g. 'Mining', 'Herbalism', 'Engineering', 'Alchemy')")
 async def profession_command(interaction: discord.Interaction, query: str):
     name = query
-    await interaction.response.defer()
+    await interaction.response.defer(ephemeral=True)
     info = get_profession_info(name)
     if info:
         embed = discord.Embed(
@@ -1097,7 +1097,7 @@ async def profession_autocomplete(interaction: discord.Interaction, current: str
 @app_commands.describe(query="Class (e.g. 'Warrior', 'Mage', 'Rogue', 'Priest')", spec="Spec (e.g. 'Fury', 'Arms', 'Frost AoE', 'Shadow')")
 async def build_command(interaction: discord.Interaction, query: str, spec: Optional[str] = None):
     class_name = query
-    await interaction.response.defer()
+    await interaction.response.defer(ephemeral=True)
     b = get_class_build(class_name, spec)
     if b:
         embed = discord.Embed(
@@ -1164,7 +1164,7 @@ async def build_spec_autocomplete(interaction: discord.Interaction, current: str
 @app_commands.describe(query="Class or role (e.g. 'Warrior', 'Mage', 'Healer', 'Tank', 'Melee DPS')")
 async def consumes_command(interaction: discord.Interaction, query: str):
     role_or_class = query
-    await interaction.response.defer()
+    await interaction.response.defer(ephemeral=True)
     c = get_consumables_info(role_or_class)
     if c:
         embed = discord.Embed(
@@ -1222,7 +1222,7 @@ async def consumes_autocomplete(interaction: discord.Interaction, current: str) 
 @app_commands.describe(query="World buff name (e.g. 'Onyxia', 'Songflower', 'Warchief', 'Zandalar', 'Tribute')")
 async def buffs_command(interaction: discord.Interaction, query: Optional[str] = None):
     buff = query
-    await interaction.response.defer()
+    await interaction.response.defer(ephemeral=True)
     if not buff or not buff.strip():
         lines = []
         for k, v in WORLD_BUFFS_DATA.items():
@@ -1292,7 +1292,7 @@ async def buffs_autocomplete(interaction: discord.Interaction, current: str) -> 
 @app_commands.describe(query="Boss or raid name (e.g. 'Baron Geddon', 'Vaelastrasz', 'Chromaggus', 'C'Thun', 'Temporal Rift')")
 async def raid_command(interaction: discord.Interaction, query: str):
     boss = query
-    await interaction.response.defer()
+    await interaction.response.defer(ephemeral=True)
     rb = get_raid_boss_info(boss)
     if rb:
         embed = discord.Embed(
@@ -1348,7 +1348,7 @@ async def raid_autocomplete(interaction: discord.Interaction, current: str) -> L
 @app_commands.describe(query="Faction name (e.g. 'Timbermaw', 'Argent Dawn', 'Thorium Brotherhood', 'Hydraxian', 'Cenarion')")
 async def rep_command(interaction: discord.Interaction, query: str):
     faction = query
-    await interaction.response.defer()
+    await interaction.response.defer(ephemeral=True)
     rep = get_reputation_info(faction)
     if rep:
         embed = discord.Embed(
@@ -1404,7 +1404,7 @@ async def rep_autocomplete(interaction: discord.Interaction, current: str) -> Li
 @bot.tree.command(name="macro", description="Generate copy-pasteable WoW in-game macros or look up templates")
 @app_commands.describe(query="Macro query or template (e.g. 'mouseover', 'stance dance', 'startattack', or custom query)")
 async def macro_command(interaction: discord.Interaction, query: str):
-    await interaction.response.defer()
+    await interaction.response.defer(ephemeral=True)
 
     # 1. Check known templates first
     m = get_macro_info(query)
@@ -1494,7 +1494,7 @@ async def macro_autocomplete(interaction: discord.Interaction, current: str) -> 
 @bot.tree.command(name="pvp", description="PvP Honor ranks 1-14, 20% weekly decay math, and Battleground guides")
 @app_commands.describe(query="PvP topic (e.g. 'ranks', 'decay', 'wsg', 'ab', 'av')")
 async def pvp_command(interaction: discord.Interaction, query: Optional[str] = "ranks"):
-    await interaction.response.defer()
+    await interaction.response.defer(ephemeral=True)
     q = query or "ranks"
     p = get_pvp_info(q)
 
@@ -1549,7 +1549,7 @@ async def pvp_autocomplete(interaction: discord.Interaction, current: str) -> Li
 @app_commands.describe(query="Raid instance (e.g. 'Onyxia', 'Molten Core', 'Blackwing Lair', 'Naxxramas', 'Temporal Rift')")
 async def attunement_command(interaction: discord.Interaction, query: Optional[str] = None):
     instance = query
-    await interaction.response.defer()
+    await interaction.response.defer(ephemeral=True)
     if not instance or instance.lower() in ["all", "list", "directory"]:
         embed = discord.Embed(
             title="📜 Raid Attunements Directory",
@@ -1624,7 +1624,7 @@ async def attunement_autocomplete(interaction: discord.Interaction, current: str
 @app_commands.describe(query="Dungeon key or dungeon name (e.g. 'Shadowforge Key', 'Scholo', 'Strat', 'Maraudon')")
 async def keys_command(interaction: discord.Interaction, query: Optional[str] = None):
     dungeon = query
-    await interaction.response.defer()
+    await interaction.response.defer(ephemeral=True)
     if not dungeon or dungeon.lower() in ["all", "list", "directory"]:
         embed = discord.Embed(
             title="🗝️ Classic & Classic+ Dungeon Keys Directory",
@@ -1707,7 +1707,7 @@ async def keys_autocomplete(interaction: discord.Interaction, current: str) -> L
 @app_commands.describe(query="Playable race (e.g. 'Human', 'Skyborne Elf', 'Orc', 'Undead', 'Dwarf', 'Gnome')")
 async def race_command(interaction: discord.Interaction, query: str):
     name = query
-    await interaction.response.defer()
+    await interaction.response.defer(ephemeral=True)
     r = get_racial_info(name)
     if r:
         faction_color = 0x2980B9 if r["faction"] == "Alliance" else 0xC0392B
@@ -1774,7 +1774,7 @@ async def race_autocomplete(interaction: discord.Interaction, current: str) -> L
 @app_commands.describe(query="Roster composition (e.g. '8 warr, 6 rogue, 6 mage, 4 lock, 6 priest, 3 hunter, 5 shaman, 2 druid')")
 async def comp_command(interaction: discord.Interaction, query: str):
     roster = query
-    await interaction.response.defer()
+    await interaction.response.defer(ephemeral=True)
     res = analyze_raid_comp(roster)
     counts = res["counts"]
     breakdown = (
@@ -1802,7 +1802,7 @@ async def comp_command(interaction: discord.Interaction, query: str):
 @app_commands.describe(query="Your class", spec="Specialization (e.g. 'Fury', 'Combat', 'Frost', 'Holy', 'Marksmanship')")
 async def bis_command(interaction: discord.Interaction, query: str, spec: Optional[str] = None):
     class_name = query
-    await interaction.response.defer()
+    await interaction.response.defer(ephemeral=True)
     b = get_bis_list(class_name, spec)
     if b:
         embed = discord.Embed(
@@ -1852,7 +1852,7 @@ async def bis_class_autocomplete(interaction: discord.Interaction, current: str)
 @bot.tree.command(name="farm", description="Gold farming hotspots, solo dungeon skips, and estimated G/hr")
 @app_commands.describe(query="Farm location or class (e.g. 'dm east', 'maraudon', 'tribute', 'zf graveyard', 'elemental earth')")
 async def farm_command(interaction: discord.Interaction, query: Optional[str] = "dm east"):
-    await interaction.response.defer()
+    await interaction.response.defer(ephemeral=True)
     q = query or "dm east"
     gf = get_gold_farm_info(q)
     if gf:
@@ -1917,7 +1917,7 @@ async def farm_autocomplete(interaction: discord.Interaction, current: str) -> L
 @app_commands.describe(query="Specific event (e.g. 'gurubashi', 'dmf', 'fishing', or 'all')")
 async def events_command(interaction: discord.Interaction, query: Optional[str] = "all"):
     event = query
-    await interaction.response.defer()
+    await interaction.response.defer(ephemeral=True)
     we = get_world_events_info(event)
     ev_lower = (event or "all").lower().strip()
 
@@ -1980,7 +1980,7 @@ async def gdkp_command(interaction: discord.Interaction, query: int, cut: Option
         desc += f"🛡️ **Total Tank Payout (Raider + Bonus):** **{res['tank_total_payout']:,}g**\n"
     embed.description = desc
     embed.set_footer(text="World of Warcraft: Forever Companion • GDKP Ledger")
-    await interaction.response.send_message(embed=embed)
+    await interaction.response.send_message(embed=embed, ephemeral=True)
 
 
 # -------------------------------------------------------------
@@ -2065,7 +2065,7 @@ async def roll_command(interaction: discord.Interaction, query: Optional[str] = 
 @app_commands.describe(query="First weapon name", weapon2="Second weapon name", race="Character race (e.g. 'Human', 'Orc', 'Dwarf')", character_class="Class (default 'Warrior')")
 async def compare_command(interaction: discord.Interaction, query: str, weapon2: str, race: Optional[str] = "Human", character_class: Optional[str] = "Warrior"):
     weapon1 = query
-    await interaction.response.defer()
+    await interaction.response.defer(ephemeral=True)
     comp = compare_weapons(weapon1, weapon2, race=race or "Human")
     w1, w2 = comp["weapon1"], comp["weapon2"]
 
@@ -2093,7 +2093,7 @@ async def compare_command(interaction: discord.Interaction, query: str, weapon2:
 @bot.tree.command(name="resets", description="View live countdowns to Weekly, Onyxia (5-day), ZG (3-day), and Daily resets")
 @app_commands.describe(query="Optional filter for resets (e.g. 'onyxia', 'zg', 'weekly')")
 async def resets_command(interaction: discord.Interaction, query: Optional[str] = None):
-    await interaction.response.defer()
+    await interaction.response.defer(ephemeral=True)
     res = get_raid_lockouts()
     embed = discord.Embed(
         title="⏳ World of Warcraft Raid & World Resets",
@@ -2118,7 +2118,7 @@ async def resets_command(interaction: discord.Interaction, query: Optional[str] 
 @app_commands.describe(query="Twink level bracket (19, 29, or 39)", character_class="Optional character class (e.g. Rogue, Hunter, Warrior, Priest)")
 async def twink_command(interaction: discord.Interaction, query: str, character_class: Optional[str] = None):
     bracket = query
-    await interaction.response.defer()
+    await interaction.response.defer(ephemeral=True)
     tw = get_twink_info(bracket)
     if not tw:
         await interaction.followup.send(f"❌ Unknown bracket `{bracket}`. Supported brackets: 19, 29, 39.", ephemeral=True)
@@ -2152,7 +2152,7 @@ async def twink_bracket_autocomplete(interaction: discord.Interaction, current: 
 @app_commands.describe(query="Level range bundle (10-20, 20-30, 30-40)", faction="Faction filter (Alliance, Horde, or Both)")
 async def route_command(interaction: discord.Interaction, query: str, faction: Optional[str] = "Both"):
     level = query
-    await interaction.response.defer()
+    await interaction.response.defer(ephemeral=True)
     rt = get_leveling_route(level)
     if not rt:
         await interaction.followup.send(f"❌ Unknown level range `{level}`. Supported: 10-20, 20-30, 30-40.", ephemeral=True)
@@ -2187,7 +2187,7 @@ async def route_level_autocomplete(interaction: discord.Interaction, current: st
 @bot.tree.command(name="addons", description="Essential Classic WoW addons, optimal settings, and zero-lag configurations")
 @app_commands.describe(query="Addon name or category (e.g. 'questie', 'details', 'threatclassic2', 'bigwigs', 'itemrack')")
 async def addons_command(interaction: discord.Interaction, query: Optional[str] = None):
-    await interaction.response.defer()
+    await interaction.response.defer(ephemeral=True)
     if query:
         ad = get_addon_info(query)
         if ad:
@@ -2313,7 +2313,7 @@ async def trivia_command(interaction: discord.Interaction, query: Optional[str] 
         color=0x9B59B6
     )
     embed.set_footer(text="World of Warcraft: Forever Companion • Lore Trivia (30s timer)")
-    await interaction.response.send_message(embed=embed, view=view)
+    await interaction.response.send_message(embed=embed, view=view, ephemeral=True)
     view.message = await interaction.original_response()
 
 
@@ -2356,7 +2356,7 @@ async def profile_set(
     guild_role: Optional[str] = "",
     gear_note: Optional[str] = ""
 ):
-    await interaction.response.defer()
+    await interaction.response.defer(ephemeral=True)
     name = query
     lvl = min(max(level or 60, 1), 60)
     db.set_user_profile(
@@ -2398,7 +2398,7 @@ async def profile_view(
     member: Optional[discord.Member] = None
 ):
     character_name = query
-    await interaction.response.defer()
+    await interaction.response.defer(ephemeral=True)
     prof = None
     target_label = ""
     if character_name:
@@ -2438,7 +2438,7 @@ bot.tree.add_command(profile_group)
 @app_commands.describe(query="Resistance school (Fire, Nature, Frost, Shadow)", current="Current resistance rating (default 0)", role="Raid role (Tank, DPS, Healer)")
 async def resist_command(interaction: discord.Interaction, query: str, current: Optional[int] = 0, role: Optional[str] = "DPS"):
     school = query
-    await interaction.response.defer()
+    await interaction.response.defer(ephemeral=True)
     r = calculate_resistance_mitigation(school, current_val=current or 0, role=role or "DPS")
 
     color_map = {
@@ -2478,7 +2478,7 @@ async def resist_autocomplete(interaction: discord.Interaction, current: str) ->
 @app_commands.describe(query="First character class (e.g. Rogue, Warrior, Mage)", class2="Second character class (e.g. Frost Mage, Priest, Warlock)")
 async def duels_command(interaction: discord.Interaction, query: str, class2: str):
     class1 = query
-    await interaction.response.defer()
+    await interaction.response.defer(ephemeral=True)
     m = get_duel_matchup(class1, class2)
 
     embed = discord.Embed(
@@ -2579,7 +2579,7 @@ async def signup_command(interaction: discord.Interaction, query: str, max_playe
 @app_commands.describe(query="Class (Warrior, Mage, Rogue, Priest, Warlock, Hunter, Druid, Paladin, Shaman)", spec="Spec (e.g. 'Fury', 'Frost', 'Combat', 'Shadow', 'SM/Ruin')")
 async def talents_command(interaction: discord.Interaction, query: str, spec: Optional[str] = None):
     character_class = query
-    await interaction.response.defer()
+    await interaction.response.defer(ephemeral=True)
     t = get_talent_build(character_class, spec)
     if not t:
         cb = get_class_build(character_class, spec)
@@ -2642,7 +2642,7 @@ async def forever_command(interaction: discord.Interaction, query: Optional[str]
         color=0xF39C12
     )
     embed.set_footer(text="World of Warcraft: Forever • Launching Nov 4, 2026")
-    await interaction.response.send_message(embed=embed)
+    await interaction.response.send_message(embed=embed, ephemeral=True)
 
 
 # -------------------------------------------------------------
@@ -2652,7 +2652,7 @@ async def forever_command(interaction: discord.Interaction, query: Optional[str]
 @app_commands.describe(query="Your question (e.g. 'which dungeon to use at 42', 'mankrik wife', 'how to get from duskwood to thousand needles')")
 async def ask_command(interaction: discord.Interaction, query: str):
     question = query
-    await interaction.response.defer()
+    await interaction.response.defer(ephemeral=True)
     q_lower = question.lower()
 
     # 1. Level-specific queries (Only if it's genuinely a level query, not a specific item/mechanic query)
