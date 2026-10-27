@@ -7,39 +7,29 @@
 
 ---
 
-## 🚀 How to Install & Add to Discord
+## 🚀 Quickstart (How to Download & Run)
 
-### Step 1: Create & Invite the Bot
-1. Open the [Discord Developer Portal](https://discord.com/developers/applications) and click **New Application**.
-2. Go to the **Bot** tab:
-   - Click **Reset Token** (or **Copy**) to save your **Bot Token**.
-   - Under **Privileged Gateway Intents**, enable **Message Content Intent**.
-3. Go to the **OAuth2 > URL Generator** tab:
-   - Select scopes: `bot` and `applications.commands`.
-   - Select bot permissions: `Send Messages`, `Embed Links`, `Attach Files`, `Use Slash Commands`.
-   - Copy the generated URL and open it in your browser to add the bot to your Discord server.
+### 1. Download the Project
+- **Easiest:** Click the green **`<> Code`** button at the top of this page ➔ click **Download ZIP**, then unzip it.
+- **Git:** `git clone https://github.com/s1l3ntHub/wow-foreverbot.git`
 
-### Step 2: Install & Launch
+### 2. Get Your Discord Bot Token
+1. Create an application at the [Discord Developer Portal](https://discord.com/developers/applications) and copy your **Bot Token** (under the **Bot** tab).
+2. Under **OAuth2 ➔ URL Generator**, check `bot` + `applications.commands`, then open the generated link to invite the bot to your server.
+
+### 3. Run Foreverbot (3 Commands)
+Open a terminal in your unzipped bot folder and run:
 ```bash
-# 1. Clone repository
-git clone git@github.com:s1l3ntHub/wow-foreverbot.git
-cd wow-foreverbot
-
-# 2. Install dependencies
-python3 -m venv .venv
-source .venv/bin/activate
+# 1. Install required packages
 pip install -r requirements.txt
 
-# 3. Add your Bot Token to .env
-cp .env.example .env
-# Edit .env and paste: DISCORD_TOKEN=your_token_here
+# 2. Add your token
+cp .env.example .env          # Open .env in any text editor & paste your DISCORD_TOKEN
 
-# 4. Start Foreverbot
+# 3. Launch the bot!
 python3 bot.py
 ```
-
-### Step 3: Use Commands in Discord
-Once the bot is online, simply press `/` in any channel to browse and use any command.
+*Once online, just type `/` in any Discord channel to start using commands!*
 
 ---
 
