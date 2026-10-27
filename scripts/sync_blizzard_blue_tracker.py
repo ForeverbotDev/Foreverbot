@@ -14,10 +14,11 @@ import re
 import subprocess
 import sys
 import urllib.request
-from datetime import datetime
+from datetime import datetime, timedelta, timezone
 
 REPO_ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 PRIMARY_TOPIC_URL = "https://www.wowhead.com/blue-tracker/topic/eu/wow-forever-beta-development-notes-updated-26-october-631316"
+BLIZZARD_FORUM_JSON_URL = "https://eu.forums.blizzard.com/en/wow/t/631316.json"
 PATCH_NOTES_MD = os.path.join(REPO_ROOT, "docs", "BLIZZARD_BETA_PATCH_NOTES.md")
 
 
@@ -69,35 +70,87 @@ def html_to_markdown(raw_html: str) -> str:
 
 
 def fetch_blue_tracker_entries(url: str = PRIMARY_TOPIC_URL, fallback_file: str = None):
-    """Fetches and parses the `data.blueTracker.topic` JSON payload from Wowhead Blue Tracker."""
-    raw_page = None
+    """Fetches official Blizzard Blue Tracker entries directly via Blizzard's Discourse JSON API
+    (or falls back to Wowhead `data.blueTracker.topic` / local cached HTML).
+    """
+    if fallback_file and os.path.exists(fallback_file):
+        with open(fallback_file, "r", encoding="utf-8", errors="replace") as f:
+            raw_page = f.read()
+        m = re.search(
+            r'<script type="application/json" id="data\.blueTracker\.topic">(.*?)</script>',
+            raw_page,
+            re.S,
+        )
+        if m:
+            payload = json.loads(m.group(1))
+            return payload.get("entries", [])
+
+    # Primary: Direct Official Blizzard EU Discourse JSON API (no Cloudflare 403 block)
+    topic_id_match = re.search(r"(\d{5,})(?:\.json)?$", url)
+    json_url = (
+        f"https://eu.forums.blizzard.com/en/wow/t/{topic_id_match.group(1)}.json"
+        if topic_id_match
+        else BLIZZARD_FORUM_JSON_URL
+    )
     try:
         req = urllib.request.Request(
-            url,
+            json_url,
             headers={
-                "User-Agent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36",
-                "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
+                "User-Agent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36",
+                "Accept": "application/json",
             },
         )
         with urllib.request.urlopen(req, timeout=20) as resp:
-            raw_page = resp.read().decode("utf-8", errors="replace")
-    except Exception as exc:
-        if fallback_file and os.path.exists(fallback_file):
-            with open(fallback_file, "r", encoding="utf-8", errors="replace") as f:
-                raw_page = f.read()
-        else:
-            raise RuntimeError(f"Failed to fetch Blue Tracker URL {url}: {exc}") from exc
+            data = json.loads(resp.read().decode("utf-8", errors="replace"))
+        posts = data.get("post_stream", {}).get("posts", [])
+        if posts:
+            tz_central = timezone(timedelta(hours=-5))
+            entries = []
+            for p in posts:
+                body = p.get("cooked", "").strip()
+                if not body:
+                    continue
+                created_at = p.get("created_at", "")
+                if created_at:
+                    dt = datetime.fromisoformat(created_at.replace("Z", "+00:00")).astimezone(tz_central)
+                    posted_str = dt.strftime("%Y-%m-%d %H:%M:%S")
+                else:
+                    posted_str = "2026-10-26"
+                entries.append(
+                    {
+                        "id": p.get("id"),
+                        "posted": posted_str,
+                        "author": p.get("username", "Kaivax"),
+                        "body": body,
+                    }
+                )
+            return entries
+    except Exception as json_exc:
+        # Secondary fallback: try scraping the Wowhead Blue Tracker URL directly
+        try:
+            req = urllib.request.Request(
+                url,
+                headers={
+                    "User-Agent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36",
+                    "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
+                },
+            )
+            with urllib.request.urlopen(req, timeout=20) as resp:
+                raw_page = resp.read().decode("utf-8", errors="replace")
+            m = re.search(
+                r'<script type="application/json" id="data\.blueTracker\.topic">(.*?)</script>',
+                raw_page,
+                re.S,
+            )
+            if m:
+                payload = json.loads(m.group(1))
+                return payload.get("entries", [])
+        except Exception as html_exc:
+            raise RuntimeError(
+                f"Failed to fetch Blue Tracker via Blizzard JSON ({json_exc}) and Wowhead ({html_exc})"
+            ) from html_exc
 
-    m = re.search(
-        r'<script type="application/json" id="data\.blueTracker\.topic">(.*?)</script>',
-        raw_page,
-        re.S,
-    )
-    if not m:
-        raise ValueError("Could not locate `data.blueTracker.topic` JSON in page source.")
-
-    payload = json.loads(m.group(1))
-    return payload.get("entries", [])
+    raise ValueError("Could not retrieve Blue Tracker entries from Blizzard JSON or Wowhead.")
 
 
 def render_patch_notes_doc(entries: list, source_url: str) -> str:
