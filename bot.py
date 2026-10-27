@@ -2641,7 +2641,7 @@ async def forever_command(interaction: discord.Interaction, query: Optional[str]
         ),
         color=0xF39C12
     )
-    embed.set_footer(text="World of Warcraft: Forever • Launching Nov 4, 2026")
+    embed.set_footer(text="World of Warcraft: Forever • Open Beta • Launching Nov 4, 2026")
     await interaction.response.send_message(embed=embed, ephemeral=True)
 
 

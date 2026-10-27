@@ -1,7 +1,10 @@
 # ⚔️ Foreverbot: Epic Edition // World of Warcraft: Forever Discord Co-Pilot
 > The in-game Discord companion for **World of Warcraft: Forever**. Look up item stats & drop rates, get directions when you're lost, and find answers right from your PC, phone, or tablet without leaving the game. Built with **Zero-Clutter Channel Layering** so each player's queries and answers are completely private (`ephemeral`) without filling server channels with spam!
+>
+> 🧪 **Beta Notice:** Foreverbot is currently in **Open Beta** leading up to the global launch of World of Warcraft: Forever on November 4, 2026. Data and features are actively tuned and community-tested.
 
 [![Discord Bot](https://img.shields.io/badge/Discord-Companion%20Bot-5865F2?logo=discord&logoColor=white)](https://discord.com)
+[![Status](https://img.shields.io/badge/Status-Open%20Beta-3B82F6)](https://github.com/s1l3ntHub/wow-foreverbot)
 [![WoW Forever](https://img.shields.io/badge/WoW-Forever-F59E0B)](https://github.com/s1l3ntHub/wow-foreverbot)
 [![Edition](https://img.shields.io/badge/Edition-Epic%20v3.0.0-9333EA)](docs/EPIC_EDITION_RELEASE_NOTES.md)
 [![Tests Passing](https://img.shields.io/badge/Tests-3%2C903%20%2F%203%2C903%20Passed-10B981)](#-automated-testing)

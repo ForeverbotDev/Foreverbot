@@ -1,5 +1,7 @@
-# 🏆 World of Warcraft: Forever Bot // Epic Edition (v3.0.0)
+# 🏆 World of Warcraft: Forever Bot // Epic Edition (v3.0.0 Open Beta)
 > *The ultimate, zero-clutter, cross-platform Discord co-pilot for World of Warcraft: Forever (Classic+) and Classic Era.*
+>
+> 🧪 **Release Status: Open Beta.** Pre-launch edition actively tuned and community-tested ahead of the global launch on November 4, 2026.
 
 ---
 

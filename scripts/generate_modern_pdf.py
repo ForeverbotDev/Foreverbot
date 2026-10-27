@@ -34,7 +34,7 @@ class ModernWoWPDF(FPDF):
         self.set_y(-12)
         self.set_font("Helvetica", "I", 8)
         self.set_text_color(140, 145, 155)
-        self.cell(0, 8, f"Page {self.page_no()}  |  WoW: Forever Companion Guide  |  Launch: Nov 4, 2026", align="C")
+        self.cell(0, 8, f"Page {self.page_no()}  |  WoW: Forever Companion Guide (Open Beta)  |  Launch: Nov 4, 2026", align="C")
 
     def section_header(self, title, tag=""):
         self.ln(3)
@@ -121,9 +121,9 @@ def generate_guide(output_pdf="wow_forever_bot_guide.pdf"):
     pdf.set_text_color(255, 255, 255)
     pdf.cell(100, 7, "FOREVERBOT: EPIC EDITION", ln=False)
 
-    pdf.set_font("Helvetica", "B", 8.5)
+    pdf.set_font("Helvetica", "B", 8)
     pdf.set_text_color(241, 196, 15)
-    pdf.cell(82, 7, "[OFFICIAL DISCORD COMPANION]", align="R", ln=True)
+    pdf.cell(82, 7, "[DISCORD COMPANION | OPEN BETA]", align="R", ln=True)
 
     pdf.set_xy(14, 32.5)
     pdf.set_font("Helvetica", "", 8.5)
