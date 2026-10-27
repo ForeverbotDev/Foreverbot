@@ -117,9 +117,9 @@ def generate_guide(output_pdf="wow_forever_bot_guide.pdf"):
     pdf.rect(10, 22, 190, 24, "F")
 
     pdf.set_xy(14, 25)
-    pdf.set_font("Helvetica", "B", 16)
+    pdf.set_font("Helvetica", "B", 15)
     pdf.set_text_color(255, 255, 255)
-    pdf.cell(100, 7, "FOREVERBOT: EPIC EDITION", ln=False)
+    pdf.cell(100, 7, "FOREVERBOT: EPIC EDITION (BETA)", ln=False)
 
     pdf.set_font("Helvetica", "B", 8)
     pdf.set_text_color(241, 196, 15)
@@ -134,7 +134,7 @@ def generate_guide(output_pdf="wow_forever_bot_guide.pdf"):
     badge_y = 39.5
     pdf.pill_badge(14, badge_y, 38, 5, "40 COMMANDS", (30, 41, 59), (56, 189, 248))
     pdf.pill_badge(54, badge_y, 44, 5, "CHANNEL LAYERING", (30, 41, 59), (241, 196, 15))
-    pdf.pill_badge(100, badge_y, 44, 5, "3,903 TESTS PASSED", (30, 41, 59), (74, 222, 128))
+    pdf.pill_badge(100, badge_y, 44, 5, "4,904 TESTS PASSED", (30, 41, 59), (74, 222, 128))
     pdf.pill_badge(146, badge_y, 48, 5, "9 FOREVER DUNGEONS", (30, 41, 59), (248, 113, 113))
 
     pdf.set_xy(10, 49)

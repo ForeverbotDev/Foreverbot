@@ -1,4 +1,4 @@
-# ⚔️ Foreverbot: Epic Edition // World of Warcraft: Forever Discord Co-Pilot
+# ⚔️ Foreverbot: Epic Edition (Open Beta) // World of Warcraft: Forever Discord Co-Pilot
 > The in-game Discord companion for **World of Warcraft: Forever**. Look up item stats & drop rates, get directions when you're lost, and find answers right from your PC, phone, or tablet without leaving the game. Built with **Zero-Clutter Channel Layering** so each player's queries and answers are completely private (`ephemeral`) without filling server channels with spam!
 >
 > 🧪 **Beta Notice:** Foreverbot is currently in **Open Beta** leading up to the global launch of World of Warcraft: Forever on November 4, 2026. Data and features are actively tuned and community-tested.
@@ -6,8 +6,8 @@
 [![Discord Bot](https://img.shields.io/badge/Discord-Companion%20Bot-5865F2?logo=discord&logoColor=white)](https://discord.com)
 [![Status](https://img.shields.io/badge/Status-Open%20Beta-3B82F6)](https://github.com/s1l3ntHub/wow-foreverbot)
 [![WoW Forever](https://img.shields.io/badge/WoW-Forever-F59E0B)](https://github.com/s1l3ntHub/wow-foreverbot)
-[![Edition](https://img.shields.io/badge/Edition-Epic%20v3.0.0-9333EA)](docs/EPIC_EDITION_RELEASE_NOTES.md)
-[![Tests Passing](https://img.shields.io/badge/Tests-3%2C903%20%2F%203%2C903%20Passed-10B981)](#-automated-testing)
+[![Edition](https://img.shields.io/badge/Edition-Epic%20v3.0.0%20Beta-9333EA)](docs/EPIC_EDITION_RELEASE_NOTES.md)
+[![Tests Passing](https://img.shields.io/badge/Tests-4%2C904%20%2F%204%2C904%20Passed-10B981)](#-automated-testing)
 
 ---
 
@@ -85,15 +85,16 @@ python3 bot.py
 
 ## 🧪 Automated Testing
 
-Foreverbot is backed by an industry-leading **3,903 / 3,903 automated tests** across 4 verification suites ensuring 100% accuracy, instant sub-second response times, and bulletproof resilience against typos, player slang, and hostile inputs:
+Foreverbot is backed by an industry-leading **4,904 / 4,904 automated tests** across 5 verification suites (plus an overnight continuous endurance daemon) ensuring 100% accuracy, instant sub-second response times, and bulletproof resilience against typos, player slang, and hostile inputs:
 ```bash
-python3 tests/test_quality_suite.py       # 27 Core system tests
-python3 tests/test_deep_quality.py        # 81 Database & custom dungeon tests
-python3 tests/test_howto_guide_suite.py   # 115 How-To guide prompt tests
-python3 tests/test_massive_scale_suite.py # 3,680 Ultra-scale catalog, combat math & edge-case tests
+python3 tests/test_quality_suite.py               # 27 Core system tests
+python3 tests/test_deep_quality.py                # 81 Database & custom dungeon tests
+python3 tests/test_howto_guide_suite.py           # 115 How-To guide prompt tests
+python3 tests/test_massive_scale_suite.py         # 3,680 Ultra-scale catalog, combat math & edge-case tests
+python3 tests/test_slash_commands_authenticity.py # 1,001 Direct Discord '/' slash command authenticity tests
 ```
 
-### 🔬 What The 3,680-Test Ultra Suite Covers:
+### 🔬 What The Verification Suites Cover:
 - **Section 1: Full Database Catalog Sweeps (324 tests):** Every item, quest, mob, dungeon, flightpath, and vendor lookup tested with exact matches and multi-word token searches.
 - **Section 2: Level 1 to 60 Dungeon Eligibility (60 tests):** Every character level tested against level bracket filtering and starter zone recommendations.
 - **Section 3: Combat Mechanics & Mitigation Math (150 tests):** 5-school resistance mitigation across 20 resistance tiers (0 to 360 SR/FR/NR/AR/Frost R) and dual-wield glancing blow comparisons.
@@ -107,10 +108,11 @@ python3 tests/test_massive_scale_suite.py # 3,680 Ultra-scale catalog, combat ma
 - **Section 11: Honor Ranking & Weekly 20% Decay Matrix (280 tests):** All 14 PvP ranks across 20 rating point intervals validating Tuesday decay retention.
 - **Section 12: Class BiS, Talents & Consumables (250 tests):** Pre-raid BiS lists across all 9 classes (including Druid, Paladin, Shaman), 1-60 leveling advice, and consumable checklists.
 - **Section 13: 500 Out-of-the-Box Conversational & NLP Queries (500 tests):** "Where do I find...", "Can [class] use...", "How much [stat]...", and gamer LFG chat prompts verified safe and structured.
+- **Section 14: 1,001 Direct Slash Command Authenticity Permutations (1,001 tests):** Continuous verification across all Discord `/` slash commands validating `ephemeral=True` channel privacy, interactive Raid/Roll Views, and domain ground truth.
 
 ---
 
 ## 📄 Official Guide & Release Notes
 
-- **[EPIC_EDITION_RELEASE_NOTES.md](docs/EPIC_EDITION_RELEASE_NOTES.md)** — What's new in v3.0.0 Epic Edition (Channel Layering, Transit Routing, 3,903 Tests).
-- **[Your-Azeroth-Companion-Bot-Command-Guide.pdf](docs/Your-Azeroth-Companion-Bot-Command-Guide.pdf)** — Visual slide guide & command companion deck.
+- **[EPIC_EDITION_RELEASE_NOTES.md](docs/EPIC_EDITION_RELEASE_NOTES.md)** — What's new in v3.0.0 Open Beta (Channel Layering, Transit Routing, 4,904 Tests).
+- **[Your-Azeroth-Companion-Bot-Command-Guide.pdf](docs/Your-Azeroth-Companion-Bot-Command-Guide.pdf)** — Visual slide guide & command companion deck (Open Beta).
