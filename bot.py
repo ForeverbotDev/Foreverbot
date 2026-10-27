@@ -2624,26 +2624,32 @@ async def talents_class_autocomplete(interaction: discord.Interaction, current: 
 
 
 # -------------------------------------------------------------
-# Slash Command: /forever (Overview)
+# Slash Command: /forever (Overview & Official Blizzard Beta Patch Notes)
 # -------------------------------------------------------------
-@bot.tree.command(name="forever", description="Overview of WoW: Forever Classic+ (Condensed)")
-@app_commands.describe(query="Optional topic or search term (e.g. changes, timeline, features)")
+@bot.tree.command(name="forever", description="WoW: Forever Classic+ Overview & Official Beta Patch Notes (Updated Oct 26)")
+@app_commands.describe(query="Topic (e.g. 'patch notes', 'racials', 'classes', 'raid buffs', 'legacy', 'overview')")
 async def forever_command(interaction: discord.Interaction, query: Optional[str] = None):
+    info = ke.get_forever_beta_info(query)
     embed = discord.Embed(
-        title="🌟 World of Warcraft: Forever (Classic+)",
-        description=(
-            "• **Launch Date:** November 4, 2026 (Global Release)\n"
-            "• **Level Cap:** Permanent Level 60 with horizontal endgame progression\n"
-            "• **Story:** Azeroth timeline where the Dark Portal never reopened\n"
-            "• **New Zones:** Mount Hyjal (58–60), Zephras Isle (1–25), The Riverglades (54–58)\n"
-            "• **New Race:** Skyborne Elves (Alliance) with Zephyr's Grace gliding trait\n"
-            "• **9 New Instances:** Roots of Nordrassil, Sunken Citadel, Karazhan Crypts, Temporal Rift raid\n"
-            "• **Access:** Included with standard WoW subscription"
-        ),
+        title=info["title"],
+        description=f"{info['description']}\n\n💡 *Tip:* {info['tip']}",
         color=0xF39C12
     )
-    embed.set_footer(text="World of Warcraft: Forever • Open Beta • Launching Nov 4, 2026")
+    embed.set_footer(text="World of Warcraft: Forever • Open Beta (Updated Oct 26, 2026) • Launching Nov 4, 2026")
     await interaction.response.send_message(embed=embed, ephemeral=True)
+
+
+@forever_command.autocomplete("query")
+async def forever_query_autocomplete(interaction: discord.Interaction, current: str) -> List[app_commands.Choice[str]]:
+    topics = [
+        ("🌟 Overview & Horizontal Progression", "overview"),
+        ("📜 Latest Official Beta Patch Notes (Oct 26)", "patch notes"),
+        ("🧬 Racial Abilities & Traits Overhaul (Oct 26)", "racials"),
+        ("🛡️ Raid-Wide Buffs, Totems & Mass Salvation", "raid buffs"),
+        ("⚔️ Class & Talent Reworks (Druid, Warrior, Mage, Shaman, etc.)", "classes"),
+        ("🏕️ Legacy System (16 Pts), Camping, Cooldown Manager & Gamepad", "legacy"),
+    ]
+    return [app_commands.Choice(name=label, value=val) for label, val in topics if current.lower() in label.lower() or current.lower() in val.lower()]
 
 
 # -------------------------------------------------------------
@@ -2655,6 +2661,18 @@ async def ask_command(interaction: discord.Interaction, query: str):
     question = query
     await interaction.response.defer(ephemeral=True)
     q_lower = question.lower()
+
+    # 0. Official Blizzard Beta Patch Notes / Development Notes Check
+    if any(p in q_lower for p in ["patch note", "patch notes", "dev note", "development note", "blue tracker", "oct 26", "october 26", "beta update", "new racial", "racial change"]):
+        info = ke.get_forever_beta_info(question)
+        embed = discord.Embed(
+            title=info["title"],
+            description=f"{info['description']}\n\n💡 *Tip:* {info['tip']}",
+            color=0xF39C12
+        )
+        embed.set_footer(text="World of Warcraft: Forever • Official Beta Notes (Updated Oct 26, 2026)")
+        await interaction.followup.send(embed=embed)
+        return
 
     # 1. Level-specific queries (Only if it's genuinely a level query, not a specific item/mechanic query)
     extracted_lvl = extract_level_from_text(question)

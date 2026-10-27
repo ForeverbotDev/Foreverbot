@@ -194,5 +194,12 @@ python3 tests/test_slash_commands_authenticity.py # 1,001 Direct Discord '/' sla
 
 ## 📄 Official Guide & Release Notes
 
+- **[BLIZZARD_BETA_PATCH_NOTES.md](docs/BLIZZARD_BETA_PATCH_NOTES.md)** — Official Blizzard WoW: Forever Beta Development Notes (Tracked from Blue Tracker Topic #631316 • Updated Oct 26, 2026).
 - **[EPIC_EDITION_RELEASE_NOTES.md](docs/EPIC_EDITION_RELEASE_NOTES.md)** — What's new in v3.0.0 Open Beta (Channel Layering, Transit Routing, 4,904 Tests).
 - **[Your-Azeroth-Companion-Bot-Command-Guide.pdf](docs/Your-Azeroth-Companion-Bot-Command-Guide.pdf)** — Visual slide guide & command companion deck (Open Beta).
+
+### 🔄 Automated Blizzard Blue Tracker Sync
+Foreverbot automatically stays synced with official Blizzard WoW: Forever Beta development builds and pushes updates to GitHub:
+```bash
+python3 scripts/sync_blizzard_blue_tracker.py --auto-push
+```

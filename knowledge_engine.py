@@ -1770,8 +1770,9 @@ MACRO_TEMPLATES: Dict[str, Dict[str, Any]] = {
 # -------------------------------------------------------------
 PVP_SYSTEM_DATA: Dict[str, Dict[str, Any]] = {
     "ranks": {
-        "title": "Classic PvP Honor System Ranks 1–14",
+        "title": "Classic & Forever PvP Honor System (Ranks 1–14 & 25k Honor Cap)",
         "description": (
+            "• **Forever Beta Update (Oct 2026):** Honor cap increased from **15,000 to 25,000**, BG Marks of Honor stack up to **30** (was 20), and Critical Strikes in PvP deal full unreduced efficacy!\n"
             "• **R1 (Private / Scout • 1,500 RP):** Private's Tabard\n"
             "• **R2 (Corporal / Grunt • 2,000 RP):** Insignia Trinket (Dispels CC on 5-min CD)\n"
             "• **R3 (Sergeant • 5,000 RP):** 10% discount on all faction vendors & repair bills\n"
@@ -1783,7 +1784,7 @@ PVP_SYSTEM_DATA: Dict[str, Dict[str, Any]] = {
             "• **R13 (Field Marshal / Warlord • 55,000 RP):** Full Epic PvP Set (Helm, Shoulders & Chest)\n"
             "• **R14 (Grand Marshal / High Warlord • 60,000 RP):** Epic R14 Weapons (Equal to Naxxramas weapon DPS!)"
         ),
-        "tip": "Rank 14 weapons remain the highest raw stat and top weapon damage options throughout early and mid Classic."
+        "tip": "In WoW: Forever Beta, PvP gear and upgrade token Honor costs are tuned (+50%) alongside the expanded 25,000 Honor cap."
     },
     "decay": {
         "title": "Weekly Honor Decay & Rating Point (RP) Math",
@@ -1798,7 +1799,7 @@ PVP_SYSTEM_DATA: Dict[str, Dict[str, Any]] = {
     "wsg": {
         "title": "Warsong Gulch (WSG) Battleground Guide",
         "description": (
-            "• **Objective:** 10v10 Capture the Flag (First to 3 flag caps wins).\n"
+            "• **Objective:** 10v10 Capture the Flag (First to 3 flag caps wins; Marks of Honor stack to 30 in Forever Beta).\n"
             "• **Flag Carrier (FC) Meta:** Feral Druid or Protection Warrior with Swiftness Potions & Free Action Potions (FAP).\n"
             "• **Optimal FC Route:** Graveyard roof jump -> Banana ramp -> Roof drop into tunnel.\n"
             "• **Strategy:** Send 3-person kill team to EFC (Enemy Flag Carrier) while 6 players control the midfield and powerup runes (Berserking, Speed, Restoration)."
@@ -1808,7 +1809,7 @@ PVP_SYSTEM_DATA: Dict[str, Dict[str, Any]] = {
     "ab": {
         "title": "Arathi Basin (AB) Battleground Guide",
         "description": (
-            "• **Objective:** 15v15 Resource Control (Race to 2000 resources).\n"
+            "• **Objective:** 15v15 Resource Control (Race to 2000 resources; Marks of Honor stack to 30 in Forever Beta).\n"
             "• **The 3-Cap Meta:** Win by securing and permanently defending 3 nodes (Blacksmith + Stables/Farm + Lumber Mill).\n"
             "• **Lumber Mill Vision:** Assign a Hunter with Eagle Eye to call incoming enemy pushes across the entire basin.\n"
             "• **Flag Spinners:** Paladins (Consecration), Mages (Blizzard/Arcane Explosion), and Rogues keep flags contested so enemies cannot cap."
@@ -1818,7 +1819,7 @@ PVP_SYSTEM_DATA: Dict[str, Dict[str, Any]] = {
     "av": {
         "title": "Alterac Valley (AV) Battleground Guide",
         "description": (
-            "• **Objective:** 40v40 Battle of Attrition (Slay General Vanndar Stormpike or Drek'Thar).\n"
+            "• **Objective:** 40v40 Battle of Attrition (Slay General Vanndar Stormpike or Drek'Thar; Marks of Honor stack to 30 in Forever Beta).\n"
             "• **Rush Meta:** Ride directly to enemy keep, cap relief huts, pull marshals/warmasters one-by-one, and burn the general before 10 minutes.\n"
             "• **Reputation Turtle Meta:** Collect Armor Scraps, Stormpike Soldier's Blood / Frostwolf Muzzle to summon Ivus the Forest Lord or Lokholar the Ice Lord."
         ),
@@ -1916,113 +1917,220 @@ DUNGEON_KEYS: Dict[str, Dict[str, Any]] = {
 
 
 # -------------------------------------------------------------
-# Racial Traits & Weapon Skills Directory
+# Racial Traits & Weapon Skills Directory (Updated Oct 26, 2026 Beta Build)
 # -------------------------------------------------------------
 RACIAL_TRAITS: Dict[str, Dict[str, Any]] = {
     # ALLIANCE
     "human": {
         "race": "Human", "faction": "Alliance",
         "traits": (
-            "• **Sword Specialization:** +5 Sword weapon skill (1H and 2H)\n"
-            "• **Mace Specialization:** +5 Mace weapon skill (1H and 2H)\n"
-            "• **Perception:** Increases stealth detection for 20s on a 3-min CD (counters Rogues & Druids)\n"
-            "• **The Human Spirit:** +5% Spirit (mana and health regeneration)\n"
-            "• **Diplomacy:** 10% bonus to all reputation gains"
+            "• **Ruthless (Forever Beta • Oct 26):** Increases Critical Strike chance by **1%** (tuned from 2%; replaces Sword/Mace Spec in WoW: Forever)\n"
+            "• **The Human Spirit (Forever Beta • Oct 26):** **+10% Spirit** (buffed from 5% in Classic Era)\n"
+            "• **Will to Survive / Perception:** Active CC/stealth counter (Will to Survive visual updated to match Dispel Magic)\n"
+            "• **Diplomacy:** +10% bonus to all reputation gains\n"
+            "• **Classic Era Reference:** +5 Sword & +5 Mace weapon skill (reduces Lvl 63 boss glancing penalty from 35% to 5%)"
         ),
-        "meta": "+5 Sword/Mace skill reduces glancing blow damage penalty against Level 63 raid bosses from 35% to 5%, making Humans the undisputed top PvE melee DPS and tanks in Classic.",
-        "tip": "Diplomacy saves dozens of hours on Timbermaw, Argent Dawn, and Cenarion reputation grinds."
+        "meta": "In WoW: Forever (Oct 26 Beta build), weapon skill racials were replaced to prevent loot table lock-in: Humans gain **Ruthless (+1% Crit)** and **+10% Spirit**, while in Classic Era they remain melee kings via +5 Sword/Mace skill.",
+        "tip": "Diplomacy saves dozens of hours on Timbermaw, Argent Dawn, Kirin Tor, and Cenarion reputation grinds."
     },
     "dwarf": {
         "race": "Dwarf", "faction": "Alliance",
         "traits": (
+            "• **Artisan's Precision (Forever Beta • Oct 26):** Increases **Hit chance with spells and attacks by 1%** (replaces Mace Spec & Earth Fury)\n"
             "• **Stoneform:** Immunity to Bleed, Poison, and Disease effects; +10% Armor for 8s (3-min CD)\n"
-            "• **Gun Specialization:** +5 Gun weapon skill\n"
-            "• **Frost Resistance:** +10 Frost Resistance\n"
-            "• **Find Treasure:** Tracks treasure chests on mini-map radar"
+            "• **Find Treasure (Forever Beta):** Tracks chests on mini-map AND grants a chance to find **additional items in most chests**\n"
+            "• **Frost Resistance:** +10 Frost Resistance (Classic Era also includes +5 Gun skill)"
         ),
-        "meta": "Stoneform is top-tier in PvP (breaks Blind and cleanses Rogue poisons) and clears bleed effects on raid bosses. Dwarf Priests uniquely get *Fear Ward* (essential for Onyxia, Magmadar, Nefarian).",
-        "tip": "Dwarf Priest is considered mandatory for Alliance raid rosters purely for Fear Ward."
+        "meta": "With the Oct 26 Forever Beta overhaul, Dwarves gained **Artisan's Precision (+1% Spell & Melee/Ranged Hit)** on top of **Stoneform**, making Dwarves elite for both casters and physical DPS alongside Dwarf Priest *Fear Ward*.",
+        "tip": "Artisan's Precision (+1% all Hit) helps reach both the 9% melee hit cap and 16% raid spell hit cap faster."
     },
     "night elf": {
         "race": "Night Elf", "faction": "Alliance",
         "traits": (
-            "• **Shadowmeld:** Stealthes in place while standing still (breaks upon moving; usable by all classes)\n"
-            "• **Quickness:** +1% Dodge chance\n"
-            "• **Wisp Spirit:** Transforms into a wisp upon death, increasing movement speed by 50%\n"
+            "• **Shadowmeld:** Stealthes in place while standing still (usable by all classes)\n"
+            "• **Quickness (Forever Beta):** +1% Dodge chance; movement speed increase now **stacks with other movement speed increases**\n"
+            "• **Wisp Spirit:** Transforms into a wisp upon death (+50% move speed; shields hidden in Wisp Form)\n"
+            "• **Priest Racial — Starshards:** Gains spell pushback resistance from the *Twilight Focus* talent\n"
             "• **Nature Resistance:** +10 Nature Resistance"
         ),
-        "meta": "Shadowmeld allows Priests, Hunters, and Warriors to ambush enemies or eat/drink in stealth in PvP.",
+        "meta": "Shadowmeld allows Priests, Hunters, and Warriors to ambush enemies or drink in stealth, while Quickness movement speed stacking boosts world and BG mobility.",
         "tip": "Wisp Spirit drastically speeds up corpse runs in sprawling zones."
     },
     "gnome": {
         "race": "Gnome", "faction": "Alliance",
         "traits": (
+            "• **Eureka! (Forever Beta • Oct 26):** 8-second active buff (no charges) granting a **10% discount on Mana, Rage, or Energy abilities** and boosting direct damage/healing (including *Power Word: Shield*; does not affect periodics)\n"
             "• **Escape Artist:** Removes any immobilization or movement speed slowing effect (1-min CD)\n"
             "• **Expansive Mind:** +5% Intellect (scales with gear and raid buffs)\n"
-            "• **Engineering Specialization:** +15 Engineering skill\n"
-            "• **Arcane Resistance:** +10 Arcane Resistance"
+            "• **Priest Racials:** *Contingency Plan* (can now critically hit) & *Confounding Flash* (Holy cast visual)\n"
+            "• **Engineering Specialization:** +15 Engineering skill & +10 Arcane Resistance"
         ),
-        "meta": "Escape Artist has a tiny 1-minute cooldown, making Gnomes the king of Alliance PvP for Warriors and Rogues vs Frost Mages. +5% Int makes Gnome Mages/Warlocks top caster DPS.",
-        "tip": "+15 Engineering allows Gnomes to use high-level engineering gadgets earlier while leveling."
+        "meta": "**Eureka!** giving a 10% Mana/Rage/Energy cost discount across all classes makes Gnomes explosive burst contenders alongside *Escape Artist* (1m CD) and *Expansive Mind* (+5% Int).",
+        "tip": "Pop Eureka! right before high-cost burst windows or Shield spam; note it cannot be used while stealthed or invisible."
     },
     "skyborne elf": {
-        "race": "Skyborne Elf", "faction": "Alliance (WoW: Forever Classic+)",
+        "race": "Skyborne Elf", "faction": "Alliance / Horde High Order & Windshaper (WoW: Forever Classic+)",
         "traits": (
-            "• **Zephyr's Grace (Active):** Glides on aerial updrafts, reducing fall speed and allowing cliff gliding without taking falling damage (30s CD)\n"
-            "• **Aerial Precision:** +5 Bow and Thrown weapon skill\n"
-            "• **Windborne (Passive):** +5% increased out-of-combat movement speed\n"
-            "• **Arcane Heritage:** +10 Arcane Resistance"
+            "• **Wind-Blessed (Oct 26 Beta):** Passive **+2% Haste** bonus (tuned from 3% on Oct 26)\n"
+            "• **Read Leyline (Oct 26 Beta):** Castable while moving; increases Mana & Health regen by **50%** for 15s. Using at a Ley Line grants **Attuned** for 1 hr (persists through death), boosting Read Leyline to **+100% regen**!\n"
+            "• **Skysight (Oct 26 Beta):** Castable while moving; **+15% movement speed** for 15s. Using at an Elemental Convergence grants **Charged** for 1 hr (persists through death), boosting Skysight to **+30% movement speed**!\n"
+            "• **Walk on Air / Zephyr's Grace:** Glides on aerial updrafts, preventing fall damage (90s CD, reduced from 2 min)"
         ),
-        "meta": "New playable Alliance race starting in Zephras Isle. *Zephyr's Grace* provides built-in feather falling for world traversal, while +5 Bow skill rivals Troll hunters.",
-        "tip": "Use Zephyr's Grace when leaping off high terrain like Arathi Lumber Mill or Blackrock Mountain chains."
+        "meta": "The flagship WoW: Forever race starting in **Zephras Isle**. Maintaining **Attuned** (+100% regen on Read Leyline) and **Charged** (+30% speed on Skysight) via world Leylines & Elemental Convergences (which persist through death!) makes Skyborne top-tier in raids and BGs.",
+        "tip": "Visit a Ley Line or Elemental Convergence before raid pull—both 1-hour buffs persist through death! (Note: Innervate overwrites Read Leyline)."
+    },
+    "skyborne": {
+        "race": "Skyborne Elf", "faction": "Alliance / Horde High Order & Windshaper (WoW: Forever Classic+)",
+        "traits": (
+            "• **Wind-Blessed (Oct 26 Beta):** Passive **+2% Haste** bonus (tuned from 3% on Oct 26)\n"
+            "• **Read Leyline (Oct 26 Beta):** Castable while moving; increases Mana & Health regen by **50%** for 15s. Using at a Ley Line grants **Attuned** for 1 hr (persists through death), boosting Read Leyline to **+100% regen**!\n"
+            "• **Skysight (Oct 26 Beta):** Castable while moving; **+15% movement speed** for 15s. Using at an Elemental Convergence grants **Charged** for 1 hr (persists through death), boosting Skysight to **+30% movement speed**!\n"
+            "• **Walk on Air / Zephyr's Grace:** Glides on aerial updrafts, preventing fall damage (90s CD, reduced from 2 min)"
+        ),
+        "meta": "The flagship WoW: Forever race starting in **Zephras Isle**. Maintaining **Attuned** (+100% regen on Read Leyline) and **Charged** (+30% speed on Skysight) via world Leylines & Elemental Convergences (which persist through death!) makes Skyborne top-tier in raids and BGs.",
+        "tip": "Visit a Ley Line or Elemental Convergence before raid pull—both 1-hour buffs persist through death! (Note: Innervate overwrites Read Leyline)."
     },
 
     # HORDE
     "orc": {
         "race": "Orc", "faction": "Horde",
         "traits": (
-            "• **Hardiness:** +25% chance to resist Stun effects (stacks with talents to ~40% stun resist!)\n"
-            "• **Blood Fury:** Increases base melee Attack Power by 25% for 15s (reduces healing received by 50%)\n"
-            "• **Axe Specialization:** +5 Axe weapon skill (1H and 2H)\n"
-            "• **Command:** +5% damage dealt by hunter and warlock pets"
+            "• **Command (Re-Added Oct 26 Beta):** **+5% damage dealt by Warlock and Hunter pets** (replaces Savage 1% Crit & Axe Spec in Forever)\n"
+            "• **Hardiness:** +25% chance to resist Stun effects\n"
+            "• **Blood Fury (Forever Beta):** Increases Attack Power / Spell Power for 15s (3-min CD in Forever, 2-min in Classic Era)\n"
+            "• **Shatter Curse (Forever Beta):** Dispels Curses and Banes; reduces Magic damage taken by **5%**\n"
+            "• **Classic Era Reference:** +5 Axe weapon skill (1H and 2H)"
         ),
-        "meta": "Hardiness makes Orcs the undisputed best PvP race in Classic (infuriates Rogues who rely on Stun locks). +5 Axe skill provides Humans' PvE damage advantage on Horde side.",
+        "meta": "On Oct 26, Blizzard removed generic *Savage* (1% crit) and restored **Command (+5% Pet Damage)** alongside **Hardiness** and **Shatter Curse**, cementing Orcs as the premier Horde PvP and Hunter/Warlock race.",
         "tip": "Time Blood Fury during execute phases or burst windows when you aren't actively taking heavy damage."
     },
     "undead": {
         "race": "Undead", "faction": "Horde",
         "traits": (
-            "• **Will of the Forsaken (WotF):** Immune to Charm, Fear, and Sleep for 5s; instantly breaks active CC (2-min CD)\n"
-            "• **Cannibalize:** Consumes a humanoid or undead corpse to regenerate 35% health over 10s\n"
-            "• **Underwater Breathing:** 300% increased underwater breath duration\n"
-            "• **Shadow Resistance:** +10 Shadow Resistance"
+            "• **Will of the Forsaken (WotF):** Immune to Charm, Fear, and Sleep for 5s; breaks active Sleep/Charm/Fear (2-min CD; cannot be used under Scatter Shot)\n"
+            "• **Touch of the Grave / Touch of the Dead (Forever Beta):** **30% proc chance for casters** (20% for melee) on a 25s ICD; never breaks CC or triggers on non-damage spells\n"
+            "• **Cannibalize:** Consumes a humanoid/undead corpse to regenerate 35% health over 10s (usable unless immune to Physical damage)\n"
+            "• **Priest Racial — Dark Sacrifice:** Restores Mana scaling with Spirit without breaking damage-sensitive CC"
         ),
-        "meta": "Will of the Forsaken is the premier PvP racial in Classic, completely nullifying Priest and Warlock fear mechanics.",
-        "tip": "Use Cannibalize between mob pulls to eliminate downtime without spending food."
+        "meta": "Will of the Forsaken nullifies Fear/Sleep/Charm in PvP, while the tuned **Touch of the Grave / Dead** (25s ICD, CC-safe) provides consistent passive sustain and damage.",
+        "tip": "Touch of the Grave triggers on initial cast of Shadow Word: Pain, but never on periodic ticks or Distract/Polymorph."
     },
     "tauren": {
         "race": "Tauren", "faction": "Horde",
         "traits": (
-            "• **War Stomp:** Stuns up to 5 nearby enemies for 2 seconds (0.5s cast, 2-min CD)\n"
-            "• **Endurance:** +5% Maximum Health (scales with gear, world buffs, and Titans flask)\n"
-            "• **Cultivation:** +15 Herbalism skill (gather herbs with orange/yellow chance easier)\n"
-            "• **Nature Resistance:** +10 Nature Resistance"
+            "• **Plainsrunning (Oct 26 Beta):** Grants **2% movement speed per stack** (was 1%) up to **60% max movement speed** (requires continuous movement; does not affect mounts)\n"
+            "• **Endurance (Oct 26 Beta):** **+5% Maximum Health** (hit/crit damage modifiers removed Oct 26 to preserve tank identity)\n"
+            "• **War Stomp (Forever Beta):** Stuns up to 5 nearby enemies for 2s (0.5s cast, **90-sec CD**, reduced from 2 min)\n"
+            "• **Cultivation (Forever Beta):** +15 Herbalism & active herb cultivation (**15-min CD**; requires player level = Herb skill req / 5)"
         ),
-        "meta": "+5% Maximum Health makes Tauren Warriors and Bears the highest effective health tanks in Classic. War Stomp guarantees an uninterrupted heal or cast.",
-        "tip": "Taurens have a larger melee hitbox, allowing you to hit bosses and players from further away."
+        "meta": "With the Oct 26 patch, **Plainsrunning** scales twice as fast up to **+60% movement speed**, **War Stomp** is on a short 90s cooldown, and **+5% Max Health** keeps Tauren Warriors and Bears the tankiest frontliners in Azeroth.",
+        "tip": "Avoid stutter-stepping during Plainsrunning—you must move a minimum distance per second to maintain stacks."
     },
     "troll": {
         "race": "Troll", "faction": "Horde",
         "traits": (
             "• **Berserking:** Increases attack and casting speed by 10% to 30% based on missing health for 10s (3-min CD)\n"
-            "• **Bow & Throwing Specialization:** +5 Bow and Thrown weapon skill\n"
+            "• **Regeneration (Forever Beta):** Health regeneration bonus increased to **20%** (buffed from 10% in Classic Era)\n"
             "• **Beast Slaying:** +5% damage bonus against Beasts\n"
-            "• **Regeneration:** 10% health regeneration continues during combat"
+            "• **Classic Era Reference:** +5 Bow and Thrown weapon skill"
         ),
-        "meta": "Berserking makes Trolls the top PvE DPS race for Horde casters and Hunters. +5 Bow skill eliminates glancing penalties for Hunters.",
-        "tip": "Use Berserking at low health or combine with a pre-cast Blood Fury for maximum spell haste."
+        "meta": "Berserking makes Trolls top-tier PvE DPS for Horde casters and Hunters, and the doubled **20% Regeneration** passive noticeably reduces leveling downtime.",
+        "tip": "Use Berserking at low health or combine with a pre-cast cooldown for maximum spell and ranged haste."
     }
 }
+
+
+# -------------------------------------------------------------
+# Official Blizzard WoW: Forever Beta Patch Notes (Updated Oct 26, 2026 — ID: 631316)
+# -------------------------------------------------------------
+FOREVER_BETA_UPDATES: Dict[str, Dict[str, Any]] = {
+    "overview": {
+        "title": "🌟 World of Warcraft: Forever (Classic+) — Open Beta Overview",
+        "description": (
+            "• **Launch Date:** November 4, 2026 (Global Release • Currently in **Open Beta**)\n"
+            "• **Level Cap:** Permanent Level 60 with Horizontal Endgame Progression (Beta cap progressively testing 30+)\n"
+            "• **Latest Official Patch (Oct 26, 2026 • Blue Tracker #631316):**\n"
+            "  - **Racial Identity Overhaul:** Weapon skill racials replaced (*Ruthless* +1% Crit & +10% Spirit for Humans, *Artisan's Precision* +1% Hit for Dwarves, *Command* +5% Pet Dmg for Orcs, *Plainsrunning* 60% max for Tauren, *Wind-Blessed* 2% Haste + *Attuned/Charged* Leyline buffs for Skyborne)\n"
+            "  - **Raid-Wide Buffs:** *Battle Shout*, *Windfury / Grace of Air / Strength of Earth / Flametongue Totems*, *Trueshot Aura*, *Leader of the Pack*, and *Moonkin Aura* are now **Raid-Wide**!\n"
+            "  - **New Dungeons & Systems:** 9 Custom Dungeons (incl. *Excavation Site: Wetlands 26–31* & *City of Dalaran*), **Legacy System** (16 Legacy Points), **Camping**, **Cooldown Manager**, **Gamepad UI**, and native **In-Game Discord Voice**."
+        ),
+        "tip": "Try '/forever query: racials', '/forever query: classes', '/forever query: raid buffs', or '/forever query: patch notes' for full Oct 26 Blizzard Blue Tracker breakdowns!"
+    },
+    "racials": {
+        "title": "🧬 Official Oct 26 Beta Update: Racial Abilities & Traits Overhaul",
+        "description": (
+            "*Blizzard removed weapon skill racials (Sword/Axe/Mace spec) so raid loot tables aren't locked to specific races, while restoring iconic role-based racials:*\n"
+            "• **Human:** *Ruthless* (+1% Crit Chance, was 2%); *Human Spirit* increased to **+10% Spirit** (was 5%).\n"
+            "• **Dwarf:** *Earth Fury* removed; added **Artisan's Precision (+1% Hit with spells and attacks)**; *Find Treasure* grants extra chest loot.\n"
+            "• **Orc:** *Savage* (1% crit) removed; **Command re-added (+5% Warlock & Hunter pet damage)**; *Blood Fury* 3m CD; *Shatter Curse* dispels Curses/Banes (-5% Magic dmg taken).\n"
+            "• **Tauren:** *Plainsrunning* grants **2% speed/stack up to 60% max** (no mount bonus); *Endurance* is pure **+5% Health**; *War Stomp* 90s CD; *Cultivation* 15m CD.\n"
+            "• **Skyborne:** *Wind-Blessed* **2% Haste**; *Read Leyline* (+50% regen, **+100% for 1 hr when Attuned** at a Ley Line, persists through death); *Skysight* (+15% speed, **+30% for 1 hr when Charged** at an Elemental Convergence, persists through death).\n"
+            "• **Gnome / Undead / Troll:** Gnome *Eureka!* (**10% Mana/Rage/Energy discount** for 8s); Undead *Touch of the Dead* (30% caster / 20% melee proc, 25s ICD, CC-safe); Troll *Regeneration* buffed to **20%**."
+        ),
+        "tip": "Source: Official Blizzard WoW Forever Beta Development Notes (Updated 26 October 2026 • Topic #631316)."
+    },
+    "raid_buffs": {
+        "title": "🛡️ Official Beta Update: Raid-Wide Buffs, Totems & Salvation",
+        "description": (
+            "• **Warrior:** **Battle Shout** is now **Raid-Wide**!\n"
+            "• **Shaman:** **Windfury Totem**, **Grace of Air Totem**, **Strength of Earth Totem**, and **Flametongue Totem** are now **Raid-Wide**! (*Grace of Air* is no longer exclusive with *Windfury* or *Flametongue*).\n"
+            "• **Druid:** **Leader of the Pack** (Melee/Ranged Crit) and **Moonkin Aura** (Spell Crit) are now **Raid-Wide**!\n"
+            "• **Hunter:** **Trueshot Aura** is now **Raid-Wide**!\n"
+            "• **Paladin:** *Blessing of Salvation* replaced with **Salvation** and **Mass Salvation** (not exclusive with normal Blessings!) plus **Revoke** (removes Salvation from tanks on demand)."
+        ),
+        "tip": "Raid leaders no longer need to stack 8 Shamans or 8 Warriors strictly for party-locked Battle Shout or Windfury Totem!"
+    },
+    "classes": {
+        "title": "⚔️ Official Beta Update: Class & Talent Highlights (Sep 24 – Oct 26)",
+        "description": (
+            "• **Druid:** *Mangle* renamed **Primal Bite** (2x threat); new Cat talent **Shifting Power** (16s CD, 55% Base Mana -> 40 Energy; Wolfshead Helm +5 Energy); Bear +50% threat & +100% Crit Rage; forms **immune to Disarm**; *Rejuv/Tranq/Wild Growth* can **crit**.\n"
+            "• **Warrior:** *Battle Shout* Raid-wide; *Whirlwind* hits with both weapons baseline; *Bloodthirst* 45% AP ratio; new Fury talents **Lingering Rage**, **Furious Precision** (+4/7/10% OH Hit), and **Gore Drinker**.\n"
+            "• **Paladin:** *Holy Strike* 10s CD baseline (25%–50% weapon dmg); **Salvation / Mass Salvation + Revoke**; *Righteous Fury* 90% threat; *Reckoning* stores up to 4 charges (1.5s ICD).\n"
+            "• **Shaman:** **Elemental Mastery** 31-pt capstone (-0.5s LB/LvB cast, 0s Chain Lightning CD for 15s); **Lava Burst** moved to Row 5 (21-pt, 4 ranks); *Riptide* can crit; *Mana Tide* at Lvl 25/38/48/58.\n"
+            "• **Mage:** New Lvl 24 **Frost Blast** (1.5s cast, 40% slow); 16-pt **Arcane Wrath** (+5% Max Mana as Spell Power); redesigned **Arcane Blast** (1.5s cast, +15% Int as SP/stack); *Winter's Chill* buffs next *Cone of Cold*.\n"
+            "• **Priest / Warlock / Hunter:** Priest *Renew* & *Devouring Plague* (24s CD, spreads to 2 targets) can crit + **Dark Inspiration** (+3–15% party Spirit); Warlock *Shadow Mastery* **2–10%** & *Grim Reach*; Hunter 31-pt **Sniper Shot** (45yd) & simultaneous **Fire + Ice Trap**."
+        ),
+        "tip": "Downranking spells vastly below your level now reduces Spell Power scaling and proc chances (e.g. Rank 1 Frostbolt has 0% Frostbite proc at 60—use Frost Blast instead!)."
+    },
+    "legacy_camping": {
+        "title": "🏕️ Official Beta Update: Legacy System, Camping & QoL",
+        "description": (
+            "• **Legacy System (16 Legacy Points):** Completing the Legacy Challenge grants 16 Legacy Points for perks like **Master Chef**, **Luremaster**, **Bartering**, **Reagent Economy**, and **The Quick and the Dead** (1s Beta respec cost).\n"
+            "• **Camping & Campfires:** Players can cast, buff, and craft while waiting for Campfire buffs, and earn Campfire buffs while sitting, in chairs, sleeping, or kneeling (*Boosted Rest*).\n"
+            "• **Built-In Cooldown Manager:** Supports all classes, racial abilities, and trinkets with merged spell ranks (enable under *Options > Gameplay Enhancement*).\n"
+            "• **Gamepad & Discord Voice:** Native Gamepad UI with center-reticle swing timer, class flyouts (Shapeshift, Stance, Aura, Pets), and built-in **Discord Voice Integration** for parties and Group Finder!"
+        ),
+        "tip": "Weapon swapping within a single GCD (e.g. 2H to Sword & Board macro) and Classic Era individual party XP calculations have been restored!"
+    }
+}
+
+
+def get_forever_beta_info(query: Optional[str] = None) -> Dict[str, Any]:
+    """Retrieves official Blizzard WoW: Forever Beta Development Notes by topic."""
+    if not query:
+        return FOREVER_BETA_UPDATES["overview"]
+    q = query.strip().lower()
+    if any(w in q for w in ["racial", "racials", "race", "human", "orc", "dwarf", "tauren", "skyborne", "gnome", "undead", "troll", "night elf", "ruthless", "artisan", "plainsrunning", "leyline", "eureka"]):
+        return FOREVER_BETA_UPDATES["racials"]
+    if any(w in q for w in ["raid", "buff", "buffs", "totem", "totems", "windfury", "battle shout", "salvation", "revoke", "trueshot"]):
+        return FOREVER_BETA_UPDATES["raid_buffs"]
+    if any(w in q for w in ["class", "classes", "talent", "talents", "druid", "warrior", "paladin", "shaman", "mage", "priest", "hunter", "warlock", "rogue", "primal bite", "shifting power", "frost blast", "lava burst"]):
+        return FOREVER_BETA_UPDATES["classes"]
+    if any(w in q for w in ["legacy", "camp", "camping", "campfire", "cooldown", "gamepad", "controller", "voice", "ui", "qol"]):
+        return FOREVER_BETA_UPDATES["legacy_camping"]
+    if any(w in q for w in ["patch", "notes", "update", "updates", "oct", "october", "blue", "changelog", "beta"]):
+        return {
+            "title": "📜 Official WoW: Forever Beta Patch Notes (Updated Oct 26, 2026)",
+            "description": (
+                f"{FOREVER_BETA_UPDATES['racials']['description']}\n\n"
+                f"**Raid-Wide Buffs & Class Highlights:**\n"
+                "• **Raid-Wide Buffs:** *Battle Shout*, *Windfury/Grace of Air/Strength of Earth/Flametongue Totems*, *Trueshot Aura*, *Leader of the Pack*, and *Moonkin Aura* are now Raid-Wide; Paladins gain non-exclusive *Salvation / Mass Salvation + Revoke*.\n"
+                "• **Class Reworks:** Druid *Primal Bite* & *Shifting Power* (HoTs can crit), Warrior *Furious Precision / Lingering Rage / Gore Drinker* (45% AP Bloodthirst), Mage Lvl 24 *Frost Blast* & *Arcane Wrath*, Shaman 31-pt *Elemental Mastery* & Row 5 *Lava Burst*, Priest 24s *Devouring Plague* & *Dark Inspiration*, Warlock 10% *Shadow Mastery*.\n"
+                "• **PvP & World:** 25,000 Honor Cap, 30-stack BG Marks, full PvP Crit efficacy, *Excavation Site: Wetlands (26–31)* & *City of Dalaran* dungeon testing live."
+            ),
+            "tip": "Tracked from Official Blizzard EU/US Blue Tracker Topic #631316 (Updated 26 October 2026)."
+        }
+    return FOREVER_BETA_UPDATES["overview"]
 
 
 # -------------------------------------------------------------
@@ -2159,15 +2267,15 @@ RAID_BUFFS_CATALOG = {
     "recklessness": {"name": "Curse of Recklessness (-640 Armor / Anti-Fear)", "class": "Warlock", "type": "Physical Debuff", "importance": "CRITICAL"},
     "elements": {"name": "Curse of the Elements (+10% Fire/Frost Damage)", "class": "Warlock", "type": "Spell Debuff", "importance": "HIGH"},
     "shadows": {"name": "Curse of Shadows (+10% Shadow/Arcane Damage)", "class": "Warlock", "type": "Spell Debuff", "importance": "MEDIUM"},
-    "windfury": {"name": "Windfury Totem (Extra Auto-Attack)", "class": "Shaman", "type": "Melee Buff", "importance": "CRITICAL (Horde)"},
-    "battle_shout": {"name": "Battle Shout (+Attack Power)", "class": "Warrior", "type": "Melee Buff", "importance": "HIGH"},
-    "trueshot": {"name": "Trueshot Aura (+Attack Power)", "class": "Hunter", "type": "Melee/Ranged Buff", "importance": "MEDIUM"},
+    "windfury": {"name": "Windfury & Grace of Air Totems (Raid-Wide in Forever!)", "class": "Shaman", "type": "Melee Buff", "importance": "CRITICAL (Horde)"},
+    "battle_shout": {"name": "Battle Shout (+Attack Power • Raid-Wide in Forever!)", "class": "Warrior", "type": "Melee Buff", "importance": "HIGH"},
+    "trueshot": {"name": "Trueshot Aura (+Attack Power • Raid-Wide in Forever!)", "class": "Hunter", "type": "Melee/Ranged Buff", "importance": "MEDIUM"},
     "tranq_shot": {"name": "Tranquilizing Shot (Enrage Dispel)", "class": "Hunter", "type": "Boss Mechanic", "importance": "CRITICAL (Magmadar/Chromaggus)"},
     "intellect": {"name": "Arcane Intellect (+31 Intellect)", "class": "Mage", "type": "Caster Buff", "importance": "HIGH"},
     "fortitude": {"name": "Power Word: Fortitude (+54 Stamina)", "class": "Priest", "type": "Survivability", "importance": "CRITICAL"},
     "decurse": {"name": "Remove Curse (Decurse)", "class": ["Mage", "Druid"], "type": "Utility", "importance": "CRITICAL (Lucifron/Gehennas)"},
     "dispel": {"name": "Dispel Magic / Cleanse", "class": ["Priest", "Paladin"], "type": "Utility", "importance": "CRITICAL"},
-    "rebirth": {"name": "Rebirth (Combat Rez) & Innervate", "class": "Druid", "type": "Utility", "importance": "HIGH"},
+    "rebirth": {"name": "Rebirth (Combat Rez) & Raid-Wide LotP/Moonkin Aura", "class": "Druid", "type": "Utility", "importance": "HIGH"},
     "soulstone": {"name": "Soulstone (Combat Wipes Prevention)", "class": "Warlock", "type": "Utility", "importance": "HIGH"}
 }
 
@@ -2214,12 +2322,12 @@ def analyze_raid_comp(roster_str: str) -> Dict[str, Any]:
     missing = []
 
     if counts["warrior"] >= 1:
-        covered.append(f"✅ **Sunder Armor:** Covered by {counts['warrior']} Warrior(s)")
+        covered.append(f"✅ **Sunder Armor & Raid-Wide Battle Shout:** Covered by {counts['warrior']} Warrior(s)")
     else:
         missing.append("⚠️ **Sunder Armor Missing:** No Warriors! Boss takes ~30% less physical damage.")
 
     if counts["druid"] >= 1:
-        covered.append(f"✅ **Faerie Fire:** Covered by {counts['druid']} Druid(s)")
+        covered.append(f"✅ **Faerie Fire & Raid-Wide LotP/Moonkin Aura:** Covered by {counts['druid']} Druid(s)")
     else:
         missing.append("⚠️ **Faerie Fire Missing:** No Druids! Lacks -505 armor reduction.")
 
@@ -2234,9 +2342,9 @@ def analyze_raid_comp(roster_str: str) -> Dict[str, Any]:
         covered.append("⚡ **Curse Priority Conflict:** Only 1 Warlock (Must choose Recklessness OR Elements)")
 
     if counts["shaman"] >= 1:
-        covered.append(f"✅ **Windfury Totem:** Covered by {counts['shaman']} Shaman(s) (Horde)")
+        covered.append(f"✅ **Raid-Wide Windfury & Grace of Air Totems:** Covered by {counts['shaman']} Shaman(s) (Horde)")
     if counts["paladin"] >= 1:
-        covered.append(f"✅ **Paladin Blessings (Might/Kings/Salvation):** Covered by {counts['paladin']} Paladin(s) (Alliance)")
+        covered.append(f"✅ **Paladin Blessings & Mass Salvation (+Revoke):** Covered by {counts['paladin']} Paladin(s) (Alliance)")
 
     if counts["mage"] >= 1:
         covered.append(f"✅ **Arcane Intellect:** Covered by {counts['mage']} Mage(s)")
