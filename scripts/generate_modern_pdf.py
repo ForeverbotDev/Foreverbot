@@ -119,7 +119,7 @@ def generate_guide(output_pdf="wow_forever_bot_guide.pdf"):
     pdf.set_xy(14, 25)
     pdf.set_font("Helvetica", "B", 16)
     pdf.set_text_color(255, 255, 255)
-    pdf.cell(100, 7, "FOREVERBOT // COMMAND DECK", ln=False)
+    pdf.cell(100, 7, "FOREVERBOT: EPIC EDITION", ln=False)
 
     pdf.set_font("Helvetica", "B", 8.5)
     pdf.set_text_color(241, 196, 15)
@@ -128,14 +128,14 @@ def generate_guide(output_pdf="wow_forever_bot_guide.pdf"):
     pdf.set_xy(14, 32.5)
     pdf.set_font("Helvetica", "", 8.5)
     pdf.set_text_color(203, 213, 225)
-    pdf.cell(180, 5, "The ultimate second-screen co-pilot for World of Warcraft: Forever (Classic+) & Classic Era.", ln=True)
+    pdf.cell(180, 5, "The ultimate co-pilot for World of Warcraft: Forever on PC, second screen, phone & tablet.", ln=True)
 
     # Stat Badges
     badge_y = 39.5
-    pdf.pill_badge(14, badge_y, 40, 5, "42 SLASH COMMANDS", (30, 41, 59), (56, 189, 248))
-    pdf.pill_badge(58, badge_y, 42, 5, "FLOATING AUTOCOMPLETE", (30, 41, 59), (241, 196, 15))
-    pdf.pill_badge(104, badge_y, 42, 5, "SUB-MS OFFLINE MATH", (30, 41, 59), (74, 222, 128))
-    pdf.pill_badge(150, badge_y, 50, 5, "9 NEW FOREVER DUNGEONS", (30, 41, 59), (248, 113, 113))
+    pdf.pill_badge(14, badge_y, 38, 5, "40 COMMANDS", (30, 41, 59), (56, 189, 248))
+    pdf.pill_badge(54, badge_y, 44, 5, "CHANNEL LAYERING", (30, 41, 59), (241, 196, 15))
+    pdf.pill_badge(100, badge_y, 44, 5, "3,903 TESTS PASSED", (30, 41, 59), (74, 222, 128))
+    pdf.pill_badge(146, badge_y, 48, 5, "9 FOREVER DUNGEONS", (30, 41, 59), (248, 113, 113))
 
     pdf.set_xy(10, 49)
 
@@ -209,11 +209,11 @@ def generate_guide(output_pdf="wow_forever_bot_guide.pdf"):
     )
     pdf.card(
         139.5, 102, step_w, flow_h,
-        "Step 3: Instant Rich Card",
-        "Sub-millisecond data delivery",
+        "Step 3: Private Rich Card",
+        "Zero-clutter channel layering",
         [
-            "Quality-colored embeds & coords",
-            "Offline FTS5 + Gemini AI fallback"
+            "Only you see your question & answer",
+            "Zero chat spam for other raiders"
         ],
         "/vendor query: Bronze Tube"
     )
@@ -531,6 +531,12 @@ def generate_guide(output_pdf="wow_forever_bot_guide.pdf"):
     # Save PDF
     pdf.output(output_pdf)
     print(f"Modern PDF successfully generated at: {output_pdf}")
+
+    # Copy to docs/ directory
+    docs_pdf = "docs/Your-Azeroth-Companion-Bot-Command-Guide.pdf"
+    if os.path.exists("docs"):
+        shutil.copy2(output_pdf, docs_pdf)
+        print(f"Copied to docs directory: {docs_pdf}")
 
     # Also copy to artifacts directory
     artifact_dir = "/home/s1l3nt/.gemini/antigravity/brain/14f2f633-6ca3-4a1c-a167-21a6d54a6ab6"

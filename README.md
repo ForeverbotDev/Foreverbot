@@ -1,8 +1,9 @@
-# ⚔️ Foreverbot // World of Warcraft: Forever Discord Co-Pilot
+# ⚔️ Foreverbot: Epic Edition // World of Warcraft: Forever Discord Co-Pilot
 > The in-game Discord companion for **World of Warcraft: Forever**. Look up item stats & drop rates, get directions when you're lost, and find answers right from your PC, phone, or tablet without leaving the game. Built with **Zero-Clutter Channel Layering** so each player's queries and answers are completely private (`ephemeral`) without filling server channels with spam!
 
 [![Discord Bot](https://img.shields.io/badge/Discord-Companion%20Bot-5865F2?logo=discord&logoColor=white)](https://discord.com)
 [![WoW Forever](https://img.shields.io/badge/WoW-Forever-F59E0B)](https://github.com/s1l3ntHub/wow-foreverbot)
+[![Edition](https://img.shields.io/badge/Edition-Epic%20v3.0.0-9333EA)](docs/EPIC_EDITION_RELEASE_NOTES.md)
 [![Tests Passing](https://img.shields.io/badge/Tests-3%2C903%20%2F%203%2C903%20Passed-10B981)](#-automated-testing)
 
 ---
@@ -106,6 +107,7 @@ python3 tests/test_massive_scale_suite.py # 3,680 Ultra-scale catalog, combat ma
 
 ---
 
-## 📄 Official Guide
+## 📄 Official Guide & Release Notes
 
+- **[EPIC_EDITION_RELEASE_NOTES.md](docs/EPIC_EDITION_RELEASE_NOTES.md)** — What's new in v3.0.0 Epic Edition (Channel Layering, Transit Routing, 3,903 Tests).
 - **[Your-Azeroth-Companion-Bot-Command-Guide.pdf](docs/Your-Azeroth-Companion-Bot-Command-Guide.pdf)** — Visual slide guide & command companion deck.
