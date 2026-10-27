@@ -1,5 +1,5 @@
 # ⚔️ Foreverbot // World of Warcraft: Forever Discord Co-Pilot
-> The second-screen Discord companion for **World of Warcraft: Forever**. Look up item stats, get directions when you're lost, and never Alt-Tab mid-game again.
+> The in-game Discord companion for **World of Warcraft: Forever**. Look up item stats, get directions when you're lost, and find answers right from your PC, phone, or tablet.
 
 [![Discord Bot](https://img.shields.io/badge/Discord-Companion%20Bot-5865F2?logo=discord&logoColor=white)](https://discord.com)
 [![WoW Forever](https://img.shields.io/badge/WoW-Forever-F59E0B)](https://github.com/s1l3ntHub/wow-foreverbot)
