@@ -1610,6 +1610,7 @@ def get_consumables_info(role_or_class: str) -> Optional[Dict[str, Any]]:
         "warrior": "melee dps", "rogue": "melee dps", "enhancement": "melee dps",
         "mage": "caster dps", "warlock": "caster dps", "shadow": "caster dps",
         "priest": "healer", "paladin": "healer", "holy": "healer", "resto": "healer",
+        "druid": "healer", "feral": "melee dps", "shaman": "healer", "ele": "caster dps", "elemental": "caster dps",
         "tank": "tank", "bear": "tank", "prot": "tank", "heals": "healer", "healing": "healer",
         "caster": "caster dps", "melee": "melee dps", "hunter": "melee dps"
     }
@@ -2398,6 +2399,65 @@ BIS_LISTS: Dict[str, Dict[str, Any]] = {
             "• **Wand:** Skul's Ghastly Touch (Stratholme • +14 Shadow Damage)"
         ),
         "hit_summary": "Optimizes Shadow Damage to 320+ for maximum Shadow Bolt critical strike yields under Ruin (100% crit bonus)."
+    },
+    "druid_resto": {
+        "class": "Druid", "spec": "Restoration (Healing)", "phase": "Pre-Raid BiS",
+        "gear": (
+            "• **Head:** Feathered Headdress (Sunken Temple) / Insightful Hood (Dire Maul North)\n"
+            "• **Neck:** Animated Chain Necklace (Ramstein, Stratholme • +33 Healing)\n"
+            "• **Shoulders:** Living Shoulders (Leatherworking Crafted • +33 Healing)\n"
+            "• **Back:** Hide of the Wild (Leatherworking Crafted • +42 Healing)\n"
+            "• **Chest:** Robes of the Exalted (Baron Rivendare, Stratholme • +68 Healing)\n"
+            "• **Bracers:** Loomguard Armbraces (LBRS) / Gallant's Wristguards (DM North)\n"
+            "• **Hands:** Hands of the Exalted (Balnazzar, Stratholme)\n"
+            "• **Waist:** Whipvine Cord (Alzzin, DM East • +31 Healing)\n"
+            "• **Legs:** Padre's Trousers (Illyanna, DM West • +42 Healing)\n"
+            "• **Feet:** Merciful Greaves (Scholomance) / Waterspout Boots (Dire Maul East)\n"
+            "• **Rings:** Fordring's Seal (In Dreams quest) & Rosewine Circle (LBRS)\n"
+            "• **Trinkets:** Mindtap Talisman (DM West • 11 mp5) & Second Wind (BRD Golem Lord)\n"
+            "• **Weapon:** Guiding Stave of Wisdom (Emperor Thaurissan, BRD • +126 Healing)"
+        ),
+        "hit_summary": "Stacks +Healing power and MP5 regeneration to sustain efficient Healing Touch (Rank 4) rotations."
+    },
+    "paladin_holy": {
+        "class": "Paladin", "spec": "Holy (Flash of Light Crit Healer)", "phase": "Pre-Raid BiS",
+        "gear": (
+            "• **Head:** Whitesoul Helm (Tailoring Crafted) / Peacekeeper Helm (BRD)\n"
+            "• **Neck:** Animated Chain Necklace (Ramstein, Stratholme • +33 Healing)\n"
+            "• **Shoulders:** Wild Growth Spaulders (Dire Maul East • +62 Healing)\n"
+            "• **Back:** Hide of the Wild (Leatherworking Crafted • +42 Healing)\n"
+            "• **Chest:** Robes of the Exalted (Baron Rivendare, Stratholme • +68 Healing)\n"
+            "• **Bracers:** Loomguard Armbraces (LBRS) / Peacekeeper Gauntlets (BRD)\n"
+            "• **Hands:** Peacekeeper Gauntlets (BRD • +29 Healing) / Hands of the Exalted\n"
+            "• **Waist:** Whipvine Cord (DM East) / Belt of the Ordained (Scholo)\n"
+            "• **Legs:** Padre's Trousers (DM West • +42 Healing)\n"
+            "• **Feet:** Boots of the Full Moon (Dire Maul North)\n"
+            "• **Rings:** Fordring's Seal (In Dreams quest) & Rosewine Circle (LBRS)\n"
+            "• **Trinkets:** Briarwood Reed (UBRS) & Second Wind (BRD Golem Lord • +22 Healing, Mana restore)\n"
+            "• **Weapon:** The Hammer of Grace (Chest of The Seven, BRD • +31 Healing, +10 Int)\n"
+            "• **Shield:** Gizlock's Hypertech Buckler (Maraudon) / Redbeard Crest (BRD)"
+        ),
+        "hit_summary": "Max +Healing and Spell Crit. With Illumination, Holy Paladins refund 100% mana cost on Flash of Light crits!"
+    },
+    "shaman_resto": {
+        "class": "Shaman", "spec": "Restoration (Chain Heal / Totems)", "phase": "Pre-Raid BiS",
+        "gear": (
+            "• **Head:** Insightful Hood (DM North) / Helm of the Elements (Scholomance)\n"
+            "• **Neck:** Animated Chain Necklace (Ramstein, Stratholme • +33 Healing)\n"
+            "• **Shoulders:** Wild Growth Spaulders (Dire Maul East • +62 Healing)\n"
+            "• **Back:** Hide of the Wild (Leatherworking Crafted • +42 Healing)\n"
+            "• **Chest:** Robes of the Exalted (Baron Rivendare, Stratholme • +68 Healing)\n"
+            "• **Bracers:** Loomguard Armbraces (LBRS) / Gallant's Wristguards (DM North)\n"
+            "• **Hands:** Hands of the Exalted (Balnazzar, Stratholme • +55 Healing)\n"
+            "• **Waist:** Whipvine Cord (Alzzin, DM East • +31 Healing)\n"
+            "• **Legs:** Padre's Trousers (Illyanna, DM West • +42 Healing)\n"
+            "• **Feet:** Waterspout Boots (Hydrospawn, DM East)\n"
+            "• **Rings:** Fordring's Seal (In Dreams quest) & Rosewine Circle (LBRS)\n"
+            "• **Trinkets:** Mindtap Talisman (DM West • 11 mp5) & Second Wind (BRD)\n"
+            "• **Weapon:** Aurastone Hammer (Garr, MC) OR The Hammer of Grace (BRD • +31 Healing)\n"
+            "• **Shield:** Gizlock's Hypertech Buckler (Maraudon • +13 mp5) / Redbeard Crest (BRD)"
+        ),
+        "hit_summary": "Optimizes MP5 and +Healing to spam Chain Heal (Rank 1 and Rank 3) across the raid."
     }
 }
 

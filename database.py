@@ -1076,6 +1076,26 @@ class WoWForeverDB:
         cursor.execute("SELECT * FROM flightpaths WHERE lower(name) = ? OR lower(zone) = ? OR lower(name) = ? OR lower(zone) = ?", (q_raw, q_raw, q_clean, q_clean))
         rows = cursor.fetchall()
 
+        # 1b. Transit multi-point query (e.g. "Stormwind to Ironforge" or "Auberdine to Theramore")
+        if not rows:
+            parts = [p.strip() for p in re.split(r'\bto\b|\b->\b|\band\b', query.lower()) if p.strip()]
+            if len(parts) >= 2:
+                p1, p2 = parts[0], parts[1]
+                cursor.execute("""
+                    SELECT * FROM flightpaths
+                    WHERE (lower(name) LIKE ? OR lower(zone) LIKE ?)
+                      AND (lower(connections) LIKE ? OR lower(name) LIKE ?)
+                    LIMIT ?
+                """, (f"%{p1}%", f"%{p1}%", f"%{p2}%", f"%{p2}%", limit))
+                rows = cursor.fetchall()
+                if not rows:
+                    cursor.execute("""
+                        SELECT * FROM flightpaths
+                        WHERE lower(name) LIKE ? OR lower(zone) LIKE ?
+                        LIMIT ?
+                    """, (f"%{p1}%", f"%{p1}%", limit))
+                    rows = cursor.fetchall()
+
         # 2. Substring search with name & zone prioritized above connections/notes
         if not rows:
             cursor.execute("""
