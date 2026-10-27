@@ -2083,7 +2083,7 @@ def get_dungeon_key_info(query: str) -> Optional[Dict[str, Any]]:
             return v
 
     keys = list(DUNGEON_KEYS.keys())
-    matches = difflib.get_close_matches(q, keys, n=1, cutoff=0.55)
+    matches = difflib.get_close_matches(q, keys, n=1, cutoff=0.70)
     if matches:
         return DUNGEON_KEYS[matches[0]]
     return None
@@ -2980,6 +2980,22 @@ RESIST_SCHOOLS: Dict[str, Dict[str, Any]] = {
             "• **Felcloth / Runed Stygian / Dreadmist Sets:** Shadow resist pieces\n"
             "• **Rune of the Dawn:** +10 SR trinket from Argent Dawn\n"
             "• **Shadow Guard Arcanum:** +10 Shadow Resistance"
+        )
+    },
+    "arcane": {
+        "name": "Arcane Resistance (AR)",
+        "encounters": "The Prophet Skeram (AQ40 Arcane Explosion), Shazzrah (MC Arcane Explosion)",
+        "soft_cap": 150,
+        "hard_cap": 315,
+        "buffs": (
+            "• **Druid Mark of the Wild / Gift of the Wild:** Up to +27 to all resistances\n"
+            "• **Greater Arcane Protection Potion:** Absorbs 1950–3250 Arcane damage\n"
+            "• **Mage Dampen Magic:** Reduces incoming spell damage up to 180"
+        ),
+        "gear": (
+            "• **Dreamweave Set:** Crafted tailoring pieces with intellect and spell resistance\n"
+            "• **Rune of the Dawn:** +10 to all spell resistances\n"
+            "• **Libram of Resilience:** +20 AR enchant to Helm or Leggings"
         )
     }
 }

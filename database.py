@@ -854,14 +854,26 @@ class WoWForeverDB:
             cursor.execute("SELECT * FROM items WHERE name = ?", (ITEM_AUTOCOMPLETE_ALIASES[q_clean],))
             rows = cursor.fetchall()
 
-        # 2. Substring search
+        # 1b. Exact Name Match (case-insensitive)
+        if not rows:
+            cursor.execute("SELECT * FROM items WHERE lower(name) = ? OR lower(name) = ?", (q_raw, q_clean))
+            rows = cursor.fetchall()
+
+        # 2. Substring search (prioritize name matches over description/stats)
         if not rows:
             cursor.execute("""
                 SELECT * FROM items
                 WHERE name LIKE ? OR description LIKE ? OR stats LIKE ?
-                ORDER BY is_forever_content DESC, quality DESC
+                ORDER BY 
+                    CASE 
+                        WHEN lower(name) = ? THEN 0
+                        WHEN lower(name) LIKE ? THEN 1
+                        WHEN lower(name) LIKE ? THEN 2
+                        ELSE 3
+                    END,
+                    is_forever_content DESC, quality DESC
                 LIMIT ?
-            """, (f"%{cleaned}%", f"%{cleaned}%", f"%{cleaned}%", limit))
+            """, (f"%{cleaned}%", f"%{cleaned}%", f"%{cleaned}%", q_clean, f"{q_clean}%", f"%{q_clean}%", limit))
             rows = cursor.fetchall()
 
         # 3. Multi-token AND search (e.g. "dal rend", "hand ragnaros")
@@ -893,18 +905,50 @@ class WoWForeverDB:
 
     def search_quests(self, query: str, limit: int = 5) -> Tuple[List[Dict[str, Any]], Optional[str]]:
         cleaned = clean_query(query)
+        q_raw = query.strip().lower()
+        q_clean = cleaned.lower()
         conn = get_connection(self.db_path)
         cursor = conn.cursor()
         did_you_mean = None
+        rows = []
 
-        cursor.execute("""
-            SELECT * FROM quests
-            WHERE title LIKE ? OR zone LIKE ? OR objectives LIKE ?
-            ORDER BY is_forever_content DESC, quest_level ASC
-            LIMIT ?
-        """, (f"%{cleaned}%", f"%{cleaned}%", f"%{cleaned}%", limit))
+        # 1. Exact Title Match
+        cursor.execute("SELECT * FROM quests WHERE lower(title) = ? OR lower(title) = ?", (q_raw, q_clean))
         rows = cursor.fetchall()
 
+        # 2. Substring search with relevance ranking
+        if not rows:
+            cursor.execute("""
+                SELECT * FROM quests
+                WHERE title LIKE ? OR zone LIKE ? OR objectives LIKE ?
+                ORDER BY 
+                    CASE 
+                        WHEN lower(title) = ? THEN 0
+                        WHEN lower(title) LIKE ? THEN 1
+                        WHEN lower(title) LIKE ? THEN 2
+                        ELSE 3
+                    END,
+                    is_forever_content DESC, quest_level ASC
+                LIMIT ?
+            """, (f"%{cleaned}%", f"%{cleaned}%", f"%{cleaned}%", q_clean, f"{q_clean}%", f"%{q_clean}%", limit))
+            rows = cursor.fetchall()
+
+        # 3. Multi-token AND search (e.g. "fate kingdom", "diplomat missing")
+        if not rows:
+            tokens = [re.sub(r"[^\w]", "", w) for w in q_clean.split()]
+            tokens = [t for t in tokens if len(t) >= 2 and t not in STOP_WORDS]
+            if len(tokens) >= 2:
+                clauses = " AND ".join(["title LIKE ?" for _ in tokens])
+                params = [f"%{t}%" for t in tokens] + [limit]
+                cursor.execute(f"""
+                    SELECT * FROM quests
+                    WHERE {clauses}
+                    ORDER BY is_forever_content DESC, quest_level ASC
+                    LIMIT ?
+                """, params)
+                rows = cursor.fetchall()
+
+        # 4. Fuzzy fallback
         if not rows and self.quest_titles:
             fuzzy = self.find_fuzzy_match(cleaned, self.quest_titles)
             if fuzzy:
@@ -918,18 +962,50 @@ class WoWForeverDB:
 
     def search_creatures(self, query: str, limit: int = 5) -> Tuple[List[Dict[str, Any]], Optional[str]]:
         cleaned = clean_query(query)
+        q_raw = query.strip().lower()
+        q_clean = cleaned.lower()
         conn = get_connection(self.db_path)
         cursor = conn.cursor()
         did_you_mean = None
+        rows = []
 
-        cursor.execute("""
-            SELECT * FROM creatures
-            WHERE name LIKE ? OR zone LIKE ?
-            ORDER BY is_forever_content DESC, level_max DESC
-            LIMIT ?
-        """, (f"%{cleaned}%", f"%{cleaned}%", limit))
+        # 1. Exact Name Match
+        cursor.execute("SELECT * FROM creatures WHERE lower(name) = ? OR lower(name) = ?", (q_raw, q_clean))
         rows = cursor.fetchall()
 
+        # 2. Substring search with relevance ranking
+        if not rows:
+            cursor.execute("""
+                SELECT * FROM creatures
+                WHERE name LIKE ? OR zone LIKE ?
+                ORDER BY 
+                    CASE 
+                        WHEN lower(name) = ? THEN 0
+                        WHEN lower(name) LIKE ? THEN 1
+                        WHEN lower(name) LIKE ? THEN 2
+                        ELSE 3
+                    END,
+                    is_forever_content DESC, level_max DESC
+                LIMIT ?
+            """, (f"%{cleaned}%", f"%{cleaned}%", q_clean, f"{q_clean}%", f"%{q_clean}%", limit))
+            rows = cursor.fetchall()
+
+        # 3. Multi-token AND search (e.g. "emperor dagran", "baron geddon")
+        if not rows:
+            tokens = [re.sub(r"[^\w]", "", w) for w in q_clean.split()]
+            tokens = [t for t in tokens if len(t) >= 2 and t not in STOP_WORDS]
+            if len(tokens) >= 2:
+                clauses = " AND ".join(["name LIKE ?" for _ in tokens])
+                params = [f"%{t}%" for t in tokens] + [limit]
+                cursor.execute(f"""
+                    SELECT * FROM creatures
+                    WHERE {clauses}
+                    ORDER BY is_forever_content DESC, level_max DESC
+                    LIMIT ?
+                """, params)
+                rows = cursor.fetchall()
+
+        # 4. Fuzzy fallback
         if not rows and self.creature_names:
             fuzzy = self.find_fuzzy_match(cleaned, self.creature_names)
             if fuzzy:
@@ -956,6 +1032,7 @@ class WoWForeverDB:
 
     def search_vendors(self, item_name: str, limit: int = 5) -> Tuple[List[Dict[str, Any]], Optional[str]]:
         cleaned = clean_query(item_name)
+        q_clean = cleaned.lower()
         conn = get_connection(self.db_path)
         cursor = conn.cursor()
         did_you_mean = None
@@ -963,9 +1040,15 @@ class WoWForeverDB:
         cursor.execute("""
             SELECT * FROM vendors
             WHERE item_name LIKE ? OR zone LIKE ? OR npc_name LIKE ?
-            ORDER BY cost_copper ASC
+            ORDER BY 
+                CASE
+                    WHEN lower(item_name) = ? THEN 0
+                    WHEN lower(item_name) LIKE ? THEN 1
+                    ELSE 2
+                END,
+                cost_copper ASC
             LIMIT ?
-        """, (f"%{cleaned}%", f"%{cleaned}%", f"%{cleaned}%", limit))
+        """, (f"%{cleaned}%", f"%{cleaned}%", f"%{cleaned}%", q_clean, f"%{q_clean}%", limit))
         rows = cursor.fetchall()
 
         if not rows and self.vendor_items:
@@ -981,19 +1064,37 @@ class WoWForeverDB:
 
     def search_flightpaths(self, query: str, limit: int = 5) -> Tuple[List[Dict[str, Any]], Optional[str]]:
         cleaned = clean_query(query)
-        alias_target = ZONE_ALIASES.get(cleaned.lower(), cleaned)
+        q_raw = query.strip().lower()
+        q_clean = cleaned.lower()
+        alias_target = ZONE_ALIASES.get(q_clean, cleaned)
         conn = get_connection(self.db_path)
         cursor = conn.cursor()
         did_you_mean = None
+        rows = []
 
-        cursor.execute("""
-            SELECT * FROM flightpaths
-            WHERE name LIKE ? OR zone LIKE ? OR notes LIKE ? OR connections LIKE ?
-            ORDER BY is_forever_content DESC
-            LIMIT ?
-        """, (f"%{alias_target}%", f"%{alias_target}%", f"%{alias_target}%", f"%{alias_target}%", limit))
+        # 1. Exact Name / Zone Match
+        cursor.execute("SELECT * FROM flightpaths WHERE lower(name) = ? OR lower(zone) = ? OR lower(name) = ? OR lower(zone) = ?", (q_raw, q_raw, q_clean, q_clean))
         rows = cursor.fetchall()
 
+        # 2. Substring search with name & zone prioritized above connections/notes
+        if not rows:
+            cursor.execute("""
+                SELECT * FROM flightpaths
+                WHERE name LIKE ? OR zone LIKE ? OR notes LIKE ? OR connections LIKE ?
+                ORDER BY 
+                    CASE
+                        WHEN lower(name) = ? THEN 0
+                        WHEN lower(name) LIKE ? THEN 1
+                        WHEN lower(zone) = ? THEN 2
+                        WHEN lower(zone) LIKE ? THEN 3
+                        ELSE 4
+                    END,
+                    is_forever_content DESC
+                LIMIT ?
+            """, (f"%{alias_target}%", f"%{alias_target}%", f"%{alias_target}%", f"%{alias_target}%", q_clean, f"%{q_clean}%", q_clean, f"%{q_clean}%", limit))
+            rows = cursor.fetchall()
+
+        # 3. Fuzzy fallback
         if not rows and self.flight_names:
             fuzzy = self.find_fuzzy_match(cleaned, self.flight_names)
             if fuzzy:
