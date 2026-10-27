@@ -70,7 +70,7 @@ At the same time, we’re doing a tuning pass on some of the remaining passive b
 
 ## 🟦 Build Update #4 — 2026-10-15 19:16:31 (Post ID: `6435321` by Kaivax)
 
-**We’ve updating the WoW Forever Beta with a new build that includes the following.**
+**We’ve updated the WoW Forever Beta with a new build that includes the following.**
 
 **CHANGE LOG**
 
@@ -302,7 +302,7 @@ Racial abilities have been updated.
 
 - Heating Up is no longer consumed if the Mage also had Presence of Mind active for the Pyroblast cast. Heating up also always gains an additional charge each time the Mage casts Fire Blast. This does mean Fire Blast critical strikes generate 2 charges.
 
-- Wake of Fire: Talent reverted back to Improved Fire Blast and no longer grants a bonus when the Mage kills a target. It also now increases the range of Fireblast by 8/15 yards.
+- Wake of Fire: Talent reverted back to Improved Fire Blast and no longer grants a bonus when the Mage kills a target. It also now increases the range of Fire Blast by 8/15 yards.
 
 - Critical Mass: Mages can now spend up to 5 points in this talent for 10% total critical strike increase.
 
@@ -314,7 +314,7 @@ Racial abilities have been updated.
 
 - Fixed an issue where Ice Block was too transparent.
 
-- Fixed various issues around Clearcasting. Clearingcast now correctly does not roll for every target struck by a spell. Clearcasting no longer has a chance to activate off of Dampen Magic and Amplify Magic. Clearcasting no longer has a chance to be activated by abilities cast when not in combat.
+- Fixed various issues around Clearcasting. Clearcasting now correctly does not roll for every target struck by a spell. Clearcasting no longer has a chance to activate off of Dampen Magic and Amplify Magic. Clearcasting no longer has a chance to be activated by abilities cast when not in combat.
 
 - **Frost**
 
@@ -524,7 +524,7 @@ Racial abilities have been updated.
 
 - Fixed an issue where Summon Incubus was available to summon at no Soul Shard cost with the Reagent Economy Legacy Perk.
 
-- Fixed an issue allowing multiple Cure of Recklessness debuffs to be active on a target.
+- Fixed an issue allowing multiple Curse of Recklessness debuffs to be active on a target.
 
 - **Affliction**
 
@@ -586,7 +586,7 @@ Racial abilities have been updated.
 
 - Updated the Chat Channels menu to be usable with a gamepad.
 
-- Updated the Transmog frame to be useable with a gamepad.
+- Updated the Transmog frame to be usable with a gamepad.
 
 **Items**
 
@@ -664,7 +664,7 @@ Racial abilities have been updated.
 
 - Minimap header display has been updated.
 
-- Spells with different rankings now behaves as a single entry in the Cooldown Manager.
+- Spells with different rankings now behave as a single entry in the Cooldown Manager.
 
 - Auction House now displays a column for equippable level.
 
@@ -866,7 +866,7 @@ Fixed a bug that reduced XP granted to players who were in a party with higher-l
 
 - *Developers’ notes: Penance has received multiple updates to bring it more in line with powerful spells that have a cooldown.*
 
-- Reduced Penance spell damage and healing to resolve a bug where it was being treated like a 3-second channel instead of a 2 -second channel.
+- Reduced Penance spell damage and healing to resolve a bug where it was being treated like a 3-second channel instead of a 2-second channel.
 
 - Adjusted Penance mana costs so that it has a consistent advantage in mana efficiency over the Heal/Greater Heal family of spells. Rank 1 mana cost was increased by 50%.
 
@@ -1078,7 +1078,7 @@ Fixed a bug that reduced XP granted to players who were in a party with higher-l
 
 - Shaman
 
-- The various creatures needed for the quest “Storm, Earth, and Fire” respawn more quickly, creatures drop their twisted totems more often, Maraudine Scouts now drop Twisted Air Totems, Ongeku can now drop a Twisted Earth Totem, Murdaloc can now drop a Twisted Fire Totem. The Twisted Fire Totem can now additionally be obtained via Dustbelcher ogres across the Badlands. Larger encampents like Dustbelch Grotto will respawn more quickly, but smaller ones will not.
+- The various creatures needed for the quest “Storm, Earth, and Fire” respawn more quickly, creatures drop their twisted totems more often, Maraudine Scouts now drop Twisted Air Totems, Ongeku can now drop a Twisted Earth Totem, Murdaloc can now drop a Twisted Fire Totem. The Twisted Fire Totem can now additionally be obtained via Dustbelcher ogres across the Badlands. Larger encampments like Dustbelch Grotto will respawn more quickly, but smaller ones will not.
 
 - The Eye of the Tempest for “Heed My Call” is now multi-drop.
 
@@ -1352,7 +1352,7 @@ Today, we updated the WoW Forever Beta with a new build that includes the follow
 
 - **Arms**
 
-- Spearing Strike no longer requires a 2handed weapon. Spearing Strike requires Battle Stance.
+- Spearing Strike no longer requires a 2-handed weapon. Spearing Strike requires Battle Stance.
 
 - **Fury**
 
@@ -1498,7 +1498,7 @@ Today, we updated the WoW Forever Beta with a new build that includes the follow
 
 - The quest “Kyle’s Gone Missing!” has been added.
 
-- Orgrimmmar
+- Orgrimmar
 
 - Smooth Boulder should be far more plentiful and available to gather for the quest “Rocks to Rests”
 
@@ -1506,7 +1506,7 @@ Today, we updated the WoW Forever Beta with a new build that includes the follow
 
 - The quest “Blackrock Blockade” has been updated. Spawn rates have also been adjusted.
 
-- Ruins of Loraderon
+- Ruins of Lordaeron
 
 - “A Frightened Request” now sorts correctly in the quest log under the dungeon.
 
@@ -1706,7 +1706,7 @@ Today, we updated the WoW Forever Beta with a new build that includes the follow
 
 - Holy Strike’s % of weapon damage per rank changed to 25%/29%/32%/36%/39%/43%/46%/50% (was 25%/25%/30%/30%/35%/35%/40%/40%).
 
-- *Developers’s notes: This increases Holy Strike’s damage at all points while leveling, and increases how much it contributes to your rotation. Early ranks of Holy Strike didn’t always feel like an upgrade when purchasing a new rank, and we wanted to adjust that.*
+- *Developers’ notes: This increases Holy Strike’s damage at all points while leveling, and increases how much it contributes to your rotation. Early ranks of Holy Strike didn’t always feel like an upgrade when purchasing a new rank, and we wanted to adjust that.*
 
 - Fixed a bug with Echo of Justice, causing it to have a higher than intended chance to activate.
 
@@ -1934,7 +1934,7 @@ Today, we updated the WoW Forever Beta with a new build that includes the follow
 
 - Mulgore - Water Pitchers now respawn faster for the quest “A Humble Task”.
 
-- Silthus - Khonsu’s arrival has been removed from the beta phase, and in the future will return to Azeroth once more.
+- Silithus - Khonsu’s arrival has been removed from the beta phase, and in the future will return to Azeroth once more.
 
 - Silverpine Forest - Pyrewood Village worgen respawn more quickly.
 

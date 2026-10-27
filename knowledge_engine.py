@@ -1858,10 +1858,10 @@ DUNGEON_KEYS: Dict[str, Dict[str, Any]] = {
     },
     "key to the city": {
         "name": "Key to the City", "dungeon": "Stratholme",
-        "source": "Drop: Magistrate Barthas in Stratholme (Service Entrance)",
+        "source": "Drop: Magistrate Barthilas in Stratholme (Service Entrance)",
         "steps": (
             "1. Enter Stratholme through the main gate or have a rogue lockpick the service gate.\n"
-            "2. Slay Magistrate Barthas near the slaughterhouses (he runs toward Baron Rivendare's gate).\n"
+            "2. Slay Magistrate Barthilas near the slaughterhouses (he runs toward Baron Rivendare's gate).\n"
             "3. Loot the 'Key to the City' from his corpse."
         ),
         "unlocks": "Permanently unlocks the Stratholme Back Service Gate (the standard entrance for Baron Rivendare 45-minute timed runs).",
@@ -1947,7 +1947,7 @@ RACIAL_TRAITS: Dict[str, Dict[str, Any]] = {
     "night elf": {
         "race": "Night Elf", "faction": "Alliance",
         "traits": (
-            "• **Shadowmeld:** Stealthes in place while standing still (usable by all classes)\n"
+            "• **Shadowmeld:** Stealths in place while standing still (usable by all classes)\n"
             "• **Quickness (Forever Beta):** +1% Dodge chance; movement speed increase now **stacks with other movement speed increases**\n"
             "• **Wisp Spirit:** Transforms into a wisp upon death (+50% move speed; shields hidden in Wisp Form)\n"
             "• **Priest Racial — Starshards:** Gains spell pushback resistance from the *Twilight Focus* talent\n"

@@ -36,6 +36,24 @@ def html_to_markdown(raw_html: str) -> str:
     text = re.sub(r"</p>", "\n", text, flags=re.I)
     text = re.sub(r"<[^>]+>", "", text)
     text = html.unescape(text)
+    typo_fixes = {
+        "Clearingcast": "Clearcasting",
+        "Cure of Recklessness": "Curse of Recklessness",
+        "useable": "usable",
+        "encampents": "encampments",
+        "Orgrimmmar": "Orgrimmar",
+        "Ruins of Loraderon": "Ruins of Lordaeron",
+        "Developers’s notes:": "Developers’ notes:",
+        "Developers's notes:": "Developers' notes:",
+        "Silthus": "Silithus",
+        "Fireblast": "Fire Blast",
+        "2handed": "2-handed",
+        "2 -second": "2-second",
+        "We’ve updating": "We’ve updated",
+        "now behaves as": "now behave as",
+    }
+    for bad, good in typo_fixes.items():
+        text = text.replace(bad, good)
     lines = [line.rstrip() for line in text.splitlines()]
     cleaned = []
     blank_count = 0
