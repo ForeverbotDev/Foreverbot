@@ -5,6 +5,9 @@ and simulated user queries across all 42 slash commands.
 """
 
 import sys
+import os
+sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
+
 import sqlite3
 from database import WoWForeverDB, DB_PATH, extract_level_from_text, clean_query
 import knowledge_engine as ke

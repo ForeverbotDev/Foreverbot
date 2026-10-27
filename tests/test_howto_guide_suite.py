@@ -5,6 +5,9 @@ Runs and validates all 115 specific commands and prompt queries across all 23 sl
 """
 
 import sys
+import os
+sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
+
 import asyncio
 import traceback
 from typing import Dict, Any, List

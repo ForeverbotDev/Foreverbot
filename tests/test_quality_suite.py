@@ -2,6 +2,9 @@
 """Comprehensive Quality Testing Suite for WoW: Forever Bot."""
 
 import sys
+import os
+sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
+
 from database import WoWForeverDB
 import knowledge_engine as ke
 

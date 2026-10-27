@@ -92,13 +92,13 @@ python3 bot.py
 
 Foreverbot includes 3 verification suites (**223 / 223 automated tests passing**):
 ```bash
-python3 test_quality_suite.py     # 27 Core system tests
-python3 test_deep_quality.py      # 81 Database & Classic+ dungeon tests
-python3 test_howto_guide_suite.py # 115 How-To guide prompt tests
+python3 tests/test_quality_suite.py     # 27 Core system tests
+python3 tests/test_deep_quality.py      # 81 Database & Classic+ dungeon tests
+python3 tests/test_howto_guide_suite.py # 115 How-To guide prompt tests
 ```
 
 ---
 
 ## 📄 Official Guide
 
-- **[Your-Azeroth-Companion-Bot-Command-Guide.pdf](Your-Azeroth-Companion-Bot-Command-Guide.pdf)** — Visual slide guide & command companion deck.
+- **[Your-Azeroth-Companion-Bot-Command-Guide.pdf](docs/Your-Azeroth-Companion-Bot-Command-Guide.pdf)** — Visual slide guide & command companion deck.
