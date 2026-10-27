@@ -36,30 +36,30 @@ python3 bot.py
 ## 💡 Quick Command Cheat Sheet (Top Categories)
 
 ### 🗡️ Gear & Items
-- `/item query: dal rend` — View stats, drop rates, and boss loot tables.
-- `/compare query: brutality blade weapon2: deathbringer` — Side-by-side stat delta & glancing blow math.
-- `/bis query: rogue spec: swords` — Slot-by-slot Pre-Raid and Phase BiS checklist.
-- `/resist query: fire current: 150` — Mitigation tiers and points to reach the 315 cap.
+- `/item query: dal rend` — Pulls up instant stats, drop rates, and boss loot tables without having to Alt-Tab mid-dungeon.
+- `/compare query: brutality blade weapon2: deathbringer` — Side-by-side stat breakdown, swing speeds, and glancing blow math so you never equip the wrong piece.
+- `/bis query: rogue spec: swords` — Full slot-by-slot gear progression and exactly which dungeons to farm for your next upgrade.
+- `/resist query: fire current: 150` — Checks your exact mitigation tier and tells you how many points you're missing before the raid melts you.
 
 ### 🗺️ World Navigation & Dungeons
-- `/dungeons query: 42` — Eligible dungeons for your level bracket, wing levels, and entrances.
-- `/flightpath query: stv` — Nearest flight masters, map coordinates, and routes.
-- `/zones query: duskwood` — Zone level brackets, faction hubs, and danger notes.
-- `/mob query: garr` — Boss HP pools, spawn locations, abilities, and loot percentages.
+- `/dungeons query: 42` — Enter your level and instantly see every eligible dungeon, wing level range, and entrance directions.
+- `/flightpath query: stv` — Stranded in contested territory? Finds the closest flight master with exact map coordinates.
+- `/zones query: duskwood` — Zone level brackets, quest hubs, and contested danger spots before making the 15-minute run.
+- `/mob query: garr` — Boss HP pools, spawn locations, deadly abilities, and rare drop chances in seconds.
 
 ### 🛡️ Raiding, Consumables & PvP
-- `/raid query: baron geddon` — Boss wipe prevention, positioning diagrams, and dispel alerts.
-- `/consumes query: fury warrior` — Mandatory flasks, elixirs, and buff food checklists.
-- `/buffs query: ony head` — World buff turn-in locations, cooldowns, and raid stat increases.
-- `/resets query: onyxia` — Live countdowns to weekly, 5-day (Onyxia), and 3-day (ZG) resets.
-- `/pvp query: rank 14` — Honor rank math, weekly 20% decay, and battleground guides.
+- `/raid query: baron geddon` — Boss wipe mechanics, raid positioning diagrams, and dispel priority at a glance.
+- `/consumes query: fury warrior` — Full raid night checklist: mandatory flasks, elixirs, and buff food with zero guesswork.
+- `/buffs query: ony head` — Never miss a world buff: turn-in locations, cooldown timers, and raid-wide stat gains.
+- `/resets query: onyxia` — Live countdown clocks for weekly, 5-day, and 3-day lockouts so you never get saved early.
+- `/pvp query: rank 14` — Honor rank math, weekly 20% decay calculation, and battleground strategy guides.
 
 ### 🎲 Raid Leader Tools & Macros
-- `/signup query: MC Sunday 7pm max_players: 40` — Interactive raid roster with Tank/Healer/DPS buttons.
-- `/roll query: Reins of the Deathcharger seconds: 30` — Raid loot roll engine with live countdown timer.
-- `/gdkp query: 60000 cut: 10 raiders: 40` — Automatic pot splitter, organizer cut, and raider payout.
-- `/macro query: stance dance overpower` — Ready-to-use copy-pasteable in-game macros.
-- `/ask query: what are the best pre-raid swords?` — Plain English AI assistant for any WoW question.
+- `/signup query: MC Sunday 7pm max_players: 40` — Interactive raid roster with Tank, Healer, and DPS reaction buttons right in Discord.
+- `/roll query: Reins of the Deathcharger seconds: 30` — Live loot rolling with a fair countdown timer so loot drama never touches your raid.
+- `/gdkp query: 60000 cut: 10 raiders: 40` — Automatic gold pot splitter with organizer cut and per-player payout math done for you.
+- `/macro query: stance dance overpower` — Battle-tested, 1-click copy-paste macros for stance dancing, mouseovers, and panic buttons.
+- `/ask query: what are the best pre-raid swords?` — Ask any WoW question in plain English and get an instant, accurate answer.
 
 ---
 
