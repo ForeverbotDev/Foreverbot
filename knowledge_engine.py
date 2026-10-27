@@ -1581,14 +1581,17 @@ def get_class_build(query_class: str, query_spec: Optional[str] = None) -> Optio
 
     # Check if spec is in the key
     if qs:
+        qs_norm = qs.replace("_", " ").replace("-", " ")
         for k, v in CLASS_BUILDS.items():
-            if qc in k and qs in k:
+            k_norm = k.replace("_", " ").replace("-", " ")
+            if qc in k_norm and (qs in k or qs_norm in k_norm):
                 return v
 
     # Check if class matches, return first prominent spec or match
-    for k, v in CLASS_BUILDS.items():
-        if qc in k or k.startswith(qc):
-            return v
+    if not qs:
+        for k, v in CLASS_BUILDS.items():
+            if qc in k or k.startswith(qc):
+                return v
 
     # Fuzzy match
     keys = list(CLASS_BUILDS.keys())
@@ -1607,14 +1610,26 @@ def get_consumables_info(role_or_class: str) -> Optional[Dict[str, Any]]:
 
     # Map class to primary role
     class_to_role = {
-        "warrior": "melee dps", "rogue": "melee dps", "enhancement": "melee dps",
-        "mage": "caster dps", "warlock": "caster dps", "shadow": "caster dps",
-        "priest": "healer", "paladin": "healer", "holy": "healer", "resto": "healer",
-        "druid": "healer", "feral": "melee dps", "shaman": "healer", "ele": "caster dps", "elemental": "caster dps",
-        "tank": "tank", "bear": "tank", "prot": "tank", "heals": "healer", "healing": "healer",
-        "caster": "caster dps", "melee": "melee dps", "hunter": "melee dps"
+        "warrior": "melee dps", "fury": "melee dps", "arms": "melee dps",
+        "rogue": "melee dps", "combat": "melee dps", "assassination": "melee dps", "subtlety": "melee dps",
+        "enhancement": "melee dps", "enh": "melee dps",
+        "mage": "caster dps", "frost": "caster dps", "fire": "caster dps", "arcane": "caster dps",
+        "warlock": "caster dps", "affliction": "caster dps", "destruction": "caster dps", "ruin": "caster dps",
+        "shadow": "caster dps",
+        "priest": "healer", "paladin": "healer", "holy": "healer", "resto": "healer", "discipline": "healer", "disc": "healer",
+        "druid": "healer", "feral": "melee dps", "cat": "melee dps",
+        "shaman": "healer", "ele": "caster dps", "elemental": "caster dps",
+        "tank": "tank", "bear": "tank", "prot": "tank", "protection": "tank",
+        "heals": "healer", "healing": "healer",
+        "caster": "caster dps", "melee": "melee dps", "hunter": "melee dps", "marksman": "melee dps"
     }
-    target = class_to_role.get(q, q)
+    target = q
+    for word in q.replace("/", " ").replace("-", " ").split():
+        if word in class_to_role:
+            target = class_to_role[word]
+            break
+    if target not in CONSUMABLES_DATA:
+        target = class_to_role.get(q, q)
     for k, v in CONSUMABLES_DATA.items():
         if k in target or target in k:
             return v
@@ -2051,11 +2066,12 @@ def get_pvp_info(query: str) -> Optional[Dict[str, Any]]:
     q = query.strip().lower()
 
     alias_map = {
-        "rank": "ranks", "ranks": "ranks", "honor": "ranks", "title": "ranks", "r14": "ranks", "rank 14": "ranks", "rank 10": "ranks",
-        "decay": "decay", "math": "decay", "rp": "decay", "calculation": "decay",
+        "decay": "decay", "math": "decay", "rp": "decay", "calculation": "decay", "weekly decay": "decay",
         "wsg": "wsg", "warsong": "wsg", "warsong gulch": "wsg", "flag": "wsg",
         "ab": "ab", "arathi": "ab", "arathi basin": "ab", "basin": "ab",
-        "av": "av", "alterac": "av", "alterac valley": "av", "valley": "av", "drek": "av", "vanndar": "av"
+        "av": "av", "alterac": "av", "alterac valley": "av", "valley": "av", "drek": "av", "vanndar": "av",
+        "r14": "ranks", "rank 14": "ranks", "rank 10": "ranks",
+        "rank": "ranks", "ranks": "ranks", "title": "ranks", "honor": "ranks"
     }
 
     # 1. Match full word boundary aliases
@@ -3253,9 +3269,12 @@ def get_talent_build(query_class: str, query_spec: Optional[str] = None) -> Opti
     for k, v in TALENTS_DATA.items():
         if k == target or (qc in k and qs in k):
             return v
-    for k, v in TALENTS_DATA.items():
-        if qc in k:
-            return v
+    
+    # Only fall back to any class spec if no specific spec was requested
+    if not qs:
+        for k, v in TALENTS_DATA.items():
+            if qc in k:
+                return v
     return None
 
 
