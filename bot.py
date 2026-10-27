@@ -38,8 +38,7 @@ from knowledge_engine import (
     get_random_trivia, TRIVIA_QUESTIONS,
     calculate_resistance_mitigation, RESIST_SCHOOLS,
     get_duel_matchup, DUEL_MATCHUPS,
-    get_talent_build, TALENTS_DATA,
-    AMBIENT_SOUNDS
+    get_talent_build, TALENTS_DATA
 )
 
 # Load environment variables
@@ -2088,77 +2087,6 @@ async def compare_command(interaction: discord.Interaction, query: str, weapon2:
     embed.set_footer(text="World of Warcraft: Forever Companion • Combat Mechanics")
     await interaction.followup.send(embed=embed)
 
-
-# -------------------------------------------------------------
-# Slash Command: /sound (Classic WoW Soundboard in Voice Channel)
-# -------------------------------------------------------------
-SOUND_MAP = {
-    "murloc": {"file": "assets/sounds/murloc.mp3", "title": "Murloc Aggro Warcry", "quote": "Rwlrwlrwl! Rwlrwlrwl!", "lore": "Terrifying sound heard across Elwynn, Westfall, and Hillsbrad coastlines."},
-    "ragnaros": {"file": "assets/sounds/ragnaros.mp3", "title": "Ragnaros the Firelord", "quote": "BY FIRE BE PURGED!", "lore": "Summoned by Majordomo Executus at the Molten Core."},
-    "leeroy": {"file": "assets/sounds/leeroy.mp3", "title": "Leeroy Jenkins", "quote": "LEEROOOOY JENKINS!", "lore": "Rookery charge causing the most famous wipe in World of Warcraft history."},
-    "ding": {"file": "assets/sounds/ding.mp3", "title": "Level Up Chime", "quote": "Ding! Congratulations on gaining a level!", "lore": "Golden beam of light with full health & mana restoration."},
-    "aggro": {"file": "assets/sounds/aggro.mp3", "title": "Combat Aggro Alert", "quote": "Warning: High Threat / Combat Engaged!", "lore": "Classic UI aggro ping before a dungeon pull."},
-    "onyxia": {"file": "assets/sounds/onyxia.mp3", "title": "Onyxia Deep Breath", "quote": "Onyxia takes in a deep breath... MANY WHELPS! HANDLE IT!", "lore": "Wipe mechanic across Phase 2 in Onyxia's Lair."}
-}
-
-
-@bot.tree.command(name="sound", description="Play iconic Classic WoW sound effects in voice chat or view sound card")
-@app_commands.describe(query="Sound effect name (e.g. 'murloc', 'ragnaros', 'leeroy', 'ding', 'aggro', 'onyxia')")
-async def sound_command(interaction: discord.Interaction, query: str):
-    name = query
-    await interaction.response.defer()
-    key = name.lower().strip()
-    s_info = SOUND_MAP.get(key)
-    if not s_info:
-        for k, v in SOUND_MAP.items():
-            if k in key or key in k:
-                s_info = v
-                break
-    if not s_info:
-        await interaction.followup.send(f"❌ Unknown sound `{name}`. Available: murloc, ragnaros, leeroy, ding, aggro, onyxia.", ephemeral=True)
-        return
-
-    played_voice = False
-    if interaction.user and hasattr(interaction.user, "voice") and interaction.user.voice and interaction.user.voice.channel:
-        vc_channel = interaction.user.voice.channel
-        try:
-            voice_client = discord.utils.get(bot.voice_clients, guild=interaction.guild)
-            if not voice_client:
-                voice_client = await vc_channel.connect()
-            elif voice_client.channel != vc_channel:
-                await voice_client.move_to(vc_channel)
-
-            if os.path.exists(s_info["file"]):
-                audio_source = discord.FFmpegPCMAudio(s_info["file"])
-                if voice_client.is_playing():
-                    voice_client.stop()
-                voice_client.play(audio_source)
-                played_voice = True
-        except Exception as ve:
-            print(f"Voice playback note: {ve}")
-
-    embed = discord.Embed(
-        title=f"🔊 WoW Sound: {s_info['title']}",
-        description=(
-            f"📢 *\"{s_info['quote']}\"*\n\n"
-            f"📖 **Lore & Context:** {s_info['lore']}\n\n"
-            + ("🟢 **Playing in your Voice Channel!**" if played_voice else "💬 *Join a voice channel to hear it live!*")
-        ),
-        color=0xE67E22
-    )
-    embed.set_footer(text="World of Warcraft: Forever Companion • Soundboard")
-    await interaction.followup.send(embed=embed)
-
-
-@sound_command.autocomplete("query")
-async def sound_autocomplete(interaction: discord.Interaction, current: str) -> List[app_commands.Choice[str]]:
-    sounds = ["murloc", "ragnaros", "leeroy", "ding", "aggro", "onyxia"]
-    current_l = current.lower()
-    matches = [s for s in sounds if current_l in s.lower()]
-    return [app_commands.Choice(name=m, value=m) for m in matches[:25]]
-
-
-
 # -------------------------------------------------------------
 # Slash Command: /resets (Dynamic Raid Lockout & Reset Clock)
 # -------------------------------------------------------------
@@ -2643,65 +2571,6 @@ async def signup_command(interaction: discord.Interaction, query: str, max_playe
     view = RaidSignupView(event_id=event_id, event_title=title, max_players=size)
     embed = view._render_embed()
     await interaction.response.send_message(embed=embed, view=view)
-
-
-# -------------------------------------------------------------
-# Slash Command: /ambience (Classic Zone & Tavern Soundscapes)
-# -------------------------------------------------------------
-@bot.tree.command(name="ambience", description="Stream atmospheric Classic WoW zone and tavern soundscapes into voice chat")
-@app_commands.describe(query="Atmospheric soundscape (e.g. 'elwynn', 'tavern', 'ironforge', 'barrens', 'karazhan')")
-async def ambience_command(interaction: discord.Interaction, query: str):
-    zone = query
-    await interaction.response.defer()
-    key = zone.lower().strip()
-    a_info = AMBIENT_SOUNDS.get(key)
-    if not a_info:
-        for k, v in AMBIENT_SOUNDS.items():
-            if k in key or key in k:
-                a_info = v
-                break
-    if not a_info:
-        await interaction.followup.send(f"❌ Unknown soundscape `{zone}`. Available: elwynn, tavern, ironforge, barrens, karazhan.", ephemeral=True)
-        return
-
-    played_voice = False
-    if interaction.user and hasattr(interaction.user, "voice") and interaction.user.voice and interaction.user.voice.channel:
-        vc_channel = interaction.user.voice.channel
-        try:
-            voice_client = discord.utils.get(bot.voice_clients, guild=interaction.guild)
-            if not voice_client:
-                voice_client = await vc_channel.connect()
-            elif voice_client.channel != vc_channel:
-                await voice_client.move_to(vc_channel)
-
-            if os.path.exists(a_info["file"]):
-                audio_source = discord.FFmpegPCMAudio(a_info["file"])
-                if voice_client.is_playing():
-                    voice_client.stop()
-                voice_client.play(audio_source)
-                played_voice = True
-        except Exception as ve:
-            print(f"Ambience voice playback note: {ve}")
-
-    embed = discord.Embed(
-        title=f"🌲 Soundscape: {a_info['title']}",
-        description=(
-            f"🎶 *\"{a_info['quote']}\"*\n\n"
-            f"📖 **Lore & Atmosphere:**\n{a_info['lore']}\n\n"
-            + ("🟢 **Streaming atmospheric soundscape in your Voice Channel!**" if played_voice else "💬 *Join a voice channel to immerse in the soundscape!*")
-        ),
-        color=0x2ECC71
-    )
-    embed.set_footer(text="World of Warcraft: Forever Companion • Atmospheric Audio")
-    await interaction.followup.send(embed=embed)
-
-
-@ambience_command.autocomplete("query")
-async def ambience_autocomplete(interaction: discord.Interaction, current: str) -> List[app_commands.Choice[str]]:
-    zones = ["elwynn", "tavern", "ironforge", "barrens", "karazhan"]
-    matches = [z for z in zones if current.lower() in z]
-    return [app_commands.Choice(name=AMBIENT_SOUNDS[m]["title"], value=m) for m in matches[:25]]
-
 
 # -------------------------------------------------------------
 # Slash Command: /talents (Spec Code Generator & Talent Tree Visualizer)

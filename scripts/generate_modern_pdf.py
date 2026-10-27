@@ -347,18 +347,18 @@ def generate_guide(output_pdf="wow_forever_bot_guide.pdf"):
         "/dungeons query: 42"
     )
 
-    # Suite F: Audio, Voice & Community
+    # Suite F: Community & Lore
     pdf.card(
         108, 111, suite_w, suite_h,
-        "Audio Chimes, Ambience & Trivia",
-        "/sound  |  /ambience  |  /trivia  |  /ask",
+        "Community, Trivia & AI",
+        "/forever  |  /events  |  /trivia  |  /ask",
         [
-            "Streams sound effects in voice chat (Level Up, Murloc, Aggro)",
-            "Atmospheric background audio (Lion's Pride Tavern, Orgrimmar)",
             "Interactive trivia quiz with multiple-choice buttons",
+            "Event calendar, DMF schedules & Gurubashi chest timer",
+            "WoW: Forever server rules, tier systems & custom features",
             "Freeform conversational AI for complex lore & theorycrafting"
         ],
-        "/sound query: Level Up"
+        "/ask query: what are pre-raid swords?"
     )
 
     # Section: Official 9 WoW: Forever Dungeons
@@ -455,8 +455,8 @@ def generate_guide(output_pdf="wow_forever_bot_guide.pdf"):
         ("18", "/pvp", "query: Rank 14", "Honor rank math, 20% weekly decay, and BGs"),
         ("19", "/attunement", "query: Blackwing Lair", "Step-by-step questline guides for raid entry"),
         ("20", "/keys", "query: Shadowforge Key", "Key chains, tomb locations, and doors unlocked"),
-        ("21", "/race", "query: Human vs Orc", "Racial passives, +5 weapon skill & PvP ratings"),
         # Col 2
+        ("21", "/race", "query: Human vs Orc", "Racial passives, +5 weapon skill & PvP ratings"),
         ("22", "/comp", "query: 8 warrior, 6 rogue...", "Roster analyzer checking Sunder, Windfury & CoR"),
         ("23", "/bis", "query: Rogue spec: Swords", "Slot-by-slot Pre-Raid & Phase BiS checklist"),
         ("24", "/farm", "query: DM East jump", "Estimated G/hr, class requirements & solo pulls"),
@@ -464,24 +464,22 @@ def generate_guide(output_pdf="wow_forever_bot_guide.pdf"):
         ("26", "/gdkp", "query: 60000 cut: 10", "Gross pot, organizer cut, tank pot & payout"),
         ("27", "/roll", "query: Reins seconds: 30", "Interactive raid roll engine with live timer"),
         ("28", "/compare", "query: Brutality weapon2: Death", "Weapon glancing blow math vs Lvl 63 bosses"),
-        ("29", "/sound", "query: Level Up", "Plays iconic WoW sound chimes in voice chat"),
-        ("30", "/resets", "query: Onyxia", "Live countdowns to weekly, 5-day & 3-day resets"),
-        ("31", "/twink", "query: 29 class: Warrior", "Twink BiS gear & uncapped Classic enchants"),
-        ("32", "/route", "query: 10-20 faction: Ally", "Speedrun quest routing with death warps & skips"),
-        ("33", "/addons", "query: raiding UI", "Recommended UI addons with zero-lag settings"),
-        ("34", "/trivia", "query: Raids", "Interactive Discord lore trivia with button UI"),
-        ("35", "/profile", "set / view", "Guild character armory tracking spec & gear"),
-        ("36", "/resist", "query: Fire current: 150", "Resistance mitigation curve up to 315 hard cap"),
-        ("37", "/duels", "query: Warrior class2: Mage", "1v1 matchup analysis: deadzones & CD trading"),
-        ("38", "/signup", "query: MC Sunday 7pm", "Interactive raid roster with Tank/Healer buttons"),
-        ("39", "/ambience", "query: Lion's Pride", "Streams ambient tavern music in voice chat"),
-        ("40", "/talents", "query: Warrior spec: Arms", "ASCII talent tree layouts & leveling point order"),
-        ("41", "/forever", "query: Horizontal", "WoW: Forever Classic+ server rules & tier systems"),
-        ("42", "/ask", "query: what are pre-raid swords?", "Conversational AI assistant for any WoW question")
+        ("29", "/resets", "query: Onyxia", "Live countdowns to weekly, 5-day & 3-day resets"),
+        ("30", "/twink", "query: 29 class: Warrior", "Twink BiS gear & uncapped Classic enchants"),
+        ("31", "/route", "query: 10-20 faction: Ally", "Speedrun quest routing with death warps & skips"),
+        ("32", "/addons", "query: raiding UI", "Recommended UI addons with zero-lag settings"),
+        ("33", "/trivia", "query: Raids", "Interactive Discord lore trivia with button UI"),
+        ("34", "/profile", "set / view", "Guild character armory tracking spec & gear"),
+        ("35", "/resist", "query: Fire current: 150", "Resistance mitigation curve up to 315 hard cap"),
+        ("36", "/duels", "query: Warrior class2: Mage", "1v1 matchup analysis: deadzones & CD trading"),
+        ("37", "/signup", "query: MC Sunday 7pm", "Interactive raid roster with Tank/Healer buttons"),
+        ("38", "/talents", "query: Warrior spec: Arms", "ASCII talent tree layouts & leveling point order"),
+        ("39", "/forever", "query: Horizontal", "WoW: Forever Classic+ server rules & tier systems"),
+        ("40", "/ask", "query: what are pre-raid swords?", "Conversational AI assistant for any WoW question")
     ]
 
-    col1 = all_commands[:21]
-    col2 = all_commands[21:]
+    col1 = all_commands[:20]
+    col2 = all_commands[20:]
 
     start_y = 26
     for i, (num, cmd, eg, desc) in enumerate(col1):

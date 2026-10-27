@@ -2907,7 +2907,7 @@ def get_random_trivia() -> Dict[str, Any]:
 
 
 # -------------------------------------------------------------
-# Batch 3 Systems: Resistances, Duels, Talents, Ambient Sounds
+# Batch 3 Systems: Resistances, Duels, Talents
 # -------------------------------------------------------------
 RESIST_SCHOOLS: Dict[str, Dict[str, Any]] = {
     "fire": {
@@ -3181,40 +3181,6 @@ def get_talent_build(query_class: str, query_spec: Optional[str] = None) -> Opti
         if qc in k:
             return v
     return None
-
-
-AMBIENT_SOUNDS: Dict[str, Dict[str, Any]] = {
-    "elwynn": {
-        "file": "assets/sounds/elwynn.mp3",
-        "title": "Elwynn Forest Ambience",
-        "quote": "Gentle forest rain, soft acoustic harp notes, and night crickets.",
-        "lore": "The peaceful woodland home of the Kingdom of Stormwind, where every Human hero begins their journey."
-    },
-    "tavern": {
-        "file": "assets/sounds/tavern.mp3",
-        "title": "Lion's Pride Tavern Hearth & Lute",
-        "quote": "Warm fireplace crackle, gentle tavern lute chords, and resting XP warmth.",
-        "lore": "The legendary inn in Goldshire. A bustling sanctuary where weary adventurers set their hearthstone."
-    },
-    "ironforge": {
-        "file": "assets/sounds/ironforge.mp3",
-        "title": "Ironforge Great Forge Anvils & Horn",
-        "quote": "Echoing blacksmith anvils, great bellows heat, and deep dwarven horn call.",
-        "lore": "Carved into the molten heart of Dun Morogh, home to the High King of the Dwarves."
-    },
-    "barrens": {
-        "file": "assets/sounds/barrens.mp3",
-        "title": "The Barrens Savannah Wind & Drums",
-        "quote": "Warm prairie crosswinds, distant kodo drums, and the endless sun.",
-        "lore": "The vast golden heartland of Kalimdor, traversed by every Horde warrior on their path to greatness."
-    },
-    "karazhan": {
-        "file": "assets/sounds/karazhan.mp3",
-        "title": "Karazhan Haunted Tower & Organ",
-        "quote": "Eerie gothic cathedral organ, phantom whispers, and spectral waltz echoes.",
-        "lore": "Medivh's ancient spire in Deadwind Pass, holding mystical nexus points and forgotten ballroom ghosts."
-    }
-}
 
 
 

@@ -63,7 +63,7 @@ python3 bot.py
 
 ---
 
-## 📜 Complete 42-Command Reference
+## 📜 Complete 40-Command Reference
 
 | Category | Commands |
 | :--- | :--- |
@@ -75,7 +75,7 @@ python3 bot.py
 | **Class Mastery** | `/build`, `/talents`, `/race`, `/macro`, `/profile` |
 | **PvP & Competitive** | `/pvp`, `/twink`, `/duels` |
 | **Raid Management** | `/signup`, `/comp`, `/gdkp`, `/roll`, `/addons` |
-| **Voice & Community** | `/forever`, `/sound`, `/ambience`, `/events`, `/trivia`, `/ask` |
+| **Community & AI** | `/forever`, `/events`, `/trivia`, `/ask` |
 
 ---
 

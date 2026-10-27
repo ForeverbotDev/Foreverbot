@@ -301,8 +301,8 @@ def build_presentation():
     ]
     fun_cards = [
         ("/forever", "query: [topic]", "Server overview of WoW: Forever Classic+, horizontal progression, custom tiers & racial balances.", "/forever query: horizontal progression", "Explains itemization philosophy and custom endgame tiers"),
-        ("/sound", "query: [sound name]", "Plays iconic Classic WoW sound effects (Level Up, Murloc Aggro, Ready Check) in voice chat.", "/sound query: Level Up", "Streams golden chime into current voice channel"),
-        ("/ambience", "query: [tavern/zone]", "Streams relaxing Classic WoW atmospheric music (Lion's Pride, Elwynn Forest, Barrens) in voice.", "/ambience query: Lion's Pride Inn", "Plays warm hearthstone tavern ambience in voice channel"),
+        ("/macro", "query: [action]", "Battle-tested copy-pasteable macros for stance dancing, mouseovers, and panic buttons.", "/macro query: stance dance overpower", "One-click copy-paste in-game macro"),
+        ("/addons", "query: [category]", "Curated addon recommendations and clean zero-lag settings for Classic+ raiding.", "/addons query: raiding UI", "Recommended raid and UI addons"),
         ("/events", "query: [event name]", "Schedules for Darkmoon Faire, Stranglethorn Fishing Extravaganza, and Gurubashi Arena chest timers.", "/events query: Darkmoon Faire", "Next spawn date, Terokkar/Mulgore/Elwynn rotation calendar"),
         ("/trivia", "query: [category]", "Interactive Discord lore trivia mini-game with 4 clickable answer buttons and score tracking.", "/trivia query: Raids", "Spawns 4 multiple-choice buttons for raid mechanic trivia"),
         ("/ask", "query: [natural language]", "Conversational AI assistant trained on Vanilla WoW & Classic+ for any custom question.", "/ask query: what are the best pre-raid swords?", "Direct answer comparing Dal'Rends, Mirah's & Thrash Blade")
@@ -311,9 +311,9 @@ def build_presentation():
         pdf.draw_command_card(x, y, c_w, c_h, cmd, params, desc, eg, res)
 
     # SLIDE 12: Rapid Cheat Sheet & Summary
-    pdf.draw_slide_background("Complete 42-Command Cheat Sheet", "RAPID REFERENCE", 12)
+    pdf.draw_slide_background("Complete 40-Command Cheat Sheet", "RAPID REFERENCE", 12)
     
-    # 3-column table of all 42 commands
+    # 3-column table of all 40 commands
     col_width = 86
     row_height = 6.2
     start_y = 32
@@ -359,8 +359,6 @@ def build_presentation():
         ("/roll", "Live countdown loot roll engine"),
         ("/addons", "Recommended UI & zero-lag addons"),
         ("/forever", "Classic+ server features"),
-        ("/sound", "Plays WoW chimes in voice"),
-        ("/ambience", "Streams tavern music in voice"),
         ("/events", "Darkmoon & Gurubashi timers"),
         ("/trivia", "Discord lore trivia mini-game"),
         ("/ask", "Plain-English AI assistant"),
