@@ -9,31 +9,111 @@
 [![Edition](https://img.shields.io/badge/Edition-Epic%20v3.0.0%20Beta-9333EA)](docs/EPIC_EDITION_RELEASE_NOTES.md)
 [![Tests Passing](https://img.shields.io/badge/Tests-4%2C904%20%2F%204%2C904%20Passed-10B981)](#-automated-testing)
 
+[![Python](https://img.shields.io/badge/Python-3.10%2B-3776AB?logo=python&logoColor=white)](https://www.python.org/downloads/)
+
 ---
 
-## 🚀 Quickstart (How to Download & Run)
+## 📦 Download & Installation Guide
 
-### 1. Download the Project
-- **Easiest:** Click the green **`<> Code`** button at the top of this page ➔ click **Download ZIP**, then unzip it.
-- **Git:** `git clone https://github.com/s1l3ntHub/wow-foreverbot.git`
+Foreverbot ships with its complete **Classic & Classic+ SQLite database (`wow_forever.db`) pre-built and bundled**—no external database servers, Docker containers, or privileged Discord intents required.
 
-### 2. Get Your Discord Bot Token
-1. Create an application at the [Discord Developer Portal](https://discord.com/developers/applications) and copy your **Bot Token** (under the **Bot** tab).
-2. Under **OAuth2 ➔ URL Generator**, check `bot` + `applications.commands`, then open the generated link to invite the bot to your server.
+### Step 1 — Download Foreverbot
 
-### 3. Run Foreverbot (3 Commands)
-Open a terminal in your unzipped bot folder and run:
+| Method | Instructions |
+| :--- | :--- |
+| **🟢 Download ZIP *(Easiest)*** | Click the green **`<> Code`** button at the top-right of this page ➔ click **[Download ZIP](https://github.com/s1l3ntHub/wow-foreverbot/archive/refs/heads/main.zip)**, and extract the folder anywhere on your computer. |
+| **🏷️ Beta Release Archive** | Download the tagged **`v3.0.0-beta`** release directly from the **[Releases / Tags](https://github.com/s1l3ntHub/wow-foreverbot/tags)** page. |
+| **💻 Git Clone *(Recommended for Updates)*** | Run `git clone https://github.com/s1l3ntHub/wow-foreverbot.git && cd wow-foreverbot` in your terminal. |
+
+---
+
+### Step 2 — Create & Invite Your Discord Bot (2 Minutes)
+
+1. **Create the Application:**
+   - Open the **[Discord Developer Portal](https://discord.com/developers/applications)** and click **`New Application`** (top-right).
+   - Name it **`Foreverbot`** (or your guild's name) and click **Create**.
+2. **Copy Your Bot Token:**
+   - Select **`Bot`** in the left sidebar ➔ click **`Reset Token`** ➔ copy your token and keep it safe.
+   - *(Note: You do **not** need to enable any Privileged Gateway Intents—Foreverbot uses native Discord Slash Commands with default intents.)*
+3. **Invite the Bot to Your Discord Server:**
+   - Select **`OAuth2`** in the left sidebar:
+     - Under **OAuth2 URL Generator ➔ Scopes**, check:
+       - [x] `bot`
+       - [x] `applications.commands`
+     - Under **Bot Permissions** (appears below Scopes), check:
+       - [x] `View Channels`
+       - [x] `Send Messages`
+       - [x] `Embed Links`
+       - [x] `Read Message History`
+       - [x] `Use Slash Commands`
+   - Copy the **Generated URL** at the bottom of the page, paste it into your browser, and authorize the bot into your server.
+
+---
+
+### Step 3 — Configure & Launch
+
+#### 🐧 Linux & 🍎 macOS (1-Command Auto-Setup)
+Open a terminal inside your `wow-foreverbot` folder:
 ```bash
-# 1. Install required packages
+# 1. Create your .env configuration file
+cp .env.example .env
+```
+Open `.env` in any text editor and paste your token next to `DISCORD_BOT_TOKEN=`:
+```ini
+DISCORD_BOT_TOKEN=your_discord_bot_token_here
+
+# Optional: Add a free Google Gemini API key (https://aistudio.google.com/)
+# for open-ended AI theorycrafting in /ask. All 40 commands & DB lookups work 100% without it!
+GEMINI_API_KEY=
+```
+Then run the self-bootstrapping launcher script (it automatically creates `.venv`, installs `requirements.txt`, and starts the bot):
+```bash
+./start_bot.sh
+```
+
+<details>
+<summary><b>🪟 Windows (PowerShell / Command Prompt) Instructions</b></summary>
+
+```powershell
+# 1. Create and activate a virtual environment
+python -m venv .venv
+.\.venv\Scripts\Activate.ps1
+
+# 2. Install required dependencies
 pip install -r requirements.txt
 
-# 2. Add your token
-cp .env.example .env          # Open .env in any text editor & paste your DISCORD_TOKEN
+# 3. Create your .env file and paste your DISCORD_BOT_TOKEN inside
+copy .env.example .env
+notepad .env
 
-# 3. Launch the bot!
+# 4. Launch Foreverbot!
+python bot.py
+```
+</details>
+
+<details>
+<summary><b>🔧 Manual Python Virtual Environment Setup (Linux / macOS)</b></summary>
+
+```bash
+python3 -m venv .venv
+source .venv/bin/activate
+pip install -r requirements.txt
+cp .env.example .env   # Paste your DISCORD_BOT_TOKEN inside .env
 python3 bot.py
 ```
-*Once online, just type `/` in any Discord channel to start using commands!*
+</details>
+
+---
+
+### Step 4 — Verify You're Live
+When `bot.py` connects, you will see this confirmation in your terminal:
+```text
+Logged in as Foreverbot (123456789012345678)
+Synced 40 global slash commands.
+Instantly synced 40 commands to server: Your Guild Server (987654321098765432)
+Foreverbot is live and ready!
+```
+> 💡 **Instant Slash Commands:** Foreverbot automatically pushes guild-level command syncs on startup, so typing **`/`** in your Discord server displays all 40 commands **immediately** (no 1-hour global Discord cache wait!).
 
 ---
 

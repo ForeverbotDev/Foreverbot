@@ -44,7 +44,7 @@ from knowledge_engine import (
 
 # Load environment variables
 load_dotenv()
-TOKEN = os.getenv("DISCORD_BOT_TOKEN")
+TOKEN = os.getenv("DISCORD_BOT_TOKEN") or os.getenv("DISCORD_TOKEN")
 GEMINI_API_KEY = os.getenv("GEMINI_API_KEY")
 
 # Initialize DB
