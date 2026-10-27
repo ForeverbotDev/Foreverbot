@@ -1,17 +1,45 @@
-# ⚔️ Foreverbot // World of Warcraft Discord Co-Pilot
-> The second-screen companion for **World of Warcraft: Forever (Classic+)** & **Classic Era**. Never Alt-Tab again.
+# ⚔️ Foreverbot // World of Warcraft: Forever Discord Co-Pilot
+> The second-screen companion for **World of Warcraft: Forever**. Never Alt-Tab again.
 
 [![Discord Bot](https://img.shields.io/badge/Discord-Companion%20Bot-5865F2?logo=discord&logoColor=white)](https://discord.com)
-[![WoW Classic](https://img.shields.io/badge/WoW-Classic%20%26%20Classic%2B-F59E0B)](https://github.com/s1l3ntHub/wow-foreverbot)
+[![WoW Forever](https://img.shields.io/badge/WoW-Forever-F59E0B)](https://github.com/s1l3ntHub/wow-foreverbot)
 [![Tests Passing](https://img.shields.io/badge/Tests-223%20%2F%20223%20Passed-10B981)](#-automated-testing)
 
 ---
 
-## 🎮 How to Use Foreverbot
+## 🚀 How to Install & Add to Discord
 
-1. **Press `/`** in any Discord channel to open the interactive command picker.
-2. **Type acronyms or keywords** (e.g. `tf` for Thunderfury, `hoj` for Hand of Justice, `fap` for Free Action Potion).
-3. **Pick from the floating autocomplete dropdown** or type naturally in plain English!
+### Step 1: Create & Invite the Bot
+1. Open the [Discord Developer Portal](https://discord.com/developers/applications) and click **New Application**.
+2. Go to the **Bot** tab:
+   - Click **Reset Token** (or **Copy**) to save your **Bot Token**.
+   - Under **Privileged Gateway Intents**, enable **Message Content Intent**.
+3. Go to the **OAuth2 > URL Generator** tab:
+   - Select scopes: `bot` and `applications.commands`.
+   - Select bot permissions: `Send Messages`, `Embed Links`, `Attach Files`, `Use Slash Commands`.
+   - Copy the generated URL and open it in your browser to add the bot to your Discord server.
+
+### Step 2: Install & Launch
+```bash
+# 1. Clone repository
+git clone git@github.com:s1l3ntHub/wow-foreverbot.git
+cd wow-foreverbot
+
+# 2. Install dependencies
+python3 -m venv .venv
+source .venv/bin/activate
+pip install -r requirements.txt
+
+# 3. Add your Bot Token to .env
+cp .env.example .env
+# Edit .env and paste: DISCORD_TOKEN=your_token_here
+
+# 4. Start Foreverbot
+python3 bot.py
+```
+
+### Step 3: Use Commands in Discord
+Once the bot is online, simply press `/` in any channel to browse and use any command.
 
 ---
 
@@ -61,39 +89,12 @@
 
 ---
 
-## 🚀 Setup & Installation (3 Steps)
-
-### 1. Install Dependencies
-```bash
-python3 -m venv .venv
-source .venv/bin/activate
-pip install -r requirements.txt
-```
-
-### 2. Configure Token
-Copy `.env.example` to `.env` and add your Discord Bot Token:
-```bash
-cp .env.example .env
-```
-Edit `.env`:
-```ini
-DISCORD_TOKEN=your_bot_token_here
-GEMINI_API_KEY=optional_gemini_api_key_here
-```
-
-### 3. Run Foreverbot
-```bash
-python3 bot.py
-```
-
----
-
 ## 🧪 Automated Testing
 
 Foreverbot includes 3 verification suites (**223 / 223 automated tests passing**):
 ```bash
 python3 tests/test_quality_suite.py     # 27 Core system tests
-python3 tests/test_deep_quality.py      # 81 Database & Classic+ dungeon tests
+python3 tests/test_deep_quality.py      # 81 Database & custom dungeon tests
 python3 tests/test_howto_guide_suite.py # 115 How-To guide prompt tests
 ```
 
