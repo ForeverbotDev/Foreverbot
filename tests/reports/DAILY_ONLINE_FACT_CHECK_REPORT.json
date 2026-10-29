@@ -1,5 +1,5 @@
 {
-  "timestamp": "2026-10-29 13:08:55 UTC",
+  "timestamp": "2026-10-29 14:07:59 UTC",
   "total_checks": 46,
   "passed": 46,
   "failed": 0,
@@ -15,7 +15,7 @@
       "online_name": "Carton of Mystery Meat",
       "matched": true,
       "discrepancies": [],
-      "latency_ms": 183
+      "latency_ms": 209
     },
     {
       "type": "Item",
@@ -27,7 +27,7 @@
       "online_name": "Wolfshead Helm",
       "matched": true,
       "discrepancies": [],
-      "latency_ms": 137
+      "latency_ms": 158
     },
     {
       "type": "Item",
@@ -39,247 +39,247 @@
       "online_name": "Thunderfury, Blessed Blade of the Windseeker",
       "matched": true,
       "discrepancies": [],
-      "latency_ms": 152
-    },
-    {
-      "type": "Item",
-      "id": 21665,
-      "query": "Mantle of Wicked Revenge",
-      "name": "Mantle of Wicked Revenge",
-      "quality": "Epic",
-      "online_source": "Wowhead Forever Tooltip API",
-      "online_name": "Mantle of Wicked Revenge",
-      "matched": true,
-      "discrepancies": [],
-      "latency_ms": 166
-    },
-    {
-      "type": "Item",
-      "id": 19157,
-      "query": "Chromatic Gauntlets",
-      "name": "Chromatic Gauntlets",
-      "quality": "Epic",
-      "online_source": "Wowhead Forever Tooltip API",
-      "online_name": "Chromatic Gauntlets",
-      "matched": true,
-      "discrepancies": [],
       "latency_ms": 163
     },
     {
       "type": "Item",
-      "id": 22481,
-      "query": "Bonescythe Gauntlets",
-      "name": "Bonescythe Gauntlets",
+      "id": 17602,
+      "query": "Field Marshal's Headdress",
+      "name": "Field Marshal's Headdress",
       "quality": "Epic",
       "online_source": "Wowhead Forever Tooltip API",
-      "online_name": "Bonescythe Gauntlets",
+      "online_name": "Field Marshal's Headdress",
       "matched": true,
       "discrepancies": [],
-      "latency_ms": 164
+      "latency_ms": 175
     },
     {
       "type": "Item",
-      "id": 20930,
-      "query": "Vek'lor's Diadem",
-      "name": "Vek'lor's Diadem",
+      "id": 21995,
+      "query": "Boots of Heroism",
+      "name": "Boots of Heroism",
       "quality": "Epic",
       "online_source": "Wowhead Forever Tooltip API",
-      "online_name": "Vek'lor's Diadem",
+      "online_name": "Boots of Heroism",
       "matched": true,
       "discrepancies": [],
-      "latency_ms": 164
+      "latency_ms": 189
     },
     {
       "type": "Item",
-      "id": 21352,
-      "query": "Trousers of the Oracle",
-      "name": "Trousers of the Oracle",
+      "id": 19884,
+      "query": "Jin'do's Judgement",
+      "name": "Jin'do's Judgement",
       "quality": "Epic",
       "online_source": "Wowhead Forever Tooltip API",
-      "online_name": "Trousers of the Oracle",
+      "online_name": "Jin'do's Judgement",
       "matched": true,
       "discrepancies": [],
-      "latency_ms": 172
+      "latency_ms": 183
     },
     {
       "type": "Item",
-      "id": 19554,
-      "query": "Protector's Sword",
-      "name": "Protector's Sword",
+      "id": 19257,
+      "query": "Warlords Deck",
+      "name": "Warlords Deck",
+      "quality": "Epic",
+      "online_source": "Wowhead Forever Tooltip API",
+      "online_name": "Warlords Deck",
+      "matched": true,
+      "discrepancies": [],
+      "latency_ms": 170
+    },
+    {
+      "type": "Item",
+      "id": 16567,
+      "query": "General's Chain Legguards",
+      "name": "General's Chain Legguards",
+      "quality": "Epic",
+      "online_source": "Wowhead Forever Tooltip API",
+      "online_name": "General's Chain Legguards",
+      "matched": true,
+      "discrepancies": [],
+      "latency_ms": 179
+    },
+    {
+      "type": "Item",
+      "id": 21178,
+      "query": "Gloves of Earthen Power",
+      "name": "Gloves of Earthen Power",
       "quality": "Rare",
       "online_source": "Wowhead Forever Tooltip API",
-      "online_name": "Protector's Sword",
+      "online_name": "Gloves of Earthen Power",
       "matched": true,
       "discrepancies": [],
-      "latency_ms": 167
+      "latency_ms": 190
     },
     {
       "type": "Item",
-      "id": 20195,
-      "query": "Defiler's Mail Girdle",
-      "name": "Defiler's Mail Girdle",
+      "id": 16733,
+      "query": "Spaulders of Valor",
+      "name": "Spaulders of Valor",
       "quality": "Rare",
       "online_source": "Wowhead Forever Tooltip API",
-      "online_name": "Defiler's Mail Girdle",
+      "online_name": "Spaulders of Valor",
       "matched": true,
       "discrepancies": [],
-      "latency_ms": 158
+      "latency_ms": 170
     },
     {
       "type": "Item",
-      "id": 12783,
-      "query": "Heartseeker",
-      "name": "Heartseeker",
+      "id": 20046,
+      "query": "Highlander's Lizardhide Girdle",
+      "name": "Highlander's Lizardhide Girdle",
       "quality": "Rare",
       "online_source": "Wowhead Forever Tooltip API",
-      "online_name": "Heartseeker",
+      "online_name": "Highlander's Lizardhide Girdle",
       "matched": true,
       "discrepancies": [],
-      "latency_ms": 140
+      "latency_ms": 199
     },
     {
       "type": "Item",
-      "id": 19522,
-      "query": "Lorekeeper's Ring",
-      "name": "Lorekeeper's Ring",
+      "id": 16428,
+      "query": "Lieutenant Commander's Chain Helmet",
+      "name": "Lieutenant Commander's Chain Helmet",
       "quality": "Rare",
       "online_source": "Wowhead Forever Tooltip API",
-      "online_name": "Lorekeeper's Ring",
+      "online_name": "Lieutenant Commander's Chain Helmet",
       "matched": true,
       "discrepancies": [],
-      "latency_ms": 168
+      "latency_ms": 178
     },
     {
       "type": "Item",
-      "id": 7755,
-      "query": "Flintrock Shoulders",
-      "name": "Flintrock Shoulders",
+      "id": 24102,
+      "query": "Manual of Eviscerate IX",
+      "name": "Manual of Eviscerate IX",
       "quality": "Rare",
       "online_source": "Wowhead Forever Tooltip API",
-      "online_name": "Flintrock Shoulders",
+      "online_name": "Manual of Eviscerate IX",
       "matched": true,
       "discrepancies": [],
-      "latency_ms": 160
+      "latency_ms": 187
     },
     {
       "type": "Item",
-      "id": 3558,
-      "query": "Fen Keeper Robe",
-      "name": "Fen Keeper Robe",
+      "id": 15145,
+      "query": "Ghostwalker Buckler",
+      "name": "Ghostwalker Buckler",
       "quality": "Uncommon",
       "online_source": "Wowhead Forever Tooltip API",
-      "online_name": "Fen Keeper Robe",
+      "online_name": "Ghostwalker Buckler",
       "matched": true,
       "discrepancies": [],
-      "latency_ms": 166
+      "latency_ms": 205
     },
     {
       "type": "Item",
-      "id": 6343,
-      "query": "Formula: Imbue Chest - Spirit",
-      "name": "Formula: Imbue Chest - Spirit",
+      "id": 12259,
+      "query": "Glinting Steel Dagger",
+      "name": "Glinting Steel Dagger",
       "quality": "Uncommon",
       "online_source": "Wowhead Forever Tooltip API",
-      "online_name": "Formula: Imbue Chest - Spirit",
-      "matched": true,
-      "discrepancies": [],
-      "latency_ms": 168
-    },
-    {
-      "type": "Item",
-      "id": 6377,
-      "query": "Formula: Enchant Boots - Minor Agility",
-      "name": "Formula: Enchant Boots - Minor Agility",
-      "quality": "Uncommon",
-      "online_source": "Wowhead Forever Tooltip API",
-      "online_name": "Formula: Enchant Boots - Minor Agility",
-      "matched": true,
-      "discrepancies": [],
-      "latency_ms": 160
-    },
-    {
-      "type": "Item",
-      "id": 15682,
-      "query": "Triumphant Gauntlets",
-      "name": "Triumphant Gauntlets",
-      "quality": "Uncommon",
-      "online_source": "Wowhead Forever Tooltip API",
-      "online_name": "Triumphant Gauntlets",
-      "matched": true,
-      "discrepancies": [],
-      "latency_ms": 169
-    },
-    {
-      "type": "Item",
-      "id": 7983,
-      "query": "Plans: Ornate Mithril Pants",
-      "name": "Plans: Ornate Mithril Pants",
-      "quality": "Uncommon",
-      "online_source": "Wowhead Forever Tooltip API",
-      "online_name": "Plans: Ornate Mithril Pants",
+      "online_name": "Glinting Steel Dagger",
       "matched": true,
       "discrepancies": [],
       "latency_ms": 162
     },
     {
       "type": "Item",
-      "id": 4641,
-      "query": "Hand of Dagun",
-      "name": "Hand of Dagun",
-      "quality": "Common",
+      "id": 15090,
+      "query": "Runic Leather Armor",
+      "name": "Runic Leather Armor",
+      "quality": "Uncommon",
       "online_source": "Wowhead Forever Tooltip API",
-      "online_name": "Hand of Dagun",
+      "online_name": "Runic Leather Armor",
       "matched": true,
       "discrepancies": [],
-      "latency_ms": 167
+      "latency_ms": 187
     },
     {
       "type": "Item",
-      "id": 4844,
-      "query": "Opal Runestone",
-      "name": "Opal Runestone",
-      "quality": "Common",
+      "id": 4368,
+      "query": "Flying Tiger Goggles",
+      "name": "Flying Tiger Goggles",
+      "quality": "Uncommon",
       "online_source": "Wowhead Forever Tooltip API",
-      "online_name": "Opal Runestone",
+      "online_name": "Flying Tiger Goggles",
       "matched": true,
       "discrepancies": [],
-      "latency_ms": 163
+      "latency_ms": 179
     },
     {
       "type": "Item",
-      "id": 8893,
-      "query": "Tome of Sleep IV",
-      "name": "Tome of Sleep IV",
-      "quality": "Common",
+      "id": 20402,
+      "query": "Agent of Nozdormu",
+      "name": "Agent of Nozdormu",
+      "quality": "Uncommon",
       "online_source": "Wowhead Forever Tooltip API",
-      "online_name": "Tome of Sleep IV",
+      "online_name": "Agent of Nozdormu",
       "matched": true,
       "discrepancies": [],
-      "latency_ms": 168
+      "latency_ms": 173
     },
     {
       "type": "Item",
-      "id": 22049,
-      "query": "Brazier of Beckoning",
-      "name": "Brazier of Beckoning",
+      "id": 5021,
+      "query": "Explosive Stick of Gann",
+      "name": "Explosive Stick of Gann",
       "quality": "Common",
       "online_source": "Wowhead Forever Tooltip API",
-      "online_name": "Brazier of Beckoning",
+      "online_name": "Explosive Stick of Gann",
       "matched": true,
       "discrepancies": [],
-      "latency_ms": 153
+      "latency_ms": 187
     },
     {
       "type": "Item",
-      "id": 19768,
-      "query": "Primal Tiger Leather",
-      "name": "Primal Tiger Leather",
+      "id": 5416,
+      "query": "Wildmane Cleansing Totem",
+      "name": "Wildmane Cleansing Totem",
       "quality": "Common",
       "online_source": "Wowhead Forever Tooltip API",
-      "online_name": "Primal Tiger Leather",
+      "online_name": "Wildmane Cleansing Totem",
       "matched": true,
       "discrepancies": [],
       "latency_ms": 151
+    },
+    {
+      "type": "Item",
+      "id": 3296,
+      "query": "Deadman Dagger",
+      "name": "Deadman Dagger",
+      "quality": "Common",
+      "online_source": "Wowhead Forever Tooltip API",
+      "online_name": "Deadman Dagger",
+      "matched": true,
+      "discrepancies": [],
+      "latency_ms": 172
+    },
+    {
+      "type": "Item",
+      "id": 8917,
+      "query": "Libram: Lay on Hands II",
+      "name": "Libram: Lay on Hands II",
+      "quality": "Common",
+      "online_source": "Wowhead Forever Tooltip API",
+      "online_name": "Libram: Lay on Hands II",
+      "matched": true,
+      "discrepancies": [],
+      "latency_ms": 144
+    },
+    {
+      "type": "Item",
+      "id": 8896,
+      "query": "Tome of Mana Shield VI",
+      "name": "Tome of Mana Shield VI",
+      "quality": "Common",
+      "online_source": "Wowhead Forever Tooltip API",
+      "online_name": "Tome of Mana Shield VI",
+      "matched": true,
+      "discrepancies": [],
+      "latency_ms": 154
     },
     {
       "type": "Creature",
@@ -290,7 +290,7 @@
       "online_name": "Emperor Dagran Thaurissan",
       "matched": true,
       "discrepancies": [],
-      "latency_ms": 126
+      "latency_ms": 134
     },
     {
       "type": "Creature",
@@ -301,7 +301,7 @@
       "online_name": "Herod",
       "matched": true,
       "discrepancies": [],
-      "latency_ms": 142
+      "latency_ms": 136
     },
     {
       "type": "Creature",
@@ -312,95 +312,95 @@
       "online_name": "Ragnaros",
       "matched": true,
       "discrepancies": [],
-      "latency_ms": 133
+      "latency_ms": 157
     },
     {
       "type": "Creature",
-      "id": 3698,
-      "query": "Bolyun",
-      "name": "Bolyun",
+      "id": 5343,
+      "query": "Lady Szallah",
+      "name": "Lady Szallah",
       "online_source": "Wowhead Forever NPC API",
-      "online_name": "Bolyun",
+      "online_name": "Lady Szallah",
       "matched": true,
       "discrepancies": [],
-      "latency_ms": 196
+      "latency_ms": 193
     },
     {
       "type": "Creature",
-      "id": 7467,
-      "query": "Nature Resistance Totem",
-      "name": "Nature Resistance Totem",
+      "id": 3888,
+      "query": "Korra",
+      "name": "Korra",
       "online_source": "Wowhead Forever NPC API",
-      "online_name": "Nature Resistance Totem",
+      "online_name": "Korra",
       "matched": true,
       "discrepancies": [],
-      "latency_ms": 196
+      "latency_ms": 212
     },
     {
       "type": "Creature",
-      "id": 11194,
-      "query": "Argent Defender",
-      "name": "Argent Defender",
+      "id": 6202,
+      "query": "Legashi Hellcaller",
+      "name": "Legashi Hellcaller",
       "online_source": "Wowhead Forever NPC API",
-      "online_name": "Argent Defender",
+      "online_name": "Legashi Hellcaller",
       "matched": true,
       "discrepancies": [],
-      "latency_ms": 176
+      "latency_ms": 200
     },
     {
       "type": "Creature",
-      "id": 4960,
-      "query": "Bishop DeLavey",
-      "name": "Bishop DeLavey",
+      "id": 8321,
+      "query": "Paladin 20 Alternate",
+      "name": "Paladin 20 Alternate",
       "online_source": "Wowhead Forever NPC API",
-      "online_name": "Bishop DeLavey",
+      "online_name": "Paladin 20 Alternate",
       "matched": true,
       "discrepancies": [],
-      "latency_ms": 182
+      "latency_ms": 207
     },
     {
       "type": "Creature",
-      "id": 111,
-      "query": "Priest",
-      "name": "Priest",
+      "id": 3953,
+      "query": "Tandaan Lightmane",
+      "name": "Tandaan Lightmane",
       "online_source": "Wowhead Forever NPC API",
-      "online_name": "Priest",
+      "online_name": "Tandaan Lightmane",
       "matched": true,
       "discrepancies": [],
-      "latency_ms": 188
+      "latency_ms": 233
     },
     {
       "type": "Creature",
-      "id": 3652,
-      "query": "Trigore the Lasher",
-      "name": "Trigore the Lasher",
+      "id": 227,
+      "query": "Mabel Solaj",
+      "name": "Mabel Solaj",
       "online_source": "Wowhead Forever NPC API",
-      "online_name": "Trigore the Lasher",
+      "online_name": "Mabel Solaj",
       "matched": true,
       "discrepancies": [],
-      "latency_ms": 142
+      "latency_ms": 207
     },
     {
       "type": "Creature",
-      "id": 2009,
-      "query": "Gnarlpine Shaman",
-      "name": "Gnarlpine Shaman",
+      "id": 1287,
+      "query": "Marda Weller",
+      "name": "Marda Weller",
       "online_source": "Wowhead Forever NPC API",
-      "online_name": "Gnarlpine Shaman",
+      "online_name": "Marda Weller",
       "matched": true,
       "discrepancies": [],
-      "latency_ms": 198
+      "latency_ms": 184
     },
     {
       "type": "Creature",
-      "id": 11733,
-      "query": "Hive'Regal Slavemaker",
-      "name": "Hive'Regal Slavemaker",
+      "id": 2928,
+      "query": "Primitive Owlbeast",
+      "name": "Primitive Owlbeast",
       "online_source": "Wowhead Forever NPC API",
-      "online_name": "Hive'Regal Slavemaker",
+      "online_name": "Primitive Owlbeast",
       "matched": true,
       "discrepancies": [],
-      "latency_ms": 191
+      "latency_ms": 210
     },
     {
       "type": "Quest",
@@ -411,7 +411,7 @@
       "online_name": "Free Knot!",
       "matched": true,
       "discrepancies": [],
-      "latency_ms": 147
+      "latency_ms": 164
     },
     {
       "type": "Quest",
@@ -422,7 +422,7 @@
       "online_name": "The Green Hills of Stranglethorn",
       "matched": true,
       "discrepancies": [],
-      "latency_ms": 159
+      "latency_ms": 167
     },
     {
       "type": "Quest",
@@ -433,95 +433,95 @@
       "online_name": "The Fate of the Kingdom",
       "matched": true,
       "discrepancies": [],
+      "latency_ms": 150
+    },
+    {
+      "type": "Quest",
+      "id": 257,
+      "query": "A Hunter's Boast",
+      "name": "A Hunter's Boast",
+      "online_source": "Wowhead Forever Quest API",
+      "online_name": "A Hunter's Boast",
+      "matched": true,
+      "discrepancies": [],
       "latency_ms": 147
     },
     {
       "type": "Quest",
-      "id": 2849,
-      "query": "Wild Leather Vest",
-      "name": "Wild Leather Vest",
+      "id": 1490,
+      "query": "Nara Wildmane",
+      "name": "Nara Wildmane",
       "online_source": "Wowhead Forever Quest API",
-      "online_name": "Wild Leather Vest",
+      "online_name": "Nara Wildmane",
       "matched": true,
       "discrepancies": [],
-      "latency_ms": 169
+      "latency_ms": 173
     },
     {
       "type": "Quest",
-      "id": 1365,
-      "query": "Khan Dez'hepah",
-      "name": "Khan Dez'hepah",
+      "id": 790,
+      "query": "Sarkoth",
+      "name": "Sarkoth",
       "online_source": "Wowhead Forever Quest API",
-      "online_name": "Khan Dez'hepah",
+      "online_name": "Sarkoth",
+      "matched": true,
+      "discrepancies": [],
+      "latency_ms": 158
+    },
+    {
+      "type": "Quest",
+      "id": 19,
+      "query": "Tharil'zun",
+      "name": "Tharil'zun",
+      "online_source": "Wowhead Forever Quest API",
+      "online_name": "Tharil'zun",
+      "matched": true,
+      "discrepancies": [],
+      "latency_ms": 215
+    },
+    {
+      "type": "Quest",
+      "id": 1170,
+      "query": "The Brood of Onyxia",
+      "name": "The Brood of Onyxia",
+      "online_source": "Wowhead Forever Quest API",
+      "online_name": "The Brood of Onyxia",
+      "matched": true,
+      "discrepancies": [],
+      "latency_ms": 208
+    },
+    {
+      "type": "Quest",
+      "id": 4281,
+      "query": "Thalanaar Delivery",
+      "name": "Thalanaar Delivery",
+      "online_source": "Wowhead Forever Quest API",
+      "online_name": "Thalanaar Delivery",
+      "matched": true,
+      "discrepancies": [],
+      "latency_ms": 240
+    },
+    {
+      "type": "Quest",
+      "id": 2989,
+      "query": "The Altar of Zul",
+      "name": "The Altar of Zul",
+      "online_source": "Wowhead Forever Quest API",
+      "online_name": "The Altar of Zul",
+      "matched": true,
+      "discrepancies": [],
+      "latency_ms": 198
+    },
+    {
+      "type": "Quest",
+      "id": 8280,
+      "query": "Securing the Supply Lines",
+      "name": "Securing the Supply Lines",
+      "online_source": "Wowhead Forever Quest API",
+      "online_name": "Securing the Supply Lines",
       "matched": true,
       "discrepancies": [],
       "latency_ms": 172
-    },
-    {
-      "type": "Quest",
-      "id": 332,
-      "query": "Wine Shop Advert",
-      "name": "Wine Shop Advert",
-      "online_source": "Wowhead Forever Quest API",
-      "online_name": "Wine Shop Advert",
-      "matched": true,
-      "discrepancies": [],
-      "latency_ms": 151
-    },
-    {
-      "type": "Quest",
-      "id": 46,
-      "query": "Bounty on Murlocs",
-      "name": "Bounty on Murlocs",
-      "online_source": "Wowhead Forever Quest API",
-      "online_name": "Bounty on Murlocs",
-      "matched": true,
-      "discrepancies": [],
-      "latency_ms": 152
-    },
-    {
-      "type": "Quest",
-      "id": 779,
-      "query": "Seal of the Earth",
-      "name": "Seal of the Earth",
-      "online_source": "Wowhead Forever Quest API",
-      "online_name": "Seal of the Earth",
-      "matched": true,
-      "discrepancies": [],
-      "latency_ms": 135
-    },
-    {
-      "type": "Quest",
-      "id": 5535,
-      "query": "Spiritual Unrest",
-      "name": "Spiritual Unrest",
-      "online_source": "Wowhead Forever Quest API",
-      "online_name": "Spiritual Unrest",
-      "matched": true,
-      "discrepancies": [],
-      "latency_ms": 168
-    },
-    {
-      "type": "Quest",
-      "id": 4361,
-      "query": "The Bearer of Bad News",
-      "name": "The Bearer of Bad News",
-      "online_source": "Wowhead Forever Quest API",
-      "online_name": "The Bearer of Bad News",
-      "matched": true,
-      "discrepancies": [],
-      "latency_ms": 163
-    },
-    {
-      "type": "Quest",
-      "id": 235,
-      "query": "The Ashenvale Hunt",
-      "name": "The Ashenvale Hunt",
-      "online_source": "Wowhead Forever Quest API",
-      "online_name": "The Ashenvale Hunt",
-      "matched": true,
-      "discrepancies": [],
-      "latency_ms": 148
     },
     {
       "type": "Blizzard Live Intel",
@@ -532,7 +532,7 @@
       "online_name": "WoW Forever Beta Development Notes \u2013 Updated 26 October",
       "matched": true,
       "discrepancies": [],
-      "latency_ms": 632
+      "latency_ms": 852
     }
   ]
 }
