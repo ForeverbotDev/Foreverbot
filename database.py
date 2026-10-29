@@ -228,6 +228,7 @@ ITEM_AUTOCOMPLETE_ALIASES = {
     "mooncloth": "Mooncloth",
     "tf": "Thunderfury, Blessed Blade of the Windseeker",
     "thunderfury": "Thunderfury, Blessed Blade of the Windseeker",
+    "thudner": "Thunderfury, Blessed Blade of the Windseeker",
     "hand of rag": "Sulfuras, Hand of Ragnaros",
     "rag": "Sulfuras, Hand of Ragnaros",
     "sulfuras": "Sulfuras, Hand of Ragnaros",
