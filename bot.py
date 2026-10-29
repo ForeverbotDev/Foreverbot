@@ -41,7 +41,8 @@ from knowledge_engine import (
     get_class_top5_addons, CLASS_TOP5_ADDONS,
     get_random_trivia, TRIVIA_QUESTIONS,
     calculate_resistance_mitigation, RESIST_SCHOOLS,
-    get_talent_build, TALENTS_DATA
+    get_talent_build, TALENTS_DATA,
+    get_disenchant_info, DISENCHANT_MATERIALS
 )
 from redirection import get_command_redirection_advice
 
@@ -1504,9 +1505,60 @@ async def raid_autocomplete(interaction: discord.Interaction, current: str) -> L
 # -------------------------------------------------------------
 @bot.tree.command(name="rep", description="Reputation farming loops, turn-ins & reward breakpoints (Condensed)")
 @app_commands.describe(query="Faction name (e.g. 'Timbermaw', 'Argent Dawn', 'Thorium Brotherhood', 'Hydraxian', 'Cenarion')")
-async def rep_command(interaction: discord.Interaction, query: str):
+async def rep_command(interaction: discord.Interaction, query: Optional[str] = None):
     faction = query
     await interaction.response.defer(ephemeral=True)
+
+    # 1. Directory of all factions if query is empty or requested list
+    if not faction or faction.lower() in ("all", "list", "directory", "factions", "help"):
+        embed = discord.Embed(
+            title="🛡️ World of Warcraft: Classic Reputations Directory",
+            description=(
+                "Farming reputation unlocks essential raid attunements, permanent crafting recipes, "
+                "BiS combat trinkets, and cross-race mounts.\n\n"
+                "👉 Use `/rep query:<faction>` for step-by-step turn-ins and reward tables!"
+            ),
+            color=0x3498DB
+        )
+        embed.add_field(
+            name="🏛️ Raid & Dungeon Progression",
+            value=(
+                "• **Argent Dawn:** Stratholme / Scholomance / Naxxramas • Free Naxx Attunement & Shoulder enchants\n"
+                "• **Thorium Brotherhood:** Searing Gorge & BRD • Sulfuron Hammer & Dark Iron fire resist gear\n"
+                "• **Hydraxian Waterlords:** Azshara & Molten Core • Eternal Quintessence to summon Ragnaros\n"
+                "• **Cenarion Circle:** Silithus & AQ20 • Earthstrike AP trinket & Rockfury Bracers\n"
+                "• **Zandalar Tribe:** Stranglethorn Vale & Zul'Gurub • Class shoulder enchants & Zanza flasks\n"
+                "• **Brood of Nozdormu:** Temple of Ahn'Qiraj (AQ40) • Signet Ring of the Bronze Dragonflight\n"
+                "• **Shen'dralar:** Dire Maul West • Arcanum of Rapidity (+1% Haste) & Focus"
+            ),
+            inline=False
+        )
+        embed.add_field(
+            name="⚔️ Battlegrounds (PvP Standing)",
+            value=(
+                "• **Frostwolf Clan / Stormpike Guard:** Alterac Valley • Don Julio's Band, Unstoppable Force, 640g Mount\n"
+                "• **Warsong Outriders / Silverwing Sentinels:** Warsong Gulch • Berserker & Dryad's Epic Bracers\n"
+                "• **The Defilers / League of Arathor:** Arathi Basin • Highlander's/Defiler's gear & Ironbark Staff"
+            ),
+            inline=False
+        )
+        embed.add_field(
+            name="🌲 World & Special Factions",
+            value=(
+                "• **Timbermaw Hold:** Felwood & Winterspring • +15 Agility 1H enchant & Defender trinket\n"
+                "• **Wintersaber Trainers:** Winterspring • Reins of the Winterspring Frostsaber (100% Tiger Mount)\n"
+                "• **Darkmoon Faire:** Monthly Carnival • Darkmoon Card Trinkets & Sayge +10% Damage Buff\n"
+                "• **Steamwheedle Cartel:** Booty Bay / Gadgetzan / Everlook / Ratchet • Goblin ports & neutral AH\n"
+                "• **Bloodsail Buccaneers:** Stranglethorn Pirates • Bloodsail Admiral's Hat (Parrot pet)\n"
+                "• **Ravenholdt:** Hillsbrad Foothills • League of Thieves (Heavy Junkbox turn-ins)\n"
+                "• **Capital Cities:** Stormwind / Orgrimmar / Ironforge / Undercity • Runecloth for Cross-Race Mounts"
+            ),
+            inline=False
+        )
+        embed.set_footer(text="World of Warcraft: Forever Companion • Select a faction via autocomplete")
+        await interaction.followup.send(embed=embed)
+        return
+
     rep = get_reputation_info(faction)
     if rep:
         embed = discord.Embed(
@@ -1550,10 +1602,105 @@ async def rep_command(interaction: discord.Interaction, query: str):
 
 @rep_command.autocomplete("query")
 async def rep_autocomplete(interaction: discord.Interaction, current: str) -> List[app_commands.Choice[str]]:
-    factions = ["Timbermaw Hold", "Argent Dawn", "Thorium Brotherhood", "Hydraxian Waterlords", "Cenarion Circle", "Zandalar Tribe", "Wintersaber Trainers", "Brood of Nozdormu"]
+    factions = [
+        "Argent Dawn", "Timbermaw Hold", "Thorium Brotherhood", "Hydraxian Waterlords",
+        "Cenarion Circle", "Zandalar Tribe", "Brood of Nozdormu",
+        "Frostwolf Clan (Alterac Valley)", "Stormpike Guard (Alterac Valley)",
+        "Warsong Outriders (Warsong Gulch)", "Silverwing Sentinels (Warsong Gulch)",
+        "The Defilers (Arathi Basin)", "The League of Arathor (Arathi Basin)",
+        "Wintersaber Trainers", "Shen'dralar (Dire Maul)", "Darkmoon Faire",
+        "Steamwheedle Cartel (Booty Bay / Gadgetzan)", "Bloodsail Buccaneers",
+        "Ravenholdt (League of Thieves)", "Alliance Capital Cities (Runecloth)",
+        "Horde Capital Cities (Runecloth)", "Gelkis Clan Centaur", "Magram Clan Centaur"
+    ]
     current_l = current.lower()
     matches = [f for f in factions if current_l in f.lower()]
-    return [app_commands.Choice(name=m[:100], value=m[:100]) for m in matches[:25]]
+    if not matches and current_l:
+        import difflib
+        matches = difflib.get_close_matches(current, factions, n=10, cutoff=0.3)
+    return [app_commands.Choice(name=m[:100], value=m[:100]) for m in (matches or factions)[:25]]
+
+
+# -------------------------------------------------------------
+# Slash Command: /disenchant (Disenchant Yields, Probabilities & Value)
+# -------------------------------------------------------------
+@bot.tree.command(name="disenchant", description="Disenchant yields, material probabilities & vendor vs DE value calculator")
+@app_commands.describe(
+    query="Item name, item level (e.g. '55'), or material (e.g. 'Large Brilliant Shard')",
+    quality="Item quality filter: Uncommon (Green), Rare (Blue), or Epic (Purple)",
+    item_type="Item category: Armor or Weapon"
+)
+@app_commands.choices(quality=[
+    app_commands.Choice(name="🟢 Uncommon (Green)", value="uncommon"),
+    app_commands.Choice(name="🔵 Rare (Blue)", value="rare"),
+    app_commands.Choice(name="🟣 Epic (Purple)", value="epic"),
+])
+@app_commands.choices(item_type=[
+    app_commands.Choice(name="🛡️ Armor", value="armor"),
+    app_commands.Choice(name="⚔️ Weapon", value="weapon"),
+])
+async def disenchant_command(
+    interaction: discord.Interaction,
+    query: Optional[str] = None,
+    quality: Optional[app_commands.Choice[str]] = None,
+    item_type: Optional[app_commands.Choice[str]] = None
+):
+    await interaction.response.defer(ephemeral=True)
+    q_val = quality.value if quality else None
+    t_val = item_type.value if item_type else None
+
+    info = get_disenchant_info(query=query, quality_filter=q_val, item_type_filter=t_val, db=db)
+
+    embed_color = 0x9B59B6  # Enchanting Purple / Arcane
+    if info.get("type") == "ineligible":
+        embed_color = 0xE74C3C  # Red error
+    elif info.get("type") == "material":
+        embed_color = 0x3498DB  # Blue reagent
+
+    embed = discord.Embed(
+        title=info.get("title", "✨ Disenchant Guide"),
+        description=info.get("description", ""),
+        color=embed_color
+    )
+
+    if "fields" in info:
+        for f in info["fields"]:
+            embed.add_field(name=f["name"], value=f["value"], inline=f.get("inline", False))
+
+    footer_text = info.get("tip", "World of Warcraft: Forever Companion • Enchanting Knowledge Engine")
+    embed.set_footer(text=footer_text)
+    await interaction.followup.send(embed=embed)
+
+
+@disenchant_command.autocomplete("query")
+async def disenchant_autocomplete(interaction: discord.Interaction, current: str) -> List[app_commands.Choice[str]]:
+    current_l = current.lower()
+
+    # 1. Matching enchanting materials
+    mat_choices = [
+        m_info["name"] for m_key, m_info in DISENCHANT_MATERIALS.items()
+        if current_l in m_key or current_l in m_info["name"].lower()
+    ]
+
+    # 2. Featured items for quick DE checks if current is short
+    featured_de_items = [
+        "Krol Blade", "Archaic Defender", "Shadowfang", "Warden Staff",
+        "Runecloth Shoulders", "White Bandit Mask", "Traveler's Backpack",
+        "Large Brilliant Shard", "Greater Eternal Essence", "Illusion Dust", "Nexus Crystal"
+    ]
+    matching_featured = [item for item in featured_de_items if current_l in item.lower()]
+
+    # 3. Item database autocomplete
+    db_items = db.autocomplete_items(current, limit=15)
+
+    combined = []
+    seen = set()
+    for item in mat_choices + matching_featured + db_items:
+        if item.lower() not in seen:
+            seen.add(item.lower())
+            combined.append(item)
+
+    return [app_commands.Choice(name=c[:100], value=c[:100]) for c in combined[:25]]
 
 
 # -------------------------------------------------------------

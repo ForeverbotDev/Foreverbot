@@ -61,7 +61,7 @@ class TestTuesdayWeeklyIntel(unittest.TestCase):
         # Verify /intel command is registered in bot tree
         cmds = [cmd.name for cmd in bot.bot.tree.get_commands()]
         self.assertIn("intel", cmds)
-        self.assertEqual(len(cmds), 41)
+        self.assertEqual(len(cmds), 42)
 
 
 if __name__ == "__main__":

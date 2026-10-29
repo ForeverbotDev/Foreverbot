@@ -2018,6 +2018,61 @@ REPUTATIONS_DATA: Dict[str, Dict[str, Any]] = {
             "• **Exalted:** Unlocks **Cross-Faction Racial Mounts** (e.g. Human riding a Nightsaber Tiger, Orc riding an Undead Skeletal Warhorse, or Skyborne Windstrider!)"
         ),
         "tip": "Alterac Valley turn-ins give spillover reputation to ALL home cities simultaneously — the cheapest way to save thousands of Runecloth!"
+    },
+    "shen'dralar": {
+        "name": "Shen'dralar (Dire Maul High Elves)",
+        "location": "The Athenaeum, Dire Maul West (Prince Tortheldrin's Sanctuary)",
+        "farm_loop": (
+            "• Neutral to Exalted: Farm Pristine Black Diamonds, Skin of Shadow (Scholomance), and Frayed Abomination Stitchings (Stratholme).\n"
+            "• Turn in rare class books (*Compendium of Dragonslaying*, *Harnessing Shadows*, etc.) for 500 rep each.\n"
+            "• Complete repeatable Libram turn-ins to Lorekeeper Lydros: **Libram of Focus**, **Libram of Rapidity**, and **Libram of Protection** (500 rep each)."
+        ),
+        "rewards": (
+            "• **Honored:** Access to Lorekeeper Lydros & Shen'dralar Provisioner in Dire Maul West\n"
+            "• **Exalted:** **Arcanum of Rapidity** (+1% Haste), **Arcanum of Focus** (+8 Spell Dmg & Healing), and **Arcanum of Protection** (+1% Dodge) head/leg arcanums"
+        ),
+        "tip": "Shen'dralar is the most prestigious reputation grind in Classic WoW, required for the legendary 'Insane in the Membrane' Feat of Strength."
+    },
+    "ravenholdt": {
+        "name": "Ravenholdt (The League of Thieves)",
+        "location": "Ravenholdt Manor, Northern Hillsbrad Foothills (hidden mountain tunnel at 70, 45)",
+        "farm_loop": (
+            "• Neutral to Friendly: Slay Syndicate rogues and operatives in Hillsbrad Foothills & Durnholde Keep, turning in **Syndicate Emblems**.\n"
+            "• Friendly to Exalted: Rogues must pickpocket level 50+ humanoid mobs in Lower Blackrock Spire, Stratholme, or Tyr's Hand for **Heavy Junkboxes** (turn in 5 for 75 rep to Winstone Wolfe)."
+        ),
+        "rewards": (
+            "• **Friendly to Honored:** Access to the League of Thieves mansion, Master Poisoners, and Thieves' lockpicking training crates\n"
+            "• **Exalted:** Guild Master standing with Lord Jorach Ravenholdt, unique rogue throwing knives, and achievement progression"
+        ),
+        "tip": "Non-rogue characters who want Ravenholdt Exalted must purchase thousands of Heavy Junkboxes from guild rogues on the Auction House!"
+    },
+    "bloodsail buccaneers": {
+        "name": "Bloodsail Buccaneers",
+        "location": "The Crimson Veil & Bloodsail ships off Southern Stranglethorn Vale / Faldir's Cove",
+        "farm_loop": (
+            "• Open your Reputation tab (U), click Booty Bay, and check **At War**.\n"
+            "• Slaughter Booty Bay Bruisers (+25 Bloodsail rep, -125 Booty Bay), Jazzrik, and Baron Revilgaz (+5-25 rep) until Friendly (3,000/3,000).\n"
+            "• Complete the quest **Avast Ye, Admiral!** from Fleet Master Firallon atop the pirate fleet."
+        ),
+        "rewards": (
+            "• **Friendly:** **Blood Red Pirate Shirt** & **Bloodsail Admiral's Hat** (Epic pirate hat that summons a Bloodsail Parrot pet!)\n"
+            "• **Honored to Exalted:** Title of Bloodsail Admiral and honorary command of the pirate fleet"
+        ),
+        "tip": "To fix your ruined Goblin rep after getting your Pirate Hat, turn in Silk and Mageweave cloth outside Booty Bay & Gadgetzan — it restores Steamwheedle rep without losing Bloodsail!"
+    },
+    "gelkis clan centaur": {
+        "name": "Gelkis Clan Centaur",
+        "location": "Gelkis Village, Southwestern Desolace (36, 79)",
+        "farm_loop": "Kill Magram clan centaurs in southeastern Desolace (+20 Gelkis rep, -100 Magram rep per kill) until reaching Friendly 3,000/3,000 cap.",
+        "rewards": "Friendly standing allows safe travel through southwestern Desolace and unlocks the quest *Gelkis Alliance*.",
+        "tip": "You cannot reach Honored with centaurs in Vanilla WoW 1.12.1; 3,000/3,000 Friendly is the hard mathematical maximum."
+    },
+    "magram clan centaur": {
+        "name": "Magram Clan Centaur",
+        "location": "Magram Village, Southeastern Desolace (71, 73)",
+        "farm_loop": "Kill Gelkis clan centaurs in southwestern Desolace (+20 Magram rep, -100 Gelkis rep per kill) until reaching Friendly 3,000/3,000 cap.",
+        "rewards": "Friendly standing allows safe travel through southeastern Desolace and unlocks the quest *Magram Alliance*.",
+        "tip": "Choose either Gelkis or Magram based on whichever village is closer to your leveling path in Desolace."
     }
 }
 
@@ -2316,8 +2371,13 @@ def get_reputation_info(query: str) -> Optional[Dict[str, Any]]:
         "wsg": "warsong outriders", "warsong": "warsong outriders", "outriders": "warsong outriders", "silverwing": "warsong outriders", "sentinels": "warsong outriders", "silverwing sentinels": "warsong outriders",
         "ab": "the defilers", "defilers": "the defilers", "arathor": "the defilers", "league of arathor": "the defilers", "arathi": "the defilers",
         "av": "frostwolf clan", "frostwolf": "frostwolf clan", "stormpike": "frostwolf clan", "stormpike guard": "frostwolf clan", "alterac": "frostwolf clan",
-        "steamwheedle": "steamwheedle cartel", "booty bay": "steamwheedle cartel", "gadgetzan": "steamwheedle cartel", "ratchet": "steamwheedle cartel", "everlook": "steamwheedle cartel", "bloodsail": "steamwheedle cartel", "bloodsail buccaneers": "steamwheedle cartel", "pirates": "steamwheedle cartel",
+        "steamwheedle": "steamwheedle cartel", "booty bay": "steamwheedle cartel", "gadgetzan": "steamwheedle cartel", "ratchet": "steamwheedle cartel", "everlook": "steamwheedle cartel", "pirates": "steamwheedle cartel",
+        "bloodsail": "bloodsail buccaneers", "bloodsail buccaneers": "bloodsail buccaneers", "pirate hat": "bloodsail buccaneers",
         "dmf": "darkmoon faire", "darkmoon": "darkmoon faire", "sayge": "darkmoon faire",
+        "shen'dralar": "shen'dralar", "shendralar": "shen'dralar", "dire maul": "shen'dralar", "athenaeum": "shen'dralar", "libram": "shen'dralar",
+        "ravenholdt": "ravenholdt", "junkbox": "ravenholdt", "heavy junkbox": "ravenholdt", "thieves": "ravenholdt",
+        "gelkis": "gelkis clan centaur", "gelkis clan": "gelkis clan centaur", "centaur": "gelkis clan centaur",
+        "magram": "magram clan centaur", "magram clan": "magram clan centaur",
         "stormwind": "home cities", "orgrimmar": "home cities", "ironforge": "home cities", "undercity": "home cities", "thunder bluff": "home cities", "darnassus": "home cities", "gnomeregan": "home cities", "gnomeregan exiles": "home cities", "darkspear": "home cities", "darkspear trolls": "home cities", "skyborne": "home cities", "city": "home cities", "cities": "home cities", "cloth": "home cities"
     }
 
@@ -2334,6 +2394,536 @@ def get_reputation_info(query: str) -> Optional[Dict[str, Any]]:
     if matches:
         return REPUTATIONS_DATA[matches[0]]
     return None
+
+
+# -------------------------------------------------------------
+# Disenchanting Materials, Brackets & Value Engine
+# -------------------------------------------------------------
+DISENCHANT_MATERIALS: Dict[str, Dict[str, Any]] = {
+    "strange dust": {
+        "id": 10940, "name": "Strange Dust", "quality": "common", "icon": "🌫️", "ilvl": "5–25",
+        "sources": "Uncommon (Green) armor (75–80%) and weapons (20%)",
+        "farming_advice": "Run Deadmines, Wailing Caverns, or grind humanoid camps in Westfall, Loch Modan, and The Barrens for level 5–20 green equipment.",
+        "crafted_sources": "Minor Armor Kit (Leatherworking), Linen Boots (Tailoring), Spidersilk Boots (Tailoring)",
+        "tip": "Armor yields ~75% dust compared to weapons which yield essences. Disenchant green armor to stockpile Strange Dust."
+    },
+    "soul dust": {
+        "id": 11083, "name": "Soul Dust", "quality": "common", "icon": "✨", "ilvl": "26–35",
+        "sources": "Uncommon (Green) armor (75%) and weapons (20%)",
+        "farming_advice": "Farm Scarlet Monastery Graveyard & Library, Razorfen Kraul, or level 26–35 mobs in Thousand Needles, Hillsbrad, and Duskwood.",
+        "crafted_sources": "Silk Headband (Tailoring), Heavy Woolen Cloak (Tailoring), Barbaric Shoulders (Leatherworking)",
+        "tip": "Crucial mid-level enchanting material for +3 Weapon Damage, Minor Speed on boots, and Greater Stamina."
+    },
+    "vision dust": {
+        "id": 11137, "name": "Vision Dust", "quality": "common", "icon": "🔮", "ilvl": "36–45",
+        "sources": "Uncommon (Green) armor (75%) and weapons (20%)",
+        "farming_advice": "Farm Scarlet Monastery Armory/Cathedral, Uldaman, Zul'Farrak, Badlands, and Northern Stranglethorn Vale.",
+        "crafted_sources": "White Bandit Mask (Tailoring — best gold-to-dust ratio!), Black Mageweave Vest, Turtle Scale Breastplate",
+        "tip": "Tailoring's *White Bandit Mask* (crafted with 1 Bleach, 1 Heavy Silken Thread, 1 Mageweave Cloth) is the most efficient Vision Dust farm in Classic."
+    },
+    "dream dust": {
+        "id": 11176, "name": "Dream Dust", "quality": "common", "icon": "🌙", "ilvl": "46–55",
+        "sources": "Uncommon (Green) armor (75%) and weapons (20%)",
+        "farming_advice": "Farm Maraudon (Princess/trash runs), Sunken Temple, Western Plaguelands sorrow hill, and Felwood jadefire satyrs.",
+        "crafted_sources": "Runecloth Belt (Tailoring), Frostweave Pants (Tailoring), Wild Leather Cloak (Leatherworking)",
+        "tip": "High demand for level 50+ enchants (+7 Weapon Damage, Greater Intellect, Greater Agility)."
+    },
+    "illusion dust": {
+        "id": 16204, "name": "Illusion Dust", "quality": "common", "icon": "💫", "ilvl": "56–65+",
+        "sources": "Uncommon (Green) level 56–60 armor (75%) and weapons (20%)",
+        "farming_advice": "Endgame level 56–60 green drops in Stratholme, Scholomance, Dire Maul, Western/Eastern Plaguelands, and LBRS.",
+        "crafted_sources": "Runecloth Shoulders (Tailoring — 5 Bolt of Runecloth, 1 Rugged Leather, 1 Rune Thread), Runecloth Tunic, Wizardweave Robe",
+        "tip": "Required in massive quantities (40–80x) for top-tier raid enchants: Crusader, +15 Agility, Healing Power, and Spell Power."
+    },
+    "lesser magic essence": {
+        "id": 10938, "name": "Lesser Magic Essence", "quality": "uncommon", "icon": "🧪", "ilvl": "5–15",
+        "sources": "Green weapons (80%) and green armor (20%)",
+        "farming_advice": "Low-level green weapon drops from Elwynn Forest, Durotar, and starter zone humanoid camps.",
+        "crafted_sources": "Lesser Magic Wand (Enchanting — 1 Simple Wood, 1 Lesser Magic Essence)",
+        "tip": "3 Lesser Magic Essences can be right-clicked in your bags to turn into 1 Greater Magic Essence."
+    },
+    "greater magic essence": {
+        "id": 10939, "name": "Greater Magic Essence", "quality": "uncommon", "icon": "⚗️", "ilvl": "16–20",
+        "sources": "Green weapons (75%) and green armor (20%) • Can also combine 3 Lesser Magic Essences",
+        "farming_advice": "Deadmines & Wailing Caverns weapon drops; Loch Modan & Silverpine troggs/gnolls.",
+        "crafted_sources": "Greater Magic Wand (Enchanting — 1 Simple Wood, 1 Greater Magic Essence)",
+        "tip": "Essential for early wand crafting — every fresh Classic Priest/Mage/Warlock buys Greater Magic Wands."
+    },
+    "lesser astral essence": {
+        "id": 10998, "name": "Lesser Astral Essence", "quality": "uncommon", "icon": "🧪", "ilvl": "21–25",
+        "sources": "Green weapons (75%) and green armor (15–20%)",
+        "farming_advice": "Blackfathom Deeps, Ashenvale, Hillsbrad Foothills syndicate weapon drops.",
+        "crafted_sources": "Lesser Mystic Wand, Fine Leather Boots, Heavy Woolen Cloak",
+        "tip": "Combine 3 Lesser Astral Essences into 1 Greater Astral Essence."
+    },
+    "greater astral essence": {
+        "id": 11082, "name": "Greater Astral Essence", "quality": "uncommon", "icon": "⚗️", "ilvl": "26–30",
+        "sources": "Green weapons (75%) and green armor (20%) • Can also combine 3 Lesser Astral Essences",
+        "farming_advice": "Razorfen Kraul, Thousand Needles, Duskwood weapon drops.",
+        "crafted_sources": "Lesser Mystic Wand (Enchanting), Barbaric Harness (Leatherworking)",
+        "tip": "High value for 2H Weapon Impact and Shield Stamina enchants."
+    },
+    "lesser mystic essence": {
+        "id": 11134, "name": "Lesser Mystic Essence", "quality": "uncommon", "icon": "🧪", "ilvl": "31–35",
+        "sources": "Green weapons (75%) and green armor (20%)",
+        "farming_advice": "Scarlet Monastery (Graveyard/Library), Desolace centaurs, Arathi Highlands raptors.",
+        "crafted_sources": "Greater Mystic Wand, Phoenix Pants, Ironfeather Shoulders",
+        "tip": "Combine 3 Lesser Mystic Essences into 1 Greater Mystic Essence."
+    },
+    "greater mystic essence": {
+        "id": 11135, "name": "Greater Mystic Essence", "quality": "uncommon", "icon": "⚗️", "ilvl": "36–40",
+        "sources": "Green weapons (75%) and green armor (20%) • Can also combine 3 Lesser Mystic Essences",
+        "farming_advice": "Scarlet Monastery Armory & Cathedral weapon drops, Stranglethorn Vale kurzen/pirate weapons.",
+        "crafted_sources": "White Bandit Mask (Tailoring — yields ~20% Greater Mystic Essence when DE'd!), Black Mageweave Gloves",
+        "tip": "Needed for level 40 mounts fund — sell on AH or use for Greater Striking and Boots +5 Agility."
+    },
+    "lesser nether essence": {
+        "id": 11174, "name": "Lesser Nether Essence", "quality": "uncommon", "icon": "🧪", "ilvl": "41–45",
+        "sources": "Green weapons (75%) and green armor (20%)",
+        "farming_advice": "Zul'Farrak troll weapon drops, Tanaris wastelander weapons, Feralas ogres.",
+        "crafted_sources": "Black Mageweave Headband, Wild Leather Shoulders",
+        "tip": "Combine 3 Lesser Nether Essences into 1 Greater Nether Essence."
+    },
+    "greater nether essence": {
+        "id": 11175, "name": "Greater Nether Essence", "quality": "uncommon", "icon": "⚗️", "ilvl": "46–50",
+        "sources": "Green weapons (75%) and green armor (20%) • Can also combine 3 Lesser Nether Essences",
+        "farming_advice": "Maraudon weapon drops (Princess/Rotgrip), Searing Gorge dark iron dwarfs, Felwood furbolgs.",
+        "crafted_sources": "Runecloth Belt, Feathered Breastplate, Ghostweave Pants",
+        "tip": "Used for +7 Weapon Damage, Boots - Greater Stamina (+7), and Bracers - Greater Strength (+7)."
+    },
+    "lesser eternal essence": {
+        "id": 16202, "name": "Lesser Eternal Essence", "quality": "uncommon", "icon": "🧪", "ilvl": "51–55",
+        "sources": "Green weapons (75%) and green armor (20%)",
+        "farming_advice": "Sunken Temple, Blackrock Depths (Prison/Arena/Bar), Un'Goro Crater level 51–55 green weapons.",
+        "crafted_sources": "Frostweave Robe, Runecloth Boots, Thorium Belt",
+        "tip": "Always combine 3 Lesser Eternal Essences into 1 Greater Eternal Essence to maximize resale value."
+    },
+    "greater eternal essence": {
+        "id": 16203, "name": "Greater Eternal Essence", "quality": "uncommon", "icon": "⚗️", "ilvl": "56–65+",
+        "sources": "Level 56–60 green weapons (75%) and armor (20%) • Combine 3 Lesser Eternal Essences",
+        "farming_advice": "Stratholme, Scholomance, Dire Maul, and Eastern Plaguelands level 56+ green weapon drops.",
+        "crafted_sources": "Runecloth Shoulders (Tailoring — yields ~20% Greater Eternal Essence!), Wizardweave Turban, Mooncloth Boots",
+        "tip": "One of the most expensive trade goods in Classic WoW (~3–6g each on AH); used for +4 Stats on Chest, +9 Stats on Bracers, and +15 Agility."
+    },
+    "small glimmering shard": {
+        "id": 10978, "name": "Small Glimmering Shard", "quality": "rare", "icon": "💎", "ilvl": "16–25",
+        "sources": "Level 16–25 Rare equipment (100%) and level 16–25 greens (5%)",
+        "farming_advice": "Deadmines (Edwin VanCleef, Mr. Smite), Wailing Caverns (Mutanus), Shadowfang Keep (Silverlaine, Springvale).",
+        "crafted_sources": "Silvered Bronze Boots, Smoldering Robe",
+        "tip": "Used for early weapon enchants (+2 Weapon Damage, Minor Beastslaying)."
+    },
+    "large glimmering shard": {
+        "id": 11084, "name": "Large Glimmering Shard", "quality": "rare", "icon": "🔷", "ilvl": "26–30",
+        "sources": "Level 26–30 Rare equipment (100%) and level 26–30 greens (5%)",
+        "farming_advice": "Shadowfang Keep (Archmage Arugal), Blackfathom Deeps (Twilight Lord Kelris, Aku'mai), Razorfen Kraul.",
+        "crafted_sources": "Green Iron Bracers, Golden Scale Coif, Barbaric Harness",
+        "tip": "Used for +3 Weapon Damage and Heavy Shield Armor enchants."
+    },
+    "small glowing shard": {
+        "id": 11138, "name": "Small Glowing Shard", "quality": "rare", "icon": "💎", "ilvl": "31–35",
+        "sources": "Level 31–35 Rare equipment (100%) and level 31–35 greens (5%)",
+        "farming_advice": "Scarlet Monastery Graveyard & Library (Houndmaster Loksey, Interrogator Vishas, Arcanist Doan).",
+        "crafted_sources": "Golden Scale Shoulders, Ironfeather Shoulders",
+        "tip": "Used for level 30+ weapon and armor enchantments."
+    },
+    "large glowing shard": {
+        "id": 11139, "name": "Large Glowing Shard", "quality": "rare", "icon": "🔶", "ilvl": "36–40",
+        "sources": "Level 36–40 Rare equipment (100%) and level 36–40 greens (5%)",
+        "farming_advice": "Scarlet Monastery Armory (Herod), Cathedral (High Inquisitor Whitemane, Scarlet Commander Mograine), Razorfen Downs.",
+        "crafted_sources": "Polished Steel Boots, Frostreaver Crown",
+        "tip": "Used for +4 Weapon Damage and Greater Spirit enchants."
+    },
+    "small radiant shard": {
+        "id": 11177, "name": "Small Radiant Shard", "quality": "rare", "icon": "💎", "ilvl": "41–45",
+        "sources": "Level 41–45 Rare equipment (100%) and level 41–45 greens (5%)",
+        "farming_advice": "Uldaman (Archaedas, Grimlok), Zul'Farrak (Ghaz'rilla, Antu'sul, Chief Ukorz Sandscalp).",
+        "crafted_sources": "Ornate Mithril Pants, Big Voodoo Robe",
+        "tip": "Used for +5 Weapon Damage, Fiery Weapon, and level 40+ enchants."
+    },
+    "large radiant shard": {
+        "id": 11178, "name": "Large Radiant Shard", "quality": "rare", "icon": "☀️", "ilvl": "46–50",
+        "sources": "Level 46–50 Rare equipment (100%) and level 46–50 greens (5%)",
+        "farming_advice": "Maraudon (Princess Theradras, Lord Vyletongue), Sunken Temple dragon bosses (Jammal'an, Morphaz).",
+        "crafted_sources": "Thorium Armor (Blacksmithing), Wild Leather Vest, Ghostweave Belt",
+        "tip": "Key reagent for Fiery Weapon (+40 Fire damage proc) and Greater Stats on Chest."
+    },
+    "small brilliant shard": {
+        "id": 14343, "name": "Small Brilliant Shard", "quality": "rare", "icon": "💎", "ilvl": "51–55",
+        "sources": "Level 51–55 Rare equipment (100%) and level 51–55 greens (5%)",
+        "farming_advice": "Blackrock Depths (General Angerforge, Golem Lord Argelmach, Bael'Gar), Sunken Temple Shade of Eranikus.",
+        "crafted_sources": "Thorium Belt, Volcanic Shoulders, Frostweave Gloves",
+        "tip": "Used for level 50+ cloak, weapon, and bracer formulas."
+    },
+    "large brilliant shard": {
+        "id": 14344, "name": "Large Brilliant Shard", "quality": "rare", "icon": "🌟", "ilvl": "56–65+",
+        "sources": "Level 56–65+ Rare equipment (99.5–100%) and level 56+ greens (5%)",
+        "farming_advice": "Stratholme (Baron Rivendare, Balnazzar), Scholomance (Darkmaster Gandling), Dire Maul (Tribute/West/East), Upper Blackrock Spire (General Drakkisath), BRD (Emperor Dagran Thaurissan).",
+        "crafted_sources": "Runecloth Shoulders (Tailoring), Mooncloth Leggings, Thorium Boots",
+        "tip": "The lifeblood of endgame raiding: Crusader (4x), +15 Agility (4x), Healing Power (4x), Spell Power (4x), and +9 Stamina (2x)."
+    },
+    "nexus crystal": {
+        "id": 20725, "name": "Nexus Crystal", "quality": "epic", "icon": "🔮", "ilvl": "51–65+",
+        "sources": "Level 51–65+ Epic equipment (100%, 1–2 crystals) and level 56+ Rare items (0.5–1% rare proc in Patch 1.9+)",
+        "farming_advice": "Disenchant unwanted raid epics from Molten Core, Onyxia's Lair, Blackwing Lair, Zul'Gurub, and AQ40.",
+        "crafted_sources": "Corehound Belt, Sulfuron Hammer, Robe of the Void",
+        "tip": "Required for top-tier Ahn'Qiraj and Naxxramas enchants (+15 Agility, +55 Healing, +30 Spell Damage, Mantle of the Dawn)."
+    }
+}
+
+
+def calculate_disenchant_table(item_level: int, quality_str: str, is_weapon: bool = False) -> List[Dict[str, Any]]:
+    """Calculates authentic Blizzard 1.12.1 / VMaNGOS disenchant yield probabilities."""
+    q = (quality_str or "").lower()
+    lvl = max(5, min(item_level, 65))
+    yields = []
+
+    if q in ("poor", "grey", "common", "white", "legendary", "artifact"):
+        return []
+
+    if q in ("uncommon", "green"):
+        if lvl <= 15:
+            dust = ("Strange Dust", 1, 2)
+            essence = ("Lesser Magic Essence", 1, 2)
+            shard = None
+        elif lvl <= 20:
+            dust = ("Strange Dust", 2, 3)
+            essence = ("Greater Magic Essence", 1, 2)
+            shard = ("Small Glimmering Shard", 1, 1)
+        elif lvl <= 25:
+            dust = ("Strange Dust", 4, 6)
+            essence = ("Lesser Astral Essence", 1, 2)
+            shard = ("Small Glimmering Shard", 1, 1)
+        elif lvl <= 30:
+            dust = ("Soul Dust", 1, 2)
+            essence = ("Greater Astral Essence", 1, 2)
+            shard = ("Large Glimmering Shard", 1, 1)
+        elif lvl <= 35:
+            dust = ("Soul Dust", 2, 5)
+            essence = ("Lesser Mystic Essence", 1, 2)
+            shard = ("Small Glowing Shard", 1, 1)
+        elif lvl <= 40:
+            dust = ("Vision Dust", 1, 2)
+            essence = ("Greater Mystic Essence", 1, 2)
+            shard = ("Large Glowing Shard", 1, 1)
+        elif lvl <= 45:
+            dust = ("Vision Dust", 2, 5)
+            essence = ("Lesser Nether Essence", 1, 2)
+            shard = ("Small Radiant Shard", 1, 1)
+        elif lvl <= 50:
+            dust = ("Dream Dust", 1, 2)
+            essence = ("Greater Nether Essence", 1, 2)
+            shard = ("Large Radiant Shard", 1, 1)
+        elif lvl <= 55:
+            dust = ("Dream Dust", 2, 5)
+            essence = ("Lesser Eternal Essence", 1, 2)
+            shard = ("Small Brilliant Shard", 1, 1)
+        else:
+            dust = ("Illusion Dust", 2, 5)
+            essence = ("Greater Eternal Essence", 1, 2)
+            shard = ("Large Brilliant Shard", 1, 1)
+
+        if is_weapon:
+            yields.append({"item": essence[0], "chance": 75, "min": essence[1], "max": essence[2]})
+            yields.append({"item": dust[0], "chance": 20, "min": dust[1], "max": dust[2]})
+            if shard:
+                yields.append({"item": shard[0], "chance": 5, "min": shard[1], "max": shard[2]})
+        else:
+            yields.append({"item": dust[0], "chance": 75, "min": dust[1], "max": dust[2]})
+            yields.append({"item": essence[0], "chance": 20, "min": essence[1], "max": essence[2]})
+            if shard:
+                yields.append({"item": shard[0], "chance": 5, "min": shard[1], "max": shard[2]})
+
+    elif q in ("rare", "blue"):
+        if lvl <= 25:
+            yields.append({"item": "Small Glimmering Shard", "chance": 100, "min": 1, "max": 1})
+        elif lvl <= 30:
+            yields.append({"item": "Large Glimmering Shard", "chance": 100, "min": 1, "max": 1})
+        elif lvl <= 35:
+            yields.append({"item": "Small Glowing Shard", "chance": 100, "min": 1, "max": 1})
+        elif lvl <= 40:
+            yields.append({"item": "Large Glowing Shard", "chance": 100, "min": 1, "max": 1})
+        elif lvl <= 45:
+            yields.append({"item": "Small Radiant Shard", "chance": 100, "min": 1, "max": 1})
+        elif lvl <= 50:
+            yields.append({"item": "Large Radiant Shard", "chance": 100, "min": 1, "max": 1})
+        elif lvl <= 55:
+            yields.append({"item": "Small Brilliant Shard", "chance": 100, "min": 1, "max": 1})
+        else:
+            yields.append({"item": "Large Brilliant Shard", "chance": 99.5, "min": 1, "max": 1})
+            yields.append({"item": "Nexus Crystal", "chance": 0.5, "min": 1, "max": 1})
+
+    elif q in ("epic", "purple"):
+        if lvl <= 45:
+            yields.append({"item": "Small Radiant Shard", "chance": 100, "min": 2, "max": 4})
+        elif lvl <= 50:
+            yields.append({"item": "Large Radiant Shard", "chance": 100, "min": 2, "max": 4})
+        elif lvl <= 55:
+            yields.append({"item": "Nexus Crystal", "chance": 100, "min": 1, "max": 1})
+        else:
+            yields.append({"item": "Nexus Crystal", "chance": 100, "min": 1, "max": 2})
+
+    return yields
+
+
+def get_disenchant_info(
+    query: Optional[str] = None,
+    quality_filter: Optional[str] = None,
+    item_type_filter: Optional[str] = None,
+    db: Optional[Any] = None
+) -> Dict[str, Any]:
+    """Retrieves full disenchant yields, material guides, level brackets, and vendor vs DE calculations."""
+    q_str = (query or "").strip().lower()
+
+    # 1. Master Disenchanting Guide if empty or requested overview
+    if not q_str or q_str in ("all", "guide", "overview", "help", "list", "brackets"):
+        return {
+            "type": "guide",
+            "title": "✨ World of Warcraft: Classic Disenchanting Master Guide",
+            "description": (
+                "Disenchanting breaks down **Uncommon (Green)**, **Rare (Blue)**, and **Epic (Purple)** gear into magical reagents.\n\n"
+                "📜 **Core Vanilla 1.12.1 Mechanics:**\n"
+                "• **No Skill Level Lock:** In Classic 1.12, an enchanter with skill **1** can disenchant ANY level item (skill gates were added in TBC).\n"
+                "• **Armor vs Weapon Weighting:**\n"
+                "  - **Armor** favors **Dust (~75%)**, ~20% Essence, ~5% Shard.\n"
+                "  - **Weapons** favor **Essence (~75%)**, ~20% Dust, ~5% Shard.\n"
+                "• **Rares & Epics:** Rare gear yields **100% Shards**. Level 51+ Epics yield **Nexus Crystals**.\n"
+                "• **Cannot Disenchant:** Poor (Grey), Common (White), and Legendary (Orange) items."
+            ),
+            "fields": [
+                {
+                    "name": "🌫️ Dust Brackets (Armor Favored ~75%)",
+                    "value": (
+                        "• **Strange Dust (iLvl 5–25):** 1–6 dust (Level 5–20 greens)\n"
+                        "• **Soul Dust (iLvl 26–35):** 1–5 dust (Level 21–30 greens)\n"
+                        "• **Vision Dust (iLvl 36–45):** 1–5 dust (Level 31–40 greens)\n"
+                        "• **Dream Dust (iLvl 46–55):** 1–5 dust (Level 41–50 greens)\n"
+                        "• **Illusion Dust (iLvl 56–65+):** 1–5 dust (Level 51–60 greens)"
+                    ),
+                    "inline": False
+                },
+                {
+                    "name": "⚗️ Essence Brackets (Weapons Favored ~75%)",
+                    "value": (
+                        "• **Magic Essence (iLvl 5–20):** Lesser (1–2) / Greater (1–2)\n"
+                        "• **Astral Essence (iLvl 21–30):** Lesser (1–2) / Greater (1–2)\n"
+                        "• **Mystic Essence (iLvl 31–40):** Lesser (1–2) / Greater (1–2)\n"
+                        "• **Nether Essence (iLvl 41–50):** Lesser (1–2) / Greater (1–2)\n"
+                        "• **Eternal Essence (iLvl 51–65+):** Lesser (1–2) / Greater (1–2)"
+                    ),
+                    "inline": False
+                },
+                {
+                    "name": "💎 Shard & Crystal Brackets (Rares & Epics)",
+                    "value": (
+                        "• **Small / Large Glimmering Shard:** iLvl 16–30 Rares (100%)\n"
+                        "• **Small / Large Glowing Shard:** iLvl 31–40 Rares (100%)\n"
+                        "• **Small / Large Radiant Shard:** iLvl 41–50 Rares (100%)\n"
+                        "• **Small / Large Brilliant Shard:** iLvl 51–65+ Rares (100%)\n"
+                        "• **Nexus Crystal:** iLvl 51–65+ Epics (100%), iLvl 56+ Rares (~0.5–1%)"
+                    ),
+                    "inline": False
+                }
+            ],
+            "tip": "Tip: Use `/disenchant query:<item_name>` (e.g. `/disenchant query:Krol Blade`) or `/disenchant query:55` for exact odds!"
+        }
+
+    # 2. Check direct Material Dossier match
+    for mat_key, mat_info in DISENCHANT_MATERIALS.items():
+        if q_str == mat_key or q_str == mat_info["name"].lower():
+            return {
+                "type": "material",
+                "title": f"{mat_info['icon']} Disenchanting Reagent: {mat_info['name']}",
+                "description": (
+                    f"• **Item Level Bracket:** {mat_info['ilvl']}\n"
+                    f"• **Primary Drops:** {mat_info['sources']}\n\n"
+                    f"**Best Farming Spots & Dungeons:**\n{mat_info['farming_advice']}\n\n"
+                    f"**Best Crafted Items to DE:**\n{mat_info['crafted_sources']}"
+                ),
+                "tip": mat_info["tip"]
+            }
+
+    # 3. Numeric item level query (e.g. "55", "ilvl 42", "60")
+    num_match = re.search(r'\b([0-9]{1,2})\b', q_str)
+    if num_match and (len(q_str) <= 8 or "ilvl" in q_str or "level" in q_str or "lvl" in q_str):
+        ilvl = int(num_match.group(1))
+        ilvl = max(5, min(ilvl, 65))
+        is_wep = (item_type_filter == "weapon")
+
+        green_armor_yields = calculate_disenchant_table(ilvl, "Uncommon", is_weapon=False)
+        green_wep_yields = calculate_disenchant_table(ilvl, "Uncommon", is_weapon=True)
+        rare_yields = calculate_disenchant_table(ilvl, "Rare", is_weapon=is_wep)
+        epic_yields = calculate_disenchant_table(ilvl, "Epic", is_weapon=is_wep)
+
+        def format_yields(yls):
+            lines = []
+            for y in yls:
+                icon = DISENCHANT_MATERIALS.get(y['item'].lower(), {}).get('icon', '✨')
+                cnt_str = f"({y['min']}-{y['max']})" if y['min'] != y['max'] else f"({y['min']})"
+                lines.append(f"• **{y['chance']}%** — {icon} **{y['item']}** {cnt_str}")
+            return "\n".join(lines) if lines else "None"
+
+        return {
+            "type": "bracket",
+            "title": f"✨ Disenchant Table: Item Level {ilvl}",
+            "description": f"Official Blizzard 1.12.1 disenchant yields for items with **Item Level {ilvl}**:",
+            "fields": [
+                {
+                    "name": "🟢 Uncommon (Green) Armor (~75% Dust)",
+                    "value": format_yields(green_armor_yields),
+                    "inline": False
+                },
+                {
+                    "name": "🟢 Uncommon (Green) Weapons (~75% Essence)",
+                    "value": format_yields(green_wep_yields),
+                    "inline": False
+                },
+                {
+                    "name": "🔵 Rare (Blue) Equipment (100% Shard)",
+                    "value": format_yields(rare_yields),
+                    "inline": False
+                },
+                {
+                    "name": "🟣 Epic (Purple) Equipment",
+                    "value": format_yields(epic_yields),
+                    "inline": False
+                }
+            ],
+            "tip": "Tip: Disenchanting green weapons yields essences (high AH resale), while armor yields dust."
+        }
+
+    # 4. Item lookup in database
+    if db:
+        res, _ = db.search_items(query)
+        if res:
+            item = res[0]
+            name = item.get("name", "Unknown Item")
+            quality = item.get("quality", "Common")
+            ilvl = item.get("item_level", 0)
+            req_lvl = item.get("req_level", 0)
+            slot = item.get("slot", "")
+            item_type = item.get("item_type", "")
+            sell_price = item.get("sell_price", 0)
+
+            # Check if ineligible
+            q_lower = quality.lower()
+            if q_lower in ("poor", "grey"):
+                return {
+                    "type": "ineligible",
+                    "title": f"❌ {name} — Cannot Be Disenchanted",
+                    "description": (
+                        f"**Quality:** {quality} (Grey)\n"
+                        f"**Item Level:** {ilvl}\n\n"
+                        f"⚠️ **Ineligible:** Poor (Grey) junk items cannot be disenchanted in World of Warcraft. "
+                        f"Sell this item directly to any vendor for currency."
+                    ),
+                    "tip": "Only Uncommon (Green), Rare (Blue), and Epic (Purple) equipment can be disenchanted."
+                }
+            if q_lower in ("common", "white"):
+                return {
+                    "type": "ineligible",
+                    "title": f"❌ {name} — Cannot Be Disenchanted",
+                    "description": (
+                        f"**Quality:** {quality} (White)\n"
+                        f"**Item Level:** {ilvl}\n\n"
+                        f"⚠️ **Ineligible:** Common (White) equipment and crafting reagents cannot be disenchanted. "
+                        f"Use this item for trade, crafting, or vendor it."
+                    ),
+                    "tip": "Only Uncommon (Green), Rare (Blue), and Epic (Purple) equipment can be disenchanted."
+                }
+            if q_lower in ("legendary", "artifact"):
+                return {
+                    "type": "ineligible",
+                    "title": f"❌ {name} — Cannot Be Disenchanted",
+                    "description": (
+                        f"**Quality:** {quality} (Orange)\n\n"
+                        f"⚠️ **Ineligible:** Legendary artifacts cannot be broken down by enchanters."
+                    ),
+                    "tip": "Legendary items are permanent relics."
+                }
+
+            # Check weapon vs armor
+            weapon_slots = {"One-Hand", "Two-Hand", "Main Hand", "Off Hand", "Ranged", "Thrown", "Gun", "Bow", "Crossbow", "Wand"}
+            weapon_types = {"Sword", "Axe", "Mace", "Dagger", "Polearm", "Staff", "Fist Weapon", "Bow", "Crossbow", "Gun", "Wand", "Thrown"}
+            is_weapon = (slot in weapon_slots) or (item_type in weapon_types)
+
+            yields = calculate_disenchant_table(ilvl, quality, is_weapon)
+
+            yield_lines = []
+            for y in yields:
+                icon = DISENCHANT_MATERIALS.get(y['item'].lower(), {}).get('icon', '✨')
+                cnt_str = f"({y['min']}–{y['max']})" if y['min'] != y['max'] else f"({y['min']})"
+                yield_lines.append(f"• **{y['chance']}%** — {icon} **{y['item']}** {cnt_str}")
+
+            yield_text = "\n".join(yield_lines) if yield_lines else "None"
+
+            # Compute vendor price string
+            def fmt_copper(c):
+                if not c or c <= 0:
+                    return None
+                g = c // 10000
+                s = (c % 10000) // 100
+                cp = c % 100
+                parts = []
+                if g: parts.append(f"{g}g")
+                if s or g: parts.append(f"{s}s")
+                parts.append(f"{cp}c")
+                return " ".join(parts)
+
+            vendor_val_str = fmt_copper(sell_price)
+
+            # Advice
+            if is_weapon and q_lower in ("uncommon", "green") and ilvl >= 56:
+                advice = "💡 **Recommendation:** Level 56+ green weapons have a **75% chance** to yield **Greater Eternal Essence** (~3–5g on AH). Disenchanting this weapon is usually significantly more profitable than vendoring!"
+            elif not is_weapon and q_lower in ("uncommon", "green") and ilvl >= 56:
+                advice = "💡 **Recommendation:** Level 56+ green armor yields **Illusion Dust (75%)**. High-demand material for Crusader and +15 Agility raid enchants."
+            elif q_lower in ("rare", "blue") and ilvl >= 56:
+                advice = "💡 **Recommendation:** Guarantees **Large Brilliant Shard (100%)** — the core currency of endgame raiding enchants."
+            elif q_lower in ("epic", "purple") and ilvl >= 51:
+                advice = "💡 **Recommendation:** Yields **Nexus Crystal (1–2)** for high-end AQ and Naxxramas enchantments."
+            elif is_weapon and sell_price and sell_price >= 20000:
+                advice = "💡 **Recommendation:** High vendor value weapon. Compare your server's current essence prices before deciding to disenchant."
+            else:
+                advice = "💡 **Recommendation:** Disenchanting green and blue gear is the primary source of enchanting mats on Azeroth."
+
+            category_tag = "⚔️ Weapon" if is_weapon else "🛡️ Armor"
+
+            return {
+                "type": "item",
+                "title": f"✨ Disenchant: {name}",
+                "description": (
+                    f"**Quality:** {quality} • **Item Level:** {ilvl} (Req Lvl {req_lvl})\n"
+                    f"**Slot / Type:** {slot or 'N/A'} • {item_type or 'Equipment'} ({category_tag})\n"
+                    + (f"**Vendor Sell Price:** {vendor_val_str}\n\n" if vendor_val_str else "\n")
+                    + f"**✨ Expected Disenchant Yields:**\n{yield_text}\n\n"
+                    f"{advice}"
+                ),
+                "tip": f"Any enchanter (Skill 1+) can disenchant this {quality.lower()} {category_tag.lower()}."
+            }
+
+    # 5. Fuzzy fallback across materials
+    import difflib
+    mat_names = list(DISENCHANT_MATERIALS.keys())
+    m = difflib.get_close_matches(q_str, mat_names, n=1, cutoff=0.5)
+    if m:
+        mat_info = DISENCHANT_MATERIALS[m[0]]
+        return {
+            "type": "material",
+            "title": f"{mat_info['icon']} Disenchanting Reagent: {mat_info['name']}",
+            "description": (
+                f"• **Item Level Bracket:** {mat_info['ilvl']}\n"
+                f"• **Primary Drops:** {mat_info['sources']}\n\n"
+                f"**Best Farming Spots & Dungeons:**\n{mat_info['farming_advice']}\n\n"
+                f"**Best Crafted Items to DE:**\n{mat_info['crafted_sources']}"
+            ),
+            "tip": mat_info["tip"]
+        }
+
+    return {
+        "type": "not_found",
+        "title": "🔍 Disenchant Query Not Found",
+        "description": f"Could not find item, reagent, or level bracket matching `{query}`.",
+        "tip": "Try querying by item name (e.g. `/disenchant query:Krol Blade`), numeric item level (e.g. `/disenchant query:55`), or reagent (e.g. `/disenchant query:Large Brilliant Shard`)."
+    }
 
 
 # -------------------------------------------------------------

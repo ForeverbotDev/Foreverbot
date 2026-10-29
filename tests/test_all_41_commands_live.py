@@ -441,12 +441,32 @@ TEST_MATRIX = [
         {"query": "What yellow hit cap do I need for raid bosses?"},
         {"query": "How does glancing blow mitigation work?"},
     ]),
+    # 40. /rep
+    ("rep", "rep", [
+        {},
+        {"query": "Timbermaw Hold"},
+        {"query": "Argent Dawn"},
+        {"query": "Thorium Brotherhood"},
+        {"query": "Shen'dralar"},
+        {"query": "Wintersaber Trainers"},
+        {"query": "Bloodsail Buccaneers"},
+    ]),
+    # 41. /disenchant
+    ("disenchant", "disenchant", [
+        {},
+        {"query": "Krol Blade"},
+        {"query": "Archaic Defender"},
+        {"query": "Linen Cloth"},
+        {"query": "Large Brilliant Shard"},
+        {"query": "55"},
+        {"query": "Illusion Dust"},
+    ]),
 ]
 
 
 async def run_suite():
     print("=" * 80)
-    print("⚔️ COMPREHENSIVE LIVE SLASH COMMAND TESTING (ALL 41 COMMANDS & SUBCOMMANDS)")
+    print("⚔️ COMPREHENSIVE LIVE SLASH COMMAND TESTING (ALL 43 COMMANDS & SUBCOMMANDS)")
     print("=" * 80)
 
     # Build command callback mapping

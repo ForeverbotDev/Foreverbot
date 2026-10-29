@@ -182,11 +182,11 @@ python bot.py
 When Foreverbot connects, you will see this confirmation in your terminal:
 ```text
 Logged in as Foreverbot (123456789012345678)
-Synced 41 global slash commands.
-Instantly synced 41 commands to server: Your Guild Server (987654321098765432)
+Synced 42 global slash commands.
+Instantly synced 42 commands to server: Your Guild Server (987654321098765432)
 Foreverbot is live and ready!
 ```
-> 💡 **Instant Guild Slash Commands:** Foreverbot automatically pushes guild-level command syncs to your connected Discord server on startup, so typing **`/`** in your server displays all 41 commands **immediately** (bypassing Discord's 1-hour global cache delay!).
+> 💡 **Instant Guild Slash Commands:** Foreverbot automatically pushes guild-level command syncs to your connected Discord server on startup, so typing **`/`** in your server displays all 42 commands **immediately** (bypassing Discord's 1-hour global cache delay!).
 
 > 🛡️ **Private Per-User Responses:** When you run any query command (like `/item`, `/bis`, `/dungeons`, or `/ask`), only you will see the response (*"Only you can see this • Dismiss message"*). Group raid tools like `/roll` and `/signup` remain public for everyone in your raid to click and interact with!
 
@@ -255,14 +255,14 @@ Once installed, **Foreverbot runs as a lightweight standard Python program on yo
 
 ---
 
-## 📜 Complete 41-Command Reference
+## 📜 Complete 42-Command Reference
 
 | Category | Commands |
 | :--- | :--- |
-| **Gear & Items** | `/item`, `/compare`, `/bis`, `/resist` |
+| **Gear & Items** | `/item`, `/compare`, `/bis`, `/resist`, `/disenchant` |
 | **Quests & Progression** | `/quest`, `/keys`, `/attunement`, `/rep` |
 | **World & Travel** | `/flightpath`, `/map`, `/zones`, `/dungeons`, `/level`, `/route` |
-| **Economy & Gathering** | `/vendor`, `/gather`, `/profession`, `/farm`, `/mob`, `/rare` |
+| **Economy & Gathering** | `/vendor`, `/gather`, `/profession`, `/farm`, `/mob` |
 | **Raiding & Intel** | `/raid`, `/consumes`, `/buffs`, `/resets`, `/intel` |
 | **Class Mastery** | `/build`, `/talents`, `/race`, `/macro`, `/profile` |
 | **PvP & Competitive** | `/pvp`, `/twink` |
@@ -305,7 +305,7 @@ To maintain high data fidelity and prevent regressions during Open Alpha, Foreve
 
 3. **Discord Slash Command Authenticity Testing (15,000+ Permutations)**
    - Tested through [`tests/test_slash_commands_authenticity.py`](tests/test_slash_commands_authenticity.py).
-   - Validates that every one of the 41 slash commands returns properly formatted Discord Embeds, enforces private per-user replies (`ephemeral=True`), handles Discord's 100-character autocomplete limits, and safely manages interactive UI components.
+   - Validates that every one of the 42 slash commands returns properly formatted Discord Embeds, enforces private per-user replies (`ephemeral=True`), handles Discord's 100-character autocomplete limits, and safely manages interactive UI components.
 
 4. **Player Simulation & Query Verification (500 User Commands)**
    - Headless simulation via [`tests/test_500_user_commands.py`](tests/test_500_user_commands.py) fires 500 realistic user queries (item typos, nicknames like `"edgies"`, `"hoj"`, `"fap"`, multi-word questions) sequentially against the engine to verify stability and eliminate crashes.
