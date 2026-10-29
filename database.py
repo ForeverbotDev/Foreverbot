@@ -332,9 +332,11 @@ FEATURED_ITEM_NAMES = [
     "Bonereaver's Edge",
     "Chromatically Tempered Sword",
     "Ashkandi, Greatsword of the Brotherhood",
-    "Crown of the Skyborne Ascendant",
-    "Zephras Tidal Cleaver",
-    "Signet of the Unopened Portal",
+    "Perdition's Blade",
+    "Core Hound Tooth",
+    "Drake Fang Talisman",
+    "Neltharion's Tear",
+    "Rhok'delar, Longbow of the Ancient Keepers",
 ]
 
 
@@ -623,6 +625,13 @@ class WoWForeverDB:
                     results.append(self._format_autocomplete_choice(rec))
                     if len(results) >= limit:
                         break
+            if len(results) < limit:
+                for rec in self.item_records:
+                    if rec["name"] not in seen and rec.get("quality") in ("Legendary", "Epic"):
+                        seen.add(rec["name"])
+                        results.append(self._format_autocomplete_choice(rec))
+                        if len(results) >= limit:
+                            break
             return results
 
         # 2. Check acronym / alias map
