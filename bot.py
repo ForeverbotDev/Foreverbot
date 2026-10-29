@@ -2295,7 +2295,7 @@ async def resets_command(interaction: discord.Interaction, query: Optional[str] 
 ])
 async def intel_command(interaction: discord.Interaction, topic: Optional[app_commands.Choice[str]] = None):
     await interaction.response.defer(ephemeral=True)
-    selected = topic.value if topic else "full"
+    selected = topic.value if hasattr(topic, "value") else (str(topic).lower() if topic else "full")
 
     embed = discord.Embed(
         title="🛡️ WoW Forever — Tuesday Night Intel & Meta Briefing",
