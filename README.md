@@ -10,7 +10,7 @@
 [![Discord Assistant](https://img.shields.io/badge/Discord-Assistant-5865F2?logo=discord&logoColor=white)](https://discord.com)
 [![Status](https://img.shields.io/badge/Status-Open%20Alpha-3B82F6)](https://github.com/ForeverbotDev/foreverbot)
 [![WoW Forever](https://img.shields.io/badge/WoW-Forever-F59E0B)](https://github.com/ForeverbotDev/foreverbot)
-[![Database](https://img.shields.io/badge/Database-19.6K%20Items%20%E2%80%A2%2010.1K%20NPCs%20%E2%80%A2%204.2K%20Quests%20%E2%80%A2%20370K%20Loot%20Drops%20%E2%80%A2%2046%20Dungeons-10B981)](#-database)
+[![Database](https://img.shields.io/badge/Database-19.6K%20Items%20%E2%80%A2%2010.1K%20NPCs%20%E2%80%A2%204.2K%20Quests%20%E2%80%A2%2046%20Dungeons-10B981)](#-database)
 [![Verified Queries](https://img.shields.io/badge/Verified_Queries-15%2C000%2B_Combos-10B981)](#-automated-testing-and-query-verification)
 [![Scheduled Sync](https://img.shields.io/badge/Scheduled_Intel_Sync-Tuesdays_8pm_EST-10B981)](docs/TUESDAY_WEEKLY_INTEL.md)
 [![Daily 8pm QC Email](https://img.shields.io/badge/Daily_QC_Email-8:00_PM_Daily-10B981?logo=gmail&logoColor=white)](tests/reports/DAILY_ONLINE_FACT_CHECK_REPORT.md)
@@ -213,7 +213,7 @@ Once installed, **Foreverbot runs as a lightweight standard Python program on yo
 
 * **Runs Directly on Your Hardware:** Foreverbot uses only **~114 MB of RAM** and virtually **0% CPU** when idle. It can run seamlessly on your daily computer, a laptop in a closet, or a $35 Raspberry Pi.
 * **No Port Forwarding or Public IP Needed:** The bot connects *outbound* to Discord's Gateway via a secure encrypted WebSocket (`wss://`). You do **not** need to open router ports, and players never see your home IP address (Discord acts as a protective shield).
-* **100% Offline Database:** All 19,628 items, 10,122 NPCs, 4,245 quests, and 370,360 drop records live inside `wow_forever.db` on your device.
+* **100% Offline Database:** All 19,628 items, 10,122 NPCs, 4,245 quests, and 293,762 active drop records live inside `wow_forever.db` on your device.
 * **Sleep & Shutdown Behavior:** If your PC sleeps or turns off, the bot goes offline. As soon as you wake your PC and run `./start_bot.sh` (or `start_bot.bat`), it reconnects in ~2 seconds.
 * **Want 24/7 Uptime?** 
   - **Linux `systemd` Service:** Auto-starts on system boot and restarts if closed (see guide).
@@ -282,7 +282,7 @@ Foreverbot is built to provide authoritative, grounded answers for **World of Wa
 
 | Source Category | Provenance & Compilation Method | Data Provided |
 | :--- | :--- | :--- |
-| **🎮 Public Game Catalogs & Reference Archives** | Curated from open, publicly compiled Classic game databases and community wiki archives. | **19,628 items** with exact stats, drop rates, required levels, sell values; **10,122 creatures** with health pools and abilities; **4,245 quests**; **370,360 creature drop records**; **54 flight paths**. |
+| **🎮 Public Game Catalogs & Reference Archives** | Curated from open, publicly compiled Classic game databases and community wiki archives. | **19,628 items** with exact stats, drop rates, required levels, sell values; **10,122 creatures** with health pools and abilities; **4,245 quests**; **293,762 active creature drop records**; **54 flight paths**. |
 | **📜 WoW Forever Alpha Notes & Blue Tracker** | Ingested from public developer announcements and official forum topics via [`scripts/sync_blizzard_blue_tracker.py`](scripts/sync_blizzard_blue_tracker.py). | **16 custom dungeons & raids** (*Hall of Thanes*, *Ruins of Lordaeron*, *Excavation Site*, *City of Dalaran*, *The Drowned City*, *Krol'dok Stronghold*, *Alcaz Island Prison*, *Blackmaw Hold*, *Shaper's Terrace*), custom bosses, and horizontal progression sets. |
 | **⚔️ Canonical Combat & Mechanics Math** | Grounded in standard Vanilla 1.12 combat tables and verified theorycrafting formulas. | Exact dual-wield glancing blow math (+5 weapon skill = 5% glancing penalty vs. 35% base), yellow-hit cap rules (6% vs. 9%), 5-tier resistance mitigation formulas (0–360 SR/FR/NR/AR/Frost R), and GDKP payout splits. |
 | **🗡️ Meta, BiS & Addon Knowledge Tables** | Curated by experienced Vanilla & Classic raid leaders and theorycrafters. | Pre-raid Best-in-Slot (BiS) gearing paths for all 9 classes and specs, top 5 essential addons per class (`/addons`), raid consumable matrices (`/consumes`), and 1-60 speedleveling routes. |
@@ -321,7 +321,7 @@ To maintain high data fidelity and prevent regressions during Open Alpha, Foreve
 <a id="database"></a>
 ### 🗄️ Database Architecture & Storage
 
-Foreverbot’s database (**`wow_forever.db`** • ~32 MB) is bundled directly with the bot as a standalone, zero-dependency SQLite engine. Every record is verified for accuracy against canonical World of Warcraft: Forever specifications:
+Foreverbot’s database (**`wow_forever.db`** • ~28 MB) is bundled directly with the bot as a standalone, zero-dependency SQLite engine. Every record is verified for accuracy against canonical World of Warcraft: Forever specifications:
 
 ```
 ┌────────────────────────────────────────────────────────────────────────┐
@@ -331,7 +331,7 @@ Foreverbot’s database (**`wow_forever.db`** • ~32 MB) is bundled directly wi
 │   • 16 Custom Dungeons & Raids       • 19,628 Total Items (16,422 Live)│
 │   • Custom Bosses & Tactics          • 10,122 Creatures & Raid Bosses  │
 │   • Horizontal Progression Sets      • 4,245 Quests & Objectives       │
-│   • New Leveling Zones & Taxi        • 370,360 Loot Drops • 54 Taxis   │
+│   • New Leveling Zones & Taxi        • 293,762 Drops • 54 Taxis        │
 │                                                                        │
 │   3. Live Blizzard Blue Tracker      4. SQLite FTS5 Full-Text Engine   │
 │   • Automated Patch Sync Workflow    • Sub-second indexed search       │
@@ -344,12 +344,12 @@ Foreverbot’s database (**`wow_forever.db`** • ~32 MB) is bundled directly wi
 * **Local SQLite FTS5 Virtual Tables:** All tables are indexed using SQLite Full-Text Search (FTS5) with Porter stemming and exact-match priority ranking, enabling sub-second in-memory lookups without requiring external databases, Docker, or third-party web scraping during Discord interactions.
 
 <details>
-<summary><strong>🔍 Deep Dive: Where Does the Data Come From & Why Is It Only ~32 MB?</strong> (Click to expand)</summary>
+<summary><strong>🔍 Deep Dive: Where Does the Data Come From & Why Is It Only ~28 MB?</strong> (Click to expand)</summary>
 
 <br/>
 
 #### 1. Data Origins & Canonical Sources
-* **Classic Game Client DBCs & Tables:** Extracted directly from canonical client tables (`ItemSparse.db2`, `Item.db2`, `item_template`, `creature_template`, `quest_template`, `creature_loot_template`, `reference_loot_template`) covering all 19,628 items, 10,122 NPCs/creatures, 4,245 quests, and 370,360 drop records.
+* **Classic Game Client DBCs & Tables:** Extracted directly from canonical client tables (`ItemSparse.db2`, `Item.db2`, `item_template`, `creature_template`, `quest_template`, `creature_loot_template`, `reference_loot_template`) covering all 19,628 items, 10,122 NPCs/creatures, 4,245 quests, and 293,762 verified drop associations.
 * **Wowhead & Tooltip Archive:** Precise stat strings (`+12 Strength, 41.2 DPS`), on-equip spell effects, flavor quotes, and boss drop percentages (`Baron Rivendare: 0.02%`).
 * **WoW: Forever Expansion Content:** Curated entries for all 16 custom dungeons & raids (*Roots of Nordrassil*, *Karazhan Crypts*, *Temporal Rift*, etc.), custom boss strategies, and taxi networks.
 * **Weekly Automated Blue Tracker:** Automated GitHub Actions pipeline refreshes hotfixes, developer notes, and tuning adjustments every Tuesday reset.
@@ -362,10 +362,10 @@ Pure relational text and numbers are remarkably lightweight when stripped of rep
 | **`items`** | **19,628 items** | **2.85 MB** | ~145 bytes / item |
 | **`quests`** | **4,245 quests** | **1.90 MB** | ~469 bytes / quest |
 | **`creatures`** | **10,122 NPCs** | **0.47 MB** | ~48 bytes / NPC |
-| **`loot`** | **370,360 drops** | **8.80 MB** | ~24 bytes / drop |
+| **`loot`** | **293,762 drops** | **7.05 MB** | ~24 bytes / drop |
 | **`dungeons`** | **46 instances** | **0.01 MB** | ~292 bytes / dungeon |
-| **FTS5 Inverted Search Indexes & B-Trees** | — | **~18.0 MB** | Full-text token trees & B-Tree headers |
-| **Total `wow_forever.db`** | **404,455 records** | **~32.0 MB** | Complete offline package |
+| **FTS5 Inverted Search Indexes & B-Trees** | — | **~15.5 MB** | Full-text token trees & B-Tree headers |
+| **Total `wow_forever.db`** | **327,857 records** | **~28.0 MB** | Complete offline package |
 
 #### 3. Why Is It So Fast & Compact Compared to Other Bots?
 * **Column Names Stored Once:** A JSON representation repeats `"name"`, `"quality"`, `"stats"` 19,628 times, multiplying file sizes by 10x to 20x. SQLite stores column definitions once in the schema header.

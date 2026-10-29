@@ -1,6 +1,6 @@
 # 🌐 Daily Online Fact-Checking & Deep Field Verification Report
 
-**Last Automated Run:** `2026-10-29 14:59:45 UTC`  
+**Last Automated Run:** `2026-10-29 19:48:12 UTC`  
 **Pass Rate:** **`100.0%`** (46/46 verified)  
 **Ground Truth Verification Gateways:**
 - [Wowhead Forever Live Tooltip API](https://nether.wowhead.com/forever/tooltip/item/19019)
@@ -14,52 +14,52 @@
 
 | Type | ID | Query Output Name | Online Source | Latency | Status | Discrepancies |
 | :--- | :--- | :--- | :--- | :--- | :--- | :--- |
-| Item | `17118` | **Carton of Mystery Meat** | Wowhead Forever Tooltip API | 218ms | ✅ PASS | None (All fields verified authentic) |
-| Item | `8345` | **Wolfshead Helm** | Wowhead Forever Tooltip API | 168ms | ✅ PASS | None (All fields verified authentic) |
-| Item | `19019` | **Thunderfury, Blessed Blade of the Windseeker** | Wowhead Forever Tooltip API | 177ms | ✅ PASS | None (All fields verified authentic) |
-| Item | `16949` | **Greaves of Ten Storms** | Wowhead Classic Tooltip API | 145ms | ✅ PASS | None (All fields verified authentic) |
-| Item | `21647` | **Fetish of the Sand Reaver** | Wowhead Forever Tooltip API | 150ms | ✅ PASS | None (All fields verified authentic) |
-| Item | `22691` | **Corrupted Ashbringer** | Wowhead Classic Tooltip API | 170ms | ✅ PASS | None (All fields verified authentic) |
-| Item | `22371` | **Desecrated Gloves** | Wowhead Forever Tooltip API | 156ms | ✅ PASS | None (All fields verified authentic) |
-| Item | `16905` | **Bloodfang Chestpiece** | Wowhead Classic Tooltip API | 156ms | ✅ PASS | None (All fields verified authentic) |
-| Item | `3228` | **Jimmied Handcuffs** | Wowhead Forever Tooltip API | 158ms | ✅ PASS | None (All fields verified authentic) |
-| Item | `11611` | **Plans: Dark Iron Sunderer** | Wowhead Forever Tooltip API | 159ms | ✅ PASS | None (All fields verified authentic) |
-| Item | `23261` | **Champion's Satin Hood** | Wowhead Forever Tooltip API | 169ms | ✅ PASS | None (All fields verified authentic) |
-| Item | `5443` | **Gold-plated Buckler** | Wowhead Forever Tooltip API | 158ms | ✅ PASS | None (All fields verified authentic) |
-| Item | `23256` | **Champion's Dreadweave Spaulders** | Wowhead Forever Tooltip API | 160ms | ✅ PASS | None (All fields verified authentic) |
-| Item | `14835` | **Tyrant's Chestpiece** | Wowhead Forever Tooltip API | 159ms | ✅ PASS | None (All fields verified authentic) |
-| Item | `10299` | **Gnomeregan Amulet** | Wowhead Forever Tooltip API | 167ms | ✅ PASS | None (All fields verified authentic) |
-| Item | `14480` | **Pattern: Ghostweave Vest** | Wowhead Forever Tooltip API | 166ms | ✅ PASS | None (All fields verified authentic) |
-| Item | `14220` | **Geomancer's Cap** | Wowhead Forever Tooltip API | 334ms | ✅ PASS | None (All fields verified authentic) |
-| Item | `4125` | **Tranquil Orb** | Wowhead Forever Tooltip API | 288ms | ✅ PASS | None (All fields verified authentic) |
-| Item | `2928` | **Dust of Decay** | Wowhead Forever Tooltip API | 377ms | ✅ PASS | None (All fields verified authentic) |
-| Item | `4905` | **Sarkoth's Mangled Claw** | Wowhead Forever Tooltip API | 296ms | ✅ PASS | None (All fields verified authentic) |
-| Item | `4669` | **Battle Chain Girdle** | Wowhead Forever Tooltip API | 223ms | ✅ PASS | None (All fields verified authentic) |
-| Item | `9542` | **Simple Letter** | Wowhead Forever Tooltip API | 295ms | ✅ PASS | None (All fields verified authentic) |
-| Item | `10621` | **Runed Scroll** | Wowhead Forever Tooltip API | 356ms | ✅ PASS | None (All fields verified authentic) |
-| Creature | `9019` | **Emperor Dagran Thaurissan** | Wowhead Forever NPC API | 308ms | ✅ PASS | None (All fields verified authentic) |
-| Creature | `3975` | **Herod** | Wowhead Forever NPC API | 337ms | ✅ PASS | None (All fields verified authentic) |
-| Creature | `11502` | **Ragnaros** | Wowhead Forever NPC API | 240ms | ✅ PASS | None (All fields verified authentic) |
-| Creature | `4844` | **Shadowforge Surveyor** | Wowhead Forever NPC API | 343ms | ✅ PASS | None (All fields verified authentic) |
-| Creature | `1339` | **Mayda Thane** | Wowhead Forever NPC API | 420ms | ✅ PASS | None (All fields verified authentic) |
-| Creature | `15456` | **Sarah Sadwhistle** | Wowhead Forever NPC API | 186ms | ✅ PASS | None (All fields verified authentic) |
-| Creature | `8363` | **Shadi Mistrunner** | Wowhead Forever NPC API | 209ms | ✅ PASS | None (All fields verified authentic) |
-| Creature | `645` | **Cookie** | Wowhead Forever NPC API | 183ms | ✅ PASS | None (All fields verified authentic) |
-| Creature | `5391` | **Galen Goodward** | Wowhead Forever NPC API | 194ms | ✅ PASS | None (All fields verified authentic) |
-| Creature | `2548` | **Captain Keelhaul** | Wowhead Forever NPC API | 161ms | ✅ PASS | None (All fields verified authentic) |
-| Creature | `15443` | **Janela Stouthammer** | Wowhead Forever NPC API | 217ms | ✅ PASS | None (All fields verified authentic) |
-| Quest | `5525` | **Free Knot!** | Wowhead Forever Quest API | 165ms | ✅ PASS | None (All fields verified authentic) |
-| Quest | `338` | **The Green Hills of Stranglethorn** | Wowhead Forever Quest API | 148ms | ✅ PASS | None (All fields verified authentic) |
-| Quest | `4362` | **The Fate of the Kingdom** | Wowhead Forever Quest API | 138ms | ✅ PASS | None (All fields verified authentic) |
-| Quest | `8256` | **The Ichor of Undeath** | Wowhead Forever Quest API | 170ms | ✅ PASS | None (All fields verified authentic) |
-| Quest | `5042` | **Agamaggan's Strength** | Wowhead Forever Quest API | 172ms | ✅ PASS | None (All fields verified authentic) |
-| Quest | `642` | **The Princess Trapped** | Wowhead Forever Quest API | 151ms | ✅ PASS | None (All fields verified authentic) |
-| Quest | `644` | **Sigil of Trollbane** | Wowhead Forever Quest API | 154ms | ✅ PASS | None (All fields verified authentic) |
-| Quest | `8145` | **The Maelstrom's Tendril** | Wowhead Forever Quest API | 143ms | ✅ PASS | None (All fields verified authentic) |
-| Quest | `8545` | **The Horde Needs Mithril Bars!** | Wowhead Forever Quest API | 162ms | ✅ PASS | None (All fields verified authentic) |
-| Quest | `2851` | **Wild Leather Boots** | Wowhead Forever Quest API | 164ms | ✅ PASS | None (All fields verified authentic) |
-| Quest | `3661` | **Favored of Elune?** | Wowhead Forever Quest API | 174ms | ✅ PASS | None (All fields verified authentic) |
-| Blizzard Live Intel | `631316` | **WoW Forever Beta Development Notes – Updated 26 October** | Official Blizzard Forums API | 588ms | ✅ PASS | None (All fields verified authentic) |
+| Item | `17118` | **Carton of Mystery Meat** | Wowhead Forever Tooltip API | 158ms | ✅ PASS | None (All fields verified authentic) |
+| Item | `8345` | **Wolfshead Helm** | Wowhead Forever Tooltip API | 163ms | ✅ PASS | None (All fields verified authentic) |
+| Item | `19019` | **Thunderfury, Blessed Blade of the Windseeker** | Wowhead Forever Tooltip API | 158ms | ✅ PASS | None (All fields verified authentic) |
+| Item | `22668` | **Bracers of Subterfuge** | Wowhead Forever Tooltip API | 98ms | ✅ PASS | None (All fields verified authentic) |
+| Item | `19403` | **Band of Forced Concentration** | Wowhead Forever Tooltip API | 129ms | ✅ PASS | None (All fields verified authentic) |
+| Item | `19400` | **Firemaw's Clutch** | Wowhead Classic Tooltip API | 149ms | ✅ PASS | None (All fields verified authentic) |
+| Item | `18263` | **Flarecore Wraps** | Wowhead Forever Tooltip API | 126ms | ✅ PASS | None (All fields verified authentic) |
+| Item | `16543` | **General's Plate Leggings** | Wowhead Forever Tooltip API | 125ms | ✅ PASS | None (All fields verified authentic) |
+| Item | `12464` | **Bloodfire Talons** | Wowhead Classic Tooltip API | 1191ms | ✅ PASS | None (All fields verified authentic) |
+| Item | `13394` | **Skul's Cold Embrace** | Wowhead Classic Tooltip API | 127ms | ✅ PASS | None (All fields verified authentic) |
+| Item | `22395` | **Totem of Rage** | Wowhead Classic Tooltip API | 145ms | ✅ PASS | None (All fields verified authentic) |
+| Item | `20071` | **Talisman of Arathor** | Wowhead Forever Tooltip API | 152ms | ✅ PASS | None (All fields verified authentic) |
+| Item | `19892` | **Animist's Boots** | Wowhead Classic Tooltip API | 132ms | ✅ PASS | None (All fields verified authentic) |
+| Item | `3066` | **Bright Gloves** | Wowhead Forever Tooltip API | 107ms | ✅ PASS | None (All fields verified authentic) |
+| Item | `12261` | **Plans: Searing Golden Blade** | Wowhead Forever Tooltip API | 143ms | ✅ PASS | None (All fields verified authentic) |
+| Item | `6806` | **Dancing Flame** | Wowhead Forever Tooltip API | 126ms | ✅ PASS | None (All fields verified authentic) |
+| Item | `4989` | **Mage Dragon Robe** | Wowhead Forever Tooltip API | 128ms | ✅ PASS | None (All fields verified authentic) |
+| Item | `8107` | **Hibernal Boots** | Wowhead Forever Tooltip API | 116ms | ✅ PASS | None (All fields verified authentic) |
+| Item | `13536` | **Horn of Awakening** | Wowhead Forever Tooltip API | 109ms | ✅ PASS | None (All fields verified authentic) |
+| Item | `21436` | **Alliance Commendation Signet** | Wowhead Forever Tooltip API | 134ms | ✅ PASS | None (All fields verified authentic) |
+| Item | `9052` | **Tablet of Stoneskin Totem II** | Wowhead Forever Tooltip API | 128ms | ✅ PASS | None (All fields verified authentic) |
+| Item | `20506` | **Pattern: Spitfire Bracers** | Wowhead Classic Tooltip API | 125ms | ✅ PASS | None (All fields verified authentic) |
+| Item | `3383` | **Elixir of Wisdom** | Wowhead Forever Tooltip API | 135ms | ✅ PASS | None (All fields verified authentic) |
+| Creature | `9019` | **Emperor Dagran Thaurissan** | Wowhead Forever NPC API | 160ms | ✅ PASS | None (All fields verified authentic) |
+| Creature | `3975` | **Herod** | Wowhead Forever NPC API | 189ms | ✅ PASS | None (All fields verified authentic) |
+| Creature | `11502` | **Ragnaros** | Wowhead Forever NPC API | 180ms | ✅ PASS | None (All fields verified authentic) |
+| Creature | `5970` | **World Orc Female Warlock Trainer** | Wowhead Forever NPC API | 165ms | ✅ PASS | None (All fields verified authentic) |
+| Creature | `16382` | **Patchwork Terror** | Wowhead Forever NPC API | 150ms | ✅ PASS | None (All fields verified authentic) |
+| Creature | `359` | **Riding Wolf (Winter)** | Wowhead Forever NPC API | 135ms | ✅ PASS | None (All fields verified authentic) |
+| Creature | `6734` | **Innkeeper Hearthstove** | Wowhead Forever NPC API | 147ms | ✅ PASS | None (All fields verified authentic) |
+| Creature | `7022` | **Venomlash Scorpid** | Wowhead Forever NPC API | 138ms | ✅ PASS | None (All fields verified authentic) |
+| Creature | `7341` | **Skeletal Frostweaver** | Wowhead Forever NPC API | 141ms | ✅ PASS | None (All fields verified authentic) |
+| Creature | `9520` | **Grark Lorkrub** | Wowhead Forever NPC API | 156ms | ✅ PASS | None (All fields verified authentic) |
+| Creature | `7435` | **Cobalt Wyrmkin** | Wowhead Forever NPC API | 121ms | ✅ PASS | None (All fields verified authentic) |
+| Quest | `5525` | **Free Knot!** | Wowhead Forever Quest API | 127ms | ✅ PASS | None (All fields verified authentic) |
+| Quest | `338` | **The Green Hills of Stranglethorn** | Wowhead Forever Quest API | 130ms | ✅ PASS | None (All fields verified authentic) |
+| Quest | `4362` | **The Fate of the Kingdom** | Wowhead Forever Quest API | 132ms | ✅ PASS | None (All fields verified authentic) |
+| Quest | `9045` | **Redemption Headpiece** | Wowhead Forever Quest API | 104ms | ✅ PASS | None (All fields verified authentic) |
+| Quest | `1061` | **The Spirits of Stonetalon** | Wowhead Forever Quest API | 120ms | ✅ PASS | None (All fields verified authentic) |
+| Quest | `2160` | **Supplies to Tannok** | Wowhead Forever Quest API | 140ms | ✅ PASS | None (All fields verified authentic) |
+| Quest | `496` | **Elixir of Suffering** | Wowhead Forever Quest API | 134ms | ✅ PASS | None (All fields verified authentic) |
+| Quest | `3002` | **The Gordunni Orb** | Wowhead Forever Quest API | 141ms | ✅ PASS | None (All fields verified authentic) |
+| Quest | `8271` | **Hero of the Stormpike** | Wowhead Forever Quest API | 132ms | ✅ PASS | None (All fields verified authentic) |
+| Quest | `1423` | **The Lost Supplies** | Wowhead Forever Quest API | 140ms | ✅ PASS | None (All fields verified authentic) |
+| Quest | `1428` | **Continued Threat** | Wowhead Forever Quest API | 161ms | ✅ PASS | None (All fields verified authentic) |
+| Blizzard Live Intel | `631316` | **WoW Forever Beta Development Notes – Updated 26 October** | Official Blizzard Forums API | 976ms | ✅ PASS | None (All fields verified authentic) |
 
 ---
 

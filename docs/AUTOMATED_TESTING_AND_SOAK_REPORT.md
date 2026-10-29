@@ -231,7 +231,7 @@ To establish an unassailable standard of data accuracy, Foreverbot operates an a
 ## 🌌 The Combinatorial Universe of WoW: Forever & Outcome Possibility Space
 
 A frequent question in quality assurance is:  
-**"With 19,628 items, 370,360 loot drops, and 41 commands, how many possible outcomes exist? Are we testing until we know everything is done?"**
+**"With 19,628 items, 293,762 active drop records, and 41 commands, how many possible outcomes exist? Are we testing until we know everything is done?"**
 
 The short answer is **yes, we achieve 100% deterministic ground truth coverage of the catalog, while simultaneously stress-testing a combinatorial possibility space that exceeds $10^{31}$ states.**
 
@@ -251,7 +251,7 @@ The short answer is **yes, we achieve 100% deterministic ground truth coverage o
 To ensure both complete factual accuracy and infinite runtime stability, Foreverbot utilizes a **two-pronged testing methodology**:
 
 1. **Deterministic Ground Truth Sweeps (100% Known Done):**
-   - Every single database row — all **19,628 items**, **4,245 quests**, **10,122 creatures**, **370,360 loot drops**, and **46 dungeons** — is swept deterministically.
+   - Every single database row — all **19,628 items**, **4,245 quests**, **10,122 creatures**, **293,762 active drop records**, and **46 dungeons** — is swept deterministically.
    - We verify `PRAGMA integrity_check = ok`, confirm zero null pointer exceptions, validate ephemeral privacy flags on all personal commands, and test exact combat formula boundaries.
    - In this domain, **we know 100% of the database is correct and done**.
 

@@ -12,7 +12,7 @@ When you run `./start_bot.sh` (or `start_bot.bat` on Windows):
    Foreverbot runs as a lightweight standard Python process on your own machine.
    - **RAM Footprint:** ~114 MB steady (no memory leaks).
    - **CPU Footprint:** ~0% when idle; sub-second micro-spikes (< 10 ms) only when answering a player's query.
-   - **Storage:** Pre-bundled SQLite catalog (`wow_forever.db`, ~32 MB). All 19,628 items, 10,122 NPCs, 4,245 quests, and 370,360 drop records live on your disk.
+   - **Storage:** Pre-bundled SQLite catalog (`wow_forever.db`, ~28 MB). All 19,628 items, 10,122 NPCs, 4,245 quests, and 293,762 active drop records live on your disk.
 
 2. **How Discord Communicates with Your Computer:**
    ```

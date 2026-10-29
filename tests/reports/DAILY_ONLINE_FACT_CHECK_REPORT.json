@@ -1,5 +1,5 @@
 {
-  "timestamp": "2026-10-29 14:59:45 UTC",
+  "timestamp": "2026-10-29 19:48:12 UTC",
   "total_checks": 46,
   "passed": 46,
   "failed": 0,
@@ -15,7 +15,7 @@
       "online_name": "Carton of Mystery Meat",
       "matched": true,
       "discrepancies": [],
-      "latency_ms": 218
+      "latency_ms": 158
     },
     {
       "type": "Item",
@@ -27,7 +27,7 @@
       "online_name": "Wolfshead Helm",
       "matched": true,
       "discrepancies": [],
-      "latency_ms": 168
+      "latency_ms": 163
     },
     {
       "type": "Item",
@@ -39,247 +39,247 @@
       "online_name": "Thunderfury, Blessed Blade of the Windseeker",
       "matched": true,
       "discrepancies": [],
-      "latency_ms": 177
+      "latency_ms": 158
     },
     {
       "type": "Item",
-      "id": 16949,
-      "query": "Greaves of Ten Storms",
-      "name": "Greaves of Ten Storms",
+      "id": 22668,
+      "query": "Bracers of Subterfuge",
+      "name": "Bracers of Subterfuge",
+      "quality": "Epic",
+      "online_source": "Wowhead Forever Tooltip API",
+      "online_name": "Bracers of Subterfuge",
+      "matched": true,
+      "discrepancies": [],
+      "latency_ms": 98
+    },
+    {
+      "type": "Item",
+      "id": 19403,
+      "query": "Band of Forced Concentration",
+      "name": "Band of Forced Concentration",
+      "quality": "Epic",
+      "online_source": "Wowhead Forever Tooltip API",
+      "online_name": "Band of Forced Concentration",
+      "matched": true,
+      "discrepancies": [],
+      "latency_ms": 129
+    },
+    {
+      "type": "Item",
+      "id": 19400,
+      "query": "Firemaw's Clutch",
+      "name": "Firemaw's Clutch",
       "quality": "Epic",
       "online_source": "Wowhead Classic Tooltip API",
-      "online_name": "Greaves of Ten Storms",
+      "online_name": "Firemaw's Clutch",
+      "matched": true,
+      "discrepancies": [],
+      "latency_ms": 149
+    },
+    {
+      "type": "Item",
+      "id": 18263,
+      "query": "Flarecore Wraps",
+      "name": "Flarecore Wraps",
+      "quality": "Epic",
+      "online_source": "Wowhead Forever Tooltip API",
+      "online_name": "Flarecore Wraps",
+      "matched": true,
+      "discrepancies": [],
+      "latency_ms": 126
+    },
+    {
+      "type": "Item",
+      "id": 16543,
+      "query": "General's Plate Leggings",
+      "name": "General's Plate Leggings",
+      "quality": "Epic",
+      "online_source": "Wowhead Forever Tooltip API",
+      "online_name": "General's Plate Leggings",
+      "matched": true,
+      "discrepancies": [],
+      "latency_ms": 125
+    },
+    {
+      "type": "Item",
+      "id": 12464,
+      "query": "Bloodfire Talons",
+      "name": "Bloodfire Talons",
+      "quality": "Rare",
+      "online_source": "Wowhead Classic Tooltip API",
+      "online_name": "Bloodfire Talons",
+      "matched": true,
+      "discrepancies": [],
+      "latency_ms": 1191
+    },
+    {
+      "type": "Item",
+      "id": 13394,
+      "query": "Skul's Cold Embrace",
+      "name": "Skul's Cold Embrace",
+      "quality": "Rare",
+      "online_source": "Wowhead Classic Tooltip API",
+      "online_name": "Skul's Cold Embrace",
+      "matched": true,
+      "discrepancies": [],
+      "latency_ms": 127
+    },
+    {
+      "type": "Item",
+      "id": 22395,
+      "query": "Totem of Rage",
+      "name": "Totem of Rage",
+      "quality": "Rare",
+      "online_source": "Wowhead Classic Tooltip API",
+      "online_name": "Totem of Rage",
       "matched": true,
       "discrepancies": [],
       "latency_ms": 145
     },
     {
       "type": "Item",
-      "id": 21647,
-      "query": "Fetish of the Sand Reaver",
-      "name": "Fetish of the Sand Reaver",
-      "quality": "Epic",
+      "id": 20071,
+      "query": "Talisman of Arathor",
+      "name": "Talisman of Arathor",
+      "quality": "Rare",
       "online_source": "Wowhead Forever Tooltip API",
-      "online_name": "Fetish of the Sand Reaver",
+      "online_name": "Talisman of Arathor",
       "matched": true,
       "discrepancies": [],
-      "latency_ms": 150
+      "latency_ms": 152
     },
     {
       "type": "Item",
-      "id": 22691,
-      "query": "Corrupted Ashbringer",
-      "name": "Corrupted Ashbringer",
-      "quality": "Epic",
+      "id": 19892,
+      "query": "Animist's Boots",
+      "name": "Animist's Boots",
+      "quality": "Rare",
       "online_source": "Wowhead Classic Tooltip API",
-      "online_name": "Corrupted Ashbringer",
+      "online_name": "Animist's Boots",
       "matched": true,
       "discrepancies": [],
-      "latency_ms": 170
+      "latency_ms": 132
     },
     {
       "type": "Item",
-      "id": 22371,
-      "query": "Desecrated Gloves",
-      "name": "Desecrated Gloves",
-      "quality": "Epic",
+      "id": 3066,
+      "query": "Bright Gloves",
+      "name": "Bright Gloves",
+      "quality": "Uncommon",
       "online_source": "Wowhead Forever Tooltip API",
-      "online_name": "Desecrated Gloves",
+      "online_name": "Bright Gloves",
       "matched": true,
       "discrepancies": [],
-      "latency_ms": 156
+      "latency_ms": 107
     },
     {
       "type": "Item",
-      "id": 16905,
-      "query": "Bloodfang Chestpiece",
-      "name": "Bloodfang Chestpiece",
-      "quality": "Epic",
+      "id": 12261,
+      "query": "Plans: Searing Golden Blade",
+      "name": "Plans: Searing Golden Blade",
+      "quality": "Uncommon",
+      "online_source": "Wowhead Forever Tooltip API",
+      "online_name": "Plans: Searing Golden Blade",
+      "matched": true,
+      "discrepancies": [],
+      "latency_ms": 143
+    },
+    {
+      "type": "Item",
+      "id": 6806,
+      "query": "Dancing Flame",
+      "name": "Dancing Flame",
+      "quality": "Uncommon",
+      "online_source": "Wowhead Forever Tooltip API",
+      "online_name": "Dancing Flame",
+      "matched": true,
+      "discrepancies": [],
+      "latency_ms": 126
+    },
+    {
+      "type": "Item",
+      "id": 4989,
+      "query": "Mage Dragon Robe",
+      "name": "Mage Dragon Robe",
+      "quality": "Uncommon",
+      "online_source": "Wowhead Forever Tooltip API",
+      "online_name": "Mage Dragon Robe",
+      "matched": true,
+      "discrepancies": [],
+      "latency_ms": 128
+    },
+    {
+      "type": "Item",
+      "id": 8107,
+      "query": "Hibernal Boots",
+      "name": "Hibernal Boots",
+      "quality": "Uncommon",
+      "online_source": "Wowhead Forever Tooltip API",
+      "online_name": "Hibernal Boots",
+      "matched": true,
+      "discrepancies": [],
+      "latency_ms": 116
+    },
+    {
+      "type": "Item",
+      "id": 13536,
+      "query": "Horn of Awakening",
+      "name": "Horn of Awakening",
+      "quality": "Common",
+      "online_source": "Wowhead Forever Tooltip API",
+      "online_name": "Horn of Awakening",
+      "matched": true,
+      "discrepancies": [],
+      "latency_ms": 109
+    },
+    {
+      "type": "Item",
+      "id": 21436,
+      "query": "Alliance Commendation Signet",
+      "name": "Alliance Commendation Signet",
+      "quality": "Common",
+      "online_source": "Wowhead Forever Tooltip API",
+      "online_name": "Alliance Commendation Signet",
+      "matched": true,
+      "discrepancies": [],
+      "latency_ms": 134
+    },
+    {
+      "type": "Item",
+      "id": 9052,
+      "query": "Tablet of Stoneskin Totem II",
+      "name": "Tablet of Stoneskin Totem II",
+      "quality": "Common",
+      "online_source": "Wowhead Forever Tooltip API",
+      "online_name": "Tablet of Stoneskin Totem II",
+      "matched": true,
+      "discrepancies": [],
+      "latency_ms": 128
+    },
+    {
+      "type": "Item",
+      "id": 20506,
+      "query": "Pattern: Spitfire Bracers",
+      "name": "Pattern: Spitfire Bracers",
+      "quality": "Common",
       "online_source": "Wowhead Classic Tooltip API",
-      "online_name": "Bloodfang Chestpiece",
+      "online_name": "Pattern: Spitfire Bracers",
       "matched": true,
       "discrepancies": [],
-      "latency_ms": 156
+      "latency_ms": 125
     },
     {
       "type": "Item",
-      "id": 3228,
-      "query": "Jimmied Handcuffs",
-      "name": "Jimmied Handcuffs",
-      "quality": "Rare",
-      "online_source": "Wowhead Forever Tooltip API",
-      "online_name": "Jimmied Handcuffs",
-      "matched": true,
-      "discrepancies": [],
-      "latency_ms": 158
-    },
-    {
-      "type": "Item",
-      "id": 11611,
-      "query": "Plans: Dark Iron Sunderer",
-      "name": "Plans: Dark Iron Sunderer",
-      "quality": "Rare",
-      "online_source": "Wowhead Forever Tooltip API",
-      "online_name": "Plans: Dark Iron Sunderer",
-      "matched": true,
-      "discrepancies": [],
-      "latency_ms": 159
-    },
-    {
-      "type": "Item",
-      "id": 23261,
-      "query": "Champion's Satin Hood",
-      "name": "Champion's Satin Hood",
-      "quality": "Rare",
-      "online_source": "Wowhead Forever Tooltip API",
-      "online_name": "Champion's Satin Hood",
-      "matched": true,
-      "discrepancies": [],
-      "latency_ms": 169
-    },
-    {
-      "type": "Item",
-      "id": 5443,
-      "query": "Gold-plated Buckler",
-      "name": "Gold-plated Buckler",
-      "quality": "Rare",
-      "online_source": "Wowhead Forever Tooltip API",
-      "online_name": "Gold-plated Buckler",
-      "matched": true,
-      "discrepancies": [],
-      "latency_ms": 158
-    },
-    {
-      "type": "Item",
-      "id": 23256,
-      "query": "Champion's Dreadweave Spaulders",
-      "name": "Champion's Dreadweave Spaulders",
-      "quality": "Rare",
-      "online_source": "Wowhead Forever Tooltip API",
-      "online_name": "Champion's Dreadweave Spaulders",
-      "matched": true,
-      "discrepancies": [],
-      "latency_ms": 160
-    },
-    {
-      "type": "Item",
-      "id": 14835,
-      "query": "Tyrant's Chestpiece",
-      "name": "Tyrant's Chestpiece",
-      "quality": "Uncommon",
-      "online_source": "Wowhead Forever Tooltip API",
-      "online_name": "Tyrant's Chestpiece",
-      "matched": true,
-      "discrepancies": [],
-      "latency_ms": 159
-    },
-    {
-      "type": "Item",
-      "id": 10299,
-      "query": "Gnomeregan Amulet",
-      "name": "Gnomeregan Amulet",
-      "quality": "Uncommon",
-      "online_source": "Wowhead Forever Tooltip API",
-      "online_name": "Gnomeregan Amulet",
-      "matched": true,
-      "discrepancies": [],
-      "latency_ms": 167
-    },
-    {
-      "type": "Item",
-      "id": 14480,
-      "query": "Pattern: Ghostweave Vest",
-      "name": "Pattern: Ghostweave Vest",
-      "quality": "Uncommon",
-      "online_source": "Wowhead Forever Tooltip API",
-      "online_name": "Pattern: Ghostweave Vest",
-      "matched": true,
-      "discrepancies": [],
-      "latency_ms": 166
-    },
-    {
-      "type": "Item",
-      "id": 14220,
-      "query": "Geomancer's Cap",
-      "name": "Geomancer's Cap",
-      "quality": "Uncommon",
-      "online_source": "Wowhead Forever Tooltip API",
-      "online_name": "Geomancer's Cap",
-      "matched": true,
-      "discrepancies": [],
-      "latency_ms": 334
-    },
-    {
-      "type": "Item",
-      "id": 4125,
-      "query": "Tranquil Orb",
-      "name": "Tranquil Orb",
-      "quality": "Uncommon",
-      "online_source": "Wowhead Forever Tooltip API",
-      "online_name": "Tranquil Orb",
-      "matched": true,
-      "discrepancies": [],
-      "latency_ms": 288
-    },
-    {
-      "type": "Item",
-      "id": 2928,
-      "query": "Dust of Decay",
-      "name": "Dust of Decay",
+      "id": 3383,
+      "query": "Elixir of Wisdom",
+      "name": "Elixir of Wisdom",
       "quality": "Common",
       "online_source": "Wowhead Forever Tooltip API",
-      "online_name": "Dust of Decay",
+      "online_name": "Elixir of Wisdom",
       "matched": true,
       "discrepancies": [],
-      "latency_ms": 377
-    },
-    {
-      "type": "Item",
-      "id": 4905,
-      "query": "Sarkoth's Mangled Claw",
-      "name": "Sarkoth's Mangled Claw",
-      "quality": "Common",
-      "online_source": "Wowhead Forever Tooltip API",
-      "online_name": "Sarkoth's Mangled Claw",
-      "matched": true,
-      "discrepancies": [],
-      "latency_ms": 296
-    },
-    {
-      "type": "Item",
-      "id": 4669,
-      "query": "Battle Chain Girdle",
-      "name": "Battle Chain Girdle",
-      "quality": "Common",
-      "online_source": "Wowhead Forever Tooltip API",
-      "online_name": "Battle Chain Girdle",
-      "matched": true,
-      "discrepancies": [],
-      "latency_ms": 223
-    },
-    {
-      "type": "Item",
-      "id": 9542,
-      "query": "Simple Letter",
-      "name": "Simple Letter",
-      "quality": "Common",
-      "online_source": "Wowhead Forever Tooltip API",
-      "online_name": "Simple Letter",
-      "matched": true,
-      "discrepancies": [],
-      "latency_ms": 295
-    },
-    {
-      "type": "Item",
-      "id": 10621,
-      "query": "Runed Scroll",
-      "name": "Runed Scroll",
-      "quality": "Common",
-      "online_source": "Wowhead Forever Tooltip API",
-      "online_name": "Runed Scroll",
-      "matched": true,
-      "discrepancies": [],
-      "latency_ms": 356
+      "latency_ms": 135
     },
     {
       "type": "Creature",
@@ -290,7 +290,7 @@
       "online_name": "Emperor Dagran Thaurissan",
       "matched": true,
       "discrepancies": [],
-      "latency_ms": 308
+      "latency_ms": 160
     },
     {
       "type": "Creature",
@@ -301,7 +301,7 @@
       "online_name": "Herod",
       "matched": true,
       "discrepancies": [],
-      "latency_ms": 337
+      "latency_ms": 189
     },
     {
       "type": "Creature",
@@ -312,95 +312,95 @@
       "online_name": "Ragnaros",
       "matched": true,
       "discrepancies": [],
-      "latency_ms": 240
+      "latency_ms": 180
     },
     {
       "type": "Creature",
-      "id": 4844,
-      "query": "Shadowforge Surveyor",
-      "name": "Shadowforge Surveyor",
+      "id": 5970,
+      "query": "World Orc Female Warlock Trainer",
+      "name": "World Orc Female Warlock Trainer",
       "online_source": "Wowhead Forever NPC API",
-      "online_name": "Shadowforge Surveyor",
+      "online_name": "World Orc Female Warlock Trainer",
       "matched": true,
       "discrepancies": [],
-      "latency_ms": 343
+      "latency_ms": 165
     },
     {
       "type": "Creature",
-      "id": 1339,
-      "query": "Mayda Thane",
-      "name": "Mayda Thane",
+      "id": 16382,
+      "query": "Patchwork Terror",
+      "name": "Patchwork Terror",
       "online_source": "Wowhead Forever NPC API",
-      "online_name": "Mayda Thane",
+      "online_name": "Patchwork Terror",
       "matched": true,
       "discrepancies": [],
-      "latency_ms": 420
+      "latency_ms": 150
     },
     {
       "type": "Creature",
-      "id": 15456,
-      "query": "Sarah Sadwhistle",
-      "name": "Sarah Sadwhistle",
+      "id": 359,
+      "query": "Riding Wolf (Winter)",
+      "name": "Riding Wolf (Winter)",
       "online_source": "Wowhead Forever NPC API",
-      "online_name": "Sarah Sadwhistle",
+      "online_name": "Riding Wolf (Winter)",
       "matched": true,
       "discrepancies": [],
-      "latency_ms": 186
+      "latency_ms": 135
     },
     {
       "type": "Creature",
-      "id": 8363,
-      "query": "Shadi Mistrunner",
-      "name": "Shadi Mistrunner",
+      "id": 6734,
+      "query": "Innkeeper Hearthstove",
+      "name": "Innkeeper Hearthstove",
       "online_source": "Wowhead Forever NPC API",
-      "online_name": "Shadi Mistrunner",
+      "online_name": "Innkeeper Hearthstove",
       "matched": true,
       "discrepancies": [],
-      "latency_ms": 209
+      "latency_ms": 147
     },
     {
       "type": "Creature",
-      "id": 645,
-      "query": "Cookie",
-      "name": "Cookie",
+      "id": 7022,
+      "query": "Venomlash Scorpid",
+      "name": "Venomlash Scorpid",
       "online_source": "Wowhead Forever NPC API",
-      "online_name": "Cookie",
+      "online_name": "Venomlash Scorpid",
       "matched": true,
       "discrepancies": [],
-      "latency_ms": 183
+      "latency_ms": 138
     },
     {
       "type": "Creature",
-      "id": 5391,
-      "query": "Galen Goodward",
-      "name": "Galen Goodward",
+      "id": 7341,
+      "query": "Skeletal Frostweaver",
+      "name": "Skeletal Frostweaver",
       "online_source": "Wowhead Forever NPC API",
-      "online_name": "Galen Goodward",
+      "online_name": "Skeletal Frostweaver",
       "matched": true,
       "discrepancies": [],
-      "latency_ms": 194
+      "latency_ms": 141
     },
     {
       "type": "Creature",
-      "id": 2548,
-      "query": "Captain Keelhaul",
-      "name": "Captain Keelhaul",
+      "id": 9520,
+      "query": "Grark Lorkrub",
+      "name": "Grark Lorkrub",
       "online_source": "Wowhead Forever NPC API",
-      "online_name": "Captain Keelhaul",
+      "online_name": "Grark Lorkrub",
       "matched": true,
       "discrepancies": [],
-      "latency_ms": 161
+      "latency_ms": 156
     },
     {
       "type": "Creature",
-      "id": 15443,
-      "query": "Janela Stouthammer",
-      "name": "Janela Stouthammer",
+      "id": 7435,
+      "query": "Cobalt Wyrmkin",
+      "name": "Cobalt Wyrmkin",
       "online_source": "Wowhead Forever NPC API",
-      "online_name": "Janela Stouthammer",
+      "online_name": "Cobalt Wyrmkin",
       "matched": true,
       "discrepancies": [],
-      "latency_ms": 217
+      "latency_ms": 121
     },
     {
       "type": "Quest",
@@ -411,7 +411,7 @@
       "online_name": "Free Knot!",
       "matched": true,
       "discrepancies": [],
-      "latency_ms": 165
+      "latency_ms": 127
     },
     {
       "type": "Quest",
@@ -422,7 +422,7 @@
       "online_name": "The Green Hills of Stranglethorn",
       "matched": true,
       "discrepancies": [],
-      "latency_ms": 148
+      "latency_ms": 130
     },
     {
       "type": "Quest",
@@ -433,95 +433,95 @@
       "online_name": "The Fate of the Kingdom",
       "matched": true,
       "discrepancies": [],
-      "latency_ms": 138
+      "latency_ms": 132
     },
     {
       "type": "Quest",
-      "id": 8256,
-      "query": "The Ichor of Undeath",
-      "name": "The Ichor of Undeath",
+      "id": 9045,
+      "query": "Redemption Headpiece",
+      "name": "Redemption Headpiece",
       "online_source": "Wowhead Forever Quest API",
-      "online_name": "The Ichor of Undeath",
+      "online_name": "Redemption Headpiece",
       "matched": true,
       "discrepancies": [],
-      "latency_ms": 170
+      "latency_ms": 104
     },
     {
       "type": "Quest",
-      "id": 5042,
-      "query": "Agamaggan's Strength",
-      "name": "Agamaggan's Strength",
+      "id": 1061,
+      "query": "The Spirits of Stonetalon",
+      "name": "The Spirits of Stonetalon",
       "online_source": "Wowhead Forever Quest API",
-      "online_name": "Agamaggan's Strength",
+      "online_name": "The Spirits of Stonetalon",
       "matched": true,
       "discrepancies": [],
-      "latency_ms": 172
+      "latency_ms": 120
     },
     {
       "type": "Quest",
-      "id": 642,
-      "query": "The Princess Trapped",
-      "name": "The Princess Trapped",
+      "id": 2160,
+      "query": "Supplies to Tannok",
+      "name": "Supplies to Tannok",
       "online_source": "Wowhead Forever Quest API",
-      "online_name": "The Princess Trapped",
+      "online_name": "Supplies to Tannok",
       "matched": true,
       "discrepancies": [],
-      "latency_ms": 151
+      "latency_ms": 140
     },
     {
       "type": "Quest",
-      "id": 644,
-      "query": "Sigil of Trollbane",
-      "name": "Sigil of Trollbane",
+      "id": 496,
+      "query": "Elixir of Suffering",
+      "name": "Elixir of Suffering",
       "online_source": "Wowhead Forever Quest API",
-      "online_name": "Sigil of Trollbane",
+      "online_name": "Elixir of Suffering",
       "matched": true,
       "discrepancies": [],
-      "latency_ms": 154
+      "latency_ms": 134
     },
     {
       "type": "Quest",
-      "id": 8145,
-      "query": "The Maelstrom's Tendril",
-      "name": "The Maelstrom's Tendril",
+      "id": 3002,
+      "query": "The Gordunni Orb",
+      "name": "The Gordunni Orb",
       "online_source": "Wowhead Forever Quest API",
-      "online_name": "The Maelstrom's Tendril",
+      "online_name": "The Gordunni Orb",
       "matched": true,
       "discrepancies": [],
-      "latency_ms": 143
+      "latency_ms": 141
     },
     {
       "type": "Quest",
-      "id": 8545,
-      "query": "The Horde Needs Mithril Bars!",
-      "name": "The Horde Needs Mithril Bars!",
+      "id": 8271,
+      "query": "Hero of the Stormpike",
+      "name": "Hero of the Stormpike",
       "online_source": "Wowhead Forever Quest API",
-      "online_name": "The Horde Needs Mithril Bars!",
+      "online_name": "Hero of the Stormpike",
       "matched": true,
       "discrepancies": [],
-      "latency_ms": 162
+      "latency_ms": 132
     },
     {
       "type": "Quest",
-      "id": 2851,
-      "query": "Wild Leather Boots",
-      "name": "Wild Leather Boots",
+      "id": 1423,
+      "query": "The Lost Supplies",
+      "name": "The Lost Supplies",
       "online_source": "Wowhead Forever Quest API",
-      "online_name": "Wild Leather Boots",
+      "online_name": "The Lost Supplies",
       "matched": true,
       "discrepancies": [],
-      "latency_ms": 164
+      "latency_ms": 140
     },
     {
       "type": "Quest",
-      "id": 3661,
-      "query": "Favored of Elune?",
-      "name": "Favored of Elune?",
+      "id": 1428,
+      "query": "Continued Threat",
+      "name": "Continued Threat",
       "online_source": "Wowhead Forever Quest API",
-      "online_name": "Favored of Elune?",
+      "online_name": "Continued Threat",
       "matched": true,
       "discrepancies": [],
-      "latency_ms": 174
+      "latency_ms": 161
     },
     {
       "type": "Blizzard Live Intel",
@@ -532,7 +532,7 @@
       "online_name": "WoW Forever Beta Development Notes \u2013 Updated 26 October",
       "matched": true,
       "discrepancies": [],
-      "latency_ms": 588
+      "latency_ms": 976
     }
   ]
 }

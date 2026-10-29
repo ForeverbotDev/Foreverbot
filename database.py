@@ -1074,8 +1074,13 @@ class WoWForeverDB:
                 SELECT i.name, i.quality, l.drop_chance
                 FROM loot l
                 JOIN items i ON l.item_id = i.id
-                WHERE l.creature_id = ?
+                WHERE l.creature_id = ? AND l.drop_chance > 0
                 ORDER BY 
+                    CASE 
+                        WHEN l.drop_chance >= 5.0 THEN 1 
+                        WHEN l.drop_chance >= 1.0 THEN 2 
+                        ELSE 3 
+                    END,
                     (CASE i.quality WHEN 'Legendary' THEN 5 WHEN 'Epic' THEN 4 WHEN 'Rare' THEN 3 WHEN 'Uncommon' THEN 2 ELSE 1 END) DESC,
                     l.drop_chance DESC
                 LIMIT 5
