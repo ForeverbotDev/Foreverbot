@@ -1,0 +1,43 @@
+name: 💡 General Feedback & Feature Request
+description: Share ideas, suggestions, or general feedback for Foreverbot during Open Alpha
+title: "[Feedback]: <brief summary>"
+labels: ["feedback", "enhancement"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        ### 💡 Have an idea to make Foreverbot even better?
+        Share your suggestions, new command ideas, or feedback on existing features.
+
+  - type: dropdown
+    id: category
+    attributes:
+      label: Feedback Category
+      options:
+        - "New Slash Command Suggestion"
+        - "World of Warcraft: Forever Content"
+        - "Private Per-User Responses & Privacy"
+        - "Raid & Group Coordination Tools (/roll, /signup, /gdkp)"
+        - "PvP & Dueling Guides"
+        - "Documentation or Guide Feedback"
+        - "Other"
+    validations:
+      required: true
+
+  - type: textarea
+    id: description
+    attributes:
+      label: Description of Feedback or Suggestion
+      description: Explain your idea, why it would be helpful, and how you imagine it working in Discord.
+      placeholder: "I'd love to see a command that..."
+    validations:
+      required: true
+
+  - type: textarea
+    id: screenshots_mockups
+    attributes:
+      label: Screenshots or Mockups (Optional)
+      description: Drag and drop any visual mockups, reference screenshots, or examples here.
+      placeholder: "Attach images here..."
+    validations:
+      required: false

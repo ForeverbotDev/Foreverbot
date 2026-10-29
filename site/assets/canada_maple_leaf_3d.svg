@@ -1,0 +1,36 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="2000 100 5600 4600" width="32" height="28">
+  <defs>
+    <!-- Minor 3D Shadow -->
+    <filter id="minorShadow" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="120" stdDeviation="90" flood-color="#000000" flood-opacity="0.6" />
+      <feDropShadow dx="0" dy="40" stdDeviation="40" flood-color="#000000" flood-opacity="0.35" />
+    </filter>
+
+    <!-- 3D White Bevel / Gradient Stroke -->
+    <linearGradient id="white3dStroke" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#ffffff" stop-opacity="1.0" />
+      <stop offset="50%" stop-color="#f1f5f9" stop-opacity="0.95" />
+      <stop offset="100%" stop-color="#94a3b8" stop-opacity="0.75" />
+    </linearGradient>
+
+    <linearGradient id="subtleInnerGlow" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#ffffff" stop-opacity="0.08" />
+      <stop offset="100%" stop-color="#ffffff" stop-opacity="0.01" />
+    </linearGradient>
+  </defs>
+
+  <!-- Deep 3D Under-layer (Simulating extruded 3D thickness) -->
+  <path transform="translate(0, 100)" fill="none" stroke="#0f172a" stroke-width="220" stroke-linejoin="round" stroke-linecap="round" opacity="0.5"
+    d="m4890 4430-45-863a95 95 0 0 1 111-98l859 151-116-320a65 65 0 0 1 20-73l941-762-212-99a65 65 0 0 1-34-79l186-572-542 115a65 65 0 0 1-73-38l-105-247-423 454a65 65 0 0 1-111-57l204-1052-327 189a65 65 0 0 1-91-27l-332-652-332 652a65 65 0 0 1-91 27l-327-189 204 1052a65 65 0 0 1-111 57l-423-454-105 247a65 65 0 0 1-73 38l-542-115 186 572a65 65 0 0 1-34 79l-212 99 941 762a65 65 0 0 1 20 73l-116 320 859-151a95 95 0 0 1 111 98l-45 863z"
+  />
+
+  <!-- Main Modern 3D White Outline with Minor Shadowing -->
+  <path filter="url(#minorShadow)" fill="url(#subtleInnerGlow)" stroke="url(#white3dStroke)" stroke-width="190" stroke-linejoin="round" stroke-linecap="round"
+    d="m4890 4430-45-863a95 95 0 0 1 111-98l859 151-116-320a65 65 0 0 1 20-73l941-762-212-99a65 65 0 0 1-34-79l186-572-542 115a65 65 0 0 1-73-38l-105-247-423 454a65 65 0 0 1-111-57l204-1052-327 189a65 65 0 0 1-91-27l-332-652-332 652a65 65 0 0 1-91 27l-327-189 204 1052a65 65 0 0 1-111 57l-423-454-105 247a65 65 0 0 1-73 38l-542-115 186 572a65 65 0 0 1-34 79l-212 99 941 762a65 65 0 0 1 20 73l-116 320 859-151a95 95 0 0 1 111 98l-45 863z"
+  />
+
+  <!-- Top Specular Highlight on Ridge -->
+  <path transform="translate(0, -25)" fill="none" stroke="#ffffff" stroke-width="90" stroke-linejoin="round" stroke-linecap="round" opacity="0.8"
+    d="m4890 4430-45-863a95 95 0 0 1 111-98l859 151-116-320a65 65 0 0 1 20-73l941-762-212-99a65 65 0 0 1-34-79l186-572-542 115a65 65 0 0 1-73-38l-105-247-423 454a65 65 0 0 1-111-57l204-1052-327 189a65 65 0 0 1-91-27l-332-652-332 652a65 65 0 0 1-91 27l-327-189 204 1052a65 65 0 0 1-111 57l-423-454-105 247a65 65 0 0 1-73 38l-542-115 186 572a65 65 0 0 1-34 79l-212 99 941 762a65 65 0 0 1 20 73l-116 320 859-151a95 95 0 0 1 111 98l-45 863z"
+  />
+</svg>

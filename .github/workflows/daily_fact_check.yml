@@ -1,0 +1,72 @@
+name: 🌐 Daily Online Fact-Checking & 8:00 PM QC Email Dispatch
+
+on:
+  schedule:
+    # Runs daily at 00:00 UTC (8:00 PM EDT / 7:00 PM EST / 5:00 PM PDT)
+    - cron: "0 0 * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  daily_fact_check:
+    name: Fact-Check Post-Query Output & Email Daily QC Review
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: 📥 Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: 🐍 Set up Python 3.11
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: "pip"
+
+      - name: 📦 Install Python Dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: 🌐 Run Daily Online Fact-Checking Suite
+        run: |
+          python tests/test_daily_online_fact_checker.py \
+            --samples-per-tier 5 \
+            --creature-samples 8 \
+            --quest-samples 8 \
+            --dungeon-samples 5
+
+      - name: 📧 Dispatch Daily QC Report Email to Maintainer (8:00 PM)
+        if: always()
+        env:
+          QC_EMAIL_RECIPIENT: ${{ secrets.QC_EMAIL_RECIPIENT }}
+          SMTP_HOST: ${{ secrets.SMTP_HOST || 'smtp.gmail.com' }}
+          SMTP_PORT: ${{ secrets.SMTP_PORT || '587' }}
+          SMTP_USER: ${{ secrets.SMTP_USER }}
+          SMTP_PASSWORD: ${{ secrets.SMTP_PASSWORD }}
+        run: |
+          python scripts/email_daily_qc_report.py
+
+      - name: 📤 Upload Daily Fact-Check Report Artifact
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: daily-online-fact-check-report
+          path: |
+            tests/reports/DAILY_ONLINE_FACT_CHECK_REPORT.md
+            tests/reports/DAILY_ONLINE_FACT_CHECK_REPORT.json
+            tests/reports/DAILY_QC_EMAIL_DRAFT.html
+
+      - name: 🚀 Commit & Push Daily Audit Report
+        if: always()
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add tests/reports/DAILY_ONLINE_FACT_CHECK_REPORT.md tests/reports/DAILY_ONLINE_FACT_CHECK_REPORT.json tests/reports/DAILY_QC_EMAIL_DRAFT.html
+          if [ -n "$(git status --porcelain)" ]; then
+            git commit -m "test(audit): update daily online fact-checking report [skip ci]"
+            git push origin main
+          else
+            echo "Daily fact-check report unchanged."
+          fi

@@ -1,0 +1,11 @@
+version: '3.8'
+
+services:
+  foreverbot:
+    build: .
+    container_name: foreverbot
+    restart: unless-stopped
+    env_file:
+      - .env
+    volumes:
+      - ./wow_forever.db:/app/wow_forever.db

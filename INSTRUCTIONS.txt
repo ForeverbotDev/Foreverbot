@@ -1,0 +1,62 @@
+======================================================================
+  ⚔️ FOREVERBOT — QUICK START INSTRUCTIONS (NO CODING REQUIRED)
+======================================================================
+
+Thank you for downloading Foreverbot for World of Warcraft: Forever!
+Everything you need (including the offline database) is bundled inside
+this folder. Zero database setup or Docker required.
+
+----------------------------------------------------------------------
+STEP 1: GET YOUR FREE DISCORD BOT TOKEN (2 MINUTES)
+----------------------------------------------------------------------
+1. Open the Discord Developer Portal in your browser:
+   https://discord.com/developers/applications
+2. Click "New Application" (top-right), name it "Foreverbot", and click Create.
+3. In the left menu, click "Bot" -> click "Reset Token" -> click "Copy".
+4. In the left menu, click "OAuth2":
+   - Under "Scopes", check:
+     [x] bot
+     [x] applications.commands
+   - Under "Bot Permissions", check:
+     [x] View Channels
+     [x] Send Messages
+     [x] Embed Links
+     [x] Read Message History
+     [x] Use Slash Commands
+5. Copy the "Generated URL" at the bottom of the page, paste it into
+   your browser, and invite the bot into your Discord server.
+
+----------------------------------------------------------------------
+STEP 2: DOUBLE-CLICK TO LAUNCH!
+----------------------------------------------------------------------
+Simply double-click the launch file for your operating system:
+
+• 🐧 LINUX (SteamOS, KDE Plasma, GNOME, Ubuntu, Fedora):
+  Double-click "start_bot.sh"
+  *(Note: Do NOT click start_bot.bat on Linux—that is for Windows and triggers Wine/Protontricks).*
+
+• 🍎 MACOS (Apple Silicon & Intel):
+  Double-click "start_bot.command"
+
+• 💀 WINDOWS:
+  Double-click "start_bot.bat"
+
+----------------------------------------------------------------------
+STEP 3: PASTE YOUR TOKEN & ENJOY!
+----------------------------------------------------------------------
+On your first double-click:
+1. The script will automatically open Notepad (or your text editor)
+   with your settings file.
+2. Paste your token next to:
+   DISCORD_BOT_TOKEN=your_token_here
+3. Save the file and close the editor.
+4. Double-click the launch file again—Foreverbot is LIVE!
+
+----------------------------------------------------------------------
+THAT'S IT!
+----------------------------------------------------------------------
+Foreverbot will appear online in your Discord server with all 41 slash
+commands ready to use. Type "/help" in Discord to see the full list!
+
+For boss guides, custom dungeon loot, and raid math, open README.md.
+======================================================================
