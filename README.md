@@ -19,15 +19,6 @@
 [![Feedback](https://img.shields.io/badge/Feedback-Help%20Refine%20the%20Data%20%E2%9E%94-FF5722?logo=github&logoColor=white)](https://github.com/ForeverbotDev/foreverbot/issues/new?template=failed_response_report.yml)
 
 ---
-
-> ### 🎮 About This Project
-> Foreverbot is an independent, open-source companion for the World of Warcraft: Forever community, built by Mitch — a 34-year-old developer, gamer, and dad in Canada crafting tools from his home office.
-> 
-> * **100% Private Responses:** All 41 research commands are strictly ephemeral, keeping guild raid and coordination channels clutter-free.
-> * **Smart Command Redirection:** Typed the wrong command? If a lost player asks a question in `/map`, Foreverbot recognizes the context, provides instant navigation hints (like walking directions to Stormwind from Duskwood), and guides you to `/ask`.
-> * **Sub-Second Offline Engine:** Cataloging 19,600+ items, 10,100+ NPCs, 370,000+ loot drops, and 46 dungeons in an embedded, indexed SQLite database with zero web-scraping lag.
-> * **Astronomical Possibility Space:** Verified with overnight soak daemons across over 528 million weapon matchups and astronomical gear permutations with 0 memory leaks and 0 crashes.
-
 ## 📦 Download & 1-Click Launch Guide
 
 Foreverbot ships with its **offline WoW Forever database pre-built and bundled**—no external database servers, Docker containers, or privileged Discord intents required.
