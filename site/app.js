@@ -288,7 +288,7 @@ function initDiscordSimulator() {
 }
 
 /* ==========================================================================
-   3. COMMAND CATALOG EXPLORER (ALL 41 COMMANDS)
+   3. COMMAND CATALOG EXPLORER (ALL 42 COMMANDS)
    ========================================================================== */
 const ALL_COMMANDS = [
   // Combat & Theorycrafting
@@ -321,7 +321,8 @@ const ALL_COMMANDS = [
   { name: "/profile", cat: "class", desc: "Personal user stats, roll history, and saved preferences.", example: "/profile" },
 
   // World, Travel & Economy
-  { name: "/item", cat: "world", desc: "Lookup 20,000+ items with stats, drop rates, and sources.", example: "/item query:Ironfoe" },
+  { name: "/item", cat: "world", desc: "Lookup 27,072 items (including 6,671 WoW: Forever items) with stats, drop rates, and sources.", example: "/item query:Ironfoe" },
+  { name: "/disenchant", cat: "world", desc: "Disenchant yields, material probabilities & vendor vs DE value calculator.", example: "/disenchant query:Shadowfang" },
   { name: "/mob", cat: "world", desc: "NPC stats, locations, resistances, immunities, and loot tables.", example: "/mob query:Ragnaros" },
   { name: "/flightpath", cat: "world", desc: "Direct flight hubs and multi-hop origin-to-destination transit routes.", example: "/flightpath from:Ironforge to:Light's Hope" },
   { name: "/route", cat: "world", desc: "Optimized 1-60 leveling routes and zone transitions.", example: "/route level:30" },

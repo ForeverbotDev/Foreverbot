@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
 Comprehensive Live Slash Command Test Suite for WoW: Forever Bot.
-Tests every single / slash command across all 41 commands and subcommands
+Tests every single / slash command across all 42 commands and subcommands
 with multiple diverse, realistic player examples.
 """
 
@@ -513,7 +513,7 @@ async def run_suite():
                 
                 # Check expectation:
                 # /roll and /signup are public coordination tools (ephemeral=False)
-                # All other 39 commands are private per-user responses (ephemeral=True)
+                # All other 40 commands are private per-user responses (ephemeral=True)
                 expected_ephemeral = cmd_key not in ("roll", "signup")
                 
                 if ephemeral != expected_ephemeral:
@@ -533,7 +533,7 @@ async def run_suite():
     pass_rate = (passed / total * 100.0) if total > 0 else 0.0
 
     print("\n" + "=" * 80)
-    print(f"🏁 ALL 41 COMMANDS VERIFICATION COMPLETE: {passed} / {total} Passed ({pass_rate:.1f}%) | {failed} Failed")
+    print(f"🏁 ALL 42 COMMANDS VERIFICATION COMPLETE: {passed} / {total} Passed ({pass_rate:.1f}%) | {failed} Failed")
     print(f"⏱️ Total Execution Time: {elapsed:.2f} seconds")
     print("=" * 80)
     return failed == 0
