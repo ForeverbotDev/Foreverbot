@@ -88,7 +88,7 @@ flowchart TD
   13. Conversational & NLP Queries (500 tests): Natural language questions verified safe and structured.
 
 ### 3. Deep Authenticity & Ground Truth Audit Suite (`tests/test_deep_information_authenticity_audit.py`)
-- **Volume:** 1,675 automated checks directly auditing database records, formulas, and slash fulfillments against canonical Classic and WoW: Forever ground truths.
+- **Volume:** 1,675 automated checks directly auditing database records, formulas, and slash fulfillments against canonical WoW: Forever ground truths in SQLite.
 - **16 Core Truth Domains (100% Pass in 0.03s):**
   1. Item Catalog & Stat Integrity (153 checks): Slots, stat mappings, drop sources, and quality tiers.
   2. WoW: Forever Custom Dungeons (9 checks): Exact entrance coordinates and brackets for all 9 custom instances.
@@ -99,7 +99,7 @@ flowchart TD
   7. Combat Math & Formula Invariance (9 checks): Glancing penalties, defense curves, resistance mitigation, and GDKP splits.
   8. Class Specs & Pre-Raid BiS (15 checks): 27 spec priorities, BiS rosters, and PvP advantages.
   9. Credentials & PRAGMA Integrity (9 checks): Database integrity check and required environment variables.
-  10. Full Dungeon Catalog (46 checks): Level brackets and coordinates across all 46 Classic & Forever dungeons.
+  10. Full Dungeon Catalog (46 checks): Level brackets and coordinates across all 46 dungeons in WoW: Forever.
   11. Full Creature & World Boss Sweep (38 checks): Levels, health values, and classifications.
   12. Iconic Quests (27 checks): Quest starters, zones, and rewards.
   13. 9x9 PvP Matchup Matrix (81 checks): All 81 1v1 class pairings.
@@ -139,7 +139,7 @@ Every slash command was tested to verify that guild channels remain spam-free:
 
 ### 2. Combat Mechanics & Glancing Blow Math
 - Tested against Level 63 raid bosses with weapon skill ranging from 300 to 315.
-- Validates the Classic damage reduction curve:
+- Validates the WoW: Forever damage reduction curve in SQLite:
   $$\text{Glancing Penalty} = 35\% \text{ at 300 Weapon Skill} \longrightarrow 5\% \text{ at 305+ Weapon Skill}$$
 - Confirms that +5 Sword/Axe racials (Humans/Orcs) reduce boss glancing penalties by **30%** and drop special attack hit cap from **9% down to 6%**.
 
@@ -218,8 +218,8 @@ To establish an unassailable standard of data accuracy, Foreverbot operates an a
    - Samples random items across all 6 quality tiers (Epic, Rare, Uncommon, Common, Poor, Legendary), creatures/mobs, and quests.
    - Executes real queries through Foreverbot's native search engine (`db.search_items`, `db.search_creatures`, `db.search_quests`).
 2. **Real-Time Cross-Verification with Live Web APIs:**
-   - **[Wowhead Classic Tooltip API](https://nether.wowhead.com/classic/tooltip/item/19019)** — Live CDN endpoint validating item names, quality tiers, NPC rosters, and quest IDs.
-   - **[ClassicDB Live Gateway](https://classicdb.ch/)** — Independent web database fallback for full-title cross-verification.
+   - **[Wowhead Tooltip API](https://nether.wowhead.com/forever/tooltip/item/19019)** — Live CDN endpoint validating item names, quality tiers, NPC rosters, and quest IDs.
+   - **[Wowhead Live Gateway](https://wowhead.com/)** — Independent web database fallback for full-title cross-verification.
    - **[Official Blizzard EU Forums & Blue Tracker API](https://eu.forums.blizzard.com/en/wow/t/631316.json)** — Live topic verification confirming active WoW Forever development notes and hotfixes.
 3. **8:00 PM Daily Email Dispatch to Maintainer:**
    - Triggered automatically via GitHub Actions at 8:00 PM daily (`cron: "0 0 * * *"`).

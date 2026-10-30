@@ -165,7 +165,7 @@ const SIMULATOR_DATA = {
       { name: "📈 Racial +5 Skill (305)", val: "Having 305 weapon skill (Humans with Swords/Maces, Orcs with Axes, or Edgemaster's Handguards) crushes the penalty down to **only 5%**!" },
       { name: "🎯 Hit Cap Reduction", val: "At 305 skill, your melee special yellow-attack hit cap drops from **9% down to 6%**, saving 3 gear slots for raw Crit & Attack Power." }
     ],
-    footer: "Foreverbot AI Knowledge Engine • Grounded in Classic Mechanics"
+    footer: "Foreverbot AI Knowledge Engine • Grounded in WoW: Forever Mechanics in SQLite"
   }
 };
 

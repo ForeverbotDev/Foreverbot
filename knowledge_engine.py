@@ -2678,11 +2678,11 @@ def get_disenchant_info(
     if not q_str or q_str in ("all", "guide", "overview", "help", "list", "brackets"):
         return {
             "type": "guide",
-            "title": "✨ World of Warcraft: Classic Disenchanting Master Guide",
+            "title": "✨ World of Warcraft: Forever Disenchanting Master Guide",
             "description": (
                 "Disenchanting breaks down **Uncommon (Green)**, **Rare (Blue)**, and **Epic (Purple)** gear into magical reagents.\n\n"
-                "📜 **Core Vanilla 1.12.1 Mechanics:**\n"
-                "• **No Skill Level Lock:** In Classic 1.12, an enchanter with skill **1** can disenchant ANY level item (skill gates were added in TBC).\n"
+                "📜 **Core WoW: Forever Mechanics in SQLite:**\n"
+                "• **No Skill Level Lock:** In WoW: Forever, an enchanter with skill **1** can disenchant ANY level item (skill gates were added in TBC).\n"
                 "• **Armor vs Weapon Weighting:**\n"
                 "  - **Armor** favors **Dust (~75%)**, ~20% Essence, ~5% Shard.\n"
                 "  - **Weapons** favor **Essence (~75%)**, ~20% Dust, ~5% Shard.\n"
@@ -3022,7 +3022,7 @@ MACRO_TEMPLATES: Dict[str, Dict[str, Any]] = {
 # -------------------------------------------------------------
 PVP_SYSTEM_DATA: Dict[str, Dict[str, Any]] = {
     "ranks": {
-        "title": "Classic & Forever PvP Honor System (Ranks 1–14 & 25k Honor Cap)",
+        "title": "WoW: Forever PvP Honor System in SQLite (Ranks 1–14 & 25k Honor Cap)",
         "description": (
             "• **Forever Alpha Update (Oct 2026):** Honor cap increased from **15,000 to 25,000**, BG Marks of Honor stack up to **30** (was 20), and Critical Strikes in PvP deal full unreduced efficacy!\n"
             "• **R1 (Private / Scout • 1,500 RP):** Private's Tabard\n"
@@ -4932,7 +4932,7 @@ def get_raid_lockouts() -> Dict[str, Any]:
 TWINK_DATA: Dict[str, Dict[str, Any]] = {
     "19": {
         "bracket": "Level 10–19 (Warsong Gulch)",
-        "overview": "The premier Classic twink bracket. Extremely high burst, massive stamina stacking via uncapped enchants, and speed-oriented flag running.",
+        "overview": "The premier WoW: Forever twink bracket in SQLite. Extremely high burst, massive stamina stacking via uncapped enchants, and speed-oriented flag running.",
         "weapons": (
             "• **Shadowfang** (1H Sword • Shadow bolt proc • 15.0 DPS) — Top-tier Horde/Alliance sword.\n"
             "• **Assassin's Blade** (Dagger • +4 Str, +3 Agi, +1% Crit • 15.3 DPS) — BiS Ambush/Backstab dagger.\n"
@@ -4947,7 +4947,7 @@ TWINK_DATA: Dict[str, Dict[str, Any]] = {
             "• **Feet:** Feet of the Lynx (+8 Agi, +3 Str) or Nat Pagle's Extreme Anglin' Boots (+12 Stamina)\n"
             "• **Trinket:** Arena Grand Master (+12 Dodge & 1,000 absorption shield!) from Gurubashi 12-token quest"
         ),
-        "enchants": "Enchants have NO item-level limits in Classic! Stack **+100 Health** to Chest, **+15 Agility** or **Crusader** to Weapons, **Libram of Constitution (+100 HP)** to Head/Legs, and **+9 Stamina** to Bracers."
+        "enchants": "Enchants have NO item-level limits in WoW: Forever! Stack **+100 Health** to Chest, **+15 Agility** or **Crusader** to Weapons, **Libram of Constitution (+100 HP)** to Head/Legs, and **+9 Stamina** to Bracers."
     },
     "29": {
         "bracket": "Level 20–29 (Arathi Basin & Warsong Gulch)",
@@ -5727,7 +5727,7 @@ CLASS_TOP5_ADDONS: Dict[str, Dict[str, Any]] = {
     "general": {
         "class_name": "Essential Raid & Leveling Addons (All Classes)",
         "color": 0x1ABC9C,
-        "summary": "The baseline quality-of-life, threat calculation, and boss encounter addons universally required for all 40 players in Classic WoW Forever.",
+        "summary": "The baseline quality-of-life, threat calculation, and boss encounter addons universally required for all 40 players in WoW: Forever.",
         "addons": [
             {
                 "rank": 1,
@@ -5873,7 +5873,7 @@ TRIVIA_QUESTIONS: List[Dict[str, Any]] = [
         "explanation": "Rich Thorium Veins require 275 Mining skill to mine, and yield valuable Arcane Crystals."
     },
     {
-        "question": "Which racial trait grants +25% chance to resist Stun effects in Classic WoW?",
+        "question": "Which racial trait grants +25% chance to resist Stun effects in WoW: Forever?",
         "options": ["Will of the Forsaken", "Hardiness (Orc)", "Stoneform (Dwarf)", "War Stomp (Tauren)"],
         "correct": 1,
         "explanation": "Hardiness grants Orcs a passive +25% stun resist, making them formidable against Rogues."

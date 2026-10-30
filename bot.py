@@ -248,7 +248,7 @@ async def item_command(interaction: discord.Interaction, query: str):
             # Enrich bare item using Gemini/Blizzard official data
             prompt = f"""
             You are Foreverbot, an expert World of Warcraft: Forever database assistant.
-            Provide accurate Blizzard tooltip details for the WoW Classic item: "{item['name']}".
+            Provide accurate Blizzard tooltip details for the WoW: Forever item in SQLite: "{item['name']}".
             Respond in this exact format:
             DESCRIPTION: [Flavor text or tooltip description/quotes, e.g. "Handle With Care." or Use/Equip effect, or 'None']
             SOURCE: [Drop source, vendor, or Quest name and zone, or 'None']
@@ -307,7 +307,7 @@ async def item_command(interaction: discord.Interaction, query: str):
         if item.get("pro_tip"):
             desc_lines.append(f"💡 *Tip:* {item['pro_tip']}")
         if item.get("forever_status") == "not_in_forever":
-            desc_lines.append("⚠️ *Note: Not currently active in WoW: Forever (Classic archive)*")
+            desc_lines.append("⚠️ *Note: Not currently active in WoW: Forever*")
 
         embed = discord.Embed(
             title=f"{badge}{item['name']} ({item['quality']})",
@@ -431,7 +431,7 @@ async def quest_command(interaction: discord.Interaction, query: str):
         if quest.get("pro_tip"):
             lines.append(f"💡 *Tip:* {quest['pro_tip']}")
         if quest.get("forever_status") == "not_in_forever":
-            lines.append("⚠️ *Note: Not currently active in WoW: Forever (Classic archive)*")
+            lines.append("⚠️ *Note: Not currently active in WoW: Forever*")
 
         embed = discord.Embed(
             title=f"📜 {badge}{quest['title']}",
@@ -536,7 +536,7 @@ async def mob_command(interaction: discord.Interaction, query: str):
         if mob.get("strategy_notes"):
             lines.append(f"⚔️ **Strategy:** {mob['strategy_notes']}")
         if mob.get("forever_status") == "not_in_forever":
-            lines.append("⚠️ *Note: Not currently active in WoW: Forever (Classic archive)*")
+            lines.append("⚠️ *Note: Not currently active in WoW: Forever*")
 
         embed = discord.Embed(
             title=f"💀 {badge}{mob['name']} ({classification} • {lvl_str})",
@@ -939,7 +939,7 @@ async def dungeons_command(interaction: discord.Interaction, query: Optional[str
     # If empty query: Show concise bracket cheat sheet
     if not query or not query.strip():
         embed = discord.Embed(
-            title="🏰 Dungeon Finder (Classic & WoW: Forever)",
+            title="🏰 WoW: Forever Dungeon Finder",
             description=(
                 "Type `/dungeons 42` or `/dungeons zf` to find specific instances.\n\n"
                 "**Level Brackets:**\n"
@@ -1387,7 +1387,7 @@ async def buffs_command(interaction: discord.Interaction, query: Optional[str] =
         for k, v in WORLD_BUFFS_DATA.items():
             lines.append(f"• **{v['name']}:** {v['effect']} `({v['cooldown']})`")
         embed = discord.Embed(
-            title="✨ World Buffs Directory (Classic & WoW: Forever)",
+            title="✨ WoW: Forever World Buffs Directory",
             description="\n\n".join(lines) + "\n\n*Type `/buffs <name>` for turn-in coords and stacking rules!*",
             color=0xF1C40F
         )
@@ -1512,7 +1512,7 @@ async def rep_command(interaction: discord.Interaction, query: Optional[str] = N
     # 1. Directory of all factions if query is empty or requested list
     if not faction or faction.lower() in ("all", "list", "directory", "factions", "help"):
         embed = discord.Embed(
-            title="🛡️ World of Warcraft: Classic Reputations Directory",
+            title="🛡️ World of Warcraft: Forever Reputations Directory",
             description=(
                 "Farming reputation unlocks essential raid attunements, permanent crafting recipes, "
                 "BiS combat trinkets, and cross-race mounts.\n\n"
@@ -1732,7 +1732,7 @@ async def macro_command(interaction: discord.Interaction, query: str):
     # 2. Dynamic AI Macro Builder via Gemini
     prompt = f"""
     You are Foreverbot, an expert World of Warcraft Macro Engineer.
-    A player needs an in-game WoW Classic macro for: "{query}".
+    A player needs an in-game WoW Forever macro for: "{query}".
     Generate a 100% syntactically valid WoW Forever macro (maximum 255 characters).
     Format your response EXACTLY as:
     ```lua
@@ -1741,7 +1741,7 @@ async def macro_command(interaction: discord.Interaction, query: str):
     EXPLANATION: [1-2 concise bullet points explaining mechanics, target priority, or keybind advice]
 
     Strict rules:
-    - Only valid Classic WoW macro commands (/cast, /castsequence, /use, /startattack, /stopcasting, /cancelaura, /equipslot, [@mouseover,help,nodead], [stance:X], [mod:shift], etc.).
+    - Only valid WoW macro commands (/cast, /castsequence, /use, /startattack, /stopcasting, /cancelaura, /equipslot, [@mouseover,help,nodead], [stance:X], [mod:shift], etc.).
     - Keep macro under 255 characters so it fits in the standard WoW macro editor.
     - Zero conversational fluff.
     """
@@ -2473,7 +2473,7 @@ async def intel_command(interaction: discord.Interaction, topic: Optional[app_co
         embed.description = (
             "**Design Intent & Developer Commentary:**\n\n"
             "• **Hybrid Class Viability:** Developers confirmed authentic Vanilla itemization while receiving targeted quality-of-life adjustments to mana efficiency and debuff slot priority.\n"
-            "• **Horizontal Progression:** The 16 WoW Forever custom instances are tuned horizontally to expand level 58-60 gearing without invalidating classic tier progression.\n"
+            "• **Horizontal Progression:** The 16 WoW Forever custom instances are tuned horizontally to expand level 58-60 gearing without invalidating tier progression.\n"
             "• **Blizzard Live Tracker:** Synced with European & US Blue Tracker topic discussions."
         )
     elif selected == "lockouts":
@@ -2507,7 +2507,7 @@ async def intel_command(interaction: discord.Interaction, topic: Optional[app_co
 # -------------------------------------------------------------
 # Slash Command: /twink (Twink Gear & Battleground Brackets)
 # -------------------------------------------------------------
-@bot.tree.command(name="twink", description="Twink Best-in-Slot weapons, armor, and uncapped Classic enchants")
+@bot.tree.command(name="twink", description="Twink Best-in-Slot weapons, armor, and uncapped enchants in SQLite")
 @app_commands.describe(query="Twink level bracket (19, 29, or 39)", character_class="Optional character class (e.g. Rogue, Hunter, Warrior, Priest)")
 async def twink_command(interaction: discord.Interaction, query: str, character_class: Optional[str] = None):
     bracket = query
@@ -2526,7 +2526,7 @@ async def twink_command(interaction: discord.Interaction, query: str, character_
         f"*{tw['overview']}*\n\n"
         f"**🗡️ Top Weapons:**\n{tw['weapons']}\n\n"
         f"**🛡️ BiS Armor & Accessories:**\n{tw['armor']}\n\n"
-        f"**✨ Uncapped Classic Enchants:**\n{tw['enchants']}"
+        f"**✨ Uncapped Enchants:**\n{tw['enchants']}"
     )
     embed.set_footer(text="World of Warcraft: Forever Companion • Twink Metas")
     await interaction.followup.send(embed=embed)
@@ -2618,10 +2618,10 @@ async def addons_command(interaction: discord.Interaction, query: Optional[str] 
     # If no query provided, show General Top 5 essentials + directory prompt
     gen = CLASS_TOP5_ADDONS["general"]
     embed = discord.Embed(
-        title="🧩 Essential Classic WoW Addons Directory (Top 5 & Class Guides)",
+        title="🧩 Essential WoW: Forever Addons Directory (Top 5 & Class Guides)",
         description=(
             "**Universally Essential Raid & Leveling Addons:**\n"
-            "Every player in Classic WoW Forever should run these core baseline addons:\n"
+            "Every player in WoW Forever should run these core baseline addons:\n"
         ),
         color=0x1ABC9C
     )
