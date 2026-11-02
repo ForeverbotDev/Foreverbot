@@ -226,9 +226,7 @@ def main():
             subprocess.run(["git", "add", "-A"], cwd=REPO_ROOT, check=True)
             commit_msg = f"feat(alpha): sync official Blizzard WoW Forever Alpha notes ({latest_post_date})"
             subprocess.run(["git", "commit", "-m", commit_msg], cwd=REPO_ROOT, check=True)
-            subprocess.run(["git", "tag", "-f", "-a", "v3.0.0-alpha", "-m", f"Release v3.0.0-alpha ({commit_msg})"], cwd=REPO_ROOT, check=True)
             subprocess.run(["git", "push", "origin", "main"], cwd=REPO_ROOT, check=True)
-            subprocess.run(["git", "push", "origin", "-f", "v3.0.0-alpha"], cwd=REPO_ROOT, check=True)
             print(f"[GIT PUSHED] Successfully committed and pushed: {commit_msg}")
         else:
             print("[GIT CLEAN] No uncommitted changes to push.")

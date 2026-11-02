@@ -7,6 +7,7 @@ import difflib
 from typing import List, Dict, Any, Optional, Tuple
 
 DB_PATH = os.path.join(os.path.dirname(os.path.abspath(__file__)), "wow_forever.db")
+USER_DB_PATH = os.environ.get("USER_DB_PATH", os.path.join(os.path.dirname(os.path.abspath(__file__)), "user_data.db"))
 
 STOP_WORDS = {
     "where", "what", "who", "when", "why", "how", "is", "are", "was", "were",
@@ -495,33 +496,6 @@ def init_db(db_path: str = DB_PATH) -> None:
         is_forever_content INTEGER DEFAULT 0
     );
 
-    -- User Character Profiles & Armory Table
-    CREATE TABLE IF NOT EXISTS user_profiles (
-        user_id INTEGER PRIMARY KEY,
-        char_name TEXT NOT NULL,
-        char_class TEXT NOT NULL,
-        char_race TEXT NOT NULL,
-        level INTEGER DEFAULT 60,
-        spec TEXT DEFAULT '',
-        professions TEXT DEFAULT '',
-        guild_role TEXT DEFAULT '',
-        gear_note TEXT DEFAULT '',
-        updated_at TEXT DEFAULT CURRENT_TIMESTAMP
-    );
-
-    -- Raid Signups & Attendance Table
-    CREATE TABLE IF NOT EXISTS raid_signups (
-        id INTEGER PRIMARY KEY AUTOINCREMENT,
-        event_id TEXT NOT NULL,
-        event_title TEXT NOT NULL,
-        user_id INTEGER NOT NULL,
-        user_name TEXT NOT NULL,
-        role TEXT NOT NULL,
-        class_name TEXT DEFAULT '',
-        signed_at TEXT DEFAULT CURRENT_TIMESTAMP,
-        UNIQUE(event_id, user_id)
-    );
-
     CREATE VIRTUAL TABLE IF NOT EXISTS items_fts USING fts5(
         name,
         stats,
@@ -566,11 +540,85 @@ def init_db(db_path: str = DB_PATH) -> None:
     conn.close()
 
 
+def init_user_db(user_db_path: str = USER_DB_PATH) -> None:
+    """Initializes user-specific, mutable data in a separated database to protect user state."""
+    conn = get_connection(user_db_path)
+    cursor = conn.cursor()
+
+    cursor.executescript("""
+    -- User Character Profiles & Armory Table
+    CREATE TABLE IF NOT EXISTS user_profiles (
+        user_id INTEGER PRIMARY KEY,
+        char_name TEXT NOT NULL,
+        char_class TEXT NOT NULL,
+        char_race TEXT NOT NULL,
+        level INTEGER DEFAULT 60,
+        spec TEXT DEFAULT '',
+        professions TEXT DEFAULT '',
+        guild_role TEXT DEFAULT '',
+        gear_note TEXT DEFAULT '',
+        updated_at TEXT DEFAULT CURRENT_TIMESTAMP
+    );
+
+    -- Raid Signups & Attendance Table
+    CREATE TABLE IF NOT EXISTS raid_signups (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        event_id TEXT NOT NULL,
+        event_title TEXT NOT NULL,
+        user_id INTEGER NOT NULL,
+        user_name TEXT NOT NULL,
+        role TEXT NOT NULL,
+        class_name TEXT DEFAULT '',
+        signed_at TEXT DEFAULT CURRENT_TIMESTAMP,
+        UNIQUE(event_id, user_id)
+    );
+
+    -- Persistent Raid Events Metadata
+    CREATE TABLE IF NOT EXISTS raid_events (
+        event_id TEXT PRIMARY KEY,
+        message_id INTEGER DEFAULT 0,
+        event_title TEXT NOT NULL,
+        max_players INTEGER DEFAULT 40,
+        created_at TEXT DEFAULT CURRENT_TIMESTAMP
+    );
+
+    -- AI Usage & Rate Limiting Table
+    CREATE TABLE IF NOT EXISTS ai_usage (
+        user_id INTEGER NOT NULL,
+        day_date TEXT NOT NULL,
+        count INTEGER DEFAULT 0,
+        PRIMARY KEY(user_id, day_date)
+    );
+
+    -- AI Exact-Match Cache Table (Prevents repeat API calls and eliminates costs)
+    CREATE TABLE IF NOT EXISTS ai_cache (
+        prompt_hash TEXT PRIMARY KEY,
+        response_text TEXT NOT NULL,
+        created_at INTEGER DEFAULT (strftime('%s', 'now'))
+    );
+
+    -- AI Item Enrichments (Keeps static game catalog pristine and uncorrupted)
+    CREATE TABLE IF NOT EXISTS ai_item_enrichments (
+        item_id INTEGER PRIMARY KEY,
+        description TEXT DEFAULT '',
+        source TEXT DEFAULT '',
+        pro_tip TEXT DEFAULT '',
+        created_at TEXT DEFAULT CURRENT_TIMESTAMP
+    );
+    """)
+
+    conn.commit()
+    conn.close()
+
+
 class WoWForeverDB:
-    def __init__(self, db_path: str = DB_PATH):
+    def __init__(self, db_path: str = DB_PATH, user_db_path: Optional[str] = None):
         self.db_path = db_path
         if not os.path.exists(db_path):
             init_db(db_path)
+        # Protect user state: isolate mutable user records into user_db_path
+        self.user_db_path = user_db_path or (db_path if db_path != DB_PATH else USER_DB_PATH)
+        init_user_db(self.user_db_path)
         self._load_name_caches()
 
     def _load_name_caches(self):
@@ -1278,8 +1326,8 @@ class WoWForeverDB:
         level: int = 60, spec: str = "", professions: str = "",
         guild_role: str = "", gear_note: str = ""
     ) -> None:
-        """Saves or updates a Discord user's character profile."""
-        conn = get_connection(self.db_path)
+        """Saves or updates a Discord user's character profile in the isolated user database."""
+        conn = get_connection(self.user_db_path)
         cursor = conn.cursor()
         cursor.execute("""
             INSERT INTO user_profiles (user_id, char_name, char_class, char_race, level, spec, professions, guild_role, gear_note, updated_at)
@@ -1300,7 +1348,7 @@ class WoWForeverDB:
 
     def get_user_profile(self, user_id: int) -> Optional[Dict[str, Any]]:
         """Retrieves a Discord user's character profile."""
-        conn = get_connection(self.db_path)
+        conn = get_connection(self.user_db_path)
         cursor = conn.cursor()
         cursor.execute("SELECT * FROM user_profiles WHERE user_id = ?", (user_id,))
         row = cursor.fetchone()
@@ -1309,9 +1357,58 @@ class WoWForeverDB:
 
     def get_profile_by_name(self, char_name: str) -> Optional[Dict[str, Any]]:
         """Searches for a character profile by character name."""
-        conn = get_connection(self.db_path)
+        conn = get_connection(self.user_db_path)
         cursor = conn.cursor()
         cursor.execute("SELECT * FROM user_profiles WHERE char_name LIKE ? LIMIT 1", (f"%{char_name}%",))
+        row = cursor.fetchone()
+        conn.close()
+        return dict(row) if row else None
+
+    def delete_user_profile(self, user_id: int) -> bool:
+        """Deletes a user's character profile. GDPR/Privacy right to erasure."""
+        conn = get_connection(self.user_db_path)
+        cursor = conn.cursor()
+        cursor.execute("DELETE FROM user_profiles WHERE user_id = ?", (user_id,))
+        deleted = cursor.rowcount > 0
+        conn.commit()
+        conn.close()
+        return deleted
+
+    def delete_all_user_data(self, user_id: int) -> Tuple[int, int]:
+        """Deletes all data associated with a user (profile, raid signups, AI usage tracking).
+        Returns (profiles_deleted, signups_deleted).
+        """
+        conn = get_connection(self.user_db_path)
+        cursor = conn.cursor()
+        cursor.execute("DELETE FROM user_profiles WHERE user_id = ?", (user_id,))
+        p_count = cursor.rowcount
+        cursor.execute("DELETE FROM raid_signups WHERE user_id = ?", (user_id,))
+        r_count = cursor.rowcount
+        cursor.execute("DELETE FROM ai_usage WHERE user_id = ?", (user_id,))
+        conn.commit()
+        conn.close()
+        return (p_count, r_count)
+
+    def set_raid_event(self, event_id: str, event_title: str, max_players: int = 40, message_id: int = 0) -> None:
+        """Saves metadata for a raid event to ensure persistent view button recovery."""
+        conn = get_connection(self.user_db_path)
+        cursor = conn.cursor()
+        cursor.execute("""
+            INSERT INTO raid_events (event_id, message_id, event_title, max_players, created_at)
+            VALUES (?, ?, ?, ?, datetime('now'))
+            ON CONFLICT(event_id) DO UPDATE SET
+                event_title=excluded.event_title,
+                max_players=excluded.max_players,
+                message_id=excluded.message_id
+        """, (str(event_id), message_id, event_title, max_players))
+        conn.commit()
+        conn.close()
+
+    def get_raid_event(self, event_id: str) -> Optional[Dict[str, Any]]:
+        """Retrieves metadata for a persistent raid event."""
+        conn = get_connection(self.user_db_path)
+        cursor = conn.cursor()
+        cursor.execute("SELECT * FROM raid_events WHERE event_id = ?", (str(event_id),))
         row = cursor.fetchone()
         conn.close()
         return dict(row) if row else None
@@ -1320,7 +1417,7 @@ class WoWForeverDB:
         self, event_id: str, event_title: str, user_id: int, user_name: str, role: str, class_name: str = ""
     ) -> None:
         """Adds or updates a raid signup."""
-        conn = get_connection(self.db_path)
+        conn = get_connection(self.user_db_path)
         cursor = conn.cursor()
         cursor.execute("""
             INSERT INTO raid_signups (event_id, event_title, user_id, user_name, role, class_name, signed_at)
@@ -1336,7 +1433,7 @@ class WoWForeverDB:
 
     def remove_raid_signup(self, event_id: str, user_id: int) -> None:
         """Removes a user's signup from a raid event."""
-        conn = get_connection(self.db_path)
+        conn = get_connection(self.user_db_path)
         cursor = conn.cursor()
         cursor.execute("DELETE FROM raid_signups WHERE event_id = ? AND user_id = ?", (str(event_id), user_id))
         conn.commit()
@@ -1344,7 +1441,7 @@ class WoWForeverDB:
 
     def get_raid_signups(self, event_id: str) -> List[Dict[str, Any]]:
         """Retrieves all signups for a raid event ordered by role and sign-up time."""
-        conn = get_connection(self.db_path)
+        conn = get_connection(self.user_db_path)
         cursor = conn.cursor()
         cursor.execute("""
             SELECT * FROM raid_signups
@@ -1354,6 +1451,70 @@ class WoWForeverDB:
         rows = cursor.fetchall()
         conn.close()
         return [dict(r) for r in rows]
+
+    def get_ai_user_count(self, user_id: int, day_date: str) -> int:
+        """Gets number of AI calls made by a user on a given UTC date."""
+        conn = get_connection(self.user_db_path)
+        cursor = conn.cursor()
+        cursor.execute("SELECT count FROM ai_usage WHERE user_id = ? AND day_date = ?", (user_id, day_date))
+        row = cursor.fetchone()
+        conn.close()
+        return row[0] if row else 0
+
+    def increment_ai_user_count(self, user_id: int, day_date: str) -> int:
+        """Increments and returns the user's daily AI call count."""
+        conn = get_connection(self.user_db_path)
+        cursor = conn.cursor()
+        cursor.execute("""
+            INSERT INTO ai_usage (user_id, day_date, count)
+            VALUES (?, ?, 1)
+            ON CONFLICT(user_id, day_date) DO UPDATE SET count = count + 1
+        """, (user_id, day_date))
+        conn.commit()
+        cursor.execute("SELECT count FROM ai_usage WHERE user_id = ? AND day_date = ?", (user_id, day_date))
+        new_count = cursor.fetchone()[0]
+        conn.close()
+        return new_count
+
+    def get_cached_ai_response(self, prompt_hash: str) -> Optional[str]:
+        """Retrieves a cached AI response by prompt SHA-256 hash."""
+        conn = get_connection(self.user_db_path)
+        cursor = conn.cursor()
+        cursor.execute("SELECT response_text FROM ai_cache WHERE prompt_hash = ?", (prompt_hash,))
+        row = cursor.fetchone()
+        conn.close()
+        return row[0] if row else None
+
+    def set_cached_ai_response(self, prompt_hash: str, response_text: str) -> None:
+        """Caches an AI response by prompt SHA-256 hash to eliminate redundant API calls."""
+        conn = get_connection(self.user_db_path)
+        cursor = conn.cursor()
+        cursor.execute("""
+            INSERT OR REPLACE INTO ai_cache (prompt_hash, response_text, created_at)
+            VALUES (?, ?, strftime('%s', 'now'))
+        """, (prompt_hash, response_text))
+        conn.commit()
+        conn.close()
+
+    def get_item_ai_enrichment(self, item_id: int) -> Optional[Dict[str, str]]:
+        """Retrieves uncataloged community AI note for an item without modifying wow_forever.db."""
+        conn = get_connection(self.user_db_path)
+        cursor = conn.cursor()
+        cursor.execute("SELECT description, source, pro_tip FROM ai_item_enrichments WHERE item_id = ?", (item_id,))
+        row = cursor.fetchone()
+        conn.close()
+        return dict(row) if row else None
+
+    def set_item_ai_enrichment(self, item_id: int, description: str, source: str, pro_tip: str) -> None:
+        """Stores AI enrichment note in user_data.db without touching the static game catalog."""
+        conn = get_connection(self.user_db_path)
+        cursor = conn.cursor()
+        cursor.execute("""
+            INSERT OR REPLACE INTO ai_item_enrichments (item_id, description, source, pro_tip, created_at)
+            VALUES (?, ?, ?, ?, datetime('now'))
+        """, (item_id, description, source, pro_tip))
+        conn.commit()
+        conn.close()
 
 
 

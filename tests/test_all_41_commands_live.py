@@ -18,7 +18,7 @@ import bot
 
 # Mock Discord interaction
 class MockUser:
-    def __init__(self, name="MitchPlayer", user_id=1564040719130431529):
+    def __init__(self, name="TestPlayer", user_id=123456789012345678):
         self.name = name
         self.display_name = name
         self.id = user_id
@@ -38,10 +38,10 @@ class MockMember:
     guild_permissions = MockPermissions()
 
 class MockGuild:
-    def __init__(self, guild_id=1564040719130431529, name="Forever Guild"):
+    def __init__(self, guild_id=123456789012345678, name="Forever Guild"):
         self.id = guild_id
         self.name = name
-        self.owner_id = 1564040719130431529
+        self.owner_id = 123456789012345678
         self.roles = [MockRole("@everyone"), MockRole("Guild Master")]
         self.default_role = self.roles[0]
         self.categories = []

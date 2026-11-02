@@ -15,4 +15,6 @@ scratch/
 *.db-journal
 *.db-wal
 *.db-shm
+user_data.db*
+bot_storage.db*
 

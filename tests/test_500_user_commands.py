@@ -53,7 +53,7 @@ def create_mock_interaction(command_name: str, user_name: str = "GuildRaider", u
     inter.command.name = command_name
 
     inter.guild = MagicMock()
-    inter.guild.id = 1564040719130431529
+    inter.guild.id = 123456789012345678
     inter.guild.name = "Test Guild"
     inter.guild.owner_id = user_id
     inter.guild.me = MagicMock()

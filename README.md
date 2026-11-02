@@ -464,11 +464,7 @@ Special thanks to **Blizzard Entertainment** for creating World of Warcraft — 
 ---
 
 <div align="center">
-  <sub>Built with passion for the <strong>World of Warcraft: Forever</strong> community. If you enjoy Foreverbot, consider supporting development:</sub><br/><br/>
-  <a href="https://buymeacoffee.com/pixelpirate" target="_blank">
-    <img src="https://cdn.buymeacoffee.com/buttons/v2/default-yellow.png" alt="Buy Me A Coffee" height="30" style="height: 30px !important;">
-  </a>
-  <br/><br/>
+  <sub>Built with passion as a 100% free, non-commercial open-source companion for the <strong>World of Warcraft: Forever</strong> community.</sub><br/><br/>
   <img src="assets/canada_maple_leaf_3d.png" alt="Crafted with passion in Canada" width="28" height="24" />
 </div>
 

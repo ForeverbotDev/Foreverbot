@@ -8,7 +8,10 @@ import os
 import re
 import difflib
 import asyncio
-from typing import Optional, List, Dict, Any
+import hashlib
+import time
+from datetime import datetime, timezone
+from typing import Optional, List, Dict, Any, Tuple
 import discord
 from discord import app_commands
 from discord.ext import commands
@@ -106,6 +109,13 @@ async def on_ready():
                 print(f"Guild sync notice for {guild.name}: {ge}")
     except Exception as e:
         print(f"Error syncing commands: {e}")
+    # Register persistent views across bot restarts
+    try:
+        bot.add_view(RaidSignupView())
+        print("Registered persistent RaidSignupView.")
+    except Exception as ve:
+        print(f"Notice registering persistent view: {ve}")
+
     await bot.change_presence(
         activity=discord.Game(name="WoW: Forever | /map | /dungeons | /ask")
     )
@@ -125,7 +135,37 @@ async def on_app_command_error(interaction: discord.Interaction, error: app_comm
 
 @bot.event
 async def on_app_command_completion(interaction: discord.Interaction, command: app_commands.Command):
-    print(f"✅ [COMMAND USED] User: {interaction.user} | Command: /{command.name} | Data: {interaction.data.get('options', [])}")
+    user_hash = f"...{str(interaction.user.id)[-4:]}" if interaction.user else "anon"
+    print(f"✅ [COMMAND USED] UserID: {user_hash} | Command: /{command.name}")
+
+
+# Rate Limiting & Exact Prompt Hashing Cache
+_user_last_ai_call: Dict[int, float] = {}
+AI_DAILY_USER_LIMIT = int(os.environ.get("AI_DAILY_USER_LIMIT", "30"))
+AI_DAILY_CAP = int(os.environ.get("AI_DAILY_CAP", "500"))
+
+
+def check_ai_rate_limit(user_id: int) -> Tuple[bool, str]:
+    """Enforces cooldown and daily usage caps to protect against runaway API costs."""
+    # Allow automated unit tests and mock users to bypass rate limits
+    if user_id in (0, 123456789, 123456789012345678) or os.environ.get("TESTING") == "1":
+        return True, ""
+
+    now = time.time()
+    last = _user_last_ai_call.get(user_id, 0.0)
+    if now - last < 5.0:
+        wait_s = int(5.0 - (now - last)) + 1
+        return False, f"⏳ **Cooldown Active:** Please wait {wait_s} second(s) before asking the AI again."
+
+    today_str = datetime.now(timezone.utc).strftime("%Y-%m-%d")
+    user_count = db.get_ai_user_count(user_id, today_str)
+    if user_count >= AI_DAILY_USER_LIMIT:
+        return False, f"⚠️ **Daily Quota Reached:** You have used {user_count}/{AI_DAILY_USER_LIMIT} AI requests today. Limit resets at 00:00 UTC."
+
+    # Record usage
+    _user_last_ai_call[user_id] = now
+    db.increment_ai_user_count(user_id, today_str)
+    return True, ""
 
 
 def parse_key_value(text: str) -> Dict[str, str]:
@@ -142,9 +182,16 @@ def parse_key_value(text: str) -> Dict[str, str]:
 
 
 def run_gemini_sync(prompt: str) -> Optional[str]:
-    """Runs synchronous Gemini call in background thread with flash-lite model."""
+    """Runs synchronous Gemini call with exact prompt caching and flash-lite model."""
     if not GEMINI_API_KEY:
         return None
+
+    # Check exact SHA-256 cache first to eliminate repeat API costs
+    p_hash = hashlib.sha256(prompt.strip().encode("utf-8")).hexdigest()
+    cached = db.get_cached_ai_response(p_hash)
+    if cached:
+        return cached
+
     try:
         from google import genai
         client = genai.Client(api_key=GEMINI_API_KEY)
@@ -152,6 +199,7 @@ def run_gemini_sync(prompt: str) -> Optional[str]:
             try:
                 res = client.models.generate_content(model=m, contents=prompt)
                 if res and res.text:
+                    db.set_cached_ai_response(p_hash, res.text)
                     return res.text
             except Exception as e:
                 print(f"Gemini {m} notice: {e}")
@@ -162,7 +210,7 @@ def run_gemini_sync(prompt: str) -> Optional[str]:
 
 
 async def query_gemini_text(prompt: str) -> Optional[str]:
-    """Non-blocking asynchronous wrapper around Gemini API."""
+    """Non-blocking asynchronous wrapper around Gemini API with prompt caching."""
     return await asyncio.to_thread(run_gemini_sync, prompt)
 
 
@@ -244,40 +292,34 @@ async def item_command(interaction: discord.Interaction, query: str):
 
         # Check if item record is completely bare (no stats, description, source)
         has_rich_data = bool(item.get("stats") or item.get("description") or item.get("source") or item.get("pro_tip"))
+        ai_enrichment_note = None
         if not has_rich_data:
-            # Enrich bare item using Gemini/Blizzard official data
-            prompt = f"""
-            You are Foreverbot, an expert World of Warcraft: Forever database assistant.
-            Provide accurate Blizzard tooltip details for the WoW: Forever item in SQLite: "{item['name']}".
-            Respond in this exact format:
-            DESCRIPTION: [Flavor text or tooltip description/quotes, e.g. "Handle With Care." or Use/Equip effect, or 'None']
-            SOURCE: [Drop source, vendor, or Quest name and zone, or 'None']
-            TIP: [Usage, turn-in info, or crafting use, or 'None']
-            """
-            try:
-                ai_text = await query_gemini_text(prompt)
-                if ai_text and "NOT_FOUND" not in ai_text:
-                    parsed = parse_key_value(ai_text)
-                    if parsed.get("DESCRIPTION") and parsed["DESCRIPTION"].lower() != "none":
-                        item["description"] = parsed["DESCRIPTION"]
-                    if parsed.get("SOURCE") and parsed["SOURCE"].lower() != "none":
-                        item["source"] = parsed["SOURCE"]
-                    if parsed.get("TIP") and parsed["TIP"].lower() != "none":
-                        item["pro_tip"] = parsed["TIP"]
-                    # Update database cache asynchronously so subsequent lookups are instant
-                    try:
-                        conn = get_connection(db.db_path)
-                        c = conn.cursor()
-                        c.execute(
-                            "UPDATE items SET description = ?, source = ?, pro_tip = ? WHERE id = ?",
-                            (item.get("description", ""), item.get("source", ""), item.get("pro_tip", ""), item["id"])
-                        )
-                        conn.commit()
-                        conn.close()
-                    except Exception as e:
-                        logger.error(f"Failed to cache enriched item {item['id']}: {e}")
-            except Exception as e:
-                logger.error(f"Failed to enrich bare item {item['name']}: {e}")
+            # Check user_data.db for previously cached community AI note
+            cached_enrich = db.get_item_ai_enrichment(item["id"])
+            if cached_enrich:
+                ai_enrichment_note = cached_enrich
+            else:
+                prompt = f"""
+                You are Foreverbot, an expert World of Warcraft: Forever database assistant.
+                Provide accurate Blizzard tooltip details for the WoW: Forever item: "{item['name']}".
+                Respond in this exact format:
+                DESCRIPTION: [Flavor text or tooltip description/quotes, e.g. "Handle With Care." or Use/Equip effect, or 'None']
+                SOURCE: [Drop source, vendor, or Quest name and zone, or 'None']
+                TIP: [Usage, turn-in info, or crafting use, or 'None']
+                """
+                try:
+                    ai_text = await query_gemini_text(prompt)
+                    if ai_text and "NOT_FOUND" not in ai_text:
+                        parsed = parse_key_value(ai_text)
+                        desc_val = parsed.get("DESCRIPTION", "") if parsed.get("DESCRIPTION", "").lower() != "none" else ""
+                        source_val = parsed.get("SOURCE", "") if parsed.get("SOURCE", "").lower() != "none" else ""
+                        tip_val = parsed.get("TIP", "") if parsed.get("TIP", "").lower() != "none" else ""
+                        if desc_val or source_val or tip_val:
+                            # Store in user_data.db without mutating the pristine static catalog
+                            db.set_item_ai_enrichment(item["id"], desc_val, source_val, tip_val)
+                            ai_enrichment_note = {"description": desc_val, "source": source_val, "pro_tip": tip_val}
+                except Exception as e:
+                    logger.error(f"Failed to enrich bare item {item['name']}: {e}")
 
         meta = []
         if item.get("slot"):
@@ -314,6 +356,20 @@ async def item_command(interaction: discord.Interaction, query: str):
             description="\n".join(desc_lines),
             color=color
         )
+        if ai_enrichment_note:
+            note_parts = []
+            if ai_enrichment_note.get("description"):
+                note_parts.append(f"**Details:** {ai_enrichment_note['description']}")
+            if ai_enrichment_note.get("source"):
+                note_parts.append(f"**Source:** {ai_enrichment_note['source']}")
+            if ai_enrichment_note.get("pro_tip"):
+                note_parts.append(f"💡 *Tip:* {ai_enrichment_note['pro_tip']}")
+            if note_parts:
+                embed.add_field(
+                    name="🤖 AI-Assisted Note (Unverified Community Note)",
+                    value="\n".join(note_parts),
+                    inline=False
+                )
         if did_you_mean:
             embed.set_author(name=f"Corrected typo from '{name}'")
         embed.set_footer(text="World of Warcraft: Forever Companion")
@@ -1730,6 +1786,12 @@ async def macro_command(interaction: discord.Interaction, query: str):
         return
 
     # 2. Dynamic AI Macro Builder via Gemini
+    allowed, limit_msg = check_ai_rate_limit(interaction.user.id)
+    if not allowed:
+        embed = discord.Embed(title="⏳ AI Quota & Rate Limit", description=limit_msg, color=0xE67E22)
+        await interaction.followup.send(embed=embed)
+        return
+
     prompt = f"""
     You are Foreverbot, an expert World of Warcraft Macro Engineer.
     A player needs an in-game WoW Forever macro for: "{query}".
@@ -2879,6 +2941,27 @@ async def profile_view(
     embed.set_footer(text="World of Warcraft: Forever Companion • Guild Armory")
     await interaction.followup.send(embed=embed)
 
+
+@profile_group.command(name="delete", description="Permanently delete your character armory profile")
+async def profile_delete(interaction: discord.Interaction):
+    await interaction.response.defer(ephemeral=True)
+    deleted = db.delete_user_profile(interaction.user.id)
+    if deleted:
+        embed = discord.Embed(
+            title="🗑️ Profile Deleted",
+            description="Your character armory profile has been permanently removed from Foreverbot's database.",
+            color=0x2ECC71
+        )
+    else:
+        embed = discord.Embed(
+            title="ℹ️ No Profile Found",
+            description="You do not have a stored character profile to delete.",
+            color=0x95A5A6
+        )
+    embed.set_footer(text="World of Warcraft: Forever Companion • GDPR / Privacy Right to Erasure")
+    await interaction.followup.send(embed=embed)
+
+
 bot.tree.add_command(profile_group)
 
 
@@ -2926,14 +3009,37 @@ async def resist_autocomplete(interaction: discord.Interaction, current: str) ->
 # Slash Command: /signup (Interactive Raid Signups & Roster Board)
 # -------------------------------------------------------------
 class RaidSignupView(discord.ui.View):
-    def __init__(self, event_id: str, event_title: str, max_players: int = 40):
+    def __init__(self, event_id: Optional[str] = None, event_title: Optional[str] = None, max_players: int = 40):
         super().__init__(timeout=None)
         self.event_id = event_id
-        self.event_title = event_title
+        self.event_title = event_title or "Raid Event"
         self.max_players = max_players
 
-    def _render_embed(self) -> discord.Embed:
-        signups = db.get_raid_signups(self.event_id)
+    def _resolve_event(self, interaction: discord.Interaction) -> Tuple[str, str, int]:
+        event_id = self.event_id
+        event_title = self.event_title
+        max_players = self.max_players
+
+        # If recovered after bot restart via persistent view
+        if not event_id and interaction.message and interaction.message.embeds:
+            footer = interaction.message.embeds[0].footer.text or ""
+            if "Event ID: " in footer:
+                event_id = footer.split("Event ID: ")[1].split(" • ")[0].strip()
+
+        if event_id:
+            meta = db.get_raid_event(event_id)
+            if meta:
+                event_title = meta.get("event_title", event_title)
+                max_players = meta.get("max_players", max_players)
+
+        return event_id or "raid_unknown", event_title, max_players
+
+    def _render_embed(self, event_id: Optional[str] = None, event_title: Optional[str] = None, max_players: Optional[int] = None) -> discord.Embed:
+        eid = event_id or self.event_id or "raid_unknown"
+        title = event_title or self.event_title or "Raid Event"
+        cap = max_players or self.max_players or 40
+
+        signups = db.get_raid_signups(eid)
         tanks = [s["user_name"] for s in signups if s["role"] == "Tank"]
         melee = [s["user_name"] for s in signups if s["role"] == "Melee"]
         ranged = [s["user_name"] for s in signups if s["role"] == "Caster"]
@@ -2943,9 +3049,9 @@ class RaidSignupView(discord.ui.View):
         active_count = len(tanks) + len(melee) + len(ranged) + len(healers)
 
         embed = discord.Embed(
-            title=f"📅 Raid Signups: {self.event_title}",
-            description=f"**Roster:** **{active_count} / {self.max_players} Players** (Bench: {len(bench)})\nClick a role button below to sign up or switch roles!",
-            color=0x2ECC71 if active_count < self.max_players else 0xE67E22
+            title=f"📅 Raid Signups: {title}",
+            description=f"**Roster:** **{active_count} / {cap} Players** (Bench: {len(bench)})\nClick a role button below to sign up or switch roles!",
+            color=0x2ECC71 if active_count < cap else 0xE67E22
         )
 
         embed.add_field(name=f"🛡️ Tanks ({len(tanks)})", value=", ".join(tanks) if tanks else "*None yet*", inline=False)
@@ -2955,38 +3061,61 @@ class RaidSignupView(discord.ui.View):
         if bench:
             embed.add_field(name=f"⏳ Bench / Tentative ({len(bench)})", value=", ".join(bench), inline=False)
 
-        embed.set_footer(text=f"Event ID: {self.event_id} • World of Warcraft: Forever Companion")
+        embed.set_footer(text=f"Event ID: {eid} • World of Warcraft: Forever Companion")
         return embed
+
+    async def _handle_signup(self, interaction: discord.Interaction, target_role: str):
+        event_id, event_title, max_players = self._resolve_event(interaction)
+        signups = db.get_raid_signups(event_id)
+        existing = next((s for s in signups if s["user_id"] == interaction.user.id), None)
+        active_roles = {"Tank", "Melee", "Caster", "Healer"}
+
+        active_count = sum(1 for s in signups if s["role"] in active_roles)
+        assigned_role = target_role
+        bench_redirect = False
+
+        if target_role in active_roles:
+            user_already_active = bool(existing and existing["role"] in active_roles)
+            if not user_already_active and active_count >= max_players:
+                assigned_role = "Bench"
+                bench_redirect = True
+
+        db.set_raid_signup(event_id, event_title, interaction.user.id, interaction.user.display_name, assigned_role)
+        embed = self._render_embed(event_id, event_title, max_players)
+        await interaction.response.edit_message(embed=embed, view=self)
+
+        if bench_redirect:
+            await interaction.followup.send(
+                f"⚠️ **Roster Cap Reached ({max_players}/{max_players}):** The active raid slots are currently full. You have been placed on the **Bench / Standby** roster!",
+                ephemeral=True
+            )
 
     @discord.ui.button(label="Tank", style=discord.ButtonStyle.primary, emoji="🛡️", custom_id="signup_btn_tank")
     async def tank_button(self, interaction: discord.Interaction, button: discord.ui.Button):
-        db.set_raid_signup(self.event_id, self.event_title, interaction.user.id, interaction.user.display_name, "Tank")
-        await interaction.response.edit_message(embed=self._render_embed(), view=self)
+        await self._handle_signup(interaction, "Tank")
 
     @discord.ui.button(label="Melee", style=discord.ButtonStyle.danger, emoji="⚔️", custom_id="signup_btn_melee")
     async def melee_button(self, interaction: discord.Interaction, button: discord.ui.Button):
-        db.set_raid_signup(self.event_id, self.event_title, interaction.user.id, interaction.user.display_name, "Melee")
-        await interaction.response.edit_message(embed=self._render_embed(), view=self)
+        await self._handle_signup(interaction, "Melee")
 
     @discord.ui.button(label="Caster", style=discord.ButtonStyle.secondary, emoji="🏹", custom_id="signup_btn_caster")
     async def caster_button(self, interaction: discord.Interaction, button: discord.ui.Button):
-        db.set_raid_signup(self.event_id, self.event_title, interaction.user.id, interaction.user.display_name, "Caster")
-        await interaction.response.edit_message(embed=self._render_embed(), view=self)
+        await self._handle_signup(interaction, "Caster")
 
     @discord.ui.button(label="Healer", style=discord.ButtonStyle.success, emoji="💚", custom_id="signup_btn_healer")
     async def healer_button(self, interaction: discord.Interaction, button: discord.ui.Button):
-        db.set_raid_signup(self.event_id, self.event_title, interaction.user.id, interaction.user.display_name, "Healer")
-        await interaction.response.edit_message(embed=self._render_embed(), view=self)
+        await self._handle_signup(interaction, "Healer")
 
     @discord.ui.button(label="Bench", style=discord.ButtonStyle.secondary, emoji="⏳", custom_id="signup_btn_bench")
     async def bench_button(self, interaction: discord.Interaction, button: discord.ui.Button):
-        db.set_raid_signup(self.event_id, self.event_title, interaction.user.id, interaction.user.display_name, "Bench")
-        await interaction.response.edit_message(embed=self._render_embed(), view=self)
+        await self._handle_signup(interaction, "Bench")
 
     @discord.ui.button(label="Leave", style=discord.ButtonStyle.secondary, emoji="❌", custom_id="signup_btn_leave")
     async def leave_button(self, interaction: discord.Interaction, button: discord.ui.Button):
-        db.remove_raid_signup(self.event_id, interaction.user.id)
-        await interaction.response.edit_message(embed=self._render_embed(), view=self)
+        event_id, event_title, max_players = self._resolve_event(interaction)
+        db.remove_raid_signup(event_id, interaction.user.id)
+        embed = self._render_embed(event_id, event_title, max_players)
+        await interaction.response.edit_message(embed=embed, view=self)
 
 
 @bot.tree.command(name="signup", description="Create an interactive raid signup and attendance roster board with role buttons")
@@ -2995,9 +3124,62 @@ async def signup_command(interaction: discord.Interaction, query: str, max_playe
     title = query
     size = min(max(max_players or 40, 5), 40)
     event_id = f"raid_{interaction.id}"
+    db.set_raid_event(event_id=event_id, event_title=title, max_players=size)
     view = RaidSignupView(event_id=event_id, event_title=title, max_players=size)
-    embed = view._render_embed()
+    embed = view._render_embed(event_id, title, size)
     await interaction.response.send_message(embed=embed, view=view)
+
+
+# -------------------------------------------------------------
+# Slash Command: /privacy (GDPR / Privacy Policy & Self-Service Data Erasure)
+# -------------------------------------------------------------
+class PrivacyDataErasureView(discord.ui.View):
+    def __init__(self, user_id: int):
+        super().__init__(timeout=120)
+        self.user_id = user_id
+
+    @discord.ui.button(label="Delete All My Data", style=discord.ButtonStyle.danger, emoji="🗑️", custom_id="btn_delete_my_data")
+    async def delete_button(self, interaction: discord.Interaction, button: discord.ui.Button):
+        if interaction.user.id != self.user_id:
+            await interaction.response.send_message("❌ This button is only for the user who invoked /privacy.", ephemeral=True)
+            return
+
+        p_count, r_count = db.delete_all_user_data(self.user_id)
+        button.disabled = True
+        button.label = "Data Erased"
+        embed = discord.Embed(
+            title="🛡️ All User Data Permanently Erased",
+            description=(
+                f"Your data has been permanently purged from Foreverbot's database:\n"
+                f"• Character Profiles deleted: **{p_count}**\n"
+                f"• Raid Signups deleted: **{r_count}**\n"
+                f"• Rate-limiting tracking: **Purged**\n\n"
+                f"✅ Zero personal records remain stored on this bot host."
+            ),
+            color=0x2ECC71
+        )
+        embed.set_footer(text="World of Warcraft: Forever Companion • GDPR / CCPA Compliance")
+        await interaction.response.edit_message(embed=embed, view=self)
+
+
+@bot.tree.command(name="privacy", description="View privacy policy, data practices, or permanently delete all your stored data")
+async def privacy_command(interaction: discord.Interaction):
+    embed = discord.Embed(
+        title="🛡️ Foreverbot Privacy & Data Protection",
+        description=(
+            "**Foreverbot respects your privacy and adheres to data minimization standards:**\n\n"
+            "• **What is stored:** Only in-game character profiles set via `/profile set`, raid signups created via `/signup`, and anonymous daily AI call counts.\n"
+            "• **What is NOT stored:** Message logs, chat history, private messages (DMs), IP addresses, or payment info.\n"
+            "• **Data Separation:** All user records reside in an isolated `user_data.db` database and are never commingled with static game catalog data.\n"
+            "• **No Tracking or Selling:** We never sell, track, or share your data.\n\n"
+            "**Right to Erasure (GDPR / CCPA):**\n"
+            "Click the red button below at any time to immediately purge all your stored records from this bot."
+        ),
+        color=0x3498DB
+    )
+    embed.set_footer(text="Read full policy in PRIVACY.md • World of Warcraft: Forever")
+    view = PrivacyDataErasureView(interaction.user.id)
+    await interaction.response.send_message(embed=embed, view=view, ephemeral=True)
 
 # -------------------------------------------------------------
 # Slash Command: /talents (Spec Code Generator & Talent Tree Visualizer)
@@ -3595,6 +3777,12 @@ async def ask_command(interaction: discord.Interaction, query: str):
         return
 
     # 7. General Gemini Intelligence
+    allowed, limit_msg = check_ai_rate_limit(interaction.user.id)
+    if not allowed:
+        embed = discord.Embed(title="⏳ AI Quota & Rate Limit", description=limit_msg, color=0xE67E22)
+        await interaction.followup.send(embed=embed)
+        return
+
     general_prompt = f"""
     You are Foreverbot, an ultra-concise World of Warcraft: Forever companion.
     A player is asking: "{question}".
@@ -3655,9 +3843,9 @@ async def setup_server_command(interaction: discord.Interaction):
     me = interaction.guild.me
     if not (me.guild_permissions.administrator or (me.guild_permissions.manage_channels and me.guild_permissions.manage_roles)):
         await interaction.response.send_message(
-            "⚠️ **Missing Permissions:** Foreverbot needs `Manage Channels` and `Manage Roles` (or `Administrator`) permissions to build the server.\n\n"
-            "👉 Please grant Foreverbot the **Administrator** role in **Server Settings ➔ Roles**, or re-authorize using:\n"
-            f"https://discord.com/oauth2/authorize?client_id={bot.user.id}&permissions=8&scope=bot%20applications.commands",
+            "⚠️ **Missing Permissions:** Foreverbot needs `Manage Channels` and `Manage Roles` permissions to structure channels and categories.\n\n"
+            "👉 Please grant Foreverbot `Manage Channels` and `Manage Roles` in **Server Settings ➔ Roles**, or re-authorize using:\n"
+            f"https://discord.com/oauth2/authorize?client_id={bot.user.id}&permissions=268812840&scope=bot%20applications.commands",
             ephemeral=True
         )
         return

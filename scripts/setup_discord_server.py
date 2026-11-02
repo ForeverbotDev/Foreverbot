@@ -262,9 +262,9 @@ async def setup_server(guild_id: int):
         # Check permissions
         me = guild.me
         if not me.guild_permissions.administrator and not (me.guild_permissions.manage_channels and me.guild_permissions.manage_roles):
-            print("\n⚠️ WARNING: Foreverbot does not have Administrator or Manage Channels/Roles permissions in this server.")
-            print("Please grant Foreverbot the Administrator role in Server Settings -> Roles, or re-authorize using:")
-            print(f"https://discord.com/oauth2/authorize?client_id={client.user.id}&permissions=8&scope=bot%20applications.commands")
+            print("\n⚠️ WARNING: Foreverbot does not have Manage Channels and Manage Roles permissions in this server.")
+            print("Please grant Foreverbot 'Manage Channels' and 'Manage Roles' in Server Settings -> Roles, or re-authorize using:")
+            print(f"https://discord.com/oauth2/authorize?client_id={client.user.id}&permissions=268812840&scope=bot%20applications.commands")
             await client.close()
             return
 
@@ -426,7 +426,12 @@ if __name__ == "__main__":
             print("Please pass a valid integer Guild ID.")
             sys.exit(1)
     else:
-        # Default to mitch's server if no argument given
-        target_guild_id = 1564040719130431529
+        env_guild = os.environ.get("TARGET_GUILD_ID")
+        if env_guild and env_guild.isdigit():
+            target_guild_id = int(env_guild)
+        else:
+            print("Usage: python scripts/setup_discord_server.py <GUILD_ID>")
+            print("Or set TARGET_GUILD_ID in your environment.")
+            sys.exit(1)
 
     asyncio.run(setup_server(target_guild_id))

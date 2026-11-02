@@ -44,9 +44,9 @@ jobs:
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add docs/TUESDAY_WEEKLY_INTEL.md wow_forever.db docs/BLIZZARD_BETA_PATCH_NOTES.md
+          git add docs/TUESDAY_WEEKLY_INTEL.md docs/BLIZZARD_BETA_PATCH_NOTES.md
           if [ -n "$(git status --porcelain)" ]; then
-            git commit -m "chore(sync): Tuesday weekly database & intel update [skip ci]"
+            git commit -m "chore(sync): Tuesday weekly intel documentation update [skip ci]"
             git push origin main
           else
             echo "No database or intel changes detected this cycle."
