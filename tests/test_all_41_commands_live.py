@@ -481,12 +481,12 @@ async def run_suite():
     # Add profile tests
     profile_tests = [
         ("profile set", "profile set", [
-            {"query": "Mitch", "character_class": "Warrior", "race": "Human", "level": 60, "spec": "Fury DPS"},
+            {"query": "Valiant", "character_class": "Warrior", "race": "Human", "level": 60, "spec": "Fury DPS"},
             {"query": "Aeloria", "character_class": "Priest", "race": "Night Elf", "level": 60, "spec": "Holy Healer"}
         ]),
         ("profile view", "profile view", [
             {},
-            {"query": "Mitch"}
+            {"query": "Valiant"}
         ]),
     ]
 

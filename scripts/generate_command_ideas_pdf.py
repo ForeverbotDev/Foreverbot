@@ -369,10 +369,12 @@ def build_ideas_deck():
     pdf.output(out_file)
     print(f"Command ideas PDF successfully generated at: {out_file}")
 
-    # Copy to downloads
-    downloads_path = "/home/s1l3nt/Downloads/Foreverbot_Command_Ideas.pdf"
-    shutil.copy2(out_file, downloads_path)
-    print(f"Copied directly to user Downloads: {downloads_path}")
+    # Copy to downloads if directory exists
+    downloads_dir = os.path.expanduser("~/Downloads")
+    if os.path.exists(downloads_dir):
+        downloads_path = os.path.join(downloads_dir, "Foreverbot_Command_Ideas.pdf")
+        shutil.copy2(out_file, downloads_path)
+        print(f"Copied directly to user Downloads: {downloads_path}")
 
 if __name__ == "__main__":
     build_ideas_deck()

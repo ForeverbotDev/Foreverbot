@@ -402,9 +402,9 @@ def build_presentation():
     pdf.output(out_file)
     print(f"Presentation PDF successfully built at: {out_file}")
 
-    # Copy to artifacts directory
-    artifact_dir = "/home/s1l3nt/.gemini/antigravity/brain/14f2f633-6ca3-4a1c-a167-21a6d54a6ab6"
-    if os.path.exists(artifact_dir):
+    # Copy to artifacts directory if configured
+    artifact_dir = os.environ.get("ANTIGRAVITY_ARTIFACT_DIR")
+    if artifact_dir and os.path.exists(artifact_dir):
         dest = os.path.join(artifact_dir, "Foreverbot_How_To_Guide.pdf")
         shutil.copy2(out_file, dest)
         print(f"Copied to artifact dir: {dest}")

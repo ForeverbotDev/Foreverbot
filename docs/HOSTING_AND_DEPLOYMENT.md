@@ -68,9 +68,9 @@ If you are running Ubuntu, Debian, Fedora, Arch, or Raspberry Pi OS, configure `
 
    [Service]
    Type=simple
-   User=s1l3nt
-   WorkingDirectory=/home/s1l3nt/wow-forever-bot
-   ExecStart=/home/s1l3nt/wow-forever-bot/.venv/bin/python3 bot.py
+   User=foreverbot
+   WorkingDirectory=/opt/foreverbot
+   ExecStart=/opt/foreverbot/.venv/bin/python3 bot.py
    Restart=always
    RestartSec=10
    Environment=PYTHONUNBUFFERED=1

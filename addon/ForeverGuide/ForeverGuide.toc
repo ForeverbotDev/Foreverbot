@@ -6,7 +6,7 @@
 ## SavedVariables: ForeverGuideDB
 ## SavedVariablesPerCharacter: ForeverGuideCharDB
 ## X-Category: Quests & Leveling, Map & Minimap, Miscellaneous
-## X-Website: https://github.com/mitch/wow-forever-bot
+## X-Website: https://github.com/ForeverbotDev/foreverbot
 ## X-License: MIT + Blizzard AddOn Policy
 
 ForeverGuide_Data.lua

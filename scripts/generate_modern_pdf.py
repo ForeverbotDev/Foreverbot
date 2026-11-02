@@ -538,9 +538,9 @@ def generate_guide(output_pdf="wow_forever_bot_guide.pdf"):
         shutil.copy2(output_pdf, docs_pdf)
         print(f"Copied to docs directory: {docs_pdf}")
 
-    # Also copy to artifacts directory
-    artifact_dir = "/home/s1l3nt/.gemini/antigravity/brain/14f2f633-6ca3-4a1c-a167-21a6d54a6ab6"
-    if os.path.exists(artifact_dir):
+    # Also copy to artifacts directory if env configured
+    artifact_dir = os.environ.get("ANTIGRAVITY_ARTIFACT_DIR")
+    if artifact_dir and os.path.exists(artifact_dir):
         dest_pdf = os.path.join(artifact_dir, "wow_forever_bot_guide.pdf")
         shutil.copy2(output_pdf, dest_pdf)
         print(f"Copied to artifact directory: {dest_pdf}")

@@ -50,7 +50,7 @@ Themed after the cinematic trailer's celestial **Blue Spark**, this companion ho
 3. Click **Install**.
 
 ### Option B: Manual Installation
-1. Download the latest `ForeverGuide-v1.0.0.zip` from [Releases](https://github.com/mitch/wow-forever-bot/releases).
+1. Download the latest `ForeverGuide-v1.0.0.zip` from [Releases](https://github.com/ForeverbotDev/foreverbot/releases).
 2. Extract the `ForeverGuide` folder into your World of Warcraft directory:
    - `World of Warcraft/_classic_era_/Interface/AddOns/ForeverGuide/`
 3. Launch World of Warcraft and ensure **Forever Guide** is checked in your AddOns menu.
