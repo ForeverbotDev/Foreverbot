@@ -69,5 +69,3 @@ jobs:
       - name: 🎲 Suite 10 — Random Catalog Verification & Quality Sampling (138 Tests)
         run: python tests/test_random_item_catalog_verification.py
 
-      - name: ✨ Suite 11 — ForeverGuide Addon Integrity & Simulation Suite (5 Tests)
-        run: python -m unittest tests/test_addon_integrity_and_simulation.py

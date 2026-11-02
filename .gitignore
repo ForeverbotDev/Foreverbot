@@ -19,4 +19,8 @@ user_data.db*
 bot_storage.db*
 dist/
 *.zip
+addon/
+scripts/export_catalog_to_lua.py
+scripts/package_addon.py
+tests/test_addon_integrity_and_simulation.py
 
