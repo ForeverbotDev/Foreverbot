@@ -63,7 +63,7 @@ jobs:
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add tests/reports/DAILY_ONLINE_FACT_CHECK_REPORT.md tests/reports/DAILY_ONLINE_FACT_CHECK_REPORT.json tests/reports/DAILY_QC_EMAIL_DRAFT.html
+          git add tests/reports/DAILY_ONLINE_FACT_CHECK_REPORT.md
           if [ -n "$(git status --porcelain)" ]; then
             git commit -m "test(audit): update daily online fact-checking report [skip ci]"
             git push origin main
