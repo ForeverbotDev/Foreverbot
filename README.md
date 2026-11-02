@@ -8,15 +8,23 @@
 > 🧪 **Alpha Notice:** Foreverbot is currently in **Open Alpha** leading up to the global launch of World of Warcraft: Forever on November 4, 2026. Data and features are actively tuned and community-tested.
 
 [![Discord Assistant](https://img.shields.io/badge/Discord-Assistant-5865F2?logo=discord&logoColor=white)](https://discord.com)
+[![CurseForge Addon](https://img.shields.io/badge/CurseForge_Addon-Forever_Guide_(The_Blue_Spark)-F16436?logo=curseforge&logoColor=white)](addon/README.md)
 [![Status](https://img.shields.io/badge/Status-Open%20Alpha-3B82F6)](https://github.com/ForeverbotDev/foreverbot)
 [![WoW Forever](https://img.shields.io/badge/WoW-Forever-F59E0B)](https://github.com/ForeverbotDev/foreverbot)
 [![Database](https://img.shields.io/badge/Database-27.1K%20Items%20%E2%80%A2%2010.1K%20NPCs%20%E2%80%A2%204.2K%20Quests%20%E2%80%A2%2046%20Dungeons-10B981)](#-database)
 [![Verified Queries](https://img.shields.io/badge/Verified_Queries-15%2C000%2B_Combos-10B981)](#-automated-testing-and-query-verification)
 [![Scheduled Sync](https://img.shields.io/badge/Scheduled_Intel_Sync-Tuesdays_8pm_EST-10B981)](docs/TUESDAY_WEEKLY_INTEL.md)
-[![Daily 8pm QC Email](https://img.shields.io/badge/Daily_QC_Email-8:00_PM_Daily-10B981?logo=gmail&logoColor=white)](tests/reports/DAILY_ONLINE_FACT_CHECK_REPORT.md)
 [![Python](https://img.shields.io/badge/Python-3.10%2B-3776AB?logo=python&logoColor=white)](https://www.python.org/downloads/)
 [![Hosting](assets/hosting_badge.svg)](docs/HOSTING_AND_DEPLOYMENT.md)
-[![Feedback](https://img.shields.io/badge/Feedback-Help%20Refine%20the%20Data%20%E2%9E%94-FF5722?logo=github&logoColor=white)](https://github.com/ForeverbotDev/foreverbot/issues/new?template=failed_response_report.yml)
+
+---
+## ✨ New: Forever Guide In-Game Addon (The Blue Spark)
+Prefer having the database directly inside World of Warcraft? Install **Forever Guide**, our in-game companion distributed via **CurseForge**!
+- **Living Floating Companion**: Themed after the cinematic trailer's celestial **Blue Spark**, hovering quietly by your UI.
+- **In-Game Codex (`/spark` or `/fg`)**: Instant search for items, drop rates, dungeon tactics, and zone leveling progression without leaving the game or Alt-Tabbing.
+- **CurseForge Ready**: Located in [`addon/ForeverGuide/`](addon/README.md). Pre-packaged distribution zip ready in `dist/ForeverGuide-v1.0.0.zip`.
+
+---
 
 ---
 ## 📦 Download & 1-Click Launch Guide

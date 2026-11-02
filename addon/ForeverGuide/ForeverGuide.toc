@@ -1,0 +1,14 @@
+## Interface: 11505, 11404, 11506, 11507, 11508
+## Title: |cff00bfffForever Guide|r |cff71d5ff(The Blue Spark)|r
+## Notes: An interactive companion themed after the celestial Blue Spark. Delivers instant in-game item codex, zone wayfarer, dungeon tactician, and gear guidance for Warcraft Forever.
+## Author: Forever Community
+## Version: 1.0.0
+## SavedVariables: ForeverGuideDB
+## SavedVariablesPerCharacter: ForeverGuideCharDB
+## X-Category: Quests & Leveling, Map & Minimap, Miscellaneous
+## X-Website: https://github.com/mitch/wow-forever-bot
+## X-License: MIT + Blizzard AddOn Policy
+
+ForeverGuide_Data.lua
+ForeverGuide.lua
+Bindings.xml

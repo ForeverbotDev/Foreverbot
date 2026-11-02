@@ -17,4 +17,6 @@ scratch/
 *.db-shm
 user_data.db*
 bot_storage.db*
+dist/
+*.zip
 
