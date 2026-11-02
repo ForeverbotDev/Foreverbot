@@ -11,7 +11,7 @@
 [![Status](https://img.shields.io/badge/Status-Open%20Alpha-3B82F6)](https://github.com/ForeverbotDev/foreverbot)
 [![WoW Forever](https://img.shields.io/badge/WoW-Forever-F59E0B)](https://github.com/ForeverbotDev/foreverbot)
 [![Database](https://img.shields.io/badge/Database-27.1K%20Items%20%E2%80%A2%2010.1K%20NPCs%20%E2%80%A2%204.2K%20Quests%20%E2%80%A2%2046%20Dungeons-10B981)](#-database)
-[![Verified Queries](https://img.shields.io/badge/Verified_Queries-15%2C000%2B_Combos-10B981)](#-automated-testing-and-query-verification)
+[![Verified Queries](https://img.shields.io/badge/Verified_Queries-35%2C000%2B_Combos-10B981)](#-automated-testing--query-verification)
 [![Scheduled Sync](https://img.shields.io/badge/Scheduled_Intel_Sync-Tuesdays_8pm_EST-10B981)](docs/TUESDAY_WEEKLY_INTEL.md)
 [![Python](https://img.shields.io/badge/Python-3.10%2B-3776AB?logo=python&logoColor=white)](https://www.python.org/downloads/)
 [![Hosting](assets/hosting_badge.svg)](docs/HOSTING_AND_DEPLOYMENT.md)

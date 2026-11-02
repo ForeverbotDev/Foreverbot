@@ -72,3 +72,6 @@ jobs:
       - name: 🔗 Suite 11 — Combo Matches & App Integrity Audit (8 Deep Sections)
         run: python -m unittest tests/test_combo_matches_and_data_integrity.py
 
+      - name: 🚀 Suite 12 — 20,000-Query Verification Benchmark Sweep (20,000 Verified Combos)
+        run: python tests/test_20k_verified_queries.py
+
