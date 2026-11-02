@@ -2,15 +2,19 @@
 """
 scripts/export_catalog_to_lua.py
 
-Compiles static game data from wow_forever.db into an optimized Lua data file
-for the in-game World of Warcraft Addon: ForeverGuide ("The Blue Spark").
+Compiles static game data from wow_forever.db and bot.py knowledge modules
+into an optimized Lua data file for the in-game World of Warcraft Addon:
+ForeverGuide ("The Blue Spark").
 """
 
 import os
-import json
+import sys
 import sqlite3
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+sys.path.insert(0, BASE_DIR)
+import bot
+
 DB_PATH = os.path.join(BASE_DIR, "wow_forever.db")
 OUTPUT_DIR = os.path.join(BASE_DIR, "addon", "ForeverGuide")
 OUTPUT_FILE = os.path.join(OUTPUT_DIR, "ForeverGuide_Data.lua")
@@ -22,6 +26,28 @@ def escape_lua_str(val) -> str:
     val_str = str(val)
     val_str = val_str.replace('\\', '\\\\').replace('"', '\\"').replace('\n', '\\n').replace('\r', '')
     return f'"{val_str}"'
+
+
+def py_to_lua(val, indent=0):
+    spaces = "  " * indent
+    if val is None:
+        return "nil"
+    elif isinstance(val, bool):
+        return "true" if val else "false"
+    elif isinstance(val, (int, float)):
+        return str(val)
+    elif isinstance(val, str):
+        return escape_lua_str(val)
+    elif isinstance(val, list):
+        items = [f"{spaces}  {py_to_lua(x, indent + 1)}," for x in val]
+        return "{\n" + "\n".join(items) + "\n" + spaces + "}"
+    elif isinstance(val, dict):
+        items = []
+        for k, v in val.items():
+            key_repr = f'["{k}"]' if isinstance(k, str) else f"[{k}]"
+            items.append(f"{spaces}  {key_repr} = {py_to_lua(v, indent + 1)},")
+        return "{\n" + "\n".join(items) + "\n" + spaces + "}"
+    return '""'
 
 
 def export_dungeons(cursor) -> str:
@@ -101,7 +127,6 @@ def export_vendors(cursor) -> str:
 
 
 def export_items(cursor) -> str:
-    # Export items: all forever items + all rare/epic/legendary items + key quest items
     cursor.execute("""
         SELECT id, name, quality, item_level, req_level, slot, item_type, stats, description, source, pro_tip, is_forever_content
         FROM items
@@ -129,8 +154,61 @@ def export_items(cursor) -> str:
     return "\n".join(lua)
 
 
+def export_quests(cursor) -> str:
+    cursor.execute("""
+        SELECT id, title, req_level, quest_level, faction, zone, start_npc, objectives, rewards, pro_tip, is_forever_content
+        FROM quests
+        ORDER BY quest_level ASC, title ASC
+    """)
+    rows = cursor.fetchall()
+    lua = ["ForeverGuide_Data.Quests = {"]
+    for r in rows:
+        q_id, title, req_lvl, q_lvl, faction, zone, npc, objs, rewards, tip, is_forever = r
+        lua.append(f"  [{q_id}] = {{")
+        lua.append(f"    id = {q_id},")
+        lua.append(f"    title = {escape_lua_str(title)},")
+        lua.append(f"    reqLevel = {req_lvl or 0},")
+        lua.append(f"    questLevel = {q_lvl or 0},")
+        lua.append(f"    faction = {escape_lua_str(faction or 'Both')},")
+        lua.append(f"    zone = {escape_lua_str(zone or '')},")
+        lua.append(f"    npc = {escape_lua_str(npc or '')},")
+        lua.append(f"    objectives = {escape_lua_str(objs or '')},")
+        lua.append(f"    rewards = {escape_lua_str(rewards or '')},")
+        lua.append(f"    tip = {escape_lua_str(tip or '')},")
+        lua.append(f"    isForever = {'true' if is_forever else 'false'},")
+        lua.append("  },")
+    lua.append("}\n")
+    return "\n".join(lua)
+
+
+def export_creatures(cursor) -> str:
+    cursor.execute("""
+        SELECT id, name, level_min, level_max, classification, zone, location_details, health, strategy_notes, is_forever_content
+        FROM creatures
+        WHERE classification IN ('Boss', 'Elite', 'Rare Elite', 'Rare') OR is_forever_content = 1
+        ORDER BY level_max DESC, name ASC
+    """)
+    rows = cursor.fetchall()
+    lua = ["ForeverGuide_Data.Creatures = {"]
+    for r in rows:
+        c_id, name, l_min, l_max, classification, zone, loc, hp, strat, is_forever = r
+        lua.append(f"  [{c_id}] = {{")
+        lua.append(f"    id = {c_id},")
+        lua.append(f"    name = {escape_lua_str(name)},")
+        lua.append(f"    minLevel = {l_min or 0},")
+        lua.append(f"    maxLevel = {l_max or 0},")
+        lua.append(f"    classification = {escape_lua_str(classification or 'Normal')},")
+        lua.append(f"    zone = {escape_lua_str(zone or '')},")
+        lua.append(f"    location = {escape_lua_str(loc or '')},")
+        lua.append(f"    health = {hp or 0},")
+        lua.append(f"    strategy = {escape_lua_str(strat or '')},")
+        lua.append(f"    isForever = {'true' if is_forever else 'false'},")
+        lua.append("  },")
+    lua.append("}\n")
+    return "\n".join(lua)
+
+
 def export_zone_guide() -> str:
-    # Standard Vanilla / Forever zone progression guide
     zones = [
         {"name": "Dun Morogh", "level": "1-10", "faction": "Alliance", "continent": "Eastern Kingdoms"},
         {"name": "Elwynn Forest", "level": "1-10", "faction": "Alliance", "continent": "Eastern Kingdoms"},
@@ -177,6 +255,30 @@ def export_zone_guide() -> str:
     return "\n".join(lua)
 
 
+def export_bot_knowledge() -> str:
+    modules = [
+        ("Attunements", getattr(bot, "ATTUNEMENTS", {})),
+        ("ClassBuilds", getattr(bot, "CLASS_BUILDS", {})),
+        ("Consumables", getattr(bot, "CONSUMABLES_DATA", {})),
+        ("DungeonKeys", getattr(bot, "DUNGEON_KEYS", {})),
+        ("Gathering", getattr(bot, "GATHERING_NODES", {})),
+        ("Professions", getattr(bot, "PROFESSIONS_DATA", {})),
+        ("PvP", getattr(bot, "PVP_SYSTEM_DATA", {})),
+        ("Racials", getattr(bot, "RACIAL_TRAITS", {})),
+        ("RaidBosses", getattr(bot, "RAID_BOSSES_DATA", {})),
+        ("Reputations", getattr(bot, "REPUTATIONS_DATA", {})),
+        ("Resistance", getattr(bot, "RESIST_SCHOOLS", {})),
+        ("Talents", getattr(bot, "TALENTS_DATA", {})),
+        ("Twinks", getattr(bot, "TWINK_DATA", {})),
+        ("WorldBuffs", getattr(bot, "WORLD_BUFFS_DATA", {})),
+    ]
+
+    parts = []
+    for name, val in modules:
+        parts.append(f"ForeverGuide_Data.{name} = {py_to_lua(val, 0)}\n")
+    return "\n".join(parts)
+
+
 def main():
     os.makedirs(OUTPUT_DIR, exist_ok=True)
     conn = sqlite3.connect(DB_PATH)
@@ -185,12 +287,15 @@ def main():
     header = """--[[
   ForeverGuide_Data.lua
   Warcraft Forever Addon Data Compilation
-  Auto-generated from wow_forever.db for ForeverGuide ("The Blue Spark").
-  Contains pre-compiled static lookup data for fast in-game retrieval.
+  Auto-generated from wow_forever.db and bot.py knowledge modules.
+  Complete offline encyclopedia for the Blue Spark companion.
 --]]
 
 ForeverGuide_Data = ForeverGuide_Data or {}
 """
+
+    print("Exporting zone guides...")
+    zones_lua = export_zone_guide()
 
     print("Exporting dungeons...")
     dungeons_lua = export_dungeons(cursor)
@@ -204,12 +309,21 @@ ForeverGuide_Data = ForeverGuide_Data or {}
     print("Exporting items (Forever + High Quality)...")
     items_lua = export_items(cursor)
 
-    print("Exporting zone guides...")
-    zones_lua = export_zone_guide()
+    print("Exporting quests...")
+    quests_lua = export_quests(cursor)
+
+    print("Exporting creatures (Bosses + Elites)...")
+    creatures_lua = export_creatures(cursor)
+
+    print("Exporting bot knowledge encyclopedia (Attunements, BiS, Builds, Buffs, etc.)...")
+    knowledge_lua = export_bot_knowledge()
 
     conn.close()
 
-    full_content = "\n".join([header, zones_lua, dungeons_lua, fp_lua, vendors_lua, items_lua])
+    full_content = "\n".join([
+        header, zones_lua, dungeons_lua, fp_lua, vendors_lua,
+        items_lua, quests_lua, creatures_lua, knowledge_lua
+    ])
 
     with open(OUTPUT_FILE, "w", encoding="utf-8") as f:
         f.write(full_content)
