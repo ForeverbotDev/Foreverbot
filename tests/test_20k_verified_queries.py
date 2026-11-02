@@ -238,7 +238,7 @@ class Test20kVerifiedQueries(unittest.TestCase):
                 self.assertIsNotNone(entry)
                 cat = "World Buff Query"
                 q_text = f"/buffs {k}"
-                res_text = f"{k}: {entry.get('effects', '')} ({entry.get('turn_in', '')})"
+                res_text = f"{entry.get('name', k)}: {entry.get('effect', '').replace(chr(10), ' ')[:90]}"
             dt = time.perf_counter() - t0
             latencies.append(dt)
             passed_queries += 1
