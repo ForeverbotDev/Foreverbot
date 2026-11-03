@@ -6,11 +6,11 @@ and formatted HTML directly to the maintainer/QC reviewer.
 
 Configuration:
   Set the following in `.env` or GitHub Secrets:
-    QC_EMAIL_RECIPIENT=your_email@example.com
-    SMTP_HOST=smtp.gmail.com
+    QC_EMAIL_RECIPIENT=reviewer@example.com
+    SMTP_HOST=smtp.mailserver.com
     SMTP_PORT=587
-    SMTP_USER=your_email@gmail.com
-    SMTP_PASSWORD=your_app_password
+    SMTP_USER=user@example.com
+    SMTP_PASSWORD=your_password
 
 Usage:
   python3 scripts/email_daily_qc_report.py
@@ -163,7 +163,7 @@ def dispatch_daily_qc_email(recipient: Optional[str] = None) -> bool:
     load_env_vars()
 
     to_email = recipient or os.getenv("QC_EMAIL_RECIPIENT")
-    smtp_host = os.getenv("SMTP_HOST", "smtp.gmail.com")
+    smtp_host = os.getenv("SMTP_HOST", "")
     smtp_port = int(os.getenv("SMTP_PORT", "587"))
     smtp_user = os.getenv("SMTP_USER")
     smtp_pass = os.getenv("SMTP_PASSWORD")

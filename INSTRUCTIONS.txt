@@ -31,15 +31,11 @@ STEP 2: DOUBLE-CLICK TO LAUNCH!
 ----------------------------------------------------------------------
 Simply double-click the launch file for your operating system:
 
-• 🐧 LINUX (SteamOS, KDE Plasma, GNOME, Ubuntu, Fedora):
-  Double-click "start_bot.sh"
-  *(Note: Do NOT click start_bot.bat on Linux—that is for Windows and triggers Wine/Protontricks).*
+• 🐧 LINUX & 🍎 MACOS:
+  Run or double-click "start_bot.sh"
 
-• 🍎 MACOS (Apple Silicon & Intel):
-  Double-click "start_bot.command"
-
-• 💀 WINDOWS:
-  Double-click "start_bot.bat"
+• 💀 WINDOWS (PowerShell / Command Prompt):
+  python bot.py
 
 ----------------------------------------------------------------------
 STEP 3: PASTE YOUR TOKEN & ENJOY!

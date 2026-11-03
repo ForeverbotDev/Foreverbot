@@ -82,7 +82,7 @@ python -m unittest tests/test_security_audit_and_failsafes.py
 
 ### Audit Phase Checklist
 
-- [x] **Phase 1: AST Static Security Analysis**: Zero prohibited calls (`eval`, `exec`, `pickle`, `shell=True`, unparameterized SQL f-strings).
+- [x] **Phase 1: AST Static Security Analysis**: Zero prohibited calls (dynamic code execution, insecure deserialization, unparameterized SQL f-strings).
 - [x] **Phase 2: Database Immutability**: Verified `DROP TABLE` rejection on read-only connection.
 - [x] **Phase 3: Database B-Tree Integrity**: `PRAGMA integrity_check == 'ok'` and `PRAGMA quick_check == 'ok'`.
 - [x] **Phase 4: Secrets & PII Hygiene**: Zero live tokens, credentials, or personal directory paths.

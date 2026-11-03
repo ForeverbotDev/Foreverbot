@@ -33,11 +33,11 @@ Foreverbot ships with its **offline WoW Forever database pre-built and bundled**
 
 ### 🚀 1-Click Launch (Which File to Double-Click)
 
-| Operating System | Double-Click This File | What Happens Automatically |
+| Operating System | Command / Launcher | What Happens Automatically |
 | :--- | :--- | :--- |
-| **🐧 Linux (SteamOS, KDE, GNOME, Ubuntu)** | **`start_bot.sh`** *(Don't click .bat)* | Spawns a terminal window (Konsole/GNOME), configures `.venv`, opens editor! |
-| **🍎 macOS (Apple Silicon & Intel)** | **`start_bot.command`** | Launches native Terminal.app, configures `.venv`, opens editor! |
-| **💀 Windows (10 / 11)** | **`start_bot.bat`** | Verifies Python, configures `.venv`, opens Notepad with `.env`, launches! |
+| **🐧 Linux (SteamOS, KDE, GNOME, Ubuntu)** | **`./start_bot.sh`** | Spawns a terminal window (Konsole/GNOME), configures `.venv`, opens editor! |
+| **🍎 macOS (Apple Silicon & Intel)** | **`./start_bot.sh`** | Launches native Terminal, configures `.venv`, opens editor! |
+| **💀 Windows (10 / 11)** | **`python bot.py`** | Verifies Python, configures `.venv`, connects and launches! |
 
 > 💡 **Tip:** On your first launch, the script will automatically create your settings file and pop open your text editor. Simply paste your Discord bot token and you're done! (Detailed inside [`INSTRUCTIONS.txt`](INSTRUCTIONS.txt)).
 
@@ -90,15 +90,14 @@ If your system does not have Python 3, `venv`, or `pip` installed yet, copy and 
 > Debian and Ubuntu deliberately split Python's standard `venv` and `ensurepip` modules into a separate package (`python3-venv`). Installing `python3-venv` ensures your isolated virtual environment (`.venv`) is created cleanly with zero pip errors.
 
 **Option A — 1-Click Launch (KDE Plasma, GNOME, SteamOS):**
-1. In your file manager, simply double-click **`start_bot.sh`**!
-   - It will automatically launch inside your native terminal (Konsole, GNOME Terminal, etc.), configure `.venv`, install packages, and pop open `.env` in your text editor.
-   - *Note for Linux users: Do **NOT** double-click `start_bot.bat`—`.bat` is for Windows and will prompt Wine or Protontricks.*
+1. In your file manager, simply double-click or run **`./start_bot.sh`**!
+   - It will automatically launch inside your native terminal, configure `.venv`, install packages, and pop open `.env` in your text editor.
 
 **Option B — Terminal Launch:**
 Open a terminal inside your extracted bot folder:
 
 ```bash
-# 1. Run the launcher script (it will automatically create .env and open your editor if missing)
+# Run the launcher script (it will automatically create .env and open your editor if missing)
 ./start_bot.sh
 ```
 *`start_bot.sh` automatically creates `.venv`, installs all packages from `requirements.txt`, and connects to Discord.*
@@ -107,11 +106,6 @@ Open a terminal inside your extracted bot folder:
 
 #### 🍎 2. macOS Setup (Apple Silicon M1/M2/M3 & Intel)
 
-**Option A — 1-Click Launch:**
-1. In Finder, simply double-click **`start_bot.command`**!
-   - It will automatically open Terminal.app, set up your environment, and launch Foreverbot.
-
-**Option B — Terminal Launch:**
 Open the **Terminal** app (`Cmd + Space` ➔ type `Terminal` ➔ press Enter):
 
 ```bash
@@ -127,28 +121,21 @@ cd ~/Downloads/foreverbot
 
 #### 💀 3. Windows Setup (Windows 10 / 11)
 
-**Option A — 1-Click Launch:**
-1. Extract your downloaded ZIP to any folder (e.g. `Desktop` or `Downloads`).
-2. Double-click **`start_bot.bat`**.
-   - On the first run, the script automatically checks for Python, creates your `.venv`, installs all packages, creates `.env`, and opens it directly in **Notepad**.
-3. In Notepad, paste your token next to `DISCORD_BOT_TOKEN=`:
-   ```ini
-   DISCORD_BOT_TOKEN=paste_your_token_here
-   ```
-4. Save the file (**`Ctrl + S`**) and close Notepad.
-5. Press any key in the terminal window—Foreverbot connects and goes live immediately!
+Open **PowerShell** or **Command Prompt**:
 
-**Option B — PowerShell / Command Prompt:**
 ```powershell
-# 1. Navigate to the extracted folder in PowerShell:
+# 1. Navigate to the extracted folder:
 cd C:\path\to\foreverbot
 
-# 2. Copy configuration and open in Notepad:
+# 2. Copy configuration and configure token:
 copy .env.example .env
 notepad .env   # Paste your DISCORD_BOT_TOKEN=, save (Ctrl+S), and close
 
-# 3. Run the automated Windows launcher:
-.\start_bot.bat
+# 3. Create virtual environment and run:
+python -m venv .venv
+.\.venv\Scripts\activate
+pip install -r requirements.txt
+python bot.py
 ```
 
 <details>
@@ -212,7 +199,7 @@ Once installed, **Foreverbot runs as a lightweight standard Python program on yo
 * **Runs Directly on Your Hardware:** Foreverbot uses only **~114 MB of RAM** and virtually **0% CPU** when idle. It can run seamlessly on your daily computer, a laptop in a closet, or a $35 Raspberry Pi.
 * **No Port Forwarding or Public IP Needed:** The bot connects *outbound* to Discord's Gateway via a secure encrypted WebSocket (`wss://`). You do **not** need to open router ports, and players never see your home IP address (Discord acts as a protective shield).
 * **100% Offline Database:** All 27,072 items (including 6,671 authentic WoW: Forever items), 10,122 NPCs, 4,245 quests, and 293,762 active drop records live inside `wow_forever.db` on your device.
-* **Sleep & Shutdown Behavior:** If your PC sleeps or turns off, the bot goes offline. As soon as you wake your PC and run `./start_bot.sh` (or `start_bot.bat`), it reconnects in ~2 seconds.
+* **Sleep & Shutdown Behavior:** If your PC sleeps or turns off, the bot goes offline. As soon as you wake your PC and run `./start_bot.sh` (or `python bot.py`), it reconnects in ~2 seconds.
 * **Want 24/7 Uptime?** 
   - **Linux `systemd` Service:** Auto-starts on system boot and restarts if closed (see guide).
   - **Free Cloud Server:** Deploy to **Oracle Cloud Always-Free Tier** ($0/month forever).
