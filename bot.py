@@ -3990,6 +3990,136 @@ async def setup_server_command(interaction: discord.Interaction):
     )
 
 
+# ==============================================================================
+# SPELLS, ARMOR SETS & ACHIEVEMENTS COMMANDS (BLIZZARD OFFICIAL EXPANSION)
+# ==============================================================================
+
+@bot.tree.command(name="spell", description="Look up class abilities, ranks, mana/energy costs & Forever tuning")
+@app_commands.describe(
+    query="Spell or ability name (e.g. 'Battle Shout', 'Windfury Totem', 'Mortal Strike', 'Frostbolt')",
+    character_class="Optional class filter (e.g. 'Warrior', 'Mage', 'Shaman', 'Priest')"
+)
+async def spell_command(interaction: discord.Interaction, query: str, character_class: Optional[str] = None):
+    """Fetches comprehensive class spellbook info with ranks, costs, and official Forever balance notes."""
+    await interaction.response.defer(ephemeral=False)
+    spell = ke.get_spell_info(query, class_filter=character_class)
+    if not spell:
+        await interaction.followup.send(f"❌ No spell found matching '**{query}**'. Check spelling or try autocomplete.", ephemeral=True)
+        return
+
+    badge = "🌟 [Forever Alpha Content] " if spell["is_forever"] else ""
+    embed = discord.Embed(
+        title=f"⚡ {badge}{spell['name']} ({spell['rank']})",
+        description=f"**Class:** {spell['character_class']} • **Spec/School:** {spell['spec']} • **Level Req:** {spell['level_req']}",
+        color=0x3498DB if not spell["is_forever"] else 0xF1C40F
+    )
+    embed.add_field(name="Cost", value=spell["cost"], inline=True)
+    embed.add_field(name="Cast Time", value=spell["cast_time"], inline=True)
+    embed.add_field(name="Range & Cooldown", value=f"{spell['range']} • {spell['cooldown']}", inline=True)
+    embed.add_field(name="Spell Effect", value=spell["description"], inline=False)
+    embed.add_field(name="⚖️ Official Tuning & Balance", value=spell["forever_tuning"], inline=False)
+
+    if spell.get("did_you_mean"):
+        embed.set_footer(text=f"Auto-corrected from '{query}' to '{spell['name']}' • World of Warcraft: Forever")
+    else:
+        embed.set_footer(text="World of Warcraft: Forever • Authentic Spellbook Catalog")
+
+    await interaction.followup.send(embed=embed)
+
+
+@spell_command.autocomplete("query")
+async def spell_autocomplete(interaction: discord.Interaction, current: str) -> List[app_commands.Choice[str]]:
+    cls_filter = interaction.namespace.character_class if hasattr(interaction.namespace, "character_class") else None
+    choices = db.autocomplete_spells(current, class_filter=cls_filter, limit=25)
+    return [app_commands.Choice(name=c["name"], value=c["value"]) for c in choices]
+
+
+@spell_command.autocomplete("character_class")
+async def spell_class_autocomplete(interaction: discord.Interaction, current: str) -> List[app_commands.Choice[str]]:
+    classes = ["Warrior", "Paladin", "Hunter", "Rogue", "Priest", "Shaman", "Mage", "Warlock", "Druid"]
+    matches = [c for c in classes if not current or current.lower() in c.lower()]
+    return [app_commands.Choice(name=m, value=m) for m in matches[:25]]
+
+
+@bot.tree.command(name="set", description="Look up progression armor sets (T0, T1, T2, T3, PvP) & set bonuses")
+@app_commands.describe(
+    query="Armor set name or tier (e.g. 'Might', 'Battlegear of Valor', 'Netherwind', 'Dreadnaught')",
+    character_class="Optional class filter (e.g. 'Warrior', 'Paladin', 'Mage', 'Rogue')"
+)
+async def set_command(interaction: discord.Interaction, query: str, character_class: Optional[str] = None):
+    """Fetches progression armor sets, item lists, and 2/4/6/8-piece set bonus trees."""
+    await interaction.response.defer(ephemeral=False)
+    armor_set = ke.get_armor_set_info(query, class_filter=character_class)
+    if not armor_set:
+        await interaction.followup.send(f"❌ No armor set found matching '**{query}**'. Try searching by set name like 'Might' or 'Valor'.", ephemeral=True)
+        return
+
+    badge = "🌟 [Forever Content] " if armor_set["is_forever"] else ""
+    embed = discord.Embed(
+        title=f"🛡️ {badge}{armor_set['set_name']}",
+        description=f"**Tier:** {armor_set['tier']} • **Class:** {armor_set['character_class']}\n**Source:** {armor_set['source_dungeon']}",
+        color=0xE67E22 if "Tier 3" in armor_set["tier"] else 0x9B59B6 if "Tier 2" in armor_set["tier"] else 0x3498DB
+    )
+    embed.add_field(name=f"Set Pieces ({armor_set['pieces_count']})", value=" • ".join(armor_set["pieces"][:8]), inline=False)
+
+    bonus_lines = []
+    for piece_cnt, text in sorted(armor_set["bonuses"].items(), key=lambda x: int(x[0])):
+        bonus_lines.append(f"• **({piece_cnt}) Set:** {text}")
+    embed.add_field(name="Set Bonuses", value="\n".join(bonus_lines) if bonus_lines else "None", inline=False)
+
+    if armor_set.get("did_you_mean"):
+        embed.set_footer(text=f"Auto-corrected to '{armor_set['set_name']}' • World of Warcraft: Forever")
+    else:
+        embed.set_footer(text="World of Warcraft: Forever • Armor Set Progression")
+
+    await interaction.followup.send(embed=embed)
+
+
+@set_command.autocomplete("query")
+async def set_autocomplete(interaction: discord.Interaction, current: str) -> List[app_commands.Choice[str]]:
+    cls_filter = interaction.namespace.character_class if hasattr(interaction.namespace, "character_class") else None
+    choices = db.autocomplete_armor_sets(current, class_filter=cls_filter, limit=25)
+    return [app_commands.Choice(name=c["name"], value=c["value"]) for c in choices]
+
+
+@set_command.autocomplete("character_class")
+async def set_class_autocomplete(interaction: discord.Interaction, current: str) -> List[app_commands.Choice[str]]:
+    classes = ["Warrior", "Paladin", "Hunter", "Rogue", "Priest", "Shaman", "Mage", "Warlock", "Druid"]
+    matches = [c for c in classes if not current or current.lower() in c.lower()]
+    return [app_commands.Choice(name=m, value=m) for m in matches[:25]]
+
+
+@bot.tree.command(name="achievement", description="Look up achievements, raid clears, titles & Feats of Strength")
+@app_commands.describe(query="Achievement title or keywords (e.g. 'Molten Core', 'Scarab Lord', 'Level 60', 'Undying')")
+async def achievement_command(interaction: discord.Interaction, query: str):
+    """Fetches achievement metadata, criteria, points, and Feats of Strength status."""
+    await interaction.response.defer(ephemeral=False)
+    ach = ke.get_achievement_info(query)
+    if not ach:
+        await interaction.followup.send(f"❌ No achievement found matching '**{query}**'.", ephemeral=True)
+        return
+
+    is_fos = ach["is_feat_of_strength"]
+    embed = discord.Embed(
+        title=f"{'🏆' if is_fos else '⭐'} {ach['title']}",
+        description=ach["description"],
+        color=0xF1C40F if is_fos else 0x1ABC9C
+    )
+    embed.add_field(name="Category", value=ach["category"], inline=True)
+    embed.add_field(name="Points", value="Feat of Strength" if is_fos else f"{ach['points']} Points", inline=True)
+    if ach.get("reward") and ach["reward"] != "None":
+        embed.add_field(name="Reward", value=ach["reward"], inline=False)
+
+    embed.set_footer(text="World of Warcraft: Forever • Milestones & Challenges")
+    await interaction.followup.send(embed=embed)
+
+
+@achievement_command.autocomplete("query")
+async def achievement_autocomplete(interaction: discord.Interaction, current: str) -> List[app_commands.Choice[str]]:
+    choices = db.autocomplete_achievements(current, limit=25)
+    return [app_commands.Choice(name=c["name"], value=c["value"]) for c in choices]
+
+
 def start_health_server():
     """Starts a lightweight HTTP health check server if PORT is defined (for Render / Railway / Fly.io)."""
     port_str = os.environ.get("PORT")

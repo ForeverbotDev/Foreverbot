@@ -180,11 +180,11 @@ python bot.py
 When Foreverbot connects, you will see this confirmation in your terminal:
 ```text
 Logged in as Foreverbot (123456789012345678)
-Synced 42 global slash commands.
-Instantly synced 42 commands to server: Your Guild Server (987654321098765432)
+Synced 46 global slash commands.
+Instantly synced 46 commands to server: Your Guild Server (987654321098765432)
 Foreverbot is live and ready!
 ```
-> 💡 **Instant Guild Slash Commands:** Foreverbot automatically pushes guild-level command syncs to your connected Discord server on startup, so typing **`/`** in your server displays all 42 commands **immediately** (bypassing Discord's 1-hour global cache delay!).
+> 💡 **Instant Guild Slash Commands:** Foreverbot automatically pushes guild-level command syncs to your connected Discord server on startup, so typing **`/`** in your server displays all 46 commands **immediately** (bypassing Discord's 1-hour global cache delay!).
 
 > 🛡️ **Private Per-User Responses:** When you run any query command (like `/item`, `/bis`, `/dungeons`, or `/ask`), only you will see the response (*"Only you can see this • Dismiss message"*). Group raid tools like `/roll` and `/signup` remain public for everyone in your raid to click and interact with!
 
@@ -253,19 +253,19 @@ Once installed, **Foreverbot runs as a lightweight standard Python program on yo
 
 ---
 
-## 📜 Complete 42-Command Reference
+## 📜 Complete 46-Command Reference
 
 | Category | Commands |
 | :--- | :--- |
-| **Gear & Items** | `/item`, `/compare`, `/bis`, `/resist`, `/disenchant` |
-| **Quests & Progression** | `/quest`, `/keys`, `/attunement`, `/rep` |
+| **Gear & Items** | `/item`, `/set`, `/compare`, `/bis`, `/resist`, `/disenchant` |
+| **Quests & Progression** | `/quest`, `/achievement`, `/keys`, `/attunement`, `/rep` |
 | **World & Travel** | `/flightpath`, `/map`, `/zones`, `/dungeons`, `/level`, `/route` |
 | **Economy & Gathering** | `/vendor`, `/gather`, `/profession`, `/farm`, `/mob` |
 | **Raiding & Intel** | `/raid`, `/consumes`, `/buffs`, `/resets`, `/intel` |
-| **Class Mastery** | `/build`, `/talents`, `/race`, `/macro`, `/profile` |
+| **Class Mastery** | `/spell`, `/build`, `/talents`, `/race`, `/macro`, `/profile` |
 | **PvP & Competitive** | `/pvp`, `/twink` |
 | **Raid Management** | `/signup`, `/comp`, `/gdkp`, `/roll`, `/addons` |
-| **Community & AI** | `/forever`, `/events`, `/trivia`, `/ask` |
+| **Community & AI** | `/forever`, `/events`, `/trivia`, `/ask`, `/setup_server`, `/privacy` |
 
 ---
 

@@ -654,6 +654,30 @@ class WoWForeverDB:
         dung_rows = cursor.fetchall()
         self.dungeon_names = list(set([r[0] for r in dung_rows] + [r[1] for r in dung_rows]))
 
+        try:
+            cursor.execute("SELECT id, name, character_class, spec, rank, is_forever_content FROM spells")
+            self.spell_records = [dict(r) for r in cursor.fetchall()]
+            self.spell_names = [r["name"] for r in self.spell_records]
+        except Exception:
+            self.spell_records = []
+            self.spell_names = []
+
+        try:
+            cursor.execute("SELECT id, set_name, character_class, tier, is_forever_content FROM armor_sets")
+            self.armor_set_records = [dict(r) for r in cursor.fetchall()]
+            self.armor_set_names = [r["set_name"] for r in self.armor_set_records]
+        except Exception:
+            self.armor_set_records = []
+            self.armor_set_names = []
+
+        try:
+            cursor.execute("SELECT id, title, category, points, is_feat_of_strength, is_forever_content FROM achievements")
+            self.achievement_records = [dict(r) for r in cursor.fetchall()]
+            self.achievement_titles = [r["title"] for r in self.achievement_records]
+        except Exception:
+            self.achievement_records = []
+            self.achievement_titles = []
+
         conn.close()
 
     def autocomplete_items(self, current: str, limit: int = 25) -> List[Dict[str, str]]:
@@ -788,6 +812,58 @@ class WoWForeverDB:
             "name": display[:100],
             "value": name[:100]
         }
+
+    def autocomplete_spells(self, current: str, class_filter: Optional[str] = None, limit: int = 25) -> List[Dict[str, str]]:
+        """Instant Discord autocomplete for class spells."""
+        curr = (current or "").strip().lower()
+        cls_norm = (class_filter or "").strip().lower()
+
+        results = []
+        for r in getattr(self, "spell_records", []):
+            if cls_norm and cls_norm not in r.get("character_class", "").lower():
+                continue
+            s_name = r.get("name", "")
+            if not curr or curr in s_name.lower():
+                badge = "⚡ " if r.get("is_forever_content") else ""
+                spec = f" ({r.get('spec')})" if r.get("spec") else ""
+                label = f"{badge}{s_name} [{r.get('character_class')}]{spec}"
+                results.append({"name": label[:100], "value": s_name[:100]})
+                if len(results) >= limit:
+                    break
+        return results
+
+    def autocomplete_armor_sets(self, current: str, class_filter: Optional[str] = None, limit: int = 25) -> List[Dict[str, str]]:
+        """Instant Discord autocomplete for progression armor sets."""
+        curr = (current or "").strip().lower()
+        cls_norm = (class_filter or "").strip().lower()
+
+        results = []
+        for r in getattr(self, "armor_set_records", []):
+            if cls_norm and cls_norm not in r.get("character_class", "").lower():
+                continue
+            s_name = r.get("set_name", "")
+            if not curr or curr in s_name.lower():
+                badge = "🛡️ " if r.get("is_forever_content") else ""
+                label = f"{badge}{s_name} [{r.get('tier')}] ({r.get('character_class')})"
+                results.append({"name": label[:100], "value": s_name[:100]})
+                if len(results) >= limit:
+                    break
+        return results
+
+    def autocomplete_achievements(self, current: str, limit: int = 25) -> List[Dict[str, str]]:
+        """Instant Discord autocomplete for achievements and Feats of Strength."""
+        curr = (current or "").strip().lower()
+
+        results = []
+        for r in getattr(self, "achievement_records", []):
+            title = r.get("title", "")
+            if not curr or curr in title.lower():
+                badge = "🏆 " if r.get("is_feat_of_strength") else "⭐ "
+                label = f"{badge}{title} [{r.get('category')} • {r.get('points')} pts]"
+                results.append({"name": label[:100], "value": title[:100]})
+                if len(results) >= limit:
+                    break
+        return results
 
     def find_fuzzy_match(self, query: str, candidates: List[str], cutoff: float = 0.78) -> Optional[str]:
         """Finds typo-tolerant match using high-confidence sequence matching without false positives."""
@@ -1272,16 +1348,181 @@ class WoWForeverDB:
         conn.close()
         return results, did_you_mean
 
+    def search_spells(self, query: str, class_filter: Optional[str] = None, limit: int = 5) -> Tuple[List[Dict[str, Any]], Optional[str]]:
+        """Searches class spells using FTS5, substring matching, and typo-tolerant fuzzy fallback."""
+        raw_q = (query or "").strip().lower()
+        cleaned = clean_query(query) if query else ""
+        cls_norm = (class_filter or "").strip()
+        if not raw_q and not cls_norm:
+            return [], None
+
+        conn = get_connection(self.db_path)
+        cursor = conn.cursor()
+        rows = []
+        did_you_mean = None
+
+        # 0. If query is empty, return top spells for class
+        if not raw_q and cls_norm:
+            cursor.execute("""
+                SELECT * FROM spells WHERE lower(character_class) LIKE ?
+                ORDER BY is_forever_content DESC, level_req DESC LIMIT ?
+            """, (f"%{cls_norm.lower()}%", limit))
+            rows = cursor.fetchall()
+            conn.close()
+            return [dict(r) for r in rows], None
+
+        # 1. Exact or Substring match on raw query
+        sql_exact = "SELECT * FROM spells WHERE lower(name) = ? OR lower(name) LIKE ?"
+        params: List[Any] = [raw_q, f"%{raw_q}%"]
+        if cls_norm:
+            sql_exact += " AND lower(character_class) LIKE ?"
+            params.append(f"%{cls_norm.lower()}%")
+        sql_exact += " ORDER BY is_forever_content DESC, level_req DESC LIMIT ?"
+        params.append(limit)
+        cursor.execute(sql_exact, params)
+        rows = cursor.fetchall()
+
+        # 2. Tokenized FTS5 Search
+        if not rows:
+            words = [w for w in re.sub(r"[^\w\s]", " ", raw_q).split() if len(w) >= 2]
+            if words:
+                match_expr = " AND ".join([f'"{w}"*' for w in words])
+                try:
+                    cursor.execute("""
+                        SELECT s.* FROM spells s
+                        JOIN spells_fts f ON s.id = f.rowid
+                        WHERE spells_fts MATCH ?
+                        ORDER BY s.is_forever_content DESC
+                        LIMIT ?
+                    """, (match_expr, limit))
+                    rows = cursor.fetchall()
+                except Exception:
+                    rows = []
+
+        # 3. Cleaned substring search
+        if not rows and cleaned:
+            cursor.execute("""
+                SELECT * FROM spells
+                WHERE name LIKE ? OR description LIKE ? OR forever_tuning LIKE ?
+                ORDER BY is_forever_content DESC
+                LIMIT ?
+            """, (f"%{cleaned}%", f"%{cleaned}%", f"%{cleaned}%", limit))
+            rows = cursor.fetchall()
+
+        # 4. Fuzzy fallback
+        if not rows and getattr(self, "spell_names", []):
+            fuzzy = self.find_fuzzy_match(raw_q, self.spell_names) or (self.find_fuzzy_match(cleaned, self.spell_names) if cleaned else None)
+            if fuzzy:
+                did_you_mean = fuzzy
+                cursor.execute("SELECT * FROM spells WHERE name LIKE ? LIMIT ?", (f"%{fuzzy}%", limit))
+                rows = cursor.fetchall()
+
+        results = [dict(row) for row in rows]
+        conn.close()
+        return results, did_you_mean
+
+    def search_armor_sets(self, query: str, class_filter: Optional[str] = None, limit: int = 5) -> Tuple[List[Dict[str, Any]], Optional[str]]:
+        """Searches progression armor sets and set bonuses."""
+        raw_q = (query or "").strip().lower()
+        cleaned = clean_query(query) if query else ""
+        cls_norm = (class_filter or "").strip()
+        if not raw_q and not cls_norm:
+            return [], None
+
+        conn = get_connection(self.db_path)
+        cursor = conn.cursor()
+        rows = []
+        did_you_mean = None
+
+        if not raw_q and cls_norm:
+            cursor.execute("""
+                SELECT * FROM armor_sets WHERE lower(character_class) LIKE ?
+                ORDER BY is_forever_content DESC LIMIT ?
+            """, (f"%{cls_norm.lower()}%", limit))
+            rows = cursor.fetchall()
+        else:
+            # 1. Exact or Substring on set_name, tier, item_names, or source_dungeon
+            sql = """
+                SELECT * FROM armor_sets
+                WHERE lower(set_name) = ? OR lower(set_name) LIKE ? OR tier LIKE ? OR item_names LIKE ? OR source_dungeon LIKE ?
+            """
+            params = [raw_q, f"%{raw_q}%", f"%{raw_q}%", f"%{raw_q}%", f"%{raw_q}%"]
+            if cls_norm:
+                sql += " AND lower(character_class) LIKE ?"
+                params.append(f"%{cls_norm.lower()}%")
+            sql += " ORDER BY is_forever_content DESC LIMIT ?"
+            params.append(limit)
+            cursor.execute(sql, params)
+            rows = cursor.fetchall()
+
+            # 2. Fuzzy fallback
+            if not rows and getattr(self, "armor_set_names", []):
+                fuzzy = self.find_fuzzy_match(raw_q, self.armor_set_names) or (self.find_fuzzy_match(cleaned, self.armor_set_names) if cleaned else None)
+                if fuzzy:
+                    did_you_mean = fuzzy
+                    cursor.execute("SELECT * FROM armor_sets WHERE set_name LIKE ? LIMIT ?", (f"%{fuzzy}%", limit))
+                    rows = cursor.fetchall()
+
+        results = []
+        for r in rows:
+            d = dict(r)
+            if isinstance(d.get("bonuses_json"), str):
+                import json
+                try:
+                    d["bonuses"] = json.loads(d["bonuses_json"])
+                except Exception:
+                    d["bonuses"] = {}
+            results.append(d)
+        conn.close()
+        return results, did_you_mean
+
+    def search_achievements(self, query: str, limit: int = 5) -> Tuple[List[Dict[str, Any]], Optional[str]]:
+        """Searches achievements and Feats of Strength."""
+        raw_q = (query or "").strip().lower()
+        cleaned = clean_query(query) if query else ""
+        if not raw_q:
+            return [], None
+
+        conn = get_connection(self.db_path)
+        cursor = conn.cursor()
+        rows = []
+        did_you_mean = None
+
+        # 1. Exact or Substring
+        cursor.execute("""
+            SELECT * FROM achievements
+            WHERE lower(title) = ? OR lower(title) LIKE ? OR category LIKE ? OR description LIKE ? OR reward LIKE ?
+            ORDER BY is_feat_of_strength DESC, points DESC
+            LIMIT ?
+        """, (raw_q, f"%{raw_q}%", f"%{raw_q}%", f"%{raw_q}%", f"%{raw_q}%", limit))
+        rows = cursor.fetchall()
+
+        # 2. Fuzzy fallback
+        if not rows and getattr(self, "achievement_titles", []):
+            fuzzy = self.find_fuzzy_match(raw_q, self.achievement_titles) or (self.find_fuzzy_match(cleaned, self.achievement_titles) if cleaned else None)
+            if fuzzy:
+                did_you_mean = fuzzy
+                cursor.execute("SELECT * FROM achievements WHERE title LIKE ? LIMIT ?", (f"%{fuzzy}%", limit))
+                rows = cursor.fetchall()
+
+        results = [dict(row) for row in rows]
+        conn.close()
+        return results, did_you_mean
+
     def get_database_stats(self) -> Dict[str, int]:
         conn = get_connection(self.db_path)
         cursor = conn.cursor()
         stats = {}
-        for table in ["items", "quests", "creatures", "vendors", "flightpaths", "dungeons"]:
-            cursor.execute(f"SELECT COUNT(*) FROM {table}")
-            stats[table] = cursor.fetchone()[0]
+        for table in ["items", "quests", "creatures", "vendors", "flightpaths", "dungeons", "spells", "armor_sets", "achievements"]:
+            try:
+                cursor.execute(f"SELECT COUNT(*) FROM {table}")
+                stats[table] = cursor.fetchone()[0]
 
-            cursor.execute(f"SELECT COUNT(*) FROM {table} WHERE is_forever_content = 1")
-            stats[f"{table}_forever"] = cursor.fetchone()[0]
+                cursor.execute(f"SELECT COUNT(*) FROM {table} WHERE is_forever_content = 1")
+                stats[f"{table}_forever"] = cursor.fetchone()[0]
+            except Exception:
+                stats[table] = 0
+                stats[f"{table}_forever"] = 0
         conn.close()
         return stats
 

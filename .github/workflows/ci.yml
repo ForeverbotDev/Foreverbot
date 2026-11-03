@@ -75,3 +75,6 @@ jobs:
       - name: 🚀 Suite 12 — 20,000-Query Verification Benchmark Sweep (20,000 Verified Combos)
         run: python tests/test_20k_verified_queries.py
 
+      - name: ⚡ Suite 13 — Blizzard Official Datamined Spells, Sets & Achievements (6 Tests)
+        run: python -m unittest tests/test_datamined_spells_and_sets.py
+

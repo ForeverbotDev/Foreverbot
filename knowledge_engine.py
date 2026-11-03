@@ -6429,3 +6429,69 @@ def get_talent_build(query_class: str, query_spec: Optional[str] = None) -> Opti
                 return TALENTS_DATA[target_key]
 
     return TALENTS_DATA[default_key]
+
+
+def get_spell_info(query: str, class_filter: Optional[str] = None) -> Optional[Dict[str, Any]]:
+    """Fetches comprehensive class spellbook data, ranks, mana/rage/energy costs, and official Forever tuning."""
+    db = _get_ke_db()
+    spells, dym = db.search_spells(query, class_filter=class_filter, limit=1)
+    if not spells:
+        return None
+    spell = spells[0]
+    return {
+        "id": spell.get("id"),
+        "name": spell.get("name"),
+        "character_class": spell.get("character_class"),
+        "spec": spell.get("spec"),
+        "rank": spell.get("rank"),
+        "level_req": spell.get("level_req"),
+        "cost": f"{spell.get('cost_val', 0)} {spell.get('cost_type', 'Mana')}" if spell.get("cost_val") else "Free",
+        "cast_time": spell.get("cast_time"),
+        "range": f"{spell.get('range_yards')} yd range" if spell.get("range_yards") else "Self / Melee",
+        "cooldown": f"{spell.get('cooldown_sec')} sec cooldown" if spell.get("cooldown_sec") else "No cooldown",
+        "description": spell.get("description"),
+        "forever_tuning": spell.get("forever_tuning") or "Authentic Classic Baseline.",
+        "is_forever": bool(spell.get("is_forever_content")),
+        "did_you_mean": dym,
+    }
+
+
+def get_armor_set_info(query: str, class_filter: Optional[str] = None) -> Optional[Dict[str, Any]]:
+    """Fetches progression armor sets, constituent pieces, and 2/4/6/8-piece set bonus trees."""
+    db = _get_ke_db()
+    sets, dym = db.search_armor_sets(query, class_filter=class_filter, limit=1)
+    if not sets:
+        return None
+    s = sets[0]
+    return {
+        "id": s.get("id"),
+        "set_name": s.get("set_name"),
+        "character_class": s.get("character_class"),
+        "tier": s.get("tier"),
+        "pieces_count": s.get("pieces_count"),
+        "pieces": [p.strip() for p in s.get("item_names", "").split(",") if p.strip()],
+        "bonuses": s.get("bonuses", {}),
+        "source_dungeon": s.get("source_dungeon"),
+        "is_forever": bool(s.get("is_forever_content")),
+        "did_you_mean": dym,
+    }
+
+
+def get_achievement_info(query: str) -> Optional[Dict[str, Any]]:
+    """Fetches achievement metadata, points, category, criteria, and Feats of Strength status."""
+    db = _get_ke_db()
+    achs, dym = db.search_achievements(query, limit=1)
+    if not achs:
+        return None
+    a = achs[0]
+    return {
+        "id": a.get("id"),
+        "title": a.get("title"),
+        "category": a.get("category"),
+        "points": a.get("points"),
+        "description": a.get("description"),
+        "reward": a.get("reward"),
+        "is_feat_of_strength": bool(a.get("is_feat_of_strength")),
+        "is_forever": bool(a.get("is_forever_content")),
+        "did_you_mean": dym,
+    }
