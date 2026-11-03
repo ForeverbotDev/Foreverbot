@@ -94,8 +94,14 @@ def main() -> int:
 
     ids = set()
     if args.from_db:
-        table, col = DB_SOURCES[args.kind]
-        ids |= {r[0] for r in sqlite3.connect(DB_PATH).execute(f"SELECT {col} FROM {table}")}
+        allowed_queries = {
+            "item": "SELECT id FROM items",
+            "quest": "SELECT id FROM quests",
+            "npc": "SELECT id FROM creatures",
+            "spell": "SELECT id FROM spells",
+        }
+        query_sql = allowed_queries.get(args.kind, "SELECT id FROM items")
+        ids |= {r[0] for r in sqlite3.connect(DB_PATH).execute(query_sql)}
     if args.ids_file:
         with open(args.ids_file) as f:
             ids |= {int(x) for x in f.read().split() if x.strip().isdigit()}

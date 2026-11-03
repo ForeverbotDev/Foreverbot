@@ -18,7 +18,10 @@ from discord.ext import commands
 from dotenv import load_dotenv
 import logging
 logger = logging.getLogger("wow_forever_bot")
-from database import WoWForeverDB, DB_PATH, extract_level_from_text, ZONE_ALIASES, get_connection
+from database import (
+    WoWForeverDB, DB_PATH, USER_DB_PATH, extract_level_from_text, ZONE_ALIASES,
+    get_connection, verify_database_integrity
+)
 import knowledge_engine as ke
 from knowledge_engine import (
     get_level_advice, ATTUNEMENTS, TRAVEL_ROUTES, GAMEPLAY_MECHANICS,
@@ -144,6 +147,102 @@ async def on_app_command_completion(interaction: discord.Interaction, command: a
     print(f"✅ [COMMAND USED] UserID: {user_hash} | Command: /{command.name}")
 
 
+# Security: Logging Sanitization Filter (Defense against accidental token / path leaks)
+class SensitiveDataFilter(logging.Filter):
+    """Redacts tokens, API keys, and internal filesystem paths from logs."""
+    TOKEN_REGEX = re.compile(r"[MN][A-Za-z0-9_-]{23,28}\.[A-Za-z0-9_-]{6,7}\.[A-Za-z0-9_-]{27,38}")
+    KEY_REGEX = re.compile(r"AIzaSy[A-Za-z0-9_-]{33}")
+    PATH_REGEX = re.compile(r"(/home|/var|/usr|/root|/tmp)[^\s:]+")
+
+    def filter(self, record: logging.LogRecord) -> bool:
+        if isinstance(record.msg, str):
+            record.msg = self.TOKEN_REGEX.sub("[REDACTED_DISCORD_TOKEN]", record.msg)
+            record.msg = self.KEY_REGEX.sub("[REDACTED_API_KEY]", record.msg)
+            record.msg = self.PATH_REGEX.sub("[internal_path]", record.msg)
+        return True
+
+logger.addFilter(SensitiveDataFilter())
+logging.getLogger("discord").addFilter(SensitiveDataFilter())
+
+
+# Security: Enterprise Circuit Breaker Fail-Safe
+class CircuitBreaker:
+    """Enterprise circuit breaker fail-safe for external API and network requests."""
+    def __init__(self, failure_threshold: int = 3, recovery_time: float = 60.0):
+        self.failure_threshold = failure_threshold
+        self.recovery_time = recovery_time
+        self.failure_count = 0
+        self.last_failure_time = 0.0
+        self.state = "CLOSED"  # CLOSED, OPEN, HALF_OPEN
+
+    def record_success(self) -> None:
+        self.failure_count = 0
+        self.state = "CLOSED"
+
+    def record_failure(self) -> None:
+        self.failure_count += 1
+        self.last_failure_time = time.time()
+        if self.failure_count >= self.failure_threshold:
+            self.state = "OPEN"
+
+    def can_execute(self) -> bool:
+        if self.state == "CLOSED":
+            return True
+        if self.state == "OPEN":
+            if time.time() - self.last_failure_time > self.recovery_time:
+                self.state = "HALF_OPEN"
+                return True
+            return False
+        if self.state == "HALF_OPEN":
+            return True
+        return False
+
+gemini_circuit_breaker = CircuitBreaker(failure_threshold=3, recovery_time=60.0)
+
+
+def validate_runtime_environment(enforce_production: bool = False) -> Tuple[bool, List[str]]:
+    """Validates security posture, credentials, database integrity, and file permissions.
+
+    Returns (is_secure, issues_list).
+    """
+    issues = []
+    is_testing = os.environ.get("TESTING") == "1"
+
+    # 1. Credential validation
+    token = os.environ.get("DISCORD_BOT_TOKEN", "").strip() or os.environ.get("DISCORD_TOKEN", "").strip()
+    if not token or token == "YOUR_DISCORD_BOT_TOKEN_HERE":
+        issues.append("FATAL: DISCORD_BOT_TOKEN is missing or set to placeholder default.")
+    elif enforce_production and not is_testing:
+        if token.startswith("MTU2NDAzOTUz") or len(token) < 50:
+            issues.append("FATAL: DISCORD_BOT_TOKEN appears to be a mock or test token in production.")
+
+    # 2. Database existence & integrity validation
+    if not os.path.exists(DB_PATH):
+        issues.append(f"FATAL: Game database '{DB_PATH}' does not exist.")
+    else:
+        integrity = verify_database_integrity(DB_PATH)
+        if integrity.get("status") != "ok":
+            issues.append(f"FATAL: Game database integrity check failed: {integrity}")
+
+    if os.path.exists(USER_DB_PATH):
+        user_integrity = verify_database_integrity(USER_DB_PATH)
+        if user_integrity.get("status") != "ok":
+            issues.append(f"FATAL: User database integrity check failed: {user_integrity}")
+
+    # 3. Environment configuration safety
+    env_file = os.path.join(os.path.dirname(os.path.abspath(__file__)), ".env")
+    if os.path.exists(env_file):
+        try:
+            mode = os.stat(env_file).st_mode
+            if mode & 0o004:
+                issues.append("WARNING: .env file is world-readable (chmod 600 or 640 recommended).")
+        except Exception:
+            pass
+
+    is_secure = not any(i.startswith("FATAL:") for i in issues)
+    return is_secure, issues
+
+
 # Rate Limiting & Exact Prompt Hashing Cache
 _user_last_ai_call: Dict[int, float] = {}
 _user_command_history: Dict[int, List[float]] = {}
@@ -223,7 +322,7 @@ def parse_key_value(text: str) -> Dict[str, str]:
 
 
 def run_gemini_sync(prompt: str) -> Optional[str]:
-    """Runs synchronous Gemini call with exact prompt caching and flash-lite model."""
+    """Runs synchronous Gemini call with exact prompt caching, flash-lite model, and circuit breaker."""
     if not GEMINI_API_KEY:
         return None
 
@@ -233,6 +332,10 @@ def run_gemini_sync(prompt: str) -> Optional[str]:
     if cached:
         return cached
 
+    # Fail-safe: Fast-fail if external API circuit is open
+    if not gemini_circuit_breaker.can_execute():
+        return None
+
     try:
         from google import genai
         client = genai.Client(api_key=GEMINI_API_KEY)
@@ -241,12 +344,15 @@ def run_gemini_sync(prompt: str) -> Optional[str]:
                 res = client.models.generate_content(model=m, contents=prompt)
                 if res and res.text:
                     db.set_cached_ai_response(p_hash, res.text)
+                    gemini_circuit_breaker.record_success()
                     return res.text
             except Exception as e:
                 print(f"Gemini {m} notice: {e}")
                 continue
+        gemini_circuit_breaker.record_failure()
     except Exception as ge:
         print(f"Gemini client error: {ge}")
+        gemini_circuit_breaker.record_failure()
     return None
 
 
@@ -4190,9 +4296,15 @@ def start_health_server():
 
 
 if __name__ == "__main__":
-    if not TOKEN or TOKEN == "YOUR_DISCORD_BOT_TOKEN_HERE":
-        print("Error: DISCORD_BOT_TOKEN is missing in .env file.")
-        print("Please copy .env.example to .env and insert your bot token.")
-    else:
-        start_health_server()
-        bot.run(TOKEN)
+    is_secure, issues = validate_runtime_environment(enforce_production=True)
+    if not is_secure:
+        print("\n❌ [FAIL-SAFE HALT] Runtime security pre-flight checks failed:")
+        for issue in issues:
+            print(f"  • {issue}")
+        sys.exit(1)
+
+    for issue in issues:
+        print(f"⚠️ [SECURITY NOTICE] {issue}")
+
+    start_health_server()
+    bot.run(TOKEN)

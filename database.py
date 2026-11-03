@@ -400,9 +400,17 @@ def extract_level_from_text(text: str) -> Optional[int]:
     return None
 
 
-def get_connection(db_path: str = DB_PATH) -> sqlite3.Connection:
-    """Returns an optimized, concurrency-hardened SQLite connection."""
-    conn = sqlite3.connect(db_path, timeout=30.0)
+def get_connection(db_path: str = DB_PATH, read_only: bool = False) -> sqlite3.Connection:
+    """Returns an optimized, concurrency-hardened SQLite connection.
+
+    If read_only=True, opens via SQLite URI mode=ro to enforce immutability at the C level.
+    """
+    abs_path = os.path.abspath(db_path)
+    if read_only and os.path.exists(abs_path):
+        uri = f"file:{abs_path}?mode=ro"
+        conn = sqlite3.connect(uri, uri=True, timeout=30.0)
+    else:
+        conn = sqlite3.connect(db_path, timeout=30.0)
     conn.row_factory = sqlite3.Row
     try:
         conn.execute("PRAGMA busy_timeout = 30000;")
@@ -411,6 +419,38 @@ def get_connection(db_path: str = DB_PATH) -> sqlite3.Connection:
     except Exception:
         pass
     return conn
+
+
+def verify_database_integrity(db_path: str = DB_PATH) -> Dict[str, Any]:
+    """Runs PRAGMA integrity_check, quick_check, and foreign_key_check to verify zero corruption."""
+    if not os.path.exists(db_path):
+        return {"status": "error", "error": f"Database file not found: {db_path}"}
+    try:
+        conn = get_connection(db_path, read_only=True)
+        cursor = conn.cursor()
+        cursor.execute("PRAGMA integrity_check;")
+        integrity_row = cursor.fetchone()
+        integrity_status = integrity_row[0] if integrity_row else "unknown"
+
+        cursor.execute("PRAGMA quick_check;")
+        quick_row = cursor.fetchone()
+        quick_status = quick_row[0] if quick_row else "unknown"
+
+        cursor.execute("PRAGMA foreign_key_check;")
+        fk_errors = cursor.fetchall()
+
+        conn.close()
+        is_ok = (integrity_status == "ok" and quick_status == "ok")
+        return {
+            "status": "ok" if is_ok else "corrupted",
+            "integrity_check": integrity_status,
+            "quick_check": quick_status,
+            "foreign_key_violations": len(fk_errors),
+            "file_size_bytes": os.path.getsize(db_path)
+        }
+    except Exception as exc:
+        return {"status": "error", "error": str(exc)}
+
 
 
 def init_db(db_path: str = DB_PATH) -> None:
@@ -638,7 +678,7 @@ class WoWForeverDB:
 
     def _load_name_caches(self):
         """Loads names into memory for sub-second fuzzy typo matching."""
-        conn = get_connection(self.db_path)
+        conn = get_connection(self.db_path, read_only=True)
         cursor = conn.cursor()
 
         cursor.execute("SELECT id, name, quality, slot, item_type, req_level, is_forever_content FROM items")
@@ -922,7 +962,7 @@ class WoWForeverDB:
 
     def search_dungeons(self, query: Optional[str] = None, level: Optional[int] = None, limit: int = 5) -> Tuple[List[Dict[str, Any]], Optional[str]]:
         """Search dungeons by level range or name/zone with strict relevance and typo-tolerance."""
-        conn = get_connection(self.db_path)
+        conn = get_connection(self.db_path, read_only=True)
         cursor = conn.cursor()
         did_you_mean = None
 
@@ -1004,7 +1044,7 @@ class WoWForeverDB:
         cleaned = clean_query(query)
         q_raw = query.strip().lower()
         q_clean = cleaned.lower()
-        conn = get_connection(self.db_path)
+        conn = get_connection(self.db_path, read_only=True)
         cursor = conn.cursor()
         did_you_mean = None
         rows = []
@@ -1058,14 +1098,11 @@ class WoWForeverDB:
             if len(tokens) >= 2:
                 clauses = " AND ".join(["name LIKE ?" for _ in tokens])
                 params = [f"%{t}%" for t in tokens] + [limit]
-                cursor.execute(f"""
-                    SELECT * FROM items
-                    WHERE {clauses}
-                    ORDER BY 
-                        CASE WHEN forever_status = 'live' THEN 0 ELSE 1 END,
-                        is_forever_content DESC, quality DESC
-                    LIMIT ?
-                """, params)
+                sql = (
+                    "SELECT * FROM items WHERE " + clauses +
+                    " ORDER BY CASE WHEN forever_status = 'live' THEN 0 ELSE 1 END, is_forever_content DESC, quality DESC LIMIT ?"
+                )
+                cursor.execute(sql, params)
                 rows = cursor.fetchall()
 
         # 4. Fuzzy fallback
@@ -1084,7 +1121,7 @@ class WoWForeverDB:
         cleaned = clean_query(query)
         q_raw = query.strip().lower()
         q_clean = cleaned.lower()
-        conn = get_connection(self.db_path)
+        conn = get_connection(self.db_path, read_only=True)
         cursor = conn.cursor()
         did_you_mean = None
         rows = []
@@ -1124,14 +1161,11 @@ class WoWForeverDB:
             if len(tokens) >= 2:
                 clauses = " AND ".join(["title LIKE ?" for _ in tokens])
                 params = [f"%{t}%" for t in tokens] + [limit]
-                cursor.execute(f"""
-                    SELECT * FROM quests
-                    WHERE {clauses}
-                    ORDER BY 
-                        CASE WHEN forever_status = 'live' THEN 0 ELSE 1 END,
-                        is_forever_content DESC, quest_level ASC
-                    LIMIT ?
-                """, params)
+                sql = (
+                    "SELECT * FROM quests WHERE " + clauses +
+                    " ORDER BY CASE WHEN forever_status = 'live' THEN 0 ELSE 1 END, is_forever_content DESC, quest_level ASC LIMIT ?"
+                )
+                cursor.execute(sql, params)
                 rows = cursor.fetchall()
 
         # 4. Fuzzy fallback
@@ -1154,7 +1188,7 @@ class WoWForeverDB:
         cleaned = clean_query(query)
         q_raw = query.strip().lower()
         q_clean = cleaned.lower()
-        conn = get_connection(self.db_path)
+        conn = get_connection(self.db_path, read_only=True)
         cursor = conn.cursor()
         did_you_mean = None
         rows = []
@@ -1194,14 +1228,11 @@ class WoWForeverDB:
             if len(tokens) >= 2:
                 clauses = " AND ".join(["name LIKE ?" for _ in tokens])
                 params = [f"%{t}%" for t in tokens] + [limit]
-                cursor.execute(f"""
-                    SELECT * FROM creatures
-                    WHERE {clauses}
-                    ORDER BY 
-                        CASE WHEN forever_status = 'live' THEN 0 ELSE 1 END,
-                        is_forever_content DESC, level_max DESC
-                    LIMIT ?
-                """, params)
+                sql = (
+                    "SELECT * FROM creatures WHERE " + clauses +
+                    " ORDER BY CASE WHEN forever_status = 'live' THEN 0 ELSE 1 END, is_forever_content DESC, level_max DESC LIMIT ?"
+                )
+                cursor.execute(sql, params)
                 rows = cursor.fetchall()
 
         # 4. Fuzzy fallback
@@ -1245,7 +1276,7 @@ class WoWForeverDB:
         q_raw = item_name.strip().lower()
         q_clean = cleaned.lower()
         alias_target = ZONE_ALIASES.get(q_clean, cleaned)
-        conn = get_connection(self.db_path)
+        conn = get_connection(self.db_path, read_only=True)
         cursor = conn.cursor()
         did_you_mean = None
 
@@ -1276,12 +1307,8 @@ class WoWForeverDB:
             if len(tokens) >= 2:
                 clauses = " AND ".join(["(item_name || ' ' || zone || ' ' || npc_name) LIKE ?" for _ in tokens])
                 params = [f"%{t}%" for t in tokens] + [limit]
-                cursor.execute(f"""
-                    SELECT * FROM vendors
-                    WHERE {clauses}
-                    ORDER BY cost_copper ASC
-                    LIMIT ?
-                """, params)
+                sql = "SELECT * FROM vendors WHERE " + clauses + " ORDER BY cost_copper ASC LIMIT ?"
+                cursor.execute(sql, params)
                 rows = cursor.fetchall()
 
         if not rows and self.vendor_items:
@@ -1300,7 +1327,7 @@ class WoWForeverDB:
         q_raw = query.strip().lower()
         q_clean = cleaned.lower()
         alias_target = ZONE_ALIASES.get(q_clean, cleaned)
-        conn = get_connection(self.db_path)
+        conn = get_connection(self.db_path, read_only=True)
         cursor = conn.cursor()
         did_you_mean = None
         rows = []
@@ -1371,7 +1398,7 @@ class WoWForeverDB:
         if not raw_q and not cls_norm:
             return [], None
 
-        conn = get_connection(self.db_path)
+        conn = get_connection(self.db_path, read_only=True)
         cursor = conn.cursor()
         rows = []
         did_you_mean = None
@@ -1444,7 +1471,7 @@ class WoWForeverDB:
         if not raw_q and not cls_norm:
             return [], None
 
-        conn = get_connection(self.db_path)
+        conn = get_connection(self.db_path, read_only=True)
         cursor = conn.cursor()
         rows = []
         did_you_mean = None
@@ -1498,7 +1525,7 @@ class WoWForeverDB:
         if not raw_q:
             return [], None
 
-        conn = get_connection(self.db_path)
+        conn = get_connection(self.db_path, read_only=True)
         cursor = conn.cursor()
         rows = []
         did_you_mean = None
@@ -1525,15 +1552,25 @@ class WoWForeverDB:
         return results, did_you_mean
 
     def get_database_stats(self) -> Dict[str, int]:
-        conn = get_connection(self.db_path)
+        conn = get_connection(self.db_path, read_only=True)
         cursor = conn.cursor()
         stats = {}
-        for table in ["items", "quests", "creatures", "vendors", "flightpaths", "dungeons", "spells", "armor_sets", "achievements"]:
+        static_queries = {
+            "items": ("SELECT COUNT(*) FROM items", "SELECT COUNT(*) FROM items WHERE is_forever_content = 1"),
+            "quests": ("SELECT COUNT(*) FROM quests", "SELECT COUNT(*) FROM quests WHERE is_forever_content = 1"),
+            "creatures": ("SELECT COUNT(*) FROM creatures", "SELECT COUNT(*) FROM creatures WHERE is_forever_content = 1"),
+            "vendors": ("SELECT COUNT(*) FROM vendors", "SELECT COUNT(*) FROM vendors WHERE is_forever_content = 1"),
+            "flightpaths": ("SELECT COUNT(*) FROM flightpaths", "SELECT COUNT(*) FROM flightpaths WHERE is_forever_content = 1"),
+            "dungeons": ("SELECT COUNT(*) FROM dungeons", "SELECT COUNT(*) FROM dungeons WHERE is_forever_content = 1"),
+            "spells": ("SELECT COUNT(*) FROM spells", "SELECT COUNT(*) FROM spells WHERE is_forever_content = 1"),
+            "armor_sets": ("SELECT COUNT(*) FROM armor_sets", "SELECT COUNT(*) FROM armor_sets WHERE is_forever_content = 1"),
+            "achievements": ("SELECT COUNT(*) FROM achievements", "SELECT COUNT(*) FROM achievements WHERE is_forever_content = 1"),
+        }
+        for table, (q_all, q_for) in static_queries.items():
             try:
-                cursor.execute(f"SELECT COUNT(*) FROM {table}")
+                cursor.execute(q_all)
                 stats[table] = cursor.fetchone()[0]
-
-                cursor.execute(f"SELECT COUNT(*) FROM {table} WHERE is_forever_content = 1")
+                cursor.execute(q_for)
                 stats[f"{table}_forever"] = cursor.fetchone()[0]
             except Exception:
                 stats[table] = 0
@@ -1550,7 +1587,7 @@ class WoWForeverDB:
             return None
 
         zname = zone_info["name"]
-        conn = get_connection(self.db_path)
+        conn = get_connection(self.db_path, read_only=True)
         cursor = conn.cursor()
 
         # Query flight paths in this zone

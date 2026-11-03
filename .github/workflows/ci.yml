@@ -81,3 +81,8 @@ jobs:
       - name: 🛡️ Suite 14 — White-Hat Security Hardening & Concurrency Stress Test
         run: python -m unittest tests/test_whitehat_security_stress_test.py
 
+      - name: 🔒 Suite 15 — Coder Security Audit & Fail-Safe Verification
+        run: |
+          python scripts/security_audit_and_failsafes.py
+          python -m unittest tests/test_security_audit_and_failsafes.py
+
