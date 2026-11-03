@@ -2574,7 +2574,10 @@ DISENCHANT_MATERIALS: Dict[str, Dict[str, Any]] = {
 def calculate_disenchant_table(item_level: int, quality_str: str, is_weapon: bool = False) -> List[Dict[str, Any]]:
     """Calculates authentic Blizzard 1.12.1 / VMaNGOS disenchant yield probabilities."""
     q = (quality_str or "").lower()
-    lvl = max(5, min(item_level, 65))
+    try:
+        lvl = max(5, min(int(item_level or 5), 65))
+    except Exception:
+        lvl = 5
     yields = []
 
     if q in ("poor", "grey", "common", "white", "legendary", "artifact"):
@@ -4621,9 +4624,21 @@ def get_world_events_info(event_name: Optional[str] = None) -> Dict[str, Any]:
 # -------------------------------------------------------------
 def calculate_gdkp(pot: int, cut_pct: int = 10, raiders: int = 40, tanks: int = 0, tank_bonus_pct: int = 2) -> Dict[str, Any]:
     """Calculates GDKP pot splits, organizer cuts, tank incentives, and raider payouts."""
+    try:
+        pot = max(0, int(pot))
+        cut_pct = max(0, min(100, int(cut_pct)))
+        raiders = max(1, min(100, int(raiders)))
+        tanks = max(0, min(raiders, int(tanks)))
+        tank_bonus_pct = max(0, min(50, int(tank_bonus_pct)))
+    except Exception:
+        pot, cut_pct, raiders, tanks, tank_bonus_pct = 0, 10, 40, 0, 2
+
     organizer_cut = int(pot * (cut_pct / 100.0))
     tank_pot = int(pot * (tank_bonus_pct / 100.0)) * tanks
-    net_pot = pot - organizer_cut - tank_pot
+    # Enforce total deductions cannot exceed gross pot
+    if organizer_cut + tank_pot > pot:
+        tank_pot = max(0, pot - organizer_cut)
+    net_pot = max(0, pot - organizer_cut - tank_pot)
     raider_payout = net_pot // raiders if raiders > 0 else 0
     tank_total_payout = raider_payout + (int(pot * (tank_bonus_pct / 100.0))) if tanks > 0 else 0
 
@@ -4650,6 +4665,11 @@ def calculate_glancing_penalty(weapon_skill: int, boss_defense: int = 315) -> fl
     At 300 skill vs 315 defense: average penalty is 35%.
     At 305+ skill: penalty scales down to the hard floor of 5%.
     """
+    try:
+        weapon_skill = int(weapon_skill)
+        boss_defense = int(boss_defense)
+    except Exception:
+        weapon_skill, boss_defense = 300, 315
     delta = boss_defense - weapon_skill
     if delta <= 7:
         return 5.0
@@ -5990,7 +6010,11 @@ RESIST_SCHOOLS: Dict[str, Dict[str, Any]] = {
 
 def calculate_resistance_mitigation(school_query: str, current_val: int = 0, role: str = "dps") -> Dict[str, Any]:
     """Calculates resistance mitigation tiers, average damage resisted %, and cap deficiencies."""
-    q = school_query.lower().strip()
+    try:
+        current_val = max(0, int(current_val or 0))
+    except Exception:
+        current_val = 0
+    q = (school_query or "fire").lower().strip()
     key = "fire"
     for k in RESIST_SCHOOLS.keys():
         if k in q:

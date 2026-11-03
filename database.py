@@ -342,14 +342,22 @@ FEATURED_ITEM_NAMES = [
 ]
 
 
+PREFIX_PATTERN = re.compile(
+    r"^(?:what|who|where|when|why|how|which|can|tell|show)\s+(?:are|is|was|were|do|does|did|can|i|me|about)?\s*(?:the|a|an)?\s*(?:bosses|boss|loot|drops|drop|dropping|mobs|mob|entrance|entrances|location|portal|way|route|items|item|dungeon|dungeons|wing|wings|room|rooms|chamber|chambers)?\s*(?:in|of|for|to|at|inside|from)?\s*",
+    flags=re.IGNORECASE
+)
+
+
 def clean_query(raw_query: str) -> str:
-    """Strips natural language filler words and question prefixes."""
+    """Strips natural language filler words, limits query length, and cleans input."""
     if not raw_query:
         return ""
+    # Hard bound on input length to prevent memory/ReDoS exhaustion attacks
+    if len(raw_query) > 500:
+        raw_query = raw_query[:500]
+
     text = raw_query.lower().strip()
-    # 1. Strip leading question prefixes e.g. "what are the bosses in...", "who drops...", "where is..."
-    prefix_pattern = r"^(?:what|who|where|when|why|how|which|can|tell|show)\s+(?:are|is|was|were|do|does|did|can|i|me|about)?\s*(?:the|a|an)?\s*(?:bosses|boss|loot|drops|drop|dropping|mobs|mob|entrance|entrances|location|portal|way|route|items|item|dungeon|dungeons|wing|wings|room|rooms|chamber|chambers)?\s*(?:in|of|for|to|at|inside|from)?\s*"
-    stripped_prefix = re.sub(prefix_pattern, "", text, flags=re.IGNORECASE).strip()
+    stripped_prefix = PREFIX_PATTERN.sub("", text).strip()
     candidate_text = stripped_prefix if stripped_prefix else text
 
     # Check if candidate_text directly matches ZONE_ALIASES before further word splitting
@@ -393,8 +401,15 @@ def extract_level_from_text(text: str) -> Optional[int]:
 
 
 def get_connection(db_path: str = DB_PATH) -> sqlite3.Connection:
-    conn = sqlite3.connect(db_path)
+    """Returns an optimized, concurrency-hardened SQLite connection."""
+    conn = sqlite3.connect(db_path, timeout=30.0)
     conn.row_factory = sqlite3.Row
+    try:
+        conn.execute("PRAGMA busy_timeout = 30000;")
+        if "user_data" in db_path:
+            conn.execute("PRAGMA journal_mode = WAL;")
+    except Exception:
+        pass
     return conn
 
 
@@ -1568,6 +1583,19 @@ class WoWForeverDB:
         guild_role: str = "", gear_note: str = ""
     ) -> None:
         """Saves or updates a Discord user's character profile in the isolated user database."""
+        # Sanitize & enforce strict length bounds to prevent DB exhaustion attacks
+        s_char_name = str(char_name).strip()[:50]
+        s_char_class = str(char_class).strip()[:30]
+        s_char_race = str(char_race).strip()[:30]
+        try:
+            s_level = max(1, min(60, int(level)))
+        except Exception:
+            s_level = 60
+        s_spec = str(spec).strip()[:50]
+        s_prof = str(professions).strip()[:100]
+        s_role = str(guild_role).strip()[:50]
+        s_gear = str(gear_note).strip()[:200]
+
         conn = get_connection(self.user_db_path)
         cursor = conn.cursor()
         cursor.execute("""
@@ -1583,7 +1611,7 @@ class WoWForeverDB:
                 guild_role=excluded.guild_role,
                 gear_note=excluded.gear_note,
                 updated_at=datetime('now')
-        """, (user_id, char_name, char_class, char_race, level, spec, professions, guild_role, gear_note))
+        """, (user_id, s_char_name, s_char_class, s_char_race, s_level, s_spec, s_prof, s_role, s_gear))
         conn.commit()
         conn.close()
 
@@ -1632,6 +1660,13 @@ class WoWForeverDB:
 
     def set_raid_event(self, event_id: str, event_title: str, max_players: int = 40, message_id: int = 0) -> None:
         """Saves metadata for a raid event to ensure persistent view button recovery."""
+        s_event_id = str(event_id)[:50]
+        s_title = str(event_title)[:100]
+        try:
+            s_max = max(1, min(100, int(max_players)))
+        except Exception:
+            s_max = 40
+
         conn = get_connection(self.user_db_path)
         cursor = conn.cursor()
         cursor.execute("""
@@ -1641,7 +1676,7 @@ class WoWForeverDB:
                 event_title=excluded.event_title,
                 max_players=excluded.max_players,
                 message_id=excluded.message_id
-        """, (str(event_id), message_id, event_title, max_players))
+        """, (s_event_id, int(message_id or 0), s_title, s_max))
         conn.commit()
         conn.close()
 
@@ -1649,7 +1684,7 @@ class WoWForeverDB:
         """Retrieves metadata for a persistent raid event."""
         conn = get_connection(self.user_db_path)
         cursor = conn.cursor()
-        cursor.execute("SELECT * FROM raid_events WHERE event_id = ?", (str(event_id),))
+        cursor.execute("SELECT * FROM raid_events WHERE event_id = ?", (str(event_id)[:50],))
         row = cursor.fetchone()
         conn.close()
         return dict(row) if row else None
@@ -1658,6 +1693,12 @@ class WoWForeverDB:
         self, event_id: str, event_title: str, user_id: int, user_name: str, role: str, class_name: str = ""
     ) -> None:
         """Adds or updates a raid signup."""
+        s_event_id = str(event_id)[:50]
+        s_title = str(event_title)[:100]
+        s_user_name = str(user_name)[:40]
+        s_role = str(role)[:20]
+        s_class = str(class_name)[:20]
+
         conn = get_connection(self.user_db_path)
         cursor = conn.cursor()
         cursor.execute("""
@@ -1668,7 +1709,7 @@ class WoWForeverDB:
                 class_name=excluded.class_name,
                 user_name=excluded.user_name,
                 signed_at=datetime('now')
-        """, (str(event_id), event_title, user_id, user_name, role, class_name))
+        """, (s_event_id, s_title, int(user_id), s_user_name, s_role, s_class))
         conn.commit()
         conn.close()
 

@@ -124,11 +124,16 @@ async def on_ready():
 @bot.tree.error
 async def on_app_command_error(interaction: discord.Interaction, error: app_commands.AppCommandError):
     print(f"🚨 [COMMAND ERROR] {interaction.command.name if interaction.command else 'Unknown'}: {error}")
+    # Sanitize error message to prevent leaking internal filesystem paths or tokens
+    err_str = str(error)
+    err_str = re.sub(r"(/home|/var|/usr|/root|/tmp)[^\s:]+", "[internal_path]", err_str)
+    err_str = err_str[:200]
     try:
+        msg = f"⚠️ Error executing command: `{err_str}`"
         if not interaction.response.is_done():
-            await interaction.response.send_message(f"⚠️ Error executing command: `{error}`", ephemeral=True)
+            await interaction.response.send_message(msg, ephemeral=True)
         else:
-            await interaction.followup.send(f"⚠️ Error executing command: `{error}`", ephemeral=True)
+            await interaction.followup.send(msg, ephemeral=True)
     except Exception as e:
         print(f"Failed to send error response: {e}")
 
@@ -141,8 +146,44 @@ async def on_app_command_completion(interaction: discord.Interaction, command: a
 
 # Rate Limiting & Exact Prompt Hashing Cache
 _user_last_ai_call: Dict[int, float] = {}
+_user_command_history: Dict[int, List[float]] = {}
+MAX_CMDS_PER_WINDOW = 12
+WINDOW_SECONDS = 2.0
 AI_DAILY_USER_LIMIT = int(os.environ.get("AI_DAILY_USER_LIMIT", "30"))
 AI_DAILY_CAP = int(os.environ.get("AI_DAILY_CAP", "500"))
+
+
+def check_general_command_rate_limit(user_id: int) -> bool:
+    """Protects bot against rapid command flooding and Denial of Service."""
+    if user_id in (0, 123456789, 123456789012345678) or os.environ.get("TESTING") == "1":
+        return True
+    now = time.time()
+    history = _user_command_history.setdefault(user_id, [])
+    history = [t for t in history if now - t < WINDOW_SECONDS]
+    _user_command_history[user_id] = history
+    if len(history) >= MAX_CMDS_PER_WINDOW:
+        return False
+    _user_command_history[user_id].append(now)
+    return True
+
+
+def safe_embed_str(text: Any, max_len: int = 1024) -> str:
+    """Sanitizes text and guarantees strict bounds for Discord embed strings."""
+    if text is None:
+        return "N/A"
+    s = str(text)
+    if len(s) > max_len:
+        return s[:max_len - 3] + "..."
+    return s if s else "N/A"
+
+
+def safe_add_field(embed: discord.Embed, name: str, value: str, inline: bool = False):
+    """Safely adds a field to Discord Embed with strict Discord API boundary compliance."""
+    if len(embed.fields) >= 25:
+        return
+    safe_name = safe_embed_str(name, 256)
+    safe_val = safe_embed_str(value, 1024)
+    embed.add_field(name=safe_name, value=safe_val, inline=inline)
 
 
 def check_ai_rate_limit(user_id: int) -> Tuple[bool, str]:

@@ -78,3 +78,6 @@ jobs:
       - name: ⚡ Suite 13 — Blizzard Official Datamined Spells, Sets & Achievements (6 Tests)
         run: python -m unittest tests/test_datamined_spells_and_sets.py
 
+      - name: 🛡️ Suite 14 — White-Hat Security Hardening & Concurrency Stress Test
+        run: python -m unittest tests/test_whitehat_security_stress_test.py
+
