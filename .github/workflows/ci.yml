@@ -1,0 +1,88 @@
+name: 🧪 Foreverbot Continuous Integration & QA Suite
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+  workflow_dispatch:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  test:
+    name: Test & Audit Suite (Python ${{ matrix.python-version }})
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ["3.10", "3.11", "3.12"]
+
+    steps:
+      - name: 📥 Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: 🐍 Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+          cache: "pip"
+
+      - name: 📦 Install Python Dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: 🛡️ Verify SQLite Database Integrity
+        run: |
+          python -c "import sqlite3; conn = sqlite3.connect('wow_forever.db'); res = conn.execute('PRAGMA integrity_check').fetchone()[0]; assert res == 'ok', f'Database corruption: {res}'; print('✅ PRAGMA integrity_check = OK')"
+
+      - name: 🔍 Suite 1 — Deep Information Authenticity & Ground Truth Audit (1,675 Tests)
+        run: python tests/test_deep_information_authenticity_audit.py
+
+      - name: ⚡ Suite 2 — Ultra-Scale Concurrency, View State Machines & Fuzz (2,393 Tests)
+        run: python tests/test_ultra_concurrency_and_fuzz.py
+
+      - name: ⚔️ Suite 3 — Direct Slash Command Authenticity & Privacy (742 Tests)
+        run: python tests/test_slash_commands_authenticity.py
+
+      - name: 🔬 Suite 4 — Massive-Scale QA & Mitigation Math (3,700 Tests)
+        run: python tests/test_massive_scale_suite.py
+
+      - name: 🎲 Suite 5 — All Variables & Permutations Matrix (944 Tests)
+        run: python tests/test_all_variables_permutations.py
+
+      - name: 📖 Suite 6 — How-To Documentation & Prompts (115 Tests)
+        run: python tests/test_howto_guide_suite.py
+
+      - name: 🛠️ Suite 7 — Deep Database & Schema Quality (81 Tests)
+        run: python tests/test_deep_quality.py
+
+      - name: 🎯 Suite 8 — Core Functionality Quality Suite (27 Tests)
+        run: python tests/test_quality_suite.py
+
+      - name: ⚡ Suite 9 — Sub-Second Latency Benchmark & Knowledge Verification (1,178 Tests)
+        run: python tests/test_subsecond_knowledge_benchmark.py
+
+      - name: 🎲 Suite 10 — Random Catalog Verification & Quality Sampling (138 Tests)
+        run: python tests/test_random_item_catalog_verification.py
+
+      - name: 🔗 Suite 11 — Combo Matches & App Integrity Audit (8 Deep Sections)
+        run: python -m unittest tests/test_combo_matches_and_data_integrity.py
+
+      - name: 🚀 Suite 12 — 20,000-Query Verification Benchmark Sweep (20,000 Verified Combos)
+        run: python tests/test_20k_verified_queries.py
+
+      - name: ⚡ Suite 13 — Blizzard Official Datamined Spells, Sets & Achievements (6 Tests)
+        run: python -m unittest tests/test_datamined_spells_and_sets.py
+
+      - name: 🛡️ Suite 14 — White-Hat Security Hardening & Concurrency Stress Test
+        run: python -m unittest tests/test_whitehat_security_stress_test.py
+
+      - name: 🔒 Suite 15 — Coder Security Audit & Fail-Safe Verification
+        run: |
+          python scripts/security_audit_and_failsafes.py
+          python -m unittest tests/test_security_audit_and_failsafes.py
+

@@ -1,0 +1,72 @@
+name: 📸 Report Inaccurate or Failed Bot Response
+description: Submit the question asked, the bot's failed answer, and screenshots from Discord
+title: "[Failed Response]: <brief summary of question/command>"
+labels: ["bug", "alpha-feedback", "failed-response"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        ### 🧪 Thank you for helping test Foreverbot during Open Alpha!
+        If Foreverbot returned an incorrect drop rate, wrong zone directions, faulty level recommendation, calculation error, or unhelpful response, please let us know below. **Screenshots from Discord are hugely appreciated!**
+
+  - type: input
+    id: command_or_question
+    attributes:
+      label: 1. Question or Slash Command Asked
+      description: What exact command or prompt did you enter in Discord?
+      placeholder: "e.g. /dungeons query: 45 or /ask what are the best pre-raid daggers for rogue?"
+    validations:
+      required: true
+
+  - type: textarea
+    id: failed_response
+    attributes:
+      label: 2. Foreverbot's Response (What did the bot say?)
+      description: Copy and paste the text/embed response Foreverbot gave you, or describe what was wrong.
+      placeholder: "Foreverbot returned: '...'"
+    validations:
+      required: true
+
+  - type: textarea
+    id: expected_response
+    attributes:
+      label: 3. Expected / Authentic Response
+      description: "What should the authentic answer, formula, level bracket, or item drop rate have been according to World of Warcraft: Forever?"
+      placeholder: "e.g. Zul'Farrak is recommended for level 45, but the bot recommended..."
+    validations:
+      required: false
+
+  - type: textarea
+    id: screenshots
+    attributes:
+      label: 4. Discord Screenshots
+      description: |
+        **Please drag and drop or paste (Ctrl+V) screenshots of your Discord chat here.**
+        Screenshots showing the question and the full embed response help us debug layout, ephemeral status, and data logic instantly!
+      placeholder: "Drag and drop images or paste clipboard here..."
+    validations:
+      required: false
+
+  - type: dropdown
+    id: environment
+    attributes:
+      label: 5. Bot Environment
+      description: How are you running Foreverbot?
+      options:
+        - "Invited to my Discord server from community link"
+        - "Self-hosted on Linux"
+        - "Self-hosted on macOS"
+        - "Self-hosted on Windows"
+        - "Other / Testing in DM"
+    validations:
+      required: false
+
+  - type: checkboxes
+    id: checks
+    attributes:
+      label: Verification Checklist
+      options:
+        - label: "I have provided the exact slash command or question text"
+          required: true
+        - label: "I included a screenshot if possible"
+          required: false
