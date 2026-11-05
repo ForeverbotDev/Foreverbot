@@ -199,7 +199,9 @@ class TestPlayerSimulationWalkthrough(unittest.TestCase):
 
     def test_10_release_package_integrity(self):
         """Verify release zip archive exists, is valid, and matches package standards."""
-        zip_path = os.path.join(DIST_DIR, "ForeverGuide-v1.0.0.zip")
+        zips = [f for f in os.listdir(DIST_DIR) if f.startswith("ForeverGuide") and f.endswith(".zip")]
+        self.assertGreater(len(zips), 0, "No ForeverGuide zip found in dist/")
+        zip_path = os.path.join(DIST_DIR, zips[0])
         self.assertTrue(os.path.exists(zip_path), f"Release zip missing: {zip_path}")
 
         with zipfile.ZipFile(zip_path, 'r') as zf:

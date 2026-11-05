@@ -3513,7 +3513,7 @@ EventFrame:SetScript("OnEvent", function(self, event, arg1, ...)
     FG:CreateSparkFrame()
     FG:CreateMinimapButton()
 
-    print("|cffcf52ffForever Guide|r |cffdf80ff(Sparky)|r loaded! Type |cffdf80ff/sparky|r to open Codex or |cffdf80ff/sparky help|r for commands.")
+    print("|cffcf52ffForever Guide|r |cffdf80ff(Sparky)|r |cffff8080[Pre-Alpha v0.1.0]|r loaded! Type |cffdf80ff/sparky|r to open Codex or |cffdf80ff/sparky help|r for commands.")
 
   elseif event == "PLAYER_ENTERING_WORLD" then
     -- Guarantee any stray cursor dragging state is stopped on world load
