@@ -162,14 +162,14 @@ def export_items(cursor) -> str:
 
 def export_quests(cursor) -> str:
     cursor.execute("""
-        SELECT id, title, req_level, quest_level, faction, zone, start_npc, objectives, rewards, pro_tip, is_forever_content
+        SELECT id, title, req_level, quest_level, faction, zone, start_npc, objectives, rewards, pro_tip, is_forever_content, details, completion_text
         FROM quests
-        ORDER BY quest_level ASC, title ASC
+        ORDER BY title ASC
     """)
     rows = cursor.fetchall()
     lua = ["ForeverGuide_Data.Quests = {"]
     for r in rows:
-        q_id, title, req_lvl, q_lvl, faction, zone, npc, objs, rewards, tip, is_forever = r
+        q_id, title, req_lvl, q_lvl, faction, zone, npc, objs, rewards, tip, is_forever, details, completion = r
         lua.append(f"  [{q_id}] = {{")
         lua.append(f"    id = {q_id},")
         lua.append(f"    title = {escape_lua_str(title)},")
@@ -178,7 +178,9 @@ def export_quests(cursor) -> str:
         lua.append(f"    faction = {escape_lua_str(faction or 'Both')},")
         lua.append(f"    zone = {escape_lua_str(zone or '')},")
         lua.append(f"    npc = {escape_lua_str(npc or '')},")
+        lua.append(f"    details = {escape_lua_str(details or '')},")
         lua.append(f"    objectives = {escape_lua_str(objs or '')},")
+        lua.append(f"    completion = {escape_lua_str(completion or '')},")
         lua.append(f"    rewards = {escape_lua_str(rewards or '')},")
         lua.append(f"    tip = {escape_lua_str(tip or '')},")
         lua.append(f"    isForever = {'true' if is_forever else 'false'},")

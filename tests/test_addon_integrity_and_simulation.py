@@ -180,7 +180,39 @@ class TestAddonIntegrityAndSimulation(unittest.TestCase):
         self.assertNotIn("datamine", data_code.lower(), "Datamine reference found in ForeverGuide_Data.lua")
         self.assertNotIn("alpha patch notes", data_code.lower(), "Alpha patch notes found in ForeverGuide_Data.lua")
 
+    def test_07_dolphin_folder_structure_and_alphabetical_order(self):
+        """Verify Dolphin KDE file-manager folder navigation, breadcrumbs, and strict A-Z alphabetical sorting."""
+        with open(LUA_FILE, "r", encoding="utf-8") as f:
+            code = f.read()
+
+        # Navigation structures
+        self.assertIn("FG.FolderTree", code, "FG.FolderTree missing")
+        self.assertIn("FG:NavigateToFolder", code, "FG:NavigateToFolder missing")
+        self.assertIn("FG:NavigateUpFolder", code, "FG:NavigateUpFolder missing")
+        self.assertIn("FG:UpdateDolphinBreadcrumbs", code, "FG:UpdateDolphinBreadcrumbs missing")
+        self.assertIn("ForeverGuideDolphinBar", code, "Dolphin toolbar missing")
+
+        # Alphabetical sorting rule verification
+        self.assertIn("table.sort(matches, function(a, b)", code, "Alphabetical table.sort missing")
+        self.assertIn("nameA:lower() < nameB:lower()", code, "Case-insensitive A-Z alphabetical ordering missing")
+
+    def test_08_full_quest_story_and_completion_dialogue(self):
+        """Verify full quest story, lore, objectives, and turn-in completion dialogs are exported and rendered."""
+        with open(DATA_FILE, "r", encoding="utf-8") as f:
+            data_code = f.read()
+
+        self.assertIn("details =", data_code, "Quest details column missing from exported data")
+        self.assertIn("completion =", data_code, "Quest completion column missing from exported data")
+
+        # Detail panel rendering
+        with open(LUA_FILE, "r", encoding="utf-8") as f:
+            code = f.read()
+
+        self.assertIn('AddSection("QUEST STORY & LORE")', code, "QUEST STORY & LORE section missing in detail panel")
+        self.assertIn('AddSection("COMPLETION DIALOG")', code, "COMPLETION DIALOG section missing in detail panel")
+
 
 if __name__ == "__main__":
     unittest.main()
+
 
