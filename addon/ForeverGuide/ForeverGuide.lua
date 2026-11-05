@@ -161,6 +161,15 @@ SlashCmdList["FOREVERGUIDE"] = function(msg)
       FG:ApplyTextSharpening()
     end
 
+  -- Nearby Area Intel Radar (/spark nearby)
+  elseif cmd == "nearby" or cmd == "radar" or cmd == "local" or cmd == "area" then
+    if not FG.CodexWindow then FG:CreateCodexWindow() end
+    FG.CodexWindow:Show()
+    FG:SetActiveCategory("nearby")
+    if rest ~= "" and ForeverGuideSearchBox then
+      ForeverGuideSearchBox:SetText(rest)
+    end
+
   -- 2. Items & Equipment (/spark item <query>)
   elseif cmd == "item" or cmd == "find" or cmd == "search" then
     if rest == "" then
@@ -1354,6 +1363,468 @@ function FG:ShowCurrentZoneIntel()
 end
 
 --------------------------------------------------------------------------------
+-- Virtual Scrolling & Codex Row Pool System
+--------------------------------------------------------------------------------
+function FG:FormatNumber(n)
+  if not n then return "0" end
+  local str = tostring(n)
+  return str:reverse():gsub("(%d%d%d)", "%1,"):reverse():gsub("^,", "")
+end
+
+function FG:GetPlayerZoneInfo()
+  local zone = (GetRealZoneText and GetRealZoneText()) or (GetZoneText and GetZoneText()) or ""
+  local sub = (GetSubZoneText and GetSubZoneText()) or (GetMinimapZoneText and GetMinimapZoneText()) or ""
+  if (zone == "" or zone == "Azeroth") and sub ~= "" and FG.Data and FG.Data.Subzones then
+    local parent = FG.Data.Subzones[sub:lower()]
+    if parent then zone = parent end
+  end
+  if zone == "" then
+    zone = FG.lastKnownZone or "Elwynn Forest"
+  else
+    FG.lastKnownZone = zone
+  end
+  return zone, sub
+end
+
+function FG:CreateCodexRowButton(parent, i)
+  local btn = CreateFrame("Button", "ForeverGuideRowButton" .. i, parent, "BackdropTemplate")
+  btn:SetSize(548, 50)
+  MakePixelSharp(btn)
+
+  btn:SetBackdrop({
+    bgFile = "Interface\\Buttons\\WHITE8X8",
+    edgeFile = "Interface\\Tooltips\\UI-Tooltip-Border",
+    tile = false,
+    tileSize = 12,
+    edgeSize = 10,
+    insets = { left = 3, right = 3, top = 3, bottom = 3 },
+  })
+  btn:SetBackdropColor(0.10, 0.12, 0.16, 0.90)
+  btn:SetBackdropBorderColor(0.18, 0.24, 0.33, 0.70)
+
+  local iconFrame = CreateFrame("Frame", nil, btn, "BackdropTemplate")
+  iconFrame:SetSize(34, 34)
+  iconFrame:SetPoint("LEFT", btn, "LEFT", 8, 0)
+  MakePixelSharp(iconFrame)
+  iconFrame:SetBackdrop({
+    edgeFile = "Interface\\Tooltips\\UI-Tooltip-Border",
+    tile = false,
+    tileSize = 10,
+    edgeSize = 8,
+    insets = { left = 2, right = 2, top = 2, bottom = 2 },
+  })
+  iconFrame:SetBackdropBorderColor(0.4, 0.4, 0.5, 0.8)
+
+  local iconTex = iconFrame:CreateTexture(nil, "ARTWORK")
+  iconTex:SetPoint("TOPLEFT", iconFrame, "TOPLEFT", 2, -2)
+  iconTex:SetPoint("BOTTOMRIGHT", iconFrame, "BOTTOMRIGHT", -2, 2)
+  iconTex:SetTexCoord(0.08, 0.92, 0.08, 0.92)
+  btn.IconFrame = iconFrame
+  btn.Icon = iconTex
+
+  local titleText = btn:CreateFontString(nil, "OVERLAY", "GameFontHighlight")
+  titleText:SetPoint("TOPLEFT", btn, "TOPLEFT", 48, -7)
+  SharpenFontString(titleText, 13, "OUTLINE")
+  btn.Title = titleText
+
+  local subText = btn:CreateFontString(nil, "OVERLAY", "GameFontNormalSmall")
+  subText:SetPoint("TOPLEFT", titleText, "BOTTOMLEFT", 0, -3)
+  subText:SetWidth(400)
+  subText:SetJustifyH("LEFT")
+  SharpenFontString(subText, 11, "OUTLINE")
+  btn.Sub = subText
+
+  local hint = btn:CreateFontString(nil, "OVERLAY", "GameFontHighlightSmall")
+  hint:SetPoint("RIGHT", btn, "RIGHT", -12, 0)
+  hint:SetText("|cffdf80ffInspect >|r")
+  SharpenFontString(hint, 10, "OUTLINE")
+  btn.Hint = hint
+
+  return btn
+end
+
+function FG:ConfigureRowButton(btn, match)
+  if not match then return end
+  btn.match = match
+
+  if match.type == "folder" then
+    local folder = match.data
+    btn:SetHeight(50)
+    btn:SetBackdropColor(0.08, 0.11, 0.16, 0.95)
+    btn:SetBackdropBorderColor(0.24, 0.38, 0.58, 0.85)
+
+    if btn.IconFrame then
+      btn.IconFrame:Show()
+      btn.Icon:SetTexture("Interface\\Icons\\inv_misc_bag_08")
+      btn.IconFrame:SetBackdropBorderColor(0.3, 0.6, 0.9, 0.8)
+    end
+    btn.Title:ClearAllPoints()
+    btn.Title:SetPoint("TOPLEFT", btn, "TOPLEFT", 48, -7)
+    btn.Sub:ClearAllPoints()
+    btn.Sub:SetPoint("TOPLEFT", btn.Title, "BOTTOMLEFT", 0, -3)
+    btn.Sub:SetWidth(400)
+
+    btn.Title:SetText("|cff66ccff" .. folder.name .. "|r")
+    btn.Sub:SetText("|cff8899aa" .. (folder.desc or folder.count or "Folder") .. "|r")
+    btn.Hint:SetText("|cff33bbffOpen >|r")
+
+    btn:SetScript("OnEnter", function(self)
+      self:SetBackdropColor(0.14, 0.20, 0.30, 0.98)
+      self:SetBackdropBorderColor(0.40, 0.70, 1.0, 0.95)
+      GameTooltip:SetOwner(self, "ANCHOR_TOPLEFT")
+      GameTooltip:AddLine(folder.name, 0.4, 0.8, 1.0)
+      GameTooltip:AddLine(folder.desc or "Click to open folder", 0.8, 0.8, 0.8, true)
+      GameTooltip:Show()
+    end)
+    btn:SetScript("OnLeave", function(self)
+      self:SetBackdropColor(0.08, 0.11, 0.16, 0.95)
+      self:SetBackdropBorderColor(0.24, 0.38, 0.58, 0.85)
+      GameTooltip:Hide()
+    end)
+    btn:SetScript("OnClick", function()
+      FG:NavigateToFolder(folder.path)
+      FG:PlaySparkSound("shimmer")
+    end)
+
+  elseif match.type == "item" then
+    local item = match.data
+    btn:SetHeight(50)
+    btn:SetBackdropColor(0.10, 0.12, 0.16, 0.90)
+    btn:SetBackdropBorderColor(0.18, 0.24, 0.33, 0.70)
+    btn.Hint:SetText("|cffdf80ffInspect >|r")
+
+    if btn.IconFrame then
+      btn.IconFrame:Show()
+      local tex = (item.icon and item.icon ~= "") and ("Interface\\Icons\\" .. item.icon) or "Interface\\Icons\\inv_misc_questionmark"
+      btn.Icon:SetTexture(tex)
+      local q = item.quality or "Common"
+      if q == "Legendary" then btn.IconFrame:SetBackdropBorderColor(1.0, 0.5, 0.0, 1.0)
+      elseif q == "Epic" then btn.IconFrame:SetBackdropBorderColor(0.64, 0.21, 0.93, 1.0)
+      elseif q == "Rare" then btn.IconFrame:SetBackdropBorderColor(0.0, 0.44, 0.87, 1.0)
+      elseif q == "Uncommon" then btn.IconFrame:SetBackdropBorderColor(0.12, 1.0, 0.0, 1.0)
+      else btn.IconFrame:SetBackdropBorderColor(0.4, 0.4, 0.5, 0.8) end
+    end
+    btn.Title:ClearAllPoints()
+    btn.Title:SetPoint("TOPLEFT", btn, "TOPLEFT", 48, -7)
+    btn.Sub:ClearAllPoints()
+    btn.Sub:SetPoint("TOPLEFT", btn.Title, "BOTTOMLEFT", 0, -3)
+    btn.Sub:SetWidth(400)
+
+    local qColor = FG.QualityColors[item.quality] or "ffffffff"
+    local foreverTag = item.isForever and " |cffe6cc80[Forever]|r" or ""
+    local nearbyPrefix = match.isNearby and "|cff20ff20[Loot]|r " or ""
+    btn.Title:SetText(nearbyPrefix .. "|c" .. qColor .. item.name .. "|r" .. foreverTag .. " |cff8899aa(iLvl " .. item.ilvl .. ")|r")
+
+    local desc = (item.slot and item.slot ~= "" and (item.slot .. " - ") or "") .. (item.source or "World Drop")
+    if item.tip and item.tip ~= "" then desc = desc .. " |cff52b8ffNote:|r |cffb0c4de" .. item.tip .. "|r" end
+    btn.Sub:SetText(desc)
+
+    btn:SetScript("OnEnter", function(self)
+      self:SetBackdropColor(0.14, 0.18, 0.26, 0.95)
+      self:SetBackdropBorderColor(0.45, 0.25, 0.85, 0.90)
+      GameTooltip:SetOwner(self, "ANCHOR_TOPLEFT")
+      GameTooltip:SetItemByID(item.id)
+      if item.tip and item.tip ~= "" then
+        GameTooltip:AddLine(" ")
+        GameTooltip:AddLine("|cffcf52ffSpark Intel:|r " .. item.tip, 0.3, 0.8, 1.0, true)
+      end
+      GameTooltip:AddLine(" ")
+      GameTooltip:AddLine("|cffdf80ff<Left-Click>|r Inspect full item stats & sources", 0.85, 0.85, 0.85)
+      GameTooltip:AddLine("|cffdf80ff<Shift-Click>|r Share link to chat", 0.7, 0.7, 0.7)
+      GameTooltip:Show()
+    end)
+    btn:SetScript("OnLeave", function(self)
+      self:SetBackdropColor(0.10, 0.12, 0.16, 0.90)
+      self:SetBackdropBorderColor(0.18, 0.24, 0.33, 0.70)
+      GameTooltip:Hide()
+    end)
+    btn:SetScript("OnClick", function()
+      if IsShiftKeyDown() then
+        FG:LinkEntityToChat("item", item)
+      else
+        FG:ShowDetailPanel("item", item)
+      end
+      FG:PlaySparkSound("shimmer")
+    end)
+
+  elseif match.type == "quest" then
+    local qData = match.data
+    btn:SetHeight(50)
+    btn:SetBackdropColor(0.10, 0.12, 0.16, 0.90)
+    btn:SetBackdropBorderColor(0.18, 0.24, 0.33, 0.70)
+    btn.Hint:SetText("|cffdf80ffInspect >|r")
+
+    if btn.IconFrame then
+      btn.IconFrame:Show()
+      btn.Icon:SetTexture("Interface\\Icons\\inv_misc_book_07")
+      btn.IconFrame:SetBackdropBorderColor(0.9, 0.7, 0.2, 0.9)
+    end
+    btn.Title:ClearAllPoints()
+    btn.Title:SetPoint("TOPLEFT", btn, "TOPLEFT", 48, -7)
+    btn.Sub:ClearAllPoints()
+    btn.Sub:SetPoint("TOPLEFT", btn.Title, "BOTTOMLEFT", 0, -3)
+    btn.Sub:SetWidth(400)
+
+    local foreverTag = qData.isForever and " |cffe6cc80[Forever]|r" or ""
+    local nearbyPrefix = match.isNearby and "|cff20ff20[Quest]|r " or ""
+    btn.Title:SetText(nearbyPrefix .. "|cffffd24d" .. qData.title .. "|r" .. foreverTag .. " |cff20ff20(Lvl " .. qData.questLevel .. ")|r")
+    btn.Sub:SetText("|cff52b8ffZone:|r " .. (qData.zone or "Various") .. " |cff52b8ffStart:|r " .. (qData.npc or "Unknown"))
+
+    btn:SetScript("OnEnter", function(self)
+      self:SetBackdropColor(0.10, 0.18, 0.14, 0.95)
+      self:SetBackdropBorderColor(0.45, 0.25, 0.85, 0.90)
+      GameTooltip:SetOwner(self, "ANCHOR_TOPLEFT")
+      GameTooltip:AddLine(qData.title, 1, 0.85, 0.2)
+      GameTooltip:AddLine("Level: " .. qData.questLevel .. " (Req " .. qData.reqLevel .. ")", 1, 1, 1)
+      if qData.objectives and qData.objectives ~= "" then
+        GameTooltip:AddLine(" ")
+        GameTooltip:AddLine("Objectives: " .. qData.objectives, 0.8, 0.8, 0.8, true)
+      end
+      GameTooltip:AddLine(" ")
+      GameTooltip:AddLine("|cffdf80ff<Left-Click>|r Inspect full quest details, rewards & NPC", 0.85, 0.85, 0.85)
+      GameTooltip:AddLine("|cffdf80ff<Shift-Click>|r Share link to chat", 0.7, 0.7, 0.7)
+      GameTooltip:Show()
+    end)
+    btn:SetScript("OnLeave", function(self)
+      self:SetBackdropColor(0.10, 0.12, 0.16, 0.90)
+      self:SetBackdropBorderColor(0.18, 0.24, 0.33, 0.70)
+      GameTooltip:Hide()
+    end)
+    btn:SetScript("OnClick", function()
+      if IsShiftKeyDown() then
+        FG:LinkEntityToChat("quest", qData)
+      else
+        FG:ShowDetailPanel("quest", qData)
+      end
+      FG:PlaySparkSound("shimmer")
+    end)
+
+  elseif match.type == "creature" then
+    local c = match.data
+    btn:SetHeight(50)
+    btn:SetBackdropColor(0.10, 0.12, 0.16, 0.90)
+    btn:SetBackdropBorderColor(0.18, 0.24, 0.33, 0.70)
+    btn.Hint:SetText("|cffdf80ffInspect >|r")
+
+    if btn.IconFrame then
+      btn.IconFrame:Show()
+      local cTex = (c.classification == "Boss" or c.classification == "World Boss") and "Interface\\Icons\\inv_misc_head_dragon_01" or ((c.classification == "Elite" or c.classification == "Rare Elite") and "Interface\\Icons\\spell_shadow_summoninfernal" or "Interface\\Icons\\inv_misc_monsterhead_01")
+      btn.Icon:SetTexture(cTex)
+      if c.classification == "Boss" or c.classification == "World Boss" then
+        btn.IconFrame:SetBackdropBorderColor(1.0, 0.2, 0.2, 1.0)
+      elseif c.classification == "Elite" or c.classification == "Rare Elite" then
+        btn.IconFrame:SetBackdropBorderColor(1.0, 0.8, 0.2, 1.0)
+      else
+        btn.IconFrame:SetBackdropBorderColor(0.3, 0.6, 0.9, 0.8)
+      end
+    end
+    btn.Title:ClearAllPoints()
+    btn.Title:SetPoint("TOPLEFT", btn, "TOPLEFT", 48, -7)
+    btn.Sub:ClearAllPoints()
+    btn.Sub:SetPoint("TOPLEFT", btn.Title, "BOTTOMLEFT", 0, -3)
+    btn.Sub:SetWidth(400)
+
+    local foreverTag = c.isForever and " |cffe6cc80[Forever]|r" or ""
+    local classColor = (c.classification == "Boss" or c.classification == "Rare Elite" or c.classification == "World Boss") and "ffff4040" or (c.classification == "Elite" and "ffffd24d" or "ff52b8ff")
+    local lvlStr = (c.minLevel and c.maxLevel and c.minLevel ~= c.maxLevel) and (c.minLevel .. "-" .. c.maxLevel) or (c.maxLevel or c.minLevel or "?")
+    local tagPrefix = ""
+    if match.isNearby then
+      if c.classification == "Boss" or c.classification == "World Boss" then
+        tagPrefix = "|cffff4040[Nearby Boss]|r "
+      elseif c.classification == "Rare" or c.classification == "Rare Elite" then
+        tagPrefix = "|cff33bbff[Nearby Rare]|r "
+      else
+        tagPrefix = "|cff20ff20[Nearby NPC]|r "
+      end
+    end
+    btn.Title:SetText(tagPrefix .. "|c" .. classColor .. c.name .. "|r" .. foreverTag .. " |cff20ff20(Lvl " .. lvlStr .. " " .. (c.classification or "NPC") .. ")|r")
+    local desc = "|cff52b8ffZone:|r " .. (c.zone ~= "" and c.zone or "Various")
+    if c.location and c.location ~= "" then
+      desc = desc .. " |cff52b8ffLocation:|r " .. c.location
+    end
+    if c.coords and c.coords ~= "" then
+      desc = desc .. " (" .. c.coords .. ")"
+    end
+    btn.Sub:SetText(desc)
+
+    btn:SetScript("OnEnter", function(self)
+      self:SetBackdropColor(0.18, 0.14, 0.10, 0.95)
+      self:SetBackdropBorderColor(0.85, 0.55, 0.20, 0.90)
+      GameTooltip:SetOwner(self, "ANCHOR_TOPLEFT")
+      GameTooltip:AddLine(c.name, 1, 0.85, 0.2)
+      GameTooltip:AddLine("Level: " .. lvlStr .. " (" .. (c.classification or "Normal") .. ")", 1, 1, 1)
+      if c.zone and c.zone ~= "" then GameTooltip:AddLine("Zone: " .. c.zone, 0.3, 0.8, 1.0) end
+      if c.location and c.location ~= "" then GameTooltip:AddLine("Location: " .. c.location, 0.2, 1, 0.2) end
+      if c.coords and c.coords ~= "" then GameTooltip:AddLine("Coords: " .. c.coords, 0.2, 1, 0.2) end
+      if c.health and c.health > 0 then GameTooltip:AddLine("Health: " .. c.health, 1, 0.3, 0.3) end
+      if c.strategy and c.strategy ~= "" then
+        GameTooltip:AddLine(" ")
+        GameTooltip:AddLine("Notes: " .. c.strategy, 0.8, 0.8, 0.8, true)
+      end
+      GameTooltip:AddLine(" ")
+      GameTooltip:AddLine("|cffdf80ff<Left-Click>|r Inspect NPC intel & targeting macro", 0.85, 0.85, 0.85)
+      GameTooltip:AddLine("|cffdf80ff<Shift-Click>|r Share link to chat", 0.7, 0.7, 0.7)
+      GameTooltip:Show()
+    end)
+    btn:SetScript("OnLeave", function(self)
+      self:SetBackdropColor(0.10, 0.12, 0.16, 0.90)
+      self:SetBackdropBorderColor(0.18, 0.24, 0.33, 0.70)
+      GameTooltip:Hide()
+    end)
+    btn:SetScript("OnClick", function()
+      if IsShiftKeyDown() then
+        FG:LinkEntityToChat("creature", c)
+      else
+        FG:ShowDetailPanel("creature", c)
+      end
+      FG:PlaySparkSound("shimmer")
+    end)
+
+  elseif match.type == "dungeon" then
+    local d = match.data
+    btn:SetHeight(50)
+    btn:SetBackdropColor(0.10, 0.12, 0.16, 0.90)
+    btn:SetBackdropBorderColor(0.18, 0.24, 0.33, 0.70)
+    btn.Hint:SetText("|cffdf80ffInspect >|r")
+
+    if btn.IconFrame then
+      btn.IconFrame:Show()
+      btn.Icon:SetTexture("Interface\\Icons\\inv_helmet_08")
+      btn.IconFrame:SetBackdropBorderColor(0.7, 0.4, 0.9, 0.9)
+    end
+    btn.Title:ClearAllPoints()
+    btn.Title:SetPoint("TOPLEFT", btn, "TOPLEFT", 48, -7)
+    btn.Sub:ClearAllPoints()
+    btn.Sub:SetPoint("TOPLEFT", btn.Title, "BOTTOMLEFT", 0, -3)
+    btn.Sub:SetWidth(400)
+
+    local foreverTag = d.isForever and " |cffe6cc80[Forever]|r" or ""
+    local nearbyPrefix = match.isNearby and "|cffaf50ff[Nearby Dungeon]|r " or ""
+    btn.Title:SetText(nearbyPrefix .. "|cffffd24d" .. d.name .. "|r" .. foreverTag .. " |cff20ff20(Lvl " .. d.recLevel .. ")|r")
+    btn.Sub:SetText("|cff52b8ffZone:|r " .. d.zone .. " |cff52b8ffEntrance:|r " .. (d.coords or "N/A"))
+
+    btn:SetScript("OnEnter", function(self)
+      self:SetBackdropColor(0.15, 0.12, 0.22, 0.95)
+      self:SetBackdropBorderColor(0.55, 0.38, 0.78, 0.90)
+      GameTooltip:SetOwner(self, "ANCHOR_TOPLEFT")
+      GameTooltip:AddLine(d.name, 1, 0.85, 0.2)
+      GameTooltip:AddLine("Level: " .. d.recLevel .. " (" .. d.zone .. ")", 1, 1, 1)
+      if d.coords and d.coords ~= "" then GameTooltip:AddLine("Coords: " .. d.coords, 0.2, 1, 0.2) end
+      if d.strategy and d.strategy ~= "" then
+        GameTooltip:AddLine(" ")
+        GameTooltip:AddLine("Tactics: " .. d.strategy, 0.8, 0.8, 0.8, true)
+      end
+      GameTooltip:AddLine(" ")
+      GameTooltip:AddLine("|cffdf80ff<Left-Click>|r Inspect dungeon tactics, bosses & loot", 0.85, 0.85, 0.85)
+      GameTooltip:AddLine("|cffdf80ff<Shift-Click>|r Share link to chat", 0.7, 0.7, 0.7)
+      GameTooltip:Show()
+    end)
+    btn:SetScript("OnLeave", function(self)
+      self:SetBackdropColor(0.10, 0.12, 0.16, 0.90)
+      self:SetBackdropBorderColor(0.18, 0.24, 0.33, 0.70)
+      GameTooltip:Hide()
+    end)
+    btn:SetScript("OnClick", function()
+      if IsShiftKeyDown() then
+        FG:LinkEntityToChat("dungeon", d)
+      else
+        FG:ShowDetailPanel("dungeon", d)
+      end
+      FG:PlaySparkSound("shimmer")
+    end)
+
+  elseif match.type == "vendor" then
+    local v = match.data
+    btn:SetHeight(50)
+    btn:SetBackdropColor(0.10, 0.12, 0.16, 0.90)
+    btn:SetBackdropBorderColor(0.18, 0.24, 0.33, 0.70)
+    btn.Hint:SetText("|cffdf80ffInspect >|r")
+
+    if btn.IconFrame then
+      btn.IconFrame:Show()
+      btn.Icon:SetTexture("Interface\\Icons\\inv_misc_bag_07")
+      btn.IconFrame:SetBackdropBorderColor(0.4, 0.8, 0.5, 0.9)
+    end
+    btn.Title:ClearAllPoints()
+    btn.Title:SetPoint("TOPLEFT", btn, "TOPLEFT", 48, -7)
+    btn.Sub:ClearAllPoints()
+    btn.Sub:SetPoint("TOPLEFT", btn.Title, "BOTTOMLEFT", 0, -3)
+    btn.Sub:SetWidth(400)
+
+    local nearbyPrefix = match.isNearby and "|cff20ff20[Vendor]|r " or ""
+    btn.Title:SetText(nearbyPrefix .. "|cffffd24d" .. v.name .. "|r |cff20ff20[Vendor]|r")
+    local desc = "|cff52b8ffSells:|r " .. (v.item or "Goods") .. " |cff52b8ffZone:|r " .. (v.zone or "Various")
+    if v.coords and v.coords ~= "" then
+      desc = desc .. " (" .. v.coords .. ")"
+    end
+    btn.Sub:SetText(desc)
+
+    btn:SetScript("OnEnter", function(self)
+      self:SetBackdropColor(0.12, 0.18, 0.16, 0.95)
+      self:SetBackdropBorderColor(0.30, 0.75, 0.55, 0.90)
+      GameTooltip:SetOwner(self, "ANCHOR_TOPLEFT")
+      GameTooltip:AddLine(v.name, 1, 0.85, 0.2)
+      GameTooltip:AddLine("Sells: " .. (v.item or "Goods"), 1, 1, 1)
+      if v.zone and v.zone ~= "" then GameTooltip:AddLine("Zone: " .. v.zone, 0.3, 0.8, 1.0) end
+      if v.coords and v.coords ~= "" then GameTooltip:AddLine("Coords: " .. v.coords, 0.2, 1, 0.2) end
+      if v.tip and v.tip ~= "" then
+        GameTooltip:AddLine(" ")
+        GameTooltip:AddLine("Note: " .. v.tip, 0.8, 0.8, 0.8, true)
+      end
+      GameTooltip:AddLine(" ")
+      GameTooltip:AddLine("|cffdf80ff<Left-Click>|r Inspect vendor wares & location", 0.85, 0.85, 0.85)
+      GameTooltip:AddLine("|cffdf80ff<Shift-Click>|r Share link to chat", 0.7, 0.7, 0.7)
+      GameTooltip:Show()
+    end)
+    btn:SetScript("OnLeave", function(self)
+      self:SetBackdropColor(0.10, 0.12, 0.16, 0.90)
+      self:SetBackdropBorderColor(0.18, 0.24, 0.33, 0.70)
+      GameTooltip:Hide()
+    end)
+    btn:SetScript("OnClick", function()
+      if IsShiftKeyDown() then
+        FG:LinkEntityToChat("vendor", v)
+      else
+        FG:ShowDetailPanel("vendor", v)
+      end
+      FG:PlaySparkSound("shimmer")
+    end)
+  end
+end
+
+function FG:UpdateVirtualRows()
+  if not FG.CodexWindow or not FG.CodexWindow.Content then return end
+  local content = FG.CodexWindow.Content
+  local scrollFrame = ForeverGuideScrollFrame
+  if not scrollFrame or not content.RowPool then return end
+  local matches = FG.currentMatches or {}
+  local numMatches = #matches
+  if numMatches == 0 then
+    for _, btn in ipairs(content.RowPool) do btn:Hide() end
+    return
+  end
+
+  local ROW_HEIGHT = 54
+  local scrollOffset = scrollFrame:GetVerticalScroll() or 0
+  local startIndex = math.floor(scrollOffset / ROW_HEIGHT) + 1
+  if startIndex < 1 then startIndex = 1 end
+
+  for i = 1, #content.RowPool do
+    local btn = content.RowPool[i]
+    local matchIndex = startIndex + (i - 1)
+    if matchIndex <= numMatches then
+      local match = matches[matchIndex]
+      btn:ClearAllPoints()
+      btn:SetPoint("TOPLEFT", content, "TOPLEFT", 0, -((matchIndex - 1) * ROW_HEIGHT))
+      FG:ConfigureRowButton(btn, match)
+      btn:Show()
+    else
+      btn:Hide()
+    end
+  end
+end
+
+--------------------------------------------------------------------------------
 -- Forever Codex Search & UI Window
 --------------------------------------------------------------------------------
 function FG:CreateCodexWindow()
@@ -1418,7 +1889,7 @@ function FG:CreateCodexWindow()
   closeBtn:SetScript("OnClick", function() f:Hide() end)
 
   local searchBox = CreateFrame("EditBox", "ForeverGuideSearchBox", f, "InputBoxTemplate")
-  searchBox:SetSize(220, 24)
+  searchBox:SetSize(185, 24)
   searchBox:SetPoint("TOPLEFT", divider, "BOTTOMLEFT", 6, -10)
   searchBox:SetAutoFocus(false)
   searchBox:SetFontObject("ChatFontNormal")
@@ -1436,7 +1907,7 @@ function FG:CreateCodexWindow()
   clearBtn:SetPoint("RIGHT", searchBox, "RIGHT", -4, 0)
   local clearTxt = clearBtn:CreateFontString(nil, "OVERLAY", "GameFontHighlightSmall")
   clearTxt:SetPoint("CENTER", clearBtn, "CENTER", 0, 0)
-  clearTxt:SetText("|cffaaaaaa✕|r")
+  clearTxt:SetText("|cffaaaaaaX|r")
   clearBtn.Text = clearTxt
   clearBtn:Hide()
   searchBox.ClearBtn = clearBtn
@@ -1498,12 +1969,13 @@ function FG:CreateCodexWindow()
     return btn
   end
 
-  local allBtn   = CreateCategoryPill("all", "All", 34, 10, searchBox)
-  local itemsBtn = CreateCategoryPill("items", "Items", 44, 4, allBtn)
-  local questBtn = CreateCategoryPill("quests", "Quests", 52, 4, itemsBtn)
-  local npcBtn   = CreateCategoryPill("creatures", "NPCs", 44, 4, questBtn)
-  local dungBtn  = CreateCategoryPill("dungeons", "Dungeons", 66, 4, npcBtn)
-  local vendBtn  = CreateCategoryPill("vendors", "Vendors", 58, 4, dungBtn)
+  local allBtn    = CreateCategoryPill("all", "All", 32, 8, searchBox)
+  local nearbyBtn = CreateCategoryPill("nearby", "Nearby", 52, 4, allBtn)
+  local itemsBtn  = CreateCategoryPill("items", "Items", 42, 4, nearbyBtn)
+  local questBtn  = CreateCategoryPill("quests", "Quests", 50, 4, itemsBtn)
+  local npcBtn    = CreateCategoryPill("creatures", "NPCs", 42, 4, questBtn)
+  local dungBtn   = CreateCategoryPill("dungeons", "Dungeons", 62, 4, npcBtn)
+  local vendBtn   = CreateCategoryPill("vendors", "Vendors", 54, 4, dungBtn)
 
   -- Bottom status bar / footer
   local botDivider = f:CreateTexture(nil, "ARTWORK")
@@ -1515,7 +1987,7 @@ function FG:CreateCodexWindow()
 
   local statusText = f:CreateFontString(nil, "OVERLAY", "GameFontNormalSmall")
   statusText:SetPoint("BOTTOMLEFT", f, "BOTTOMLEFT", 18, 9)
-  statusText:SetText("|cff888899Ready • Type to search or select a category|r")
+  statusText:SetText("|cff888899Ready - Type to search, browse folders, or view Nearby intel|r")
   SharpenFontString(statusText, 11, "OUTLINE")
   f.StatusText = statusText
 
@@ -1573,7 +2045,7 @@ function FG:CreateCodexWindow()
   local upBtn = CreateFrame("Button", nil, dolphinBar, "UIPanelButtonTemplate")
   upBtn:SetSize(54, 20)
   upBtn:SetPoint("LEFT", dolphinBar, "LEFT", 4, 0)
-  upBtn:SetText("⬆ Up")
+  upBtn:SetText("< Up")
   MakePixelSharp(upBtn)
   local upFs = upBtn:GetFontString()
   if upFs then SharpenFontString(upFs, 10, "OUTLINE") end
@@ -1587,7 +2059,7 @@ function FG:CreateCodexWindow()
   breadcrumbText:SetPoint("RIGHT", dolphinBar, "RIGHT", -8, 0)
   breadcrumbText:SetJustifyH("LEFT")
   SharpenFontString(breadcrumbText, 11, "OUTLINE")
-  breadcrumbText:SetText("|cffcf52ff📁 Home|r")
+  breadcrumbText:SetText("|cffcf52ffHome|r")
   dolphinBar.Breadcrumbs = breadcrumbText
 
   local scrollFrame = CreateFrame("ScrollFrame", "ForeverGuideScrollFrame", f, "UIPanelScrollFrameTemplate")
@@ -1600,6 +2072,27 @@ function FG:CreateCodexWindow()
   scrollFrame:SetScrollChild(content)
   MakePixelSharp(content)
   f.Content = content
+
+  scrollFrame:EnableMouseWheel(true)
+  scrollFrame:SetScript("OnMouseWheel", function(self, delta)
+    local current = self:GetVerticalScroll() or 0
+    local newScroll = current - (delta * 54 * 2)
+    local maxScroll = math.max(0, (content:GetHeight() or 0) - self:GetHeight())
+    if newScroll < 0 then newScroll = 0 end
+    if newScroll > maxScroll then newScroll = maxScroll end
+    self:SetVerticalScroll(newScroll)
+    FG:UpdateVirtualRows()
+  end)
+  scrollFrame:SetScript("OnVerticalScroll", function(self, offset)
+    FG:UpdateVirtualRows()
+  end)
+
+  content.RowPool = {}
+  for i = 1, 12 do
+    content.RowPool[i] = FG:CreateCodexRowButton(content, i)
+    content.RowPool[i]:Hide()
+  end
+  content.Buttons = content.RowPool
 
   -- Blank State / Ready View (Shown on open or empty query)
   local blank = CreateFrame("Frame", nil, content)
@@ -1661,13 +2154,13 @@ function FG:CreateCodexWindow()
     return pBtn
   end
 
-  CreateQuickPill("⚔ Dungeons", -180, function() FG:SetActiveCategory("dungeons") end)
-  CreateQuickPill("✦ Forever Gear", -60, function()
+  CreateQuickPill("Dungeons", -180, function() FG:SetActiveCategory("dungeons") end)
+  CreateQuickPill("Forever Gear", -60, function()
     searchBox:SetText("forever")
     FG:SetActiveCategory("all")
   end)
-  CreateQuickPill("📜 Quests", 60, function() FG:SetActiveCategory("quests") end)
-  CreateQuickPill("🛒 Key Vendors", 180, function() FG:SetActiveCategory("vendors") end)
+  CreateQuickPill("Quests", 60, function() FG:SetActiveCategory("quests") end)
+  CreateQuickPill("Nearby Intel", 180, function() FG:SetActiveCategory("nearby") end)
 
   content.BlankState = blank
 
@@ -1714,6 +2207,7 @@ function FG:SetActiveCategory(cat)
 
   local folderMap = {
     ["all"] = "root",
+    ["nearby"] = "nearby",
     ["items"] = "items",
     ["quests"] = "quests",
     ["creatures"] = "creatures",
@@ -2020,7 +2514,7 @@ function FG:ShowDetailPanel(entityType, data)
       AddLine("Faction: |cff52b8ff" .. data.faction .. "|r", 11)
     end
     if data.isForever then
-      AddLine("|cffe6cc80★ Warcraft Forever Custom Content|r", 11, nil, nil, nil, 4)
+      AddLine("|cffe6cc80[Forever] Warcraft Forever Custom Content|r", 11, nil, nil, nil, 4)
     end
 
     AddSection("LOCATION & QUESTGIVER")
@@ -2085,7 +2579,7 @@ function FG:ShowDetailPanel(entityType, data)
     end
     if subType ~= "" then AddLine(subType, 11, 0.40, 0.80, 1.0, 4) end
 
-    if data.isForever then AddLine("|cffe6cc80★ Forever Exclusive Item|r", 11, nil, nil, nil, 4) end
+    if data.isForever then AddLine("|cffe6cc80[Forever] Forever Exclusive Item|r", 11, nil, nil, nil, 4) end
 
     if data.itemSet and data.itemSet ~= "" then
       AddSection("ITEM SET")
@@ -2279,12 +2773,13 @@ FG.FolderTree = {
   ["root"] = {
     title = "Home",
     folders = {
-      { path = "quests", name = "Quests", icon = "📁", desc = "By Continent, Zone, Class, & Dungeon (A to Z)" },
-      { path = "items", name = "Items & Equipment", icon = "📁", desc = "Weapons, Armor, Reagents, Recipes & Custom Gear" },
-      { path = "creatures", name = "Creatures & Bosses", icon = "📁", desc = "Dungeon/Raid Bosses, Rares & NPC Families" },
-      { path = "dungeons", name = "Dungeons & Raids", icon = "📁", desc = "Starter, Mid, Endgame, Raids & Forever Instances" },
-      { path = "vendors", name = "Vendors & Flight Paths", icon = "📁", desc = "Flight Masters, PvP Quartermasters & Reagents" },
-      { path = "forever", name = "★ Warcraft Forever Custom Content", icon = "📁", desc = "Exclusive items, quests, NPCs & dungeons" },
+      { path = "nearby", name = "Nearby Area Intel (Zone Radar)", desc = "Live radar: local mobs, quests, vendors & loot in current zone" },
+      { path = "quests", name = "Quests", desc = "By Continent, Zone, Class, & Dungeon (A to Z)" },
+      { path = "items", name = "Items & Equipment", desc = "Weapons, Armor, Reagents, Recipes & Custom Gear" },
+      { path = "creatures", name = "Creatures & Bosses", desc = "Dungeon/Raid Bosses, Rares & NPC Families" },
+      { path = "dungeons", name = "Dungeons & Raids", desc = "Starter, Mid, Endgame, Raids & Forever Instances" },
+      { path = "vendors", name = "Vendors & Flight Paths", desc = "Flight Masters, PvP Quartermasters & Reagents" },
+      { path = "forever", name = "[Forever] Warcraft Forever Custom Content", desc = "Exclusive items, quests, NPCs & dungeons" },
     },
   },
 
@@ -2293,12 +2788,12 @@ FG.FolderTree = {
     title = "Quests",
     parent = "root",
     folders = {
-      { path = "quests/eastern_kingdoms", name = "Eastern Kingdoms", icon = "📂", desc = "24 zones alphabetically (A to Z)" },
-      { path = "quests/kalimdor", name = "Kalimdor", icon = "📂", desc = "20 zones alphabetically (A to Z)" },
-      { path = "quests/dungeons", name = "Dungeons & Raids", icon = "📂", desc = "Instance questlines across Azeroth" },
-      { path = "quests/class", name = "Class Quests", icon = "📂", desc = "Quests for each of the 9 classes" },
-      { path = "quests/professions", name = "Profession Quests", icon = "📂", desc = "Trade skill quests & masteries" },
-      { path = "quests/forever", name = "★ Forever Quests", icon = "📂", desc = "Exclusive server questlines" },
+      { path = "quests/eastern_kingdoms", name = "Eastern Kingdoms", desc = "24 zones alphabetically (A to Z)" },
+      { path = "quests/kalimdor", name = "Kalimdor", desc = "20 zones alphabetically (A to Z)" },
+      { path = "quests/dungeons", name = "Dungeons & Raids", desc = "Instance questlines across Azeroth" },
+      { path = "quests/class", name = "Class Quests", desc = "Quests for each of the 9 classes" },
+      { path = "quests/professions", name = "Profession Quests", desc = "Trade skill quests & masteries" },
+      { path = "quests/forever", name = "[Forever] Forever Quests", desc = "Exclusive server questlines" },
     },
   },
 
@@ -2306,30 +2801,30 @@ FG.FolderTree = {
     title = "Eastern Kingdoms Quests",
     parent = "quests",
     folders = {
-      { path = "quests/zone/Alterac Mountains", name = "Alterac Mountains", icon = "📜", desc = "Zone quests" },
-      { path = "quests/zone/Arathi Highlands", name = "Arathi Highlands", icon = "📜", desc = "Zone quests" },
-      { path = "quests/zone/Badlands", name = "Badlands", icon = "📜", desc = "Zone quests" },
-      { path = "quests/zone/Blasted Lands", name = "Blasted Lands", icon = "📜", desc = "Zone quests" },
-      { path = "quests/zone/Burning Steppes", name = "Burning Steppes", icon = "📜", desc = "Zone quests" },
-      { path = "quests/zone/Deadwind Pass", name = "Deadwind Pass", icon = "📜", desc = "Zone quests" },
-      { path = "quests/zone/Dun Morogh", name = "Dun Morogh", icon = "📜", desc = "Zone quests" },
-      { path = "quests/zone/Duskwood", name = "Duskwood", icon = "📜", desc = "Zone quests" },
-      { path = "quests/zone/Eastern Plaguelands", name = "Eastern Plaguelands", icon = "📜", desc = "Zone quests" },
-      { path = "quests/zone/Elwynn Forest", name = "Elwynn Forest", icon = "📜", desc = "Zone quests" },
-      { path = "quests/zone/Hillsbrad Foothills", name = "Hillsbrad Foothills", icon = "📜", desc = "Zone quests" },
-      { path = "quests/zone/Loch Modan", name = "Loch Modan", icon = "📜", desc = "Zone quests" },
-      { path = "quests/zone/Redridge Mountains", name = "Redridge Mountains", icon = "📜", desc = "Zone quests" },
-      { path = "quests/zone/Searing Gorge", name = "Searing Gorge", icon = "📜", desc = "Zone quests" },
-      { path = "quests/zone/Silverpine Forest", name = "Silverpine Forest", icon = "📜", desc = "Zone quests" },
-      { path = "quests/zone/Stormwind City", name = "Stormwind City", icon = "📜", desc = "Zone quests" },
-      { path = "quests/zone/Stranglethorn Vale", name = "Stranglethorn Vale", icon = "📜", desc = "Zone quests" },
-      { path = "quests/zone/Swamp of Sorrows", name = "Swamp of Sorrows", icon = "📜", desc = "Zone quests" },
-      { path = "quests/zone/The Hinterlands", name = "The Hinterlands", icon = "📜", desc = "Zone quests" },
-      { path = "quests/zone/Tirisfal Glades", name = "Tirisfal Glades", icon = "📜", desc = "Zone quests" },
-      { path = "quests/zone/Undercity", name = "Undercity", icon = "📜", desc = "Zone quests" },
-      { path = "quests/zone/Western Plaguelands", name = "Western Plaguelands", icon = "📜", desc = "Zone quests" },
-      { path = "quests/zone/Westfall", name = "Westfall", icon = "📜", desc = "Zone quests" },
-      { path = "quests/zone/Wetlands", name = "Wetlands", icon = "📜", desc = "Zone quests" },
+      { path = "quests/zone/Alterac Mountains", name = "Alterac Mountains", desc = "Zone quests" },
+      { path = "quests/zone/Arathi Highlands", name = "Arathi Highlands", desc = "Zone quests" },
+      { path = "quests/zone/Badlands", name = "Badlands", desc = "Zone quests" },
+      { path = "quests/zone/Blasted Lands", name = "Blasted Lands", desc = "Zone quests" },
+      { path = "quests/zone/Burning Steppes", name = "Burning Steppes", desc = "Zone quests" },
+      { path = "quests/zone/Deadwind Pass", name = "Deadwind Pass", desc = "Zone quests" },
+      { path = "quests/zone/Dun Morogh", name = "Dun Morogh", desc = "Zone quests" },
+      { path = "quests/zone/Duskwood", name = "Duskwood", desc = "Zone quests" },
+      { path = "quests/zone/Eastern Plaguelands", name = "Eastern Plaguelands", desc = "Zone quests" },
+      { path = "quests/zone/Elwynn Forest", name = "Elwynn Forest", desc = "Zone quests" },
+      { path = "quests/zone/Hillsbrad Foothills", name = "Hillsbrad Foothills", desc = "Zone quests" },
+      { path = "quests/zone/Loch Modan", name = "Loch Modan", desc = "Zone quests" },
+      { path = "quests/zone/Redridge Mountains", name = "Redridge Mountains", desc = "Zone quests" },
+      { path = "quests/zone/Searing Gorge", name = "Searing Gorge", desc = "Zone quests" },
+      { path = "quests/zone/Silverpine Forest", name = "Silverpine Forest", desc = "Zone quests" },
+      { path = "quests/zone/Stormwind City", name = "Stormwind City", desc = "Zone quests" },
+      { path = "quests/zone/Stranglethorn Vale", name = "Stranglethorn Vale", desc = "Zone quests" },
+      { path = "quests/zone/Swamp of Sorrows", name = "Swamp of Sorrows", desc = "Zone quests" },
+      { path = "quests/zone/The Hinterlands", name = "The Hinterlands", desc = "Zone quests" },
+      { path = "quests/zone/Tirisfal Glades", name = "Tirisfal Glades", desc = "Zone quests" },
+      { path = "quests/zone/Undercity", name = "Undercity", desc = "Zone quests" },
+      { path = "quests/zone/Western Plaguelands", name = "Western Plaguelands", desc = "Zone quests" },
+      { path = "quests/zone/Westfall", name = "Westfall", desc = "Zone quests" },
+      { path = "quests/zone/Wetlands", name = "Wetlands", desc = "Zone quests" },
     },
   },
 
@@ -2337,26 +2832,26 @@ FG.FolderTree = {
     title = "Kalimdor Quests",
     parent = "quests",
     folders = {
-      { path = "quests/zone/Ashenvale", name = "Ashenvale", icon = "📜", desc = "Zone quests" },
-      { path = "quests/zone/Azshara", name = "Azshara", icon = "📜", desc = "Zone quests" },
-      { path = "quests/zone/Darkshore", name = "Darkshore", icon = "📜", desc = "Zone quests" },
-      { path = "quests/zone/Desolace", name = "Desolace", icon = "📜", desc = "Zone quests" },
-      { path = "quests/zone/Durotar", name = "Durotar", icon = "📜", desc = "Zone quests" },
-      { path = "quests/zone/Dustwallow Marsh", name = "Dustwallow Marsh", icon = "📜", desc = "Zone quests" },
-      { path = "quests/zone/Felwood", name = "Felwood", icon = "📜", desc = "Zone quests" },
-      { path = "quests/zone/Feralas", name = "Feralas", icon = "📜", desc = "Zone quests" },
-      { path = "quests/zone/Moonglade", name = "Moonglade", icon = "📜", desc = "Zone quests" },
-      { path = "quests/zone/Mulgore", name = "Mulgore", icon = "📜", desc = "Zone quests" },
-      { path = "quests/zone/Orgrimmar", name = "Orgrimmar", icon = "📜", desc = "Zone quests" },
-      { path = "quests/zone/Silithus", name = "Silithus", icon = "📜", desc = "Zone quests" },
-      { path = "quests/zone/Stonetalon Mountains", name = "Stonetalon Mountains", icon = "📜", desc = "Zone quests" },
-      { path = "quests/zone/Tanaris", name = "Tanaris", icon = "📜", desc = "Zone quests" },
-      { path = "quests/zone/Teldrassil", name = "Teldrassil", icon = "📜", desc = "Zone quests" },
-      { path = "quests/zone/The Barrens", name = "The Barrens", icon = "📜", desc = "Zone quests" },
-      { path = "quests/zone/Thousand Needles", name = "Thousand Needles", icon = "📜", desc = "Zone quests" },
-      { path = "quests/zone/Thunder Bluff", name = "Thunder Bluff", icon = "📜", desc = "Zone quests" },
-      { path = "quests/zone/Un'Goro Crater", name = "Un'Goro Crater", icon = "📜", desc = "Zone quests" },
-      { path = "quests/zone/Winterspring", name = "Winterspring", icon = "📜", desc = "Zone quests" },
+      { path = "quests/zone/Ashenvale", name = "Ashenvale", desc = "Zone quests" },
+      { path = "quests/zone/Azshara", name = "Azshara", desc = "Zone quests" },
+      { path = "quests/zone/Darkshore", name = "Darkshore", desc = "Zone quests" },
+      { path = "quests/zone/Desolace", name = "Desolace", desc = "Zone quests" },
+      { path = "quests/zone/Durotar", name = "Durotar", desc = "Zone quests" },
+      { path = "quests/zone/Dustwallow Marsh", name = "Dustwallow Marsh", desc = "Zone quests" },
+      { path = "quests/zone/Felwood", name = "Felwood", desc = "Zone quests" },
+      { path = "quests/zone/Feralas", name = "Feralas", desc = "Zone quests" },
+      { path = "quests/zone/Moonglade", name = "Moonglade", desc = "Zone quests" },
+      { path = "quests/zone/Mulgore", name = "Mulgore", desc = "Zone quests" },
+      { path = "quests/zone/Orgrimmar", name = "Orgrimmar", desc = "Zone quests" },
+      { path = "quests/zone/Silithus", name = "Silithus", desc = "Zone quests" },
+      { path = "quests/zone/Stonetalon Mountains", name = "Stonetalon Mountains", desc = "Zone quests" },
+      { path = "quests/zone/Tanaris", name = "Tanaris", desc = "Zone quests" },
+      { path = "quests/zone/Teldrassil", name = "Teldrassil", desc = "Zone quests" },
+      { path = "quests/zone/The Barrens", name = "The Barrens", desc = "Zone quests" },
+      { path = "quests/zone/Thousand Needles", name = "Thousand Needles", desc = "Zone quests" },
+      { path = "quests/zone/Thunder Bluff", name = "Thunder Bluff", desc = "Zone quests" },
+      { path = "quests/zone/Un'Goro Crater", name = "Un'Goro Crater", desc = "Zone quests" },
+      { path = "quests/zone/Winterspring", name = "Winterspring", desc = "Zone quests" },
     },
   },
 
@@ -2364,15 +2859,15 @@ FG.FolderTree = {
     title = "Class Quests",
     parent = "quests",
     folders = {
-      { path = "quests/class/Druid Class Quests", name = "Druid", icon = "📜", desc = "Bear form, aquatic, travel quests" },
-      { path = "quests/class/Hunter Class Quests", name = "Hunter", icon = "📜", desc = "Pet taming & class quests" },
-      { path = "quests/class/Mage Class Quests", name = "Mage", icon = "📜", desc = "Arcane, portal & robe quests" },
-      { path = "quests/class/Paladin Class Quests", name = "Paladin", icon = "📜", desc = "Warhorse, hammer & redemption" },
-      { path = "quests/class/Priest Class Quests", name = "Priest", icon = "📜", desc = "Devotion & Benediction quests" },
-      { path = "quests/class/Rogue Class Quests", name = "Rogue", icon = "📜", desc = "Poison brewing & lockpicking" },
-      { path = "quests/class/Shaman Class Quests", name = "Shaman", icon = "📜", desc = "Earth, Fire, Water, Air totems" },
-      { path = "quests/class/Warlock Class Quests", name = "Warlock", icon = "📜", desc = "Demon summons & Dreadsteed" },
-      { path = "quests/class/Warrior Class Quests", name = "Warrior", icon = "📜", desc = "Defensive & Berserker stances" },
+      { path = "quests/class/Druid Class Quests", name = "Druid", desc = "Bear form, aquatic, travel quests" },
+      { path = "quests/class/Hunter Class Quests", name = "Hunter", desc = "Pet taming & class quests" },
+      { path = "quests/class/Mage Class Quests", name = "Mage", desc = "Arcane, portal & robe quests" },
+      { path = "quests/class/Paladin Class Quests", name = "Paladin", desc = "Warhorse, hammer & redemption" },
+      { path = "quests/class/Priest Class Quests", name = "Priest", desc = "Devotion & Benediction quests" },
+      { path = "quests/class/Rogue Class Quests", name = "Rogue", desc = "Poison brewing & lockpicking" },
+      { path = "quests/class/Shaman Class Quests", name = "Shaman", desc = "Earth, Fire, Water, Air totems" },
+      { path = "quests/class/Warlock Class Quests", name = "Warlock", desc = "Demon summons & Dreadsteed" },
+      { path = "quests/class/Warrior Class Quests", name = "Warrior", desc = "Defensive & Berserker stances" },
     },
   },
 
@@ -2380,16 +2875,16 @@ FG.FolderTree = {
     title = "Profession Quests",
     parent = "quests",
     folders = {
-      { path = "quests/prof/Alchemy", name = "Alchemy", icon = "📜", desc = "Potions & masteries" },
-      { path = "quests/prof/Blacksmithing", name = "Blacksmithing", icon = "📜", desc = "Armorsmith & Weaponsmith" },
-      { path = "quests/prof/Cooking", name = "Cooking", icon = "📜", desc = "Recipes & feast quests" },
-      { path = "quests/prof/Enchanting", name = "Enchanting", icon = "📜", desc = "Rods & enchanting quests" },
-      { path = "quests/prof/Engineering", name = "Engineering", icon = "📜", desc = "Gnomish & Goblin engineering" },
-      { path = "quests/prof/First Aid", name = "First Aid", icon = "📜", desc = "Triage & artisan bandages" },
-      { path = "quests/prof/Fishing", name = "Fishing", icon = "📜", desc = "Nat Pagle & artisan angling" },
-      { path = "quests/prof/Leatherworking", name = "Leatherworking", icon = "📜", desc = "Dragonscale, Elemental, Tribal" },
-      { path = "quests/prof/Mining", name = "Mining", icon = "📜", desc = "Smelting & dark iron quests" },
-      { path = "quests/prof/Tailoring", name = "Tailoring", icon = "📜", desc = "Mooncloth & specialized weaves" },
+      { path = "quests/prof/Alchemy", name = "Alchemy", desc = "Potions & masteries" },
+      { path = "quests/prof/Blacksmithing", name = "Blacksmithing", desc = "Armorsmith & Weaponsmith" },
+      { path = "quests/prof/Cooking", name = "Cooking", desc = "Recipes & feast quests" },
+      { path = "quests/prof/Enchanting", name = "Enchanting", desc = "Rods & enchanting quests" },
+      { path = "quests/prof/Engineering", name = "Engineering", desc = "Gnomish & Goblin engineering" },
+      { path = "quests/prof/First Aid", name = "First Aid", desc = "Triage & artisan bandages" },
+      { path = "quests/prof/Fishing", name = "Fishing", desc = "Nat Pagle & artisan angling" },
+      { path = "quests/prof/Leatherworking", name = "Leatherworking", desc = "Dragonscale, Elemental, Tribal" },
+      { path = "quests/prof/Mining", name = "Mining", desc = "Smelting & dark iron quests" },
+      { path = "quests/prof/Tailoring", name = "Tailoring", desc = "Mooncloth & specialized weaves" },
     },
   },
 
@@ -2398,13 +2893,13 @@ FG.FolderTree = {
     title = "Items & Equipment",
     parent = "root",
     folders = {
-      { path = "items/weapons", name = "Weapons", icon = "⚔", desc = "Swords, Axes, Maces, Staves, Bows..." },
-      { path = "items/armor", name = "Armor", icon = "🛡", desc = "Cloth, Leather, Mail, Plate, Shields" },
-      { path = "items/accessories", name = "Jewelry & Accessories", icon = "💍", desc = "Rings, Trinkets, Necklaces, Cloaks" },
-      { path = "items/consumables", name = "Consumables", icon = "🧪", desc = "Potions, Food, Bandages, Scrolls" },
-      { path = "items/trade_goods", name = "Trade Goods", icon = "📦", desc = "Herbs, Ore, Leather, Cloth, Reagents" },
-      { path = "items/recipes", name = "Recipes & Plans", icon = "📜", desc = "Crafting Recipes & Manuals" },
-      { path = "items/forever", name = "★ Forever Custom Gear", icon = "⭐", desc = "Exclusive Warcraft Forever items" },
+      { path = "items/weapons", name = "Weapons", desc = "Swords, Axes, Maces, Staves, Bows..." },
+      { path = "items/armor", name = "Armor", desc = "Cloth, Leather, Mail, Plate, Shields" },
+      { path = "items/accessories", name = "Jewelry & Accessories", desc = "Rings, Trinkets, Necklaces, Cloaks" },
+      { path = "items/consumables", name = "Consumables", desc = "Potions, Food, Bandages, Scrolls" },
+      { path = "items/trade_goods", name = "Trade Goods", desc = "Herbs, Ore, Leather, Cloth, Reagents" },
+      { path = "items/recipes", name = "Recipes & Plans", desc = "Crafting Recipes & Manuals" },
+      { path = "items/forever", name = "[Forever] Forever Custom Gear", desc = "Exclusive Warcraft Forever items" },
     },
   },
 
@@ -2412,19 +2907,19 @@ FG.FolderTree = {
     title = "Weapons",
     parent = "items",
     folders = {
-      { path = "items/sub/One-Handed Axes", name = "One-Handed Axes", icon = "🪓", filter = { slot = "One-Hand", itemType = "Axe" } },
-      { path = "items/sub/Two-Handed Axes", name = "Two-Handed Axes", icon = "🪓", filter = { slot = "Two-Hand", itemType = "Axe" } },
-      { path = "items/sub/Bows", name = "Bows & Crossbows", icon = "🏹", filter = { itemType = "Bow" } },
-      { path = "items/sub/Daggers", name = "Daggers", icon = "🗡", filter = { itemType = "Dagger" } },
-      { path = "items/sub/Guns", name = "Guns & Ranged", icon = "🔫", filter = { itemType = "Gun" } },
-      { path = "items/sub/One-Handed Maces", name = "One-Handed Maces", icon = "🔨", filter = { slot = "One-Hand", itemType = "Mace" } },
-      { path = "items/sub/Two-Handed Maces", name = "Two-Handed Maces", icon = "🔨", filter = { slot = "Two-Hand", itemType = "Mace" } },
-      { path = "items/sub/Polearms", name = "Polearms", icon = "🔱", filter = { itemType = "Polearm" } },
-      { path = "items/sub/Staves", name = "Staves", icon = "🪄", filter = { itemType = "Staff" } },
-      { path = "items/sub/One-Handed Swords", name = "One-Handed Swords", icon = "⚔", filter = { slot = "One-Hand", itemType = "Sword" } },
-      { path = "items/sub/Two-Handed Swords", name = "Two-Handed Swords", icon = "⚔", filter = { slot = "Two-Hand", itemType = "Sword" } },
-      { path = "items/sub/Wands", name = "Wands", icon = "✨", filter = { itemType = "Wand" } },
-      { path = "items/sub/Fist Weapons", name = "Fist Weapons", icon = "🥊", filter = { itemType = "Fist Weapon" } },
+      { path = "items/sub/One-Handed Axes", name = "One-Handed Axes", filter = { slot = "One-Hand", itemType = "Axe" } },
+      { path = "items/sub/Two-Handed Axes", name = "Two-Handed Axes", filter = { slot = "Two-Hand", itemType = "Axe" } },
+      { path = "items/sub/Bows", name = "Bows & Crossbows", filter = { itemType = "Bow" } },
+      { path = "items/sub/Daggers", name = "Daggers", filter = { itemType = "Dagger" } },
+      { path = "items/sub/Guns", name = "Guns & Ranged", filter = { itemType = "Gun" } },
+      { path = "items/sub/One-Handed Maces", name = "One-Handed Maces", filter = { slot = "One-Hand", itemType = "Mace" } },
+      { path = "items/sub/Two-Handed Maces", name = "Two-Handed Maces", filter = { slot = "Two-Hand", itemType = "Mace" } },
+      { path = "items/sub/Polearms", name = "Polearms", filter = { itemType = "Polearm" } },
+      { path = "items/sub/Staves", name = "Staves", filter = { itemType = "Staff" } },
+      { path = "items/sub/One-Handed Swords", name = "One-Handed Swords", filter = { slot = "One-Hand", itemType = "Sword" } },
+      { path = "items/sub/Two-Handed Swords", name = "Two-Handed Swords", filter = { slot = "Two-Hand", itemType = "Sword" } },
+      { path = "items/sub/Wands", name = "Wands", filter = { itemType = "Wand" } },
+      { path = "items/sub/Fist Weapons", name = "Fist Weapons", filter = { itemType = "Fist Weapon" } },
     },
   },
 
@@ -2432,11 +2927,11 @@ FG.FolderTree = {
     title = "Armor",
     parent = "items",
     folders = {
-      { path = "items/sub/Cloth Armor", name = "Cloth Armor", icon = "👘", filter = { itemType = "Cloth" } },
-      { path = "items/sub/Leather Armor", name = "Leather Armor", icon = "🥋", filter = { itemType = "Leather" } },
-      { path = "items/sub/Mail Armor", name = "Mail Armor", icon = "🛡", filter = { itemType = "Mail" } },
-      { path = "items/sub/Plate Armor", name = "Plate Armor", icon = "🛡", filter = { itemType = "Plate" } },
-      { path = "items/sub/Shields", name = "Shields", icon = "🛡", filter = { slot = "Shield" } },
+      { path = "items/sub/Cloth Armor", name = "Cloth Armor", filter = { itemType = "Cloth" } },
+      { path = "items/sub/Leather Armor", name = "Leather Armor", filter = { itemType = "Leather" } },
+      { path = "items/sub/Mail Armor", name = "Mail Armor", filter = { itemType = "Mail" } },
+      { path = "items/sub/Plate Armor", name = "Plate Armor", filter = { itemType = "Plate" } },
+      { path = "items/sub/Shields", name = "Shields", filter = { slot = "Shield" } },
     },
   },
 
@@ -2444,10 +2939,10 @@ FG.FolderTree = {
     title = "Jewelry & Accessories",
     parent = "items",
     folders = {
-      { path = "items/sub/Amulets", name = "Amulets & Necklaces", icon = "📿", filter = { slot = "Neck" } },
-      { path = "items/sub/Rings", name = "Rings & Bands", icon = "💍", filter = { slot = "Finger" } },
-      { path = "items/sub/Trinkets", name = "Trinkets", icon = "🔮", filter = { slot = "Trinket" } },
-      { path = "items/sub/Cloaks", name = "Cloaks & Capes", icon = "🧣", filter = { slot = "Back" } },
+      { path = "items/sub/Amulets", name = "Amulets & Necklaces", filter = { slot = "Neck" } },
+      { path = "items/sub/Rings", name = "Rings & Bands", filter = { slot = "Finger" } },
+      { path = "items/sub/Trinkets", name = "Trinkets", filter = { slot = "Trinket" } },
+      { path = "items/sub/Cloaks", name = "Cloaks & Capes", filter = { slot = "Back" } },
     },
   },
 
@@ -2455,10 +2950,10 @@ FG.FolderTree = {
     title = "Consumables",
     parent = "items",
     folders = {
-      { path = "items/sub/Potions", name = "Potions & Elixirs", icon = "🧪", filter = { itemType = "Potion" } },
-      { path = "items/sub/Food", name = "Food & Drink", icon = "🍖", filter = { itemType = "Food & Drink" } },
-      { path = "items/sub/Bandages", name = "Bandages", icon = "🩹", filter = { itemType = "Bandage" } },
-      { path = "items/sub/Scrolls", name = "Scrolls", icon = "📜", filter = { itemType = "Scroll" } },
+      { path = "items/sub/Potions", name = "Potions & Elixirs", filter = { itemType = "Potion" } },
+      { path = "items/sub/Food", name = "Food & Drink", filter = { itemType = "Food & Drink" } },
+      { path = "items/sub/Bandages", name = "Bandages", filter = { itemType = "Bandage" } },
+      { path = "items/sub/Scrolls", name = "Scrolls", filter = { itemType = "Scroll" } },
     },
   },
 
@@ -2466,10 +2961,10 @@ FG.FolderTree = {
     title = "Trade Goods",
     parent = "items",
     folders = {
-      { path = "items/sub/Herbs", name = "Herbs", icon = "🌿", filter = { itemType = "Herb" } },
-      { path = "items/sub/Ore", name = "Metal & Stone", icon = "⛏", filter = { itemType = "Metal & Stone" } },
-      { path = "items/sub/Parts", name = "Parts & Devices", icon = "⚙", filter = { itemType = "Parts" } },
-      { path = "items/sub/Reagents", name = "Reagents & Materials", icon = "💎", filter = { itemType = "Reagent" } },
+      { path = "items/sub/Herbs", name = "Herbs", filter = { itemType = "Herb" } },
+      { path = "items/sub/Ore", name = "Metal & Stone", filter = { itemType = "Metal & Stone" } },
+      { path = "items/sub/Parts", name = "Parts & Devices", filter = { itemType = "Parts" } },
+      { path = "items/sub/Reagents", name = "Reagents & Materials", filter = { itemType = "Reagent" } },
     },
   },
 
@@ -2477,7 +2972,7 @@ FG.FolderTree = {
     title = "Recipes & Plans",
     parent = "items",
     folders = {
-      { path = "items/sub/All Recipes", name = "All Recipes & Plans", icon = "📜", filter = { itemType = "Recipe" } },
+      { path = "items/sub/All Recipes", name = "All Recipes & Plans", filter = { itemType = "Recipe" } },
     },
   },
 
@@ -2486,16 +2981,16 @@ FG.FolderTree = {
     title = "Creatures & Bosses",
     parent = "root",
     folders = {
-      { path = "creatures/bosses", name = "World & Dungeon Bosses", icon = "👑", desc = "Major encounter bosses" },
-      { path = "creatures/rares", name = "Rare & Rare Elite Encounters", icon = "💎", desc = "Silver-dragon rare spawns" },
-      { path = "creatures/beasts", name = "Beasts", icon = "🐺", desc = "Wolves, Cats, Raptors..." },
-      { path = "creatures/humanoids", name = "Humanoids", icon = "🧙", desc = "Bandits, Pirates, Cultists..." },
-      { path = "creatures/undead", name = "Undead", icon = "💀", desc = "Scourge & Skeletons..." },
-      { path = "creatures/demons", name = "Demons", icon = "👿", desc = "Burning Legion demons..." },
-      { path = "creatures/dragonkin", name = "Dragonkin", icon = "🐉", desc = "Black, Red, Green flights..." },
-      { path = "creatures/elementals", name = "Elementals", icon = "🔥", desc = "Fire, Water, Earth, Air..." },
-      { path = "creatures/giants", name = "Giants", icon = "🗿", desc = "Giants & Colossi" },
-      { path = "creatures/forever", name = "★ Forever Custom NPCs", icon = "⭐", desc = "Exclusive server NPCs" },
+      { path = "creatures/bosses", name = "World & Dungeon Bosses", desc = "Major encounter bosses" },
+      { path = "creatures/rares", name = "Rare & Rare Elite Encounters", desc = "Silver-dragon rare spawns" },
+      { path = "creatures/beasts", name = "Beasts", desc = "Wolves, Cats, Raptors..." },
+      { path = "creatures/humanoids", name = "Humanoids", desc = "Bandits, Pirates, Cultists..." },
+      { path = "creatures/undead", name = "Undead", desc = "Scourge & Skeletons..." },
+      { path = "creatures/demons", name = "Demons", desc = "Burning Legion demons..." },
+      { path = "creatures/dragonkin", name = "Dragonkin", desc = "Black, Red, Green flights..." },
+      { path = "creatures/elementals", name = "Elementals", desc = "Fire, Water, Earth, Air..." },
+      { path = "creatures/giants", name = "Giants", desc = "Giants & Colossi" },
+      { path = "creatures/forever", name = "[Forever] Forever Custom NPCs", desc = "Exclusive server NPCs" },
     },
   },
 
@@ -2504,11 +2999,11 @@ FG.FolderTree = {
     title = "Dungeons & Raids",
     parent = "root",
     folders = {
-      { path = "dungeons/starter", name = "Starter Dungeons (Lvl 15-30)", icon = "🏰", desc = "Deadmines, WC, SFK, BFD, Stockade" },
-      { path = "dungeons/mid", name = "Mid-Tier Dungeons (Lvl 30-50)", icon = "🏰", desc = "Gnomeregan, SM, RFK, RFD, Uldaman, ZF, Mara" },
-      { path = "dungeons/endgame", name = "Endgame Dungeons (Lvl 50-60)", icon = "🏰", desc = "BRD, LBRS, UBRS, Strath, Scholo, DM, ST" },
-      { path = "dungeons/raids", name = "Raid Dungeons (Lvl 60)", icon = "👑", desc = "MC, Onyxia, BWL, ZG, AQ20, AQ40, Naxx" },
-      { path = "dungeons/forever", name = "★ Forever Custom Dungeons", icon = "⭐", desc = "Crypts, Thanes, Roots, Hateforge, Rift..." },
+      { path = "dungeons/starter", name = "Starter Dungeons (Lvl 15-30)", desc = "Deadmines, WC, SFK, BFD, Stockade" },
+      { path = "dungeons/mid", name = "Mid-Tier Dungeons (Lvl 30-50)", desc = "Gnomeregan, SM, RFK, RFD, Uldaman, ZF, Mara" },
+      { path = "dungeons/endgame", name = "Endgame Dungeons (Lvl 50-60)", desc = "BRD, LBRS, UBRS, Strath, Scholo, DM, ST" },
+      { path = "dungeons/raids", name = "Raid Dungeons (Lvl 60)", desc = "MC, Onyxia, BWL, ZG, AQ20, AQ40, Naxx" },
+      { path = "dungeons/forever", name = "[Forever] Forever Custom Dungeons", desc = "Crypts, Thanes, Roots, Hateforge, Rift..." },
     },
   },
 
@@ -2517,21 +3012,21 @@ FG.FolderTree = {
     title = "Vendors & Flight Paths",
     parent = "root",
     folders = {
-      { path = "vendors/flightpaths", name = "Flight Masters", icon = "🦅", desc = "Alliance & Horde Flight Masters" },
-      { path = "vendors/pvp", name = "PvP Quartermasters", icon = "⚔", desc = "Battlegrounds & Honor Vendors" },
-      { path = "vendors/specialty", name = "Specialty & Rare Goods", icon = "🛍", desc = "Limited Recipes, Pets & Unique items" },
+      { path = "vendors/flightpaths", name = "Flight Masters", desc = "Alliance & Horde Flight Masters" },
+      { path = "vendors/pvp", name = "PvP Quartermasters", desc = "Battlegrounds & Honor Vendors" },
+      { path = "vendors/specialty", name = "Specialty & Rare Goods", desc = "Limited Recipes, Pets & Unique items" },
     },
   },
 
   -- FOREVER CUSTOM CONTENT
   ["forever"] = {
-    title = "★ Warcraft Forever Custom Content",
+    title = "[Forever] Warcraft Forever Custom Content",
     parent = "root",
     folders = {
-      { path = "forever/items", name = "Forever Gear & Items", icon = "⭐", desc = "Custom itemization & set pieces" },
-      { path = "forever/quests", name = "Forever Quests & Storylines", icon = "⭐", desc = "Custom narrative and story quests" },
-      { path = "forever/creatures", name = "Forever NPCs & Bosses", icon = "⭐", desc = "Custom encounters and rare mobs" },
-      { path = "forever/dungeons", name = "Forever Dungeons & Raids", icon = "⭐", desc = "Custom instances & progressive raids" },
+      { path = "forever/items", name = "Forever Gear & Items", desc = "Custom itemization & set pieces" },
+      { path = "forever/quests", name = "Forever Quests & Storylines", desc = "Custom narrative and story quests" },
+      { path = "forever/creatures", name = "Forever NPCs & Bosses", desc = "Custom encounters and rare mobs" },
+      { path = "forever/dungeons", name = "Forever Dungeons & Raids", desc = "Custom instances & progressive raids" },
     },
   },
 }
@@ -2571,6 +3066,8 @@ function FG:NavigateUpFolder()
       parent = "quests/professions"
     elseif cur:find("^items/sub/") then
       parent = "items"
+    elseif cur == "nearby" then
+      parent = "root"
     elseif cur:find("/") then
       parent = cur:match("^(.*)/[^/]+$")
     else
@@ -2595,7 +3092,20 @@ function FG:UpdateDolphinBreadcrumbs(query, matchCount)
       local ufs = upBtn:GetFontString()
       if ufs then ufs:SetTextColor(1, 1, 1) end
     end
-    bText:SetText(string.format("|cffcf52ff📁 Home|r |cff666688▶|r |cffdf80ff🔍 Search: \"|r|cffffffff%s|r|cffdf80ff\"|r |cff888899(%d items)|r", q, matchCount or 0))
+    bText:SetText(string.format("|cffcf52ffHome|r |cff666688>|r |cffdf80ffSearch: \"|r|cffffffff%s|r|cffdf80ff\"|r |cff888899(%d items)|r", q, matchCount or 0))
+    return
+  end
+
+  if cur == "nearby" or FG.activeCategory == "nearby" then
+    if upBtn then
+      upBtn:Enable()
+      local ufs = upBtn:GetFontString()
+      if ufs then ufs:SetTextColor(1, 1, 1) end
+    end
+    local pZone, pSub = FG:GetPlayerZoneInfo()
+    local zoneDisplay = pZone ~= "" and pZone or "Azeroth"
+    if pSub and pSub ~= "" then zoneDisplay = zoneDisplay .. " (" .. pSub .. ")" end
+    bText:SetText(string.format("|cffcf52ffHome|r |cff666688>|r |cff20ff20[Nearby Radar]|r |cffffd24d%s|r |cff888899(%d nearby points of interest)|r", zoneDisplay, matchCount or 0))
     return
   end
 
@@ -2605,7 +3115,7 @@ function FG:UpdateDolphinBreadcrumbs(query, matchCount)
       local ufs = upBtn:GetFontString()
       if ufs then ufs:SetTextColor(0.45, 0.45, 0.50) end
     end
-    bText:SetText("|cffcf52ff📁 Home|r")
+    bText:SetText("|cffcf52ffHome|r")
   else
     if upBtn then
       upBtn:Enable()
@@ -2613,9 +3123,9 @@ function FG:UpdateDolphinBreadcrumbs(query, matchCount)
       if ufs then ufs:SetTextColor(1, 1, 1) end
     end
 
-    local trail = { "|cffcf52ff📁 Home|r" }
+    local trail = { "|cffcf52ffHome|r" }
     if cur:find("^quests") then
-      table.insert(trail, "|cff88aacc📂 Quests|r")
+      table.insert(trail, "|cff88aaccQuests|r")
       if cur == "quests/eastern_kingdoms" then
         table.insert(trail, "|cffffffffEastern Kingdoms|r")
       elseif cur == "quests/kalimdor" then
@@ -2627,7 +3137,7 @@ function FG:UpdateDolphinBreadcrumbs(query, matchCount)
       elseif cur == "quests/dungeons" then
         table.insert(trail, "|cffffffffDungeon Quests|r")
       elseif cur == "quests/forever" then
-        table.insert(trail, "|cffe6cc80★ Forever Quests|r")
+        table.insert(trail, "|cffe6cc80[Forever] Quests|r")
       elseif cur:find("^quests/zone/") then
         local zn = cur:sub(13)
         local region = KALIMDOR_ZONES[zn] and "Kalimdor" or "Eastern Kingdoms"
@@ -2641,40 +3151,40 @@ function FG:UpdateDolphinBreadcrumbs(query, matchCount)
         table.insert(trail, "|cffffd24d" .. cur:sub(13) .. "|r")
       end
     elseif cur:find("^items") then
-      table.insert(trail, "|cff88aacc📂 Items|r")
+      table.insert(trail, "|cff88aaccItems|r")
       if cur == "items/weapons" then table.insert(trail, "|cffffffffWeapons|r")
       elseif cur == "items/armor" then table.insert(trail, "|cffffffffArmor|r")
       elseif cur == "items/accessories" then table.insert(trail, "|cffffffffAccessories|r")
       elseif cur == "items/consumables" then table.insert(trail, "|cffffffffConsumables|r")
       elseif cur == "items/trade_goods" then table.insert(trail, "|cffffffffTrade Goods|r")
       elseif cur == "items/recipes" then table.insert(trail, "|cffffffffRecipes|r")
-      elseif cur == "items/forever" then table.insert(trail, "|cffe6cc80★ Forever Gear|r")
+      elseif cur == "items/forever" then table.insert(trail, "|cffe6cc80[Forever] Gear|r")
       elseif cur:find("^items/sub/") then
         table.insert(trail, "|cffffd24d" .. cur:sub(11) .. "|r")
       end
     elseif cur:find("^creatures") then
-      table.insert(trail, "|cff88aacc📂 Creatures|r")
+      table.insert(trail, "|cff88aaccCreatures|r")
       if cur == "creatures/bosses" then table.insert(trail, "|cffffffffBosses|r")
       elseif cur == "creatures/rares" then table.insert(trail, "|cffffffffRares|r")
-      elseif cur == "creatures/forever" then table.insert(trail, "|cffe6cc80★ Forever NPCs|r")
+      elseif cur == "creatures/forever" then table.insert(trail, "|cffe6cc80[Forever] NPCs|r")
       elseif cur:find("^creatures/") then table.insert(trail, "|cffffd24d" .. cur:sub(11):gsub("^%l", string.upper) .. "|r")
       end
     elseif cur:find("^dungeons") then
-      table.insert(trail, "|cff88aacc📂 Dungeons|r")
+      table.insert(trail, "|cff88aaccDungeons|r")
       if cur == "dungeons/starter" then table.insert(trail, "|cffffffffStarter (15-30)|r")
       elseif cur == "dungeons/mid" then table.insert(trail, "|cffffffffMid-Tier (30-50)|r")
       elseif cur == "dungeons/endgame" then table.insert(trail, "|cffffffffEndgame (50-60)|r")
       elseif cur == "dungeons/raids" then table.insert(trail, "|cffffffffRaids (Lvl 60)|r")
-      elseif cur == "dungeons/forever" then table.insert(trail, "|cffe6cc80★ Forever Instances|r")
+      elseif cur == "dungeons/forever" then table.insert(trail, "|cffe6cc80[Forever] Instances|r")
       end
     elseif cur:find("^vendors") then
-      table.insert(trail, "|cff88aacc📂 Vendors|r")
+      table.insert(trail, "|cff88aaccVendors|r")
       if cur == "vendors/flightpaths" then table.insert(trail, "|cffffffffFlight Masters|r")
       elseif cur == "vendors/pvp" then table.insert(trail, "|cffffffffPvP Vendors|r")
       elseif cur == "vendors/specialty" then table.insert(trail, "|cffffffffSpecialty Goods|r")
       end
     elseif cur:find("^forever") then
-      table.insert(trail, "|cffe6cc80★ Forever Content|r")
+      table.insert(trail, "|cffe6cc80[Forever] Content|r")
       if cur == "forever/items" then table.insert(trail, "|cffffffffGear|r")
       elseif cur == "forever/quests" then table.insert(trail, "|cffffffffQuests|r")
       elseif cur == "forever/creatures" then table.insert(trail, "|cffffffffNPCs|r")
@@ -2682,29 +3192,103 @@ function FG:UpdateDolphinBreadcrumbs(query, matchCount)
       end
     end
 
-    bText:SetText(table.concat(trail, " |cff666688▶|r "))
+    bText:SetText(table.concat(trail, " |cff666688>|r "))
   end
 end
 
 function FG:PopulateCodexResults(query)
   if not FG.CodexWindow or not FG.CodexWindow.Content then return end
   local content = FG.CodexWindow.Content
+  local scrollFrame = ForeverGuideScrollFrame
 
-  if content.Buttons then
-    for _, btn in ipairs(content.Buttons) do btn:Hide() end
-  end
-  content.Buttons = content.Buttons or {}
+  if content.BlankState then content.BlankState:Hide() end
 
   local q = (query or ""):lower():trim()
   local cat = FG.activeCategory or "all"
   local cur = FG.currentFolder or "root"
   local cw = FG.CodexWindow
 
-  if content.BlankState then content.BlankState:Hide() end
-
   local matches = {}
 
-  if q == "" then
+  if cur == "nearby" or cat == "nearby" then
+    local pZone, pSub = FG:GetPlayerZoneInfo()
+    local pZoneLower = pZone:lower()
+    local pSubLower = (pSub or ""):lower()
+
+    -- 1. Nearby Bosses & Rares & Creatures
+    if FG.Data.Creatures then
+      for _, c in pairs(FG.Data.Creatures) do
+        local inZone = c.zone and c.zone:lower() == pZoneLower
+        local inSub = pSubLower ~= "" and ((c.location and c.location:lower():find(pSubLower, 1, true)) or (c.zone and c.zone:lower():find(pSubLower, 1, true)))
+        if inZone or inSub then
+          if q == "" or (c.name and c.name:lower():find(q, 1, true)) then
+            table.insert(matches, { type = "creature", data = c, isNearby = true })
+          end
+        end
+      end
+    end
+
+    -- 2. Nearby Quests
+    if FG.Data.Quests then
+      for _, quest in pairs(FG.Data.Quests) do
+        local inZone = quest.zone and quest.zone:lower() == pZoneLower
+        local inSub = pSubLower ~= "" and ((quest.zone and quest.zone:lower():find(pSubLower, 1, true)) or (quest.npc and quest.npc:lower():find(pSubLower, 1, true)))
+        if inZone or inSub then
+          if q == "" or (quest.title and quest.title:lower():find(q, 1, true)) then
+            table.insert(matches, { type = "quest", data = quest, isNearby = true })
+          end
+        end
+      end
+    end
+
+    -- 3. Nearby Key Vendors & Flight Masters
+    if FG.Data.Vendors then
+      for _, v in pairs(FG.Data.Vendors) do
+        local inZone = v.zone and v.zone:lower() == pZoneLower
+        if inZone then
+          if q == "" or (v.name and v.name:lower():find(q, 1, true)) or (v.item and v.item:lower():find(q, 1, true)) then
+            table.insert(matches, { type = "vendor", data = v, isNearby = true })
+          end
+        end
+      end
+    end
+    if FG.Data.Flightpaths then
+      for _, fp in pairs(FG.Data.Flightpaths) do
+        local inZone = fp.zone and fp.zone:lower() == pZoneLower
+        if inZone then
+          local vData = { name = fp.name, zone = fp.zone, coords = fp.coords, item = fp.faction .. " Flight Master", tip = fp.notes or fp.connections }
+          if q == "" or (fp.name and fp.name:lower():find(q, 1, true)) then
+            table.insert(matches, { type = "vendor", data = vData, isNearby = true })
+          end
+        end
+      end
+    end
+
+    -- 4. Nearby Dungeons
+    if FG.Data.Dungeons then
+      for _, d in pairs(FG.Data.Dungeons) do
+        local inZone = d.zone and d.zone:lower():find(pZoneLower, 1, true)
+        if inZone then
+          if q == "" or (d.name and d.name:lower():find(q, 1, true)) then
+            table.insert(matches, { type = "dungeon", data = d, isNearby = true })
+          end
+        end
+      end
+    end
+
+    -- 5. Notable Local Loot
+    if FG.Data.Items and #matches < 300 then
+      for _, item in pairs(FG.Data.Items) do
+        local inSource = item.source and item.source:lower():find(pZoneLower, 1, true)
+        if inSource then
+          if q == "" or (item.name and item.name:lower():find(q, 1, true)) then
+            table.insert(matches, { type = "item", data = item, isNearby = true })
+          end
+        end
+      end
+    end
+
+  elseif q == "" then
     -- Browsing current Dolphin folder
     local folderDef = FG.FolderTree[cur]
     if folderDef and folderDef.folders then
@@ -2719,7 +3303,6 @@ function FG:PopulateCodexResults(query)
       for _, quest in pairs(FG.Data.Quests) do
         if quest.zone == zoneName then
           table.insert(matches, { type = "quest", data = quest })
-          if #matches >= 80 then break end
         end
       end
     elseif cur:find("^quests/class/") and FG.Data.Quests then
@@ -2727,7 +3310,6 @@ function FG:PopulateCodexResults(query)
       for _, quest in pairs(FG.Data.Quests) do
         if quest.zone == classZone then
           table.insert(matches, { type = "quest", data = quest })
-          if #matches >= 80 then break end
         end
       end
     elseif cur:find("^quests/prof/") and FG.Data.Quests then
@@ -2735,7 +3317,6 @@ function FG:PopulateCodexResults(query)
       for _, quest in pairs(FG.Data.Quests) do
         if quest.zone == profZone then
           table.insert(matches, { type = "quest", data = quest })
-          if #matches >= 80 then break end
         end
       end
     elseif cur == "quests/dungeons" and FG.Data.Quests then
@@ -2747,26 +3328,22 @@ function FG:PopulateCodexResults(query)
                            quest.zone:find("Scholomance") or quest.zone:find("Dire Maul") or quest.zone:find("Molten") or
                            quest.zone:find("Ahn'Qiraj") or quest.zone:find("Naxxramas")) then
           table.insert(matches, { type = "quest", data = quest })
-          if #matches >= 80 then break end
         end
       end
     elseif cur == "quests/forever" and FG.Data.Quests then
       for _, quest in pairs(FG.Data.Quests) do
         if quest.isForever then
           table.insert(matches, { type = "quest", data = quest })
-          if #matches >= 80 then break end
         end
       end
     elseif cur == "items/forever" and FG.Data.Items then
       for _, item in pairs(FG.Data.Items) do
         if item.isForever then
           table.insert(matches, { type = "item", data = item })
-          if #matches >= 80 then break end
         end
       end
     elseif cur:find("^items/sub/") and FG.Data.Items then
       local subName = cur:sub(11)
-      local matchPattern = subName:lower()
       for _, item in pairs(FG.Data.Items) do
         local matchesFilter = false
         if subName == "One-Handed Axes" and item.slot == "One-Hand" and item.itemType and item.itemType:find("Axe") then matchesFilter = true
@@ -2804,7 +3381,6 @@ function FG:PopulateCodexResults(query)
 
         if matchesFilter then
           table.insert(matches, { type = "item", data = item })
-          if #matches >= 80 then break end
         end
       end
     elseif cur:find("^creatures/") and FG.Data.Creatures then
@@ -2814,11 +3390,15 @@ function FG:PopulateCodexResults(query)
         if sub == "bosses" and (c.classification == "Boss" or c.classification == "World Boss") then pass = true
         elseif sub == "rares" and (c.classification == "Rare" or c.classification == "Rare Elite") then pass = true
         elseif sub == "forever" and c.isForever then pass = true
-        elseif c.family and c.family:lower() == sub:lower() then pass = true
+        elseif c.family then
+          local fam = c.family:lower()
+          local s = sub:lower()
+          if fam == s or fam .. "s" == s or (s:sub(-1) == "s" and fam == s:sub(1, -2)) then
+            pass = true
+          end
         end
         if pass then
           table.insert(matches, { type = "creature", data = c })
-          if #matches >= 80 then break end
         end
       end
     elseif cur:find("^dungeons/") and FG.Data.Dungeons then
@@ -2840,29 +3420,24 @@ function FG:PopulateCodexResults(query)
     elseif cur == "vendors/flightpaths" and FG.Data.Flightpaths then
       for _, fp in pairs(FG.Data.Flightpaths) do
         table.insert(matches, { type = "vendor", data = { name = fp.name, zone = fp.zone, coords = fp.coords, item = fp.faction .. " Flight Master", tip = fp.notes or fp.connections } })
-        if #matches >= 80 then break end
       end
     elseif cur:find("^vendors/") and FG.Data.Vendors then
       for _, v in pairs(FG.Data.Vendors) do
         table.insert(matches, { type = "vendor", data = v })
-        if #matches >= 80 then break end
       end
     elseif cur:find("^forever/") then
       local sub = cur:sub(9)
       if sub == "items" and FG.Data.Items then
         for _, item in pairs(FG.Data.Items) do
           if item.isForever then table.insert(matches, { type = "item", data = item }) end
-          if #matches >= 80 then break end
         end
       elseif sub == "quests" and FG.Data.Quests then
         for _, quest in pairs(FG.Data.Quests) do
           if quest.isForever then table.insert(matches, { type = "quest", data = quest }) end
-          if #matches >= 80 then break end
         end
       elseif sub == "creatures" and FG.Data.Creatures then
         for _, c in pairs(FG.Data.Creatures) do
           if c.isForever then table.insert(matches, { type = "creature", data = c }) end
-          if #matches >= 80 then break end
         end
       elseif sub == "dungeons" and FG.Data.Dungeons then
         for _, d in pairs(FG.Data.Dungeons) do
@@ -2873,16 +3448,15 @@ function FG:PopulateCodexResults(query)
 
   else
     -- Active search query filtered by category
-    if (cat == "all" or cat == "items") and FG.Data.Items and #matches < 50 then
+    if (cat == "all" or cat == "items") and FG.Data.Items then
       for _, item in pairs(FG.Data.Items) do
         if item.name and (item.name:lower():find(q, 1, true) or (item.source and item.source:lower():find(q, 1, true))) then
           table.insert(matches, { type = "item", data = item })
-          if #matches >= 50 then break end
         end
       end
     end
 
-    if (cat == "all" or cat == "quests") and FG.Data.Quests and #matches < 65 then
+    if (cat == "all" or cat == "quests") and FG.Data.Quests then
       for _, quest in pairs(FG.Data.Quests) do
         local matchTitle = quest.title and quest.title:lower():find(q, 1, true)
         local matchNpc = quest.npc and quest.npc:lower():find(q, 1, true)
@@ -2891,24 +3465,22 @@ function FG:PopulateCodexResults(query)
         local matchTip = quest.tip and quest.tip:lower():find(q, 1, true)
         if matchTitle or matchNpc or matchZone or matchObj or matchTip then
           table.insert(matches, { type = "quest", data = quest })
-          if #matches >= 65 then break end
         end
       end
     end
 
-    if (cat == "all" or cat == "creatures") and FG.Data.Creatures and #matches < 75 then
+    if (cat == "all" or cat == "creatures") and FG.Data.Creatures then
       for _, c in pairs(FG.Data.Creatures) do
         local matchName = c.name and c.name:lower():find(q, 1, true)
         local matchZone = c.zone and c.zone:lower():find(q, 1, true)
         local matchLoc = c.location and c.location:lower():find(q, 1, true)
         if matchName or matchZone or matchLoc then
           table.insert(matches, { type = "creature", data = c })
-          if #matches >= 75 then break end
         end
       end
     end
 
-    if (cat == "all" or cat == "dungeons") and FG.Data.Dungeons and #matches < 80 then
+    if (cat == "all" or cat == "dungeons") and FG.Data.Dungeons then
       for _, d in pairs(FG.Data.Dungeons) do
         if d.name and (d.name:lower():find(q, 1, true) or (d.zone and d.zone:lower():find(q, 1, true))) then
           table.insert(matches, { type = "dungeon", data = d })
@@ -2916,28 +3488,57 @@ function FG:PopulateCodexResults(query)
       end
     end
 
-    if (cat == "all" or cat == "vendors") and FG.Data.Vendors and #matches < 85 then
+    if (cat == "all" or cat == "vendors") and FG.Data.Vendors then
       for _, v in pairs(FG.Data.Vendors) do
         local matchName = v.name and v.name:lower():find(q, 1, true)
         local matchItem = v.item and v.item:lower():find(q, 1, true)
         local matchZone = v.zone and v.zone:lower():find(q, 1, true)
         if matchName or matchItem or matchZone then
           table.insert(matches, { type = "vendor", data = v })
-          if #matches >= 85 then break end
         end
       end
     end
   end
 
-  -- Strict Alphabetical Ordering (A to Z) across folders and content items
-  table.sort(matches, function(a, b)
-    if a.type == "folder" and b.type ~= "folder" then return true end
-    if a.type ~= "folder" and b.type == "folder" then return false end
+  -- Sorting
+  if cur == "nearby" or cat == "nearby" then
+    local function GetNearbyWeight(m)
+      if m.type == "creature" then
+        local c = m.data
+        if c.classification == "Boss" or c.classification == "World Boss" then return 1 end
+        if c.classification == "Rare" or c.classification == "Rare Elite" then return 2 end
+        if c.classification == "Elite" then return 3 end
+        return 4
+      elseif m.type == "quest" then
+        return 5
+      elseif m.type == "vendor" then
+        return 6
+      elseif m.type == "dungeon" then
+        return 7
+      elseif m.type == "item" then
+        return 8
+      end
+      return 9
+    end
 
-    local nameA = (a.data and (a.data.title or a.data.name or "")) or ""
-    local nameB = (b.data and (b.data.title or b.data.name or "")) or ""
-    return nameA:lower() < nameB:lower()
-  end)
+    table.sort(matches, function(a, b)
+      local wA = GetNearbyWeight(a)
+      local wB = GetNearbyWeight(b)
+      if wA ~= wB then return wA < wB end
+      local nameA = (a.data and (a.data.title or a.data.name or "")) or ""
+      local nameB = (b.data and (b.data.title or b.data.name or "")) or ""
+      return nameA:lower() < nameB:lower()
+    end)
+  else
+    table.sort(matches, function(a, b)
+      if a.type == "folder" and b.type ~= "folder" then return true end
+      if a.type ~= "folder" and b.type == "folder" then return false end
+
+      local nameA = (a.data and (a.data.title or a.data.name or "")) or ""
+      local nameB = (b.data and (b.data.title or b.data.name or "")) or ""
+      return nameA:lower() < nameB:lower()
+    end)
+  end
 
   FG:UpdateDolphinBreadcrumbs(q, #matches)
 
@@ -2945,410 +3546,35 @@ function FG:PopulateCodexResults(query)
     if content.NoResultsState then
       content.NoResultsState:Show()
       if content.NoResultsState.Title then
-        content.NoResultsState.Title:SetText("|cffff8080No results found for \"|r|cffffffff" .. (query or "") .. "|r|cffff8080\"|r")
+        if cur == "nearby" or cat == "nearby" then
+          local pZone = FG:GetPlayerZoneInfo()
+          content.NoResultsState.Title:SetText("|cffff8080No nearby intel found in " .. pZone .. "|r")
+        else
+          content.NoResultsState.Title:SetText("|cffff8080No results found for \"|r|cffffffff" .. (query or "") .. "|r|cffff8080\"|r")
+        end
       end
     end
-    content:SetHeight(450)
+    for _, btn in ipairs(content.RowPool or {}) do btn:Hide() end
+    content:SetHeight(420)
     if cw and cw.StatusText then cw.StatusText:SetText("|cffff80800 results found|r") end
     return
   else
     if content.NoResultsState then content.NoResultsState:Hide() end
-    if cw and cw.StatusText then cw.StatusText:SetText("|cffdf80ff" .. #matches .. " items in view (A-Z)|r") end
+    local countStr = FG:FormatNumber(#matches)
+    if cw and cw.StatusText then
+      if cur == "nearby" or cat == "nearby" then
+        cw.StatusText:SetText("|cff20ff20" .. countStr .. " nearby points of interest (" .. (FG.lastKnownZone or "Local Area") .. ")|r")
+      else
+        cw.StatusText:SetText("|cffdf80ff" .. countStr .. " items in view (A-Z)|r")
+      end
+    end
   end
 
-  local yOffset = -2
-  for i, match in ipairs(matches) do
-    local btn = content.Buttons[i]
-    if not btn then
-      btn = CreateFrame("Button", nil, content, "BackdropTemplate")
-      btn:SetSize(548, 52)
-      MakePixelSharp(btn)
-
-      btn:SetBackdrop({
-        bgFile = "Interface\\Buttons\\WHITE8X8",
-        edgeFile = "Interface\\Tooltips\\UI-Tooltip-Border",
-        tile = false,
-        tileSize = 12,
-        edgeSize = 10,
-        insets = { left = 3, right = 3, top = 3, bottom = 3 },
-      })
-      btn:SetBackdropColor(0.10, 0.12, 0.16, 0.90)
-      btn:SetBackdropBorderColor(0.18, 0.24, 0.33, 0.70)
-
-      local iconFrame = CreateFrame("Frame", nil, btn, "BackdropTemplate")
-      iconFrame:SetSize(34, 34)
-      iconFrame:SetPoint("LEFT", btn, "LEFT", 8, 0)
-      MakePixelSharp(iconFrame)
-      iconFrame:SetBackdrop({
-        edgeFile = "Interface\\Tooltips\\UI-Tooltip-Border",
-        tile = false,
-        tileSize = 10,
-        edgeSize = 8,
-        insets = { left = 2, right = 2, top = 2, bottom = 2 },
-      })
-      iconFrame:SetBackdropBorderColor(0.4, 0.4, 0.5, 0.8)
-
-      local iconTex = iconFrame:CreateTexture(nil, "ARTWORK")
-      iconTex:SetPoint("TOPLEFT", iconFrame, "TOPLEFT", 2, -2)
-      iconTex:SetPoint("BOTTOMRIGHT", iconFrame, "BOTTOMRIGHT", -2, 2)
-      iconTex:SetTexCoord(0.08, 0.92, 0.08, 0.92)
-      btn.IconFrame = iconFrame
-      btn.Icon = iconTex
-
-      local titleText = btn:CreateFontString(nil, "OVERLAY", "GameFontHighlight")
-      titleText:SetPoint("TOPLEFT", btn, "TOPLEFT", 48, -7)
-      SharpenFontString(titleText, 13, "OUTLINE")
-      btn.Title = titleText
-
-      local subText = btn:CreateFontString(nil, "OVERLAY", "GameFontNormalSmall")
-      subText:SetPoint("TOPLEFT", titleText, "BOTTOMLEFT", 0, -3)
-      subText:SetWidth(400)
-      subText:SetJustifyH("LEFT")
-      SharpenFontString(subText, 11, "OUTLINE")
-      btn.Sub = subText
-
-      local hint = btn:CreateFontString(nil, "OVERLAY", "GameFontHighlightSmall")
-      hint:SetPoint("RIGHT", btn, "RIGHT", -12, 0)
-      hint:SetText("|cffdf80ffInspect ▶|r")
-      SharpenFontString(hint, 10, "OUTLINE")
-      btn.Hint = hint
-
-      content.Buttons[i] = btn
-    end
-
-    btn:SetPoint("TOPLEFT", content, "TOPLEFT", 0, yOffset)
-
-    if match.type == "folder" then
-      local folder = match.data
-      btn:SetHeight(38)
-      btn:SetBackdropColor(0.08, 0.11, 0.16, 0.95)
-      btn:SetBackdropBorderColor(0.24, 0.38, 0.58, 0.85)
-
-      if btn.IconFrame then btn.IconFrame:Hide() end
-      btn.Title:ClearAllPoints()
-      btn.Title:SetPoint("TOPLEFT", btn, "TOPLEFT", 10, -7)
-      btn.Sub:ClearAllPoints()
-      btn.Sub:SetPoint("TOPLEFT", btn.Title, "BOTTOMLEFT", 0, -3)
-      btn.Sub:SetWidth(440)
-
-      btn.Title:SetText("|cff66ccff" .. (folder.icon or "📁") .. " " .. folder.name .. "|r")
-      btn.Sub:SetText("|cff8899aa" .. (folder.desc or folder.count or "Folder") .. "|r")
-      btn.Hint:SetText("|cff33bbffOpen 📂 ▶|r")
-
-      btn:SetScript("OnEnter", function(self)
-        self:SetBackdropColor(0.14, 0.20, 0.30, 0.98)
-        self:SetBackdropBorderColor(0.40, 0.70, 1.0, 0.95)
-        GameTooltip:SetOwner(self, "ANCHOR_TOPLEFT")
-        GameTooltip:AddLine(folder.name, 0.4, 0.8, 1.0)
-        GameTooltip:AddLine(folder.desc or "Click to open folder", 0.8, 0.8, 0.8, true)
-        GameTooltip:Show()
-      end)
-      btn:SetScript("OnLeave", function(self)
-        self:SetBackdropColor(0.08, 0.11, 0.16, 0.95)
-        self:SetBackdropBorderColor(0.24, 0.38, 0.58, 0.85)
-        GameTooltip:Hide()
-      end)
-      btn:SetScript("OnClick", function()
-        FG:NavigateToFolder(folder.path)
-        FG:PlaySparkSound("shimmer")
-      end)
-
-    elseif match.type == "item" then
-      local item = match.data
-      btn:SetHeight(52)
-      btn:SetBackdropColor(0.10, 0.12, 0.16, 0.90)
-      btn:SetBackdropBorderColor(0.18, 0.24, 0.33, 0.70)
-      btn.Hint:SetText("|cffdf80ffInspect ▶|r")
-
-      if btn.IconFrame then
-        btn.IconFrame:Show()
-        local tex = (item.icon and item.icon ~= "") and ("Interface\\Icons\\" .. item.icon) or "Interface\\Icons\\inv_misc_questionmark"
-        btn.Icon:SetTexture(tex)
-        local q = item.quality or "Common"
-        if q == "Legendary" then btn.IconFrame:SetBackdropBorderColor(1.0, 0.5, 0.0, 1.0)
-        elseif q == "Epic" then btn.IconFrame:SetBackdropBorderColor(0.64, 0.21, 0.93, 1.0)
-        elseif q == "Rare" then btn.IconFrame:SetBackdropBorderColor(0.0, 0.44, 0.87, 1.0)
-        elseif q == "Uncommon" then btn.IconFrame:SetBackdropBorderColor(0.12, 1.0, 0.0, 1.0)
-        else btn.IconFrame:SetBackdropBorderColor(0.4, 0.4, 0.5, 0.8) end
-      end
-      btn.Title:ClearAllPoints()
-      btn.Title:SetPoint("TOPLEFT", btn, "TOPLEFT", 48, -7)
-      btn.Sub:ClearAllPoints()
-      btn.Sub:SetPoint("TOPLEFT", btn.Title, "BOTTOMLEFT", 0, -3)
-      btn.Sub:SetWidth(400)
-
-      local qColor = FG.QualityColors[item.quality] or "ffffffff"
-      local foreverTag = item.isForever and " |cffe6cc80[Forever]|r" or ""
-      btn.Title:SetText("|c" .. qColor .. item.name .. "|r" .. foreverTag .. " |cff8899aa(iLvl " .. item.ilvl .. ")|r")
-
-      local desc = (item.slot and item.slot ~= "" and (item.slot .. " • ") or "") .. (item.source or "World Drop")
-      if item.tip and item.tip ~= "" then desc = desc .. " |cff52b8ffNote:|r |cffb0c4de" .. item.tip .. "|r" end
-      btn.Sub:SetText(desc)
-
-      btn:SetScript("OnEnter", function(self)
-        self:SetBackdropColor(0.14, 0.18, 0.26, 0.95)
-        self:SetBackdropBorderColor(0.45, 0.25, 0.85, 0.90)
-        GameTooltip:SetOwner(self, "ANCHOR_TOPLEFT")
-        GameTooltip:SetItemByID(item.id)
-        if item.tip and item.tip ~= "" then
-          GameTooltip:AddLine(" ")
-          GameTooltip:AddLine("|cffcf52ffSpark Intel:|r " .. item.tip, 0.3, 0.8, 1.0, true)
-        end
-        GameTooltip:AddLine(" ")
-        GameTooltip:AddLine("|cffdf80ff<Left-Click>|r Inspect full item stats & sources", 0.85, 0.85, 0.85)
-        GameTooltip:AddLine("|cffdf80ff<Shift-Click>|r Share link to chat", 0.7, 0.7, 0.7)
-        GameTooltip:Show()
-      end)
-      btn:SetScript("OnLeave", function(self)
-        self:SetBackdropColor(0.10, 0.12, 0.16, 0.90)
-        self:SetBackdropBorderColor(0.18, 0.24, 0.33, 0.70)
-        GameTooltip:Hide()
-      end)
-      btn:SetScript("OnClick", function()
-        if IsShiftKeyDown() then
-          FG:LinkEntityToChat("item", item)
-        else
-          FG:ShowDetailPanel("item", item)
-        end
-        FG:PlaySparkSound("shimmer")
-      end)
-
-    elseif match.type == "quest" then
-      local qData = match.data
-      btn:SetHeight(52)
-      btn:SetBackdropColor(0.10, 0.12, 0.16, 0.90)
-      btn:SetBackdropBorderColor(0.18, 0.24, 0.33, 0.70)
-      btn.Hint:SetText("|cffdf80ffInspect ▶|r")
-
-      if btn.IconFrame then
-        btn.IconFrame:Show()
-        btn.Icon:SetTexture("Interface\\Icons\\inv_misc_book_07")
-        btn.IconFrame:SetBackdropBorderColor(0.9, 0.7, 0.2, 0.9)
-      end
-      btn.Title:ClearAllPoints()
-      btn.Title:SetPoint("TOPLEFT", btn, "TOPLEFT", 48, -7)
-      btn.Sub:ClearAllPoints()
-      btn.Sub:SetPoint("TOPLEFT", btn.Title, "BOTTOMLEFT", 0, -3)
-      btn.Sub:SetWidth(400)
-
-      local foreverTag = qData.isForever and " |cffe6cc80[Forever]|r" or ""
-      btn.Title:SetText("|cffffd24d" .. qData.title .. "|r" .. foreverTag .. " |cff20ff20(Lvl " .. qData.questLevel .. ")|r")
-      btn.Sub:SetText("|cff52b8ffZone:|r " .. (qData.zone or "Various") .. " |cff52b8ffStart:|r " .. (qData.npc or "Unknown"))
-
-      btn:SetScript("OnEnter", function(self)
-        self:SetBackdropColor(0.10, 0.18, 0.14, 0.95)
-        self:SetBackdropBorderColor(0.45, 0.25, 0.85, 0.90)
-        GameTooltip:SetOwner(self, "ANCHOR_TOPLEFT")
-        GameTooltip:AddLine(qData.title, 1, 0.85, 0.2)
-        GameTooltip:AddLine("Level: " .. qData.questLevel .. " (Req " .. qData.reqLevel .. ")", 1, 1, 1)
-        if qData.objectives and qData.objectives ~= "" then
-          GameTooltip:AddLine(" ")
-          GameTooltip:AddLine("Objectives: " .. qData.objectives, 0.8, 0.8, 0.8, true)
-        end
-        GameTooltip:AddLine(" ")
-        GameTooltip:AddLine("|cffdf80ff<Left-Click>|r Inspect full quest details, rewards & NPC", 0.85, 0.85, 0.85)
-        GameTooltip:AddLine("|cffdf80ff<Shift-Click>|r Share link to chat", 0.7, 0.7, 0.7)
-        GameTooltip:Show()
-      end)
-      btn:SetScript("OnLeave", function(self)
-        self:SetBackdropColor(0.10, 0.12, 0.16, 0.90)
-        self:SetBackdropBorderColor(0.18, 0.24, 0.33, 0.70)
-        GameTooltip:Hide()
-      end)
-      btn:SetScript("OnClick", function()
-        if IsShiftKeyDown() then
-          FG:LinkEntityToChat("quest", qData)
-        else
-          FG:ShowDetailPanel("quest", qData)
-        end
-        FG:PlaySparkSound("shimmer")
-      end)
-
-    elseif match.type == "dungeon" then
-      local d = match.data
-      btn:SetHeight(52)
-      btn:SetBackdropColor(0.10, 0.12, 0.16, 0.90)
-      btn:SetBackdropBorderColor(0.18, 0.24, 0.33, 0.70)
-      btn.Hint:SetText("|cffdf80ffInspect ▶|r")
-
-      if btn.IconFrame then
-        btn.IconFrame:Show()
-        btn.Icon:SetTexture("Interface\\Icons\\inv_helmet_08")
-        btn.IconFrame:SetBackdropBorderColor(0.7, 0.4, 0.9, 0.9)
-      end
-      btn.Title:ClearAllPoints()
-      btn.Title:SetPoint("TOPLEFT", btn, "TOPLEFT", 48, -7)
-      btn.Sub:ClearAllPoints()
-      btn.Sub:SetPoint("TOPLEFT", btn.Title, "BOTTOMLEFT", 0, -3)
-      btn.Sub:SetWidth(400)
-
-      local foreverTag = d.isForever and " |cffe6cc80[Forever]|r" or ""
-      btn.Title:SetText("|cffffd24d" .. d.name .. "|r" .. foreverTag .. " |cff20ff20(Lvl " .. d.recLevel .. ")|r")
-      btn.Sub:SetText("|cff52b8ffZone:|r " .. d.zone .. " |cff52b8ffEntrance:|r " .. (d.coords or "N/A"))
-
-      btn:SetScript("OnEnter", function(self)
-        self:SetBackdropColor(0.15, 0.12, 0.22, 0.95)
-        self:SetBackdropBorderColor(0.55, 0.38, 0.78, 0.90)
-        GameTooltip:SetOwner(self, "ANCHOR_TOPLEFT")
-        GameTooltip:AddLine(d.name, 1, 0.85, 0.2)
-        GameTooltip:AddLine("Level: " .. d.recLevel .. " (" .. d.zone .. ")", 1, 1, 1)
-        if d.coords and d.coords ~= "" then GameTooltip:AddLine("Coords: " .. d.coords, 0.2, 1, 0.2) end
-        if d.strategy and d.strategy ~= "" then
-          GameTooltip:AddLine(" ")
-          GameTooltip:AddLine("Tactics: " .. d.strategy, 0.8, 0.8, 0.8, true)
-        end
-        GameTooltip:AddLine(" ")
-        GameTooltip:AddLine("|cffdf80ff<Left-Click>|r Inspect dungeon tactics, bosses & loot", 0.85, 0.85, 0.85)
-        GameTooltip:AddLine("|cffdf80ff<Shift-Click>|r Share link to chat", 0.7, 0.7, 0.7)
-        GameTooltip:Show()
-      end)
-      btn:SetScript("OnLeave", function(self)
-        self:SetBackdropColor(0.10, 0.12, 0.16, 0.90)
-        self:SetBackdropBorderColor(0.18, 0.24, 0.33, 0.70)
-        GameTooltip:Hide()
-      end)
-      btn:SetScript("OnClick", function()
-        if IsShiftKeyDown() then
-          FG:LinkEntityToChat("dungeon", d)
-        else
-          FG:ShowDetailPanel("dungeon", d)
-        end
-        FG:PlaySparkSound("shimmer")
-      end)
-
-    elseif match.type == "creature" then
-      local c = match.data
-      btn:SetHeight(52)
-      btn:SetBackdropColor(0.10, 0.12, 0.16, 0.90)
-      btn:SetBackdropBorderColor(0.18, 0.24, 0.33, 0.70)
-      btn.Hint:SetText("|cffdf80ffInspect ▶|r")
-
-      if btn.IconFrame then
-        btn.IconFrame:Show()
-        local cTex = (c.classification == "Boss" or c.classification == "World Boss") and "Interface\\Icons\\inv_misc_head_dragon_01" or ((c.classification == "Elite" or c.classification == "Rare Elite") and "Interface\\Icons\\spell_shadow_summoninfernal" or "Interface\\Icons\\inv_misc_monsterhead_01")
-        btn.Icon:SetTexture(cTex)
-        if c.classification == "Boss" or c.classification == "World Boss" then
-          btn.IconFrame:SetBackdropBorderColor(1.0, 0.2, 0.2, 1.0)
-        elseif c.classification == "Elite" or c.classification == "Rare Elite" then
-          btn.IconFrame:SetBackdropBorderColor(1.0, 0.8, 0.2, 1.0)
-        else
-          btn.IconFrame:SetBackdropBorderColor(0.3, 0.6, 0.9, 0.8)
-        end
-      end
-      btn.Title:ClearAllPoints()
-      btn.Title:SetPoint("TOPLEFT", btn, "TOPLEFT", 48, -7)
-      btn.Sub:ClearAllPoints()
-      btn.Sub:SetPoint("TOPLEFT", btn.Title, "BOTTOMLEFT", 0, -3)
-      btn.Sub:SetWidth(400)
-
-      local foreverTag = c.isForever and " |cffe6cc80[Forever]|r" or ""
-      local classColor = (c.classification == "Boss" or c.classification == "Rare Elite" or c.classification == "World Boss") and "ffff4040" or (c.classification == "Elite" and "ffffd24d" or "ff52b8ff")
-      local lvlStr = (c.minLevel and c.maxLevel and c.minLevel ~= c.maxLevel) and (c.minLevel .. "-" .. c.maxLevel) or (c.maxLevel or c.minLevel or "?")
-      btn.Title:SetText("|c" .. classColor .. c.name .. "|r" .. foreverTag .. " |cff20ff20(Lvl " .. lvlStr .. " " .. (c.classification or "NPC") .. ")|r")
-      local desc = "|cff52b8ffZone:|r " .. (c.zone ~= "" and c.zone or "Various")
-      if c.location and c.location ~= "" then
-        desc = desc .. " |cff52b8ffLocation:|r " .. c.location
-      end
-      if c.coords and c.coords ~= "" then
-        desc = desc .. " (" .. c.coords .. ")"
-      end
-      btn.Sub:SetText(desc)
-
-      btn:SetScript("OnEnter", function(self)
-        self:SetBackdropColor(0.18, 0.14, 0.10, 0.95)
-        self:SetBackdropBorderColor(0.85, 0.55, 0.20, 0.90)
-        GameTooltip:SetOwner(self, "ANCHOR_TOPLEFT")
-        GameTooltip:AddLine(c.name, 1, 0.85, 0.2)
-        GameTooltip:AddLine("Level: " .. lvlStr .. " (" .. (c.classification or "Normal") .. ")", 1, 1, 1)
-        if c.zone and c.zone ~= "" then GameTooltip:AddLine("Zone: " .. c.zone, 0.3, 0.8, 1.0) end
-        if c.location and c.location ~= "" then GameTooltip:AddLine("Location: " .. c.location, 0.2, 1, 0.2) end
-        if c.coords and c.coords ~= "" then GameTooltip:AddLine("Coords: " .. c.coords, 0.2, 1, 0.2) end
-        if c.health and c.health > 0 then GameTooltip:AddLine("Health: " .. c.health, 1, 0.3, 0.3) end
-        if c.strategy and c.strategy ~= "" then
-          GameTooltip:AddLine(" ")
-          GameTooltip:AddLine("Notes: " .. c.strategy, 0.8, 0.8, 0.8, true)
-        end
-        GameTooltip:AddLine(" ")
-        GameTooltip:AddLine("|cffdf80ff<Left-Click>|r Inspect NPC intel & targeting macro", 0.85, 0.85, 0.85)
-        GameTooltip:AddLine("|cffdf80ff<Shift-Click>|r Share link to chat", 0.7, 0.7, 0.7)
-        GameTooltip:Show()
-      end)
-      btn:SetScript("OnLeave", function(self)
-        self:SetBackdropColor(0.10, 0.12, 0.16, 0.90)
-        self:SetBackdropBorderColor(0.18, 0.24, 0.33, 0.70)
-        GameTooltip:Hide()
-      end)
-      btn:SetScript("OnClick", function()
-        if IsShiftKeyDown() then
-          FG:LinkEntityToChat("creature", c)
-        else
-          FG:ShowDetailPanel("creature", c)
-        end
-        FG:PlaySparkSound("shimmer")
-      end)
-
-    elseif match.type == "vendor" then
-      local v = match.data
-      btn:SetHeight(52)
-      btn:SetBackdropColor(0.10, 0.12, 0.16, 0.90)
-      btn:SetBackdropBorderColor(0.18, 0.24, 0.33, 0.70)
-      btn.Hint:SetText("|cffdf80ffInspect ▶|r")
-
-      if btn.IconFrame then
-        btn.IconFrame:Show()
-        btn.Icon:SetTexture("Interface\\Icons\\inv_misc_bag_07")
-        btn.IconFrame:SetBackdropBorderColor(0.4, 0.8, 0.5, 0.9)
-      end
-      btn.Title:ClearAllPoints()
-      btn.Title:SetPoint("TOPLEFT", btn, "TOPLEFT", 48, -7)
-      btn.Sub:ClearAllPoints()
-      btn.Sub:SetPoint("TOPLEFT", btn.Title, "BOTTOMLEFT", 0, -3)
-      btn.Sub:SetWidth(400)
-
-      btn.Title:SetText("|cffffd24d" .. v.name .. "|r |cff20ff20[Vendor]|r")
-      local desc = "|cff52b8ffSells:|r " .. (v.item or "Goods") .. " |cff52b8ffZone:|r " .. (v.zone or "Various")
-      if v.coords and v.coords ~= "" then
-        desc = desc .. " (" .. v.coords .. ")"
-      end
-      btn.Sub:SetText(desc)
-
-      btn:SetScript("OnEnter", function(self)
-        self:SetBackdropColor(0.12, 0.18, 0.16, 0.95)
-        self:SetBackdropBorderColor(0.30, 0.75, 0.55, 0.90)
-        GameTooltip:SetOwner(self, "ANCHOR_TOPLEFT")
-        GameTooltip:AddLine(v.name, 1, 0.85, 0.2)
-        GameTooltip:AddLine("Sells: " .. (v.item or "Goods"), 1, 1, 1)
-        if v.zone and v.zone ~= "" then GameTooltip:AddLine("Zone: " .. v.zone, 0.3, 0.8, 1.0) end
-        if v.coords and v.coords ~= "" then GameTooltip:AddLine("Coords: " .. v.coords, 0.2, 1, 0.2) end
-        if v.tip and v.tip ~= "" then
-          GameTooltip:AddLine(" ")
-          GameTooltip:AddLine("Note: " .. v.tip, 0.8, 0.8, 0.8, true)
-        end
-        GameTooltip:AddLine(" ")
-        GameTooltip:AddLine("|cffdf80ff<Left-Click>|r Inspect vendor wares & location", 0.85, 0.85, 0.85)
-        GameTooltip:AddLine("|cffdf80ff<Shift-Click>|r Share link to chat", 0.7, 0.7, 0.7)
-        GameTooltip:Show()
-      end)
-      btn:SetScript("OnLeave", function(self)
-        self:SetBackdropColor(0.10, 0.12, 0.16, 0.90)
-        self:SetBackdropBorderColor(0.18, 0.24, 0.33, 0.70)
-        GameTooltip:Hide()
-      end)
-      btn:SetScript("OnClick", function()
-        if IsShiftKeyDown() then
-          FG:LinkEntityToChat("vendor", v)
-        else
-          FG:ShowDetailPanel("vendor", v)
-        end
-        FG:PlaySparkSound("shimmer")
-      end)
-    end
-
-    btn:Show()
-    yOffset = yOffset - (match.type == "folder" and 42 or 58)
-  end
-
-  content:SetHeight(math.max(450, math.abs(yOffset) + 20))
+  FG.currentMatches = matches
+  local totalHeight = math.max(420, #matches * 54)
+  content:SetHeight(totalHeight)
+  if scrollFrame then scrollFrame:SetVerticalScroll(0) end
+  FG:UpdateVirtualRows()
 end
 
 function FG:PopulateDungeons()
@@ -3480,6 +3706,8 @@ end
 local EventFrame = CreateFrame("Frame")
 EventFrame:RegisterEvent("ADDON_LOADED")
 EventFrame:RegisterEvent("PLAYER_ENTERING_WORLD")
+EventFrame:RegisterEvent("ZONE_CHANGED")
+EventFrame:RegisterEvent("ZONE_CHANGED_INDOORS")
 EventFrame:RegisterEvent("ZONE_CHANGED_NEW_AREA")
 EventFrame:RegisterEvent("PLAYER_REGEN_DISABLED")
 EventFrame:RegisterEvent("PLAYER_REGEN_ENABLED")
@@ -3523,6 +3751,8 @@ EventFrame:SetScript("OnEvent", function(self, event, arg1, ...)
       FG.SparkFrame.wasDragged = false
     end
     FG:UpdateSparkMouseState()
+    local initZone = (GetRealZoneText and GetRealZoneText()) or (GetZoneText and GetZoneText()) or ""
+    if initZone ~= "" then FG.lastKnownZone = initZone end
 
   -- NPC Interaction: Auto-hide Codex window so NPC quest dialogue is 100% visible and accessible
   elseif event == "GOSSIP_SHOW" or event == "QUEST_GREETING" or event == "QUEST_DETAIL" or
@@ -3532,7 +3762,12 @@ EventFrame:SetScript("OnEvent", function(self, event, arg1, ...)
       FG.CodexWindow:Hide()
     end
 
-  elseif event == "ZONE_CHANGED_NEW_AREA" then
+  elseif event == "ZONE_CHANGED_NEW_AREA" or event == "ZONE_CHANGED" or event == "ZONE_CHANGED_INDOORS" then
+    local newZone = (GetRealZoneText and GetRealZoneText()) or (GetZoneText and GetZoneText()) or ""
+    if newZone ~= "" then FG.lastKnownZone = newZone end
+    if FG.CodexWindow and FG.CodexWindow:IsShown() and FG.activeCategory == "nearby" then
+      FG:PopulateCodexResults(ForeverGuideSearchBox and ForeverGuideSearchBox:GetText():trim() or "")
+    end
     if FG.SparkFrame and FG.SparkFrame:IsShown() then
       FG:PlaySparkSound("pulse")
       if FG.SparkFrame.Aura then

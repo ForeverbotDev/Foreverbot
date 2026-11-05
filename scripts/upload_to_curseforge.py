@@ -26,25 +26,36 @@ DIST_DIR = os.path.join(BASE_DIR, "dist")
 ADDON_DIR = os.path.join(BASE_DIR, "addon", "ForeverGuide")
 TOC_FILE = os.path.join(ADDON_DIR, "ForeverGuide.toc")
 
-CHANGELOG_TEXT = """# ⚠️ PRE-ALPHA RELEASE: ForeverGuide v0.1.0-pre-alpha
+CHANGELOG_TEXT = """# PRE-ALPHA RELEASE: ForeverGuide v0.1.0-pre-alpha
 
 > **NOTICE**: This addon is currently in **PRE-ALPHA** development for **Warcraft Forever** and **Classic Era**.
 > Features, database schemas, and interface structures are undergoing active evolution. Feedback and bug reports are welcome!
 
-### 🌟 Key Features in this Pre-Alpha Build:
+### Key Features in this Pre-Alpha Build:
 - **Autonomous Wisp Companion (Sparky)**:
   - Ambient flight mechanics with smooth wandering, boundary tethering, and resting states.
   - Dynamic game interactivity: dashes and bounces along screen borders upon player death; celebrates upon resurrection and level up.
+- **High-Performance Virtual Scrolling Engine**:
+  - Zero hardcoded item caps: smoothly browse tens of thousands of items (e.g. 2,658 Leather Armors, 3,514 Cloth Armors, 7,406 Humanoids) at 60+ FPS.
+  - Constant memory footprint with recycled button pools and instant mouse-wheel navigation.
+- **Real-Time Live Radar [Nearby] Tab**:
+  - Live zone intel tracking player location (`GetZoneText()`, `GetRealZoneText()`, `GetSubZoneText()`).
+  - Ground-truth subzone resolution mapping 1,032 subzones to parent regions.
+  - Instant docket of immediate bosses & rares with coordinates, local quests, flight masters, key vendors, and zone drop loot.
+  - Auto-refreshes on `ZONE_CHANGED`, `ZONE_CHANGED_INDOORS`, and `ZONE_CHANGED_NEW_AREA`.
 - **KDE Dolphin-Style Codex Navigation**:
-  - Hierarchical folder browsing (`/quests`, `/items`, `/creatures`, `/dungeons`, `/flightpaths`, `/vendors`).
-  - Interactive breadcrumbs and one-click `[ ⬆ Up ]` parent folder navigation.
+  - Hierarchical folder browsing (`/quests`, `/items`, `/creatures`, `/dungeons`, `/flightpaths`, `/vendors`, `/nearby`).
+  - Interactive breadcrumbs and one-click `[ < Up ]` parent folder navigation.
+  - Clean Blizzard-native ASCII glyphs (zero missing font box or question-mark artifacts).
   - Strict case-insensitive **A-to-Z alphabetical sorting** across all views.
 - **Blizzard-Accurate Ground-Truth Database**:
-  - **26,171 Items** enriched with authentic Blizzard `Interface\\Icons\\...` textures and quality-colored borders.
+  - **27,072 Items** enriched with authentic Blizzard `Interface\\Icons\\...` textures and quality-colored borders.
   - **11,236 Items** with Equip, Use, and Chance-on-Hit proc effects displayed in WoW green (`|cff20ff20`).
   - **1,122 Items** mapped to official Item Sets (e.g. *Embrace of the Viper*, *The Gladiator*).
-  - **6,865 Creatures** with pinpoint zone map coordinates (`XX.X, YY.Y`) and instant `/target` macro generation.
-  - **4,245 Quests** with complete lore story, task objectives, item rewards, and turn-in completion dialogues.
+  - **10,122 Creatures** with pinpoint zone map coordinates (`XX.X, YY.Y`) and instant `/target` macro generation.
+  - Fully resolved family taxonomies (Elementals, Beasts, Demons, Giants, Dragonkin, Humanoids).
+  - **4,258 Quests** with complete lore story, task objectives, item rewards, and turn-in completion dialogues.
+  - **905 Authentic Blizzard Vendor Inventories** and complete flight master connections.
 - **Full Sandboxing & Security Compliance**:
   - 100% compliant with Blizzard's AddOn Policy. Zero external dependencies, zero dangerous API calls.
 """

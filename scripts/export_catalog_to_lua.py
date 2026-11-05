@@ -330,6 +330,44 @@ def export_bot_knowledge() -> str:
     return "\n".join(parts)
 
 
+def export_subzones() -> str:
+    csv_path = os.path.join(BASE_DIR, "scratch", "ground_truth", "forever_client", "1.60.1.70685", "AreaTable.csv")
+    lua = ["ForeverGuide_Data.Subzones = {"]
+    if os.path.exists(csv_path):
+        import csv
+        with open(csv_path, mode="r", encoding="utf-8") as f:
+            reader = csv.DictReader(f)
+            areas = {}
+            for row in reader:
+                areas[int(row["ID"])] = row
+
+        for aid, row in areas.items():
+            pid = int(row["ParentAreaID"])
+            if pid != 0 and pid in areas:
+                parent_name = areas[pid]["AreaName_lang"]
+                sub_name = row["AreaName_lang"].lower()
+                lua.append(f"  [{escape_lua_str(sub_name)}] = {escape_lua_str(parent_name)},")
+
+    # Common quest POIs and towns
+    manual_pois = {
+        "crossroads": "The Barrens", "camp taurajo": "The Barrens", "bloodhoof village": "Mulgore",
+        "camp narache": "Mulgore", "goldshire": "Elwynn Forest", "northshire": "Elwynn Forest",
+        "northshire valley": "Elwynn Forest", "kharanos": "Dun Morogh", "coldridge valley": "Dun Morogh",
+        "brill": "Tirisfal Glades", "deathknell": "Tirisfal Glades", "razor hill": "Durotar",
+        "valley of trials": "Durotar", "sen'jin village": "Durotar", "dolanaar": "Teldrassil",
+        "shadowglen": "Teldrassil", "sentinel hill": "Westfall", "moonbrook": "Westfall",
+        "thelsamar": "Loch Modan", "lakeshire": "Redridge Mountains", "darkshire": "Duskwood",
+        "southshore": "Hillsbrad Foothills", "tarren mill": "Hillsbrad Foothills", "menethil harbor": "Wetlands",
+        "booty bay": "Stranglethorn Vale", "gadgetzan": "Tanaris", "ratchet": "The Barrens",
+        "astranaar": "Ashenvale", "splintertree post": "Ashenvale", "auberdine": "Darkshore",
+        "freewind post": "Thousand Needles", "everlook": "Winterspring", "light's hope chapel": "Eastern Plaguelands",
+    }
+    for sub, parent in manual_pois.items():
+        lua.append(f"  [{escape_lua_str(sub)}] = {escape_lua_str(parent)},")
+    lua.append("}\n")
+    return "\n".join(lua)
+
+
 def main():
     os.makedirs(OUTPUT_DIR, exist_ok=True)
     conn = sqlite3.connect(DB_PATH)
@@ -348,13 +386,16 @@ ForeverGuide_Data = ForeverGuide_Data or {}
     print("Exporting zone guides...")
     zones_lua = export_zone_guide()
 
+    print("Exporting subzone dictionary...")
+    subzones_lua = export_subzones()
+
     print("Exporting dungeons...")
     dungeons_lua = export_dungeons(cursor)
 
     print("Exporting flight paths...")
     fp_lua = export_flightpaths(cursor)
 
-    print("Exporting vendors...")
+    print("Exporting vendors (900+ authentic Blizzard merchants)...")
     vendors_lua = export_vendors(cursor)
 
     print("Exporting items (Forever + High Quality)...")
@@ -372,7 +413,7 @@ ForeverGuide_Data = ForeverGuide_Data or {}
     conn.close()
 
     full_content = "\n".join([
-        header, zones_lua, dungeons_lua, fp_lua, vendors_lua,
+        header, zones_lua, subzones_lua, dungeons_lua, fp_lua, vendors_lua,
         items_lua, quests_lua, creatures_lua, knowledge_lua
     ])
 

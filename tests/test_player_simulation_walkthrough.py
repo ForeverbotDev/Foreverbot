@@ -76,7 +76,9 @@ class TestPlayerSimulationWalkthrough(unittest.TestCase):
         self.assertIn('function FG:NavigateUpFolder()', self.lua_code)
         self.assertIn('function FG:UpdateDolphinBreadcrumbs(query, matchCount)', self.lua_code)
         self.assertIn('dolphinBar.UpBtn = upBtn', self.lua_code)
-        self.assertIn('"⬆ Up"', self.lua_code)
+        self.assertIn('"< Up"', self.lua_code)
+        self.assertIn('function FG:UpdateVirtualRows()', self.lua_code)
+        self.assertIn('FG:GetPlayerZoneInfo()', self.lua_code)
 
         # Test simulated path splitting for breadcrumbs
         test_path = "items/sub/One-Handed Swords"
