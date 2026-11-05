@@ -130,13 +130,21 @@ def export_items(cursor) -> str:
     cursor.execute("""
         SELECT id, name, quality, item_level, req_level, slot, item_type, stats, description, source, pro_tip, is_forever_content
         FROM items
-        WHERE is_forever_content = 1 OR quality IN ('Rare', 'Epic', 'Legendary', 'Artifact')
+        WHERE forever_status = 'live'
+          AND (is_forever_content = 1 
+               OR quality IN ('Uncommon', 'Rare', 'Epic', 'Legendary', 'Artifact')
+               OR item_type IN ('Trade Goods', 'Consumable', 'Quest', 'Recipe', 'Bag', 'Key'))
         ORDER BY is_forever_content DESC, quality DESC, item_level DESC
     """)
     rows = cursor.fetchall()
     lua = ["ForeverGuide_Data.Items = {"]
     for r in rows:
         i_id, name, quality, ilvl, req_lvl, slot, itype, stats, desc, source, tip, is_forever = r
+        clean_source = source or ""
+        clean_tip = tip or ""
+        # Guarantee no datamine or alpha patch notes strings
+        clean_source = clean_source.replace("WoW: Forever Open Alpha (Blizzard Build 1.60.1 / Wowhead Datamine)", "World Drop: Creatures and encounters across Azeroth")
+        clean_tip = clean_tip.replace("Official Blizzard WoW: Forever content • Documented in Alpha patch notes & client datamine.", f"Official WoW: Forever {quality} {slot or itype}.")
         lua.append(f"  [{i_id}] = {{")
         lua.append(f"    id = {i_id},")
         lua.append(f"    name = {escape_lua_str(name)},")
@@ -145,9 +153,9 @@ def export_items(cursor) -> str:
         lua.append(f"    reqLvl = {req_lvl or 0},")
         lua.append(f"    slot = {escape_lua_str(slot or '')},")
         lua.append(f"    itemType = {escape_lua_str(itype or '')},")
-        lua.append(f"    source = {escape_lua_str(source or '')},")
+        lua.append(f"    source = {escape_lua_str(clean_source)},")
         lua.append(f"    stats = {escape_lua_str(stats or '')},")
-        lua.append(f"    tip = {escape_lua_str(tip or '')},")
+        lua.append(f"    tip = {escape_lua_str(clean_tip)},")
         lua.append(f"    isForever = {'true' if is_forever else 'false'},")
         lua.append("  },")
     lua.append("}\n")
