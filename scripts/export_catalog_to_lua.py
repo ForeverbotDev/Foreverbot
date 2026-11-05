@@ -128,7 +128,7 @@ def export_vendors(cursor) -> str:
 
 def export_items(cursor) -> str:
     cursor.execute("""
-        SELECT id, name, quality, item_level, req_level, slot, item_type, stats, description, source, pro_tip, is_forever_content
+        SELECT id, name, quality, item_level, req_level, slot, item_type, stats, description, source, pro_tip, is_forever_content, bonding, sell_price
         FROM items
         WHERE forever_status = 'live'
           AND quality != 'Poor'
@@ -137,7 +137,7 @@ def export_items(cursor) -> str:
     rows = cursor.fetchall()
     lua = ["ForeverGuide_Data.Items = {"]
     for r in rows:
-        i_id, name, quality, ilvl, req_lvl, slot, itype, stats, desc, source, tip, is_forever = r
+        i_id, name, quality, ilvl, req_lvl, slot, itype, stats, desc, source, tip, is_forever, bonding, sell_price = r
         clean_source = source or ""
         clean_tip = tip or ""
         # Guarantee no datamine or alpha patch notes strings
@@ -153,6 +153,9 @@ def export_items(cursor) -> str:
         lua.append(f"    itemType = {escape_lua_str(itype or '')},")
         lua.append(f"    source = {escape_lua_str(clean_source)},")
         lua.append(f"    stats = {escape_lua_str(stats or '')},")
+        lua.append(f"    desc = {escape_lua_str(desc or '')},")
+        lua.append(f"    bonding = {escape_lua_str(bonding or '')},")
+        lua.append(f"    sellPrice = {escape_lua_str(sell_price or '')},")
         lua.append(f"    tip = {escape_lua_str(clean_tip)},")
         lua.append(f"    isForever = {'true' if is_forever else 'false'},")
         lua.append("  },")

@@ -2041,15 +2041,38 @@ function FG:ShowDetailPanel(entityType, data)
     p.Title:SetText("|cffcf52ffItem Intel|r")
     local qColor = FG.QualityColors[data.quality] or "ffffffff"
     AddLine("|c" .. qColor .. (data.name or "Item") .. "|r", 15, nil, nil, nil, 6)
-    AddLine("Item Level: |cffffffff" .. (data.ilvl or "?") .. "|r" .. ((data.reqLevel and data.reqLevel > 0) and ("  (Req Lvl " .. data.reqLevel .. ")") or ""), 12)
-    if data.slot and data.slot ~= "" then AddLine("Slot: |cff52b8ff" .. data.slot .. "|r", 11) end
+    AddLine("Item Level: |cffffffff" .. (data.ilvl or "?") .. "|r" .. ((data.reqLvl and data.reqLvl > 0) and ("  (Req Lvl " .. data.reqLvl .. ")") or (data.reqLevel and data.reqLevel > 0 and ("  (Req Lvl " .. data.reqLevel .. ")") or "")), 12)
+
+    local subType = (data.slot and data.slot ~= "" and data.slot or "")
+    if data.itemType and data.itemType ~= "" and data.itemType ~= data.slot then
+      subType = (subType ~= "" and (subType .. " • ") or "") .. data.itemType
+    end
+    if data.bonding and data.bonding ~= "" then
+      subType = (subType ~= "" and (subType .. "  |cff8899aa(" .. data.bonding .. ")|r") or ("|cff8899aa" .. data.bonding .. "|r"))
+    end
+    if subType ~= "" then AddLine(subType, 11, 0.40, 0.80, 1.0, 4) end
+
     if data.isForever then AddLine("|cffe6cc80★ Forever Exclusive Item|r", 11, nil, nil, nil, 4) end
 
+    if data.stats and data.stats ~= "" then
+      AddSection("STATS & ATTRIBUTES")
+      AddLine(data.stats, 12, 0.20, 1.0, 0.30, 6)
+    end
+
+    if data.desc and data.desc ~= "" then
+      AddSection("DESCRIPTION & LORE")
+      AddLine("|cffffd24d\"" .. data.desc .. "\"|r", 11, 1.0, 0.85, 0.40, 6)
+    end
+
     AddSection("SOURCE & DROPS")
-    AddLine(data.source and data.source ~= "" and data.source or "World Drop / Various", 12, 0.9, 0.9, 0.9, 6)
+    AddLine(data.source and data.source ~= "" and data.source or "World Drop / Various", 12, 0.85, 0.90, 0.95, 6)
+
+    if data.sellPrice and data.sellPrice ~= "" then
+      AddLine("Vendor Price: |cffffffff" .. data.sellPrice .. "|r", 11, 0.9, 0.9, 0.9, 4)
+    end
 
     if data.tip and data.tip ~= "" then
-      AddSection("ANALYSIS & NOTES")
+      AddSection("SPARK INTEL & NOTES")
       AddLine(data.tip, 11, 0.75, 0.88, 1.0, 6)
     end
 
