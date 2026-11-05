@@ -761,41 +761,105 @@ function FG:CreateSparkFrame()
   f:SetPoint(pos.point or "CENTER", UIParent, pos.relativePoint or "CENTER", pos.x or 240, pos.y or 60)
   f:SetScale(ForeverGuideDB.sparkScale or 1.0)
 
-  -- Outer Pulsing Aura (Soft celestial glow - easy on the eyes)
+  -- Circular Alpha Masking (Eliminates all possible square corners or cutoff edges)
+  if f.CreateMaskTexture then
+    local mask = f:CreateMaskTexture()
+    mask:SetTexture("Interface\\Masks\\CircleMaskScalable", "CLAMPTOBLACKADDITIVE", "CLAMPTOBLACKADDITIVE")
+    mask:SetSize(42, 42)
+    mask:SetPoint("CENTER", f, "CENTER", 0, 0)
+    f.CircleMask = mask
+  end
+
+  -- Layer 1: Outer Ambient Celestial Aura (Soft radiant halo)
   local aura = f:CreateTexture(nil, "BACKGROUND")
-  aura:SetTexture("Interface\\Cooldown\\star4")
   aura:SetBlendMode("ADD")
   aura:SetPoint("CENTER", f, "CENTER", 0, 0)
-  aura:SetSize(68, 68)
-  aura:SetVertexColor(0.12, 0.55, 0.80, 0.65)
+  aura:SetSize(64, 64)
+  aura:SetTexture("Interface\\AddOns\\ForeverGuide\\Media\\blue_spark_aura")
+  aura:SetVertexColor(0.18, 0.65, 1.0, 0.70)
   f.Aura = aura
 
-  -- Core Luminous Spark Sphere
+  -- Layer 2: Rotating Ethereal Rays (Whimsical celestial wisp motion)
+  local rotAura = f:CreateTexture(nil, "BORDER")
+  rotAura:SetTexture("Interface\\Cooldown\\star4")
+  rotAura:SetBlendMode("ADD")
+  rotAura:SetPoint("CENTER", f, "CENTER", 0, 0)
+  rotAura:SetSize(44, 44)
+  rotAura:SetVertexColor(0.25, 0.70, 1.0, 0.50)
+  f.RotAura = rotAura
+
+  -- Layer 3: Core Luminous Plasma Orb (High-res smooth gaussian sphere)
   local core = f:CreateTexture(nil, "ARTWORK")
-  core:SetTexture("Interface\\CHARACTERFRAME\\UI-Player-Status")
-  core:SetTexCoord(0.15, 0.40, 0.15, 0.40)
+  core:SetBlendMode("ADD")
   core:SetPoint("CENTER", f, "CENTER", 0, 0)
-  core:SetSize(38, 38)
-  core:SetVertexColor(0.40, 0.75, 0.95, 0.90)
+  core:SetSize(32, 32)
+  core:SetTexture("Interface\\AddOns\\ForeverGuide\\Media\\blue_spark_core")
+  core:SetVertexColor(0.40, 0.85, 1.0, 0.95)
+  if f.CircleMask and core.AddMaskTexture then
+    pcall(core.AddMaskTexture, core, f.CircleMask)
+  end
   f.Core = core
 
-  -- Celestial Sparkle Highlight
-  local spark = f:CreateTexture(nil, "OVERLAY")
-  spark:SetTexture("Interface\\Buttons\\UI-AutoCastableOverlay")
-  spark:SetTexCoord(0.2, 0.8, 0.2, 0.8)
-  spark:SetBlendMode("ADD")
-  spark:SetPoint("CENTER", f, "CENTER", 0, 0)
-  spark:SetSize(32, 32)
-  spark:SetVertexColor(0.70, 0.88, 0.98, 0.85)
-  f.Spark = spark
+  -- Layer 4: Cross Spark Flares (The bright sparkling twinkle)
+  local sparkV = f:CreateTexture(nil, "OVERLAY")
+  sparkV:SetTexture("Interface\\CastingBar\\UI-CastingBar-Spark")
+  sparkV:SetBlendMode("ADD")
+  sparkV:SetPoint("CENTER", f, "CENTER", 0, 0)
+  sparkV:SetSize(10, 36)
+  sparkV:SetVertexColor(0.75, 0.92, 1.0, 0.85)
+  f.SparkV = sparkV
 
-  -- Lightweight Zero-Lag Alpha Animation (No geometry recalculation)
+  local sparkH = f:CreateTexture(nil, "OVERLAY")
+  sparkH:SetTexture("Interface\\CastingBar\\UI-CastingBar-Spark")
+  sparkH:SetBlendMode("ADD")
+  sparkH:SetPoint("CENTER", f, "CENTER", 0, 0)
+  sparkH:SetSize(36, 10)
+  sparkH:SetVertexColor(0.75, 0.92, 1.0, 0.85)
+  if sparkH.SetRotation then
+    pcall(sparkH.SetRotation, sparkH, 1.570796) -- 90 degrees
+  end
+  f.SparkH = sparkH
+
+  -- Layer 5: Central Brilliant Glint
+  local glint = f:CreateTexture(nil, "OVERLAY")
+  glint:SetTexture("Interface\\CastingBar\\UI-CastingBar-Spark")
+  glint:SetBlendMode("ADD")
+  glint:SetPoint("CENTER", f, "CENTER", 0, 0)
+  glint:SetSize(14, 14)
+  glint:SetVertexColor(1.0, 1.0, 1.0, 1.0)
+  f.Glint = glint
+
+  -- Layer 6: Blizzard Native AutoCastShine (Dancing fairy sparkles)
+  local shine = CreateFrame("Frame", "ForeverGuideSparkShine", f, "AutoCastShineTemplate")
+  shine:SetSize(38, 38)
+  shine:SetPoint("CENTER", f, "CENTER", 0, 0)
+  shine:Show()
+  if AutoCastShine_AutoCastStart then
+    pcall(AutoCastShine_AutoCastStart, shine, 0.30, 0.80, 1.0)
+  end
+  f.Shine = shine
+
+  -- Continuous slow rotation for the ethereal rays
+  local rotAg = f:CreateAnimationGroup()
+  local rotAnim = rotAg:CreateAnimation("Rotation")
+  rotAnim:SetDegrees(360)
+  rotAnim:SetDuration(16.0)
+  rotAg:SetLooping("REPEAT")
+  rotAg:Play()
+  f.RotAnimGroup = rotAg
+
+  -- Breathing Pulse & Gentle Floating Hover
   local ag = f:CreateAnimationGroup()
   local alphaAnim = ag:CreateAnimation("Alpha")
-  alphaAnim:SetFromAlpha(0.68)
+  alphaAnim:SetFromAlpha(0.72)
   alphaAnim:SetToAlpha(1.0)
-  alphaAnim:SetDuration(2.0)
+  alphaAnim:SetDuration(2.2)
   alphaAnim:SetSmoothing("IN_OUT")
+
+  local transAnim = ag:CreateAnimation("Translation")
+  transAnim:SetOffset(0, 3)
+  transAnim:SetDuration(2.2)
+  transAnim:SetSmoothing("IN_OUT")
 
   ag:SetLooping("BOUNCE")
   ag:Play()
@@ -854,7 +918,8 @@ function FG:CreateSparkFrame()
 
   f:SetScript("OnEnter", function(self)
     if ForeverGuideDB.sparkLocked and ForeverGuideDB.sparkClickThrough then return end
-    aura:SetVertexColor(0.25, 0.75, 0.95, 0.95)
+    if self.Aura then self.Aura:SetVertexColor(0.35, 0.85, 1.0, 0.95) end
+    if self.Core then self.Core:SetVertexColor(0.60, 0.95, 1.0, 1.0) end
     GameTooltip:SetOwner(self, "ANCHOR_RIGHT")
     GameTooltip:AddLine("|cff52b8ffThe Blue Spark|r", 1, 1, 1)
     GameTooltip:AddLine("Celestial companion for Warcraft Forever.", 0.8, 0.8, 0.8, true)
@@ -866,7 +931,8 @@ function FG:CreateSparkFrame()
   end)
 
   f:SetScript("OnLeave", function(self)
-    aura:SetVertexColor(0.12, 0.55, 0.80, 0.65)
+    if self.Aura then self.Aura:SetVertexColor(0.18, 0.65, 1.0, 0.70) end
+    if self.Core then self.Core:SetVertexColor(0.40, 0.85, 1.0, 0.95) end
     GameTooltip:Hide()
   end)
 

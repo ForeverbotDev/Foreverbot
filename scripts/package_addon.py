@@ -39,6 +39,8 @@ def package():
         "ForeverGuide.lua",
         "ForeverGuide_Data.lua",
         "Bindings.xml",
+        "Media/blue_spark_core.tga",
+        "Media/blue_spark_aura.tga",
     ]
 
     with zipfile.ZipFile(zip_path, "w", zipfile.ZIP_DEFLATED) as zf:
