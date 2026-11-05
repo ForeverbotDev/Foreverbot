@@ -131,9 +131,7 @@ def export_items(cursor) -> str:
         SELECT id, name, quality, item_level, req_level, slot, item_type, stats, description, source, pro_tip, is_forever_content
         FROM items
         WHERE forever_status = 'live'
-          AND (is_forever_content = 1 
-               OR quality IN ('Uncommon', 'Rare', 'Epic', 'Legendary', 'Artifact')
-               OR item_type IN ('Trade Goods', 'Consumable', 'Quest', 'Recipe', 'Bag', 'Key'))
+          AND quality != 'Poor'
         ORDER BY is_forever_content DESC, quality DESC, item_level DESC
     """)
     rows = cursor.fetchall()
@@ -190,27 +188,63 @@ def export_quests(cursor) -> str:
 
 
 def export_creatures(cursor) -> str:
+    # Pre-aggregate top notable drops per creature
     cursor.execute("""
-        SELECT id, name, level_min, level_max, classification, zone, location_details, health, strategy_notes, is_forever_content
+        SELECT l.creature_id, i.id, i.name, i.quality, l.drop_chance, i.slot, i.req_level
+        FROM loot l
+        JOIN items i ON l.item_id = i.id
+        ORDER BY l.creature_id,
+            CASE i.quality
+                WHEN 'Legendary' THEN 1
+                WHEN 'Epic' THEN 2
+                WHEN 'Rare' THEN 3
+                WHEN 'Uncommon' THEN 4
+                ELSE 5
+            END ASC,
+            l.drop_chance DESC
+    """)
+    loot_by_creature = {}
+    for r in cursor.fetchall():
+        cid, i_id, i_name, i_qual, drop_chance, slot, req_lvl = r
+        if cid not in loot_by_creature:
+            loot_by_creature[cid] = []
+        if len(loot_by_creature[cid]) < 8:
+            pct_str = f"{drop_chance:.2f}%" if drop_chance < 1 else f"{drop_chance:.1f}%"
+            loot_by_creature[cid].append({
+                "id": i_id,
+                "name": i_name,
+                "quality": i_qual or "Common",
+                "pct": pct_str,
+                "slot": slot or "",
+                "reqLvl": req_lvl or 0
+            })
+
+    cursor.execute("""
+        SELECT id, name, level_min, level_max, classification, family, zone, location_details, health, strategy_notes, is_forever_content
         FROM creatures
-        WHERE classification IN ('Boss', 'Elite', 'Rare Elite', 'Rare') OR is_forever_content = 1 OR name IN (SELECT DISTINCT start_npc FROM quests WHERE start_npc IS NOT NULL)
         ORDER BY level_max DESC, name ASC
     """)
     rows = cursor.fetchall()
     lua = ["ForeverGuide_Data.Creatures = {"]
     for r in rows:
-        c_id, name, l_min, l_max, classification, zone, loc, hp, strat, is_forever = r
+        c_id, name, l_min, l_max, classification, family, zone, loc, hp, strat, is_forever = r
         lua.append(f"  [{c_id}] = {{")
         lua.append(f"    id = {c_id},")
         lua.append(f"    name = {escape_lua_str(name)},")
         lua.append(f"    minLevel = {l_min or 0},")
         lua.append(f"    maxLevel = {l_max or 0},")
         lua.append(f"    classification = {escape_lua_str(classification or 'Normal')},")
+        lua.append(f"    family = {escape_lua_str(family or 'Humanoid')},")
         lua.append(f"    zone = {escape_lua_str(zone or '')},")
         lua.append(f"    location = {escape_lua_str(loc or '')},")
         lua.append(f"    health = {hp or 0},")
         lua.append(f"    strategy = {escape_lua_str(strat or '')},")
         lua.append(f"    isForever = {'true' if is_forever else 'false'},")
+        if c_id in loot_by_creature and len(loot_by_creature[c_id]) > 0:
+            lua.append("    loot = {")
+            for item in loot_by_creature[c_id]:
+                lua.append(f"      {{ id = {item['id']}, name = {escape_lua_str(item['name'])}, quality = {escape_lua_str(item['quality'])}, pct = {escape_lua_str(item['pct'])}, slot = {escape_lua_str(item['slot'])}, reqLvl = {item['reqLvl']} }},")
+            lua.append("    },")
         lua.append("  },")
     lua.append("}\n")
     return "\n".join(lua)

@@ -727,6 +727,14 @@ local function SharpenFontString(fs, size, outline, shadowOffset)
   end
 end
 
+local function FormatNumber(n)
+  if not n then return "0" end
+  local str = tostring(math.floor(tonumber(n) or 0))
+  local left, num, right = string.match(str, "^([^%d]*%d)(%d*)(.-)$")
+  if not left then return tostring(n) end
+  return left .. (num:reverse():gsub("(%d%d%d)", "%1,"):reverse()) .. right
+end
+
 function FG:UpdateSparkMouseState()
   if not FG.SparkFrame then return end
   if ForeverGuideDB.sparkClickThrough then
@@ -897,23 +905,32 @@ function FG:CreateSparkFrame()
 
   local currentPosX = f.homeX or 240
   local currentPosY = f.homeY or 120
+  -- =========================================================================
+  -- SPARKY COZY HOME-ANCHORED WANDERING & FLUID MOTION ENGINE
+  -- =========================================================================
+  local flightState = ForeverGuideDB.hasInteracted and "RESTING" or "DORMANT"
+  f.flightState = flightState
+
+  local anchorX = f.homeX or 240
+  local anchorY = f.homeY or 120
+  local currentPosX = anchorX
+  local currentPosY = anchorY
   local lastPosX, lastPosY = currentPosX, currentPosY
   local currentVelX, currentVelY = 0, 0
 
   -- State & Decision Timers
   local stateTimer = 0
-  local stateDuration = 7.0 + math.random() * 8.0 -- Snappy 7-15s resting duration
+  local stateDuration = 2.4 + math.random() * 2.2 -- Snappy 2.4-4.6s rest before next gentle drift
 
-  -- Dash / Roam Interpolation Parameters
+  -- Float & Roam Parameters
   local travelStartX, travelStartY = currentPosX, currentPosY
   local travelTargetX, travelTargetY = currentPosX, currentPosY
   local travelCtrlX, travelCtrlY = currentPosX, currentPosY
-  local travelDuration = 1.1
+  local travelDuration = 1.6
   local travelElapsed = 0
 
-  -- Zig-Zag Chained Dash Pathing
-  local zigZagLeg = 1
-  local zigZagPoints = {}
+  -- Cycle counter to venture out a bit occasionally
+  local wanderCycle = 0
 
   -- Death Bounce Physics
   local deathBounceTimer = 0
@@ -927,27 +944,32 @@ function FG:CreateSparkFrame()
   local function GetScreenBounds()
     local sw = UIParent:GetWidth() or 1920
     local sh = UIParent:GetHeight() or 1080
-    return 60, sw - 60, 60, sh - 60
+    return 50, sw - 50, 50, sh - 50
   end
 
-  local function PickDistantPoint(minDist)
+  local function PickNeighborhoodPoint()
+    wanderCycle = wanderCycle + 1
     local minX, maxX, minY, maxY = GetScreenBounds()
-    minDist = minDist or 280
-    local minDistSq = minDist * minDist
-    local bestX, bestY
-    for _ = 1, 15 do
-      local cx = minX + math.random() * (maxX - minX)
-      local cy = minY + math.random() * (maxY - minY)
-      local d2 = (cx - currentPosX)^2 + (cy - currentPosY)^2
-      if d2 >= minDistSq then
-        return cx, cy
-      end
-      bestX, bestY = cx, cy
+
+    local radius
+    if wanderCycle % 5 == 0 then
+      -- Venturing out a bit! (70 to 110px away from home)
+      radius = 70 + math.random() * 40
+    else
+      -- Hang out in small area around its home (18 to 48px away)
+      radius = 16 + math.random() * 32
     end
-    return bestX or (minX + 220), bestY or (minY + 220)
+
+    local angle = math.random() * math.pi * 2
+    local tx = anchorX + math.cos(angle) * radius
+    local ty = anchorY + math.sin(angle) * radius
+
+    tx = math.max(minX, math.min(maxX, tx))
+    ty = math.max(minY, math.min(maxY, ty))
+    return tx, ty
   end
 
-  local function StartDash(targetX, targetY, speedMultiplier, curved)
+  local function StartGentleFloat(targetX, targetY)
     travelStartX = currentPosX
     travelStartY = currentPosY
     travelTargetX = targetX
@@ -959,24 +981,17 @@ function FG:CreateSparkFrame()
     local dist = math.sqrt(dx * dx + dy * dy)
     if dist < 1 then dist = 1 end
 
-    speedMultiplier = speedMultiplier or 1.0
-    -- Rapid high-speed dash (650 to 1250 px/sec!)
-    local baseSpeed = (650 + math.random() * 350) * speedMultiplier
-    travelDuration = math.max(0.60, math.min(2.1, dist / baseSpeed))
+    -- Gentle, smooth wisp float (35 to 65 px/sec) - floaty and organic!
+    travelDuration = math.max(1.3, math.min(2.4, 0.9 + (dist / 45.0)))
 
-    if curved then
-      local minX, maxX, minY, maxY = GetScreenBounds()
-      local midX = (travelStartX + travelTargetX) * 0.5
-      local midY = (travelStartY + travelTargetY) * 0.5
-      local perpX = -dy / dist
-      local perpY = dx / dist
-      local curveDist = (math.random() > 0.5 and 1 or -1) * (50 + math.random() * 110)
-      travelCtrlX = math.max(minX, math.min(maxX, midX + perpX * curveDist))
-      travelCtrlY = math.max(minY, math.min(maxY, midY + perpY * curveDist))
-    else
-      travelCtrlX = (travelStartX + travelTargetX) * 0.5
-      travelCtrlY = (travelStartY + travelTargetY) * 0.5
-    end
+    -- Subtle organic curve
+    local midX = (travelStartX + travelTargetX) * 0.5
+    local midY = (travelStartY + travelTargetY) * 0.5
+    local perpX = -dy / dist
+    local perpY = dx / dist
+    local curveDist = (math.random() > 0.5 and 1 or -1) * (10 + math.random() * 25)
+    travelCtrlX = midX + perpX * curveDist
+    travelCtrlY = midY + perpY * curveDist
   end
 
   function f:TransitionTo(newState)
@@ -985,32 +1000,12 @@ function FG:CreateSparkFrame()
     stateTimer = 0
 
     if newState == "RESTING" then
-      stateDuration = 6.0 + math.random() * 10.0 -- 6 to 16 seconds rest
-      self.homeX = currentPosX
-      self.homeY = currentPosY
-      ForeverGuideDB.sparkPosition = {
-        point = "BOTTOMLEFT",
-        relativePoint = "BOTTOMLEFT",
-        x = math.floor(self.homeX + 0.5),
-        y = math.floor(self.homeY + 0.5),
-      }
+      stateDuration = 2.2 + math.random() * 2.4 -- Rest 2.2 to 4.6 seconds
       if visual then visual:SetSize(28, 28) end
 
-    elseif newState == "DASH" then
-      local tx, ty = PickDistantPoint(320)
-      StartDash(tx, ty, 1.25, true)
-
-    elseif newState == "ZIG_ZAG" then
-      zigZagLeg = 1
-      local minX, maxX, minY, maxY = GetScreenBounds()
-      local p1X = minX + math.random() * (maxX - minX)
-      local p1Y = minY + math.random() * (maxY - minY)
-      local p2X = minX + math.random() * (maxX - minX)
-      local p2Y = minY + math.random() * (maxY - minY)
-      local p3X = minX + math.random() * (maxX - minX)
-      local p3Y = minY + math.random() * (maxY - minY)
-      zigZagPoints = { {p1X, p1Y}, {p2X, p2Y}, {p3X, p3Y} }
-      StartDash(p1X, p1Y, 1.6, false)
+    elseif newState == "WANDER" then
+      local tx, ty = PickNeighborhoodPoint()
+      StartGentleFloat(tx, ty)
 
     elseif newState == "DEATH_BOUNCE" then
       deathBounceTimer = 0
@@ -1020,8 +1015,8 @@ function FG:CreateSparkFrame()
       FG:PlaySparkSound("shimmer")
 
     elseif newState == "CELEBRATE" then
-      stateDuration = 2.0
-      StartDash(currentPosX, math.min((UIParent:GetHeight() or 1080) - 80, currentPosY + 160), 1.8, true)
+      stateDuration = 1.6
+      StartGentleFloat(anchorX, anchorY + 30)
     end
   end
 
@@ -1038,8 +1033,10 @@ function FG:CreateSparkFrame()
       local curX, curY = cx / scale, cy / scale
       currentPosX = curX - (self.dragOffsetX or 0)
       currentPosY = curY - (self.dragOffsetY or 0)
-      self.homeX = currentPosX
-      self.homeY = currentPosY
+      anchorX = currentPosX
+      anchorY = currentPosY
+      self.homeX = anchorX
+      self.homeY = anchorY
       self:ClearAllPoints()
       self:SetPoint("CENTER", UIParent, "BOTTOMLEFT", currentPosX, currentPosY)
       lastPosX, lastPosY = currentPosX, currentPosY
@@ -1047,52 +1044,37 @@ function FG:CreateSparkFrame()
     end
 
     if flightState == "DORMANT" then
-      -- Unawakened: peaceful stationary breathing at spawn point until opened once
+      -- Peaceful stationary breathing at spawn point until opened once
       local waveX = math.sin(t * 0.40) * 2.5
       local waveY = math.cos(t * 0.32) * 2.5
-      currentPosX = (self.homeX or 240) + waveX
-      currentPosY = (self.homeY or 120) + waveY
+      currentPosX = anchorX + waveX
+      currentPosY = anchorY + waveY
 
     elseif flightState == "RESTING" then
-      -- Resting at its current outpost: very gentle, organic floating in place
+      -- Resting gently right near its current spot with soft organic hovering
       stateTimer = stateTimer + dt
-      local bobX = math.sin(t * 1.1) * 3.5 + math.sin(t * 0.45) * 1.5
-      local bobY = math.cos(t * 0.95) * 3.5 + math.sin(t * 0.30) * 1.5
-      currentPosX = (self.homeX or 240) + bobX
-      currentPosY = (self.homeY or 120) + bobY
+      local bobX = math.sin(t * 0.95) * 2.5 + math.sin(t * 0.40) * 1.0
+      local bobY = math.cos(t * 0.80) * 2.5 + math.sin(t * 0.25) * 1.0
+      currentPosX = travelTargetX + bobX
+      currentPosY = travelTargetY + bobY
 
-      -- Autonomous AI wandering decisions
+      -- After resting briefly, take a gentle float around home
       if stateTimer >= stateDuration and ForeverGuideDB.hasInteracted then
-        local roll = math.random()
-        if roll < 0.45 then
-          f:TransitionTo("DASH")
-        elseif roll < 0.75 then
-          f:TransitionTo("ZIG_ZAG")
-        else
-          -- Short curious meander
-          local tx, ty = PickDistantPoint(180)
-          StartDash(tx, ty, 0.9, true)
-          flightState = "DASH"
-          self.flightState = flightState
-        end
+        f:TransitionTo("WANDER")
       end
 
-    elseif flightState == "DASH" then
+    elseif flightState == "WANDER" then
       travelElapsed = travelElapsed + dt
       local progress = math.min(1.0, travelElapsed / travelDuration)
 
-      -- Smooth S-curve with rapid mid-flight velocity snap
-      local u = progress * progress * (3 - 2 * progress)
-      local surge = math.sin(progress * math.pi) * 0.08
-      u = math.max(0.0, math.min(1.0, u + surge))
+      -- Smooth cosine ease: gentle acceleration and soft deceleration into hover
+      local u = 0.5 - 0.5 * math.cos(progress * math.pi)
       local invU = 1.0 - u
 
-      -- Quadratic Bezier position across screen
       local bX = invU * invU * travelStartX + 2 * invU * u * travelCtrlX + u * u * travelTargetX
       local bY = invU * invU * travelStartY + 2 * invU * u * travelCtrlY + u * u * travelTargetY
 
-      -- High-frequency ethereal vibration in flight
-      local ripple = math.sin(progress * math.pi * 3) * 3.5
+      local ripple = math.sin(progress * math.pi * 2) * 2.0
       currentPosX = bX
       currentPosY = bY + ripple
 
@@ -1103,19 +1085,11 @@ function FG:CreateSparkFrame()
     elseif flightState == "ZIG_ZAG" then
       travelElapsed = travelElapsed + dt
       local progress = math.min(1.0, travelElapsed / travelDuration)
-
-      local u = progress * progress * (3 - 2 * progress)
-      currentPosX = travelStartX + (travelTargetX - travelStartX) * u
-      currentPosY = travelStartY + (travelTargetY - travelStartY) * u
-
+      local u = 0.5 - 0.5 * math.cos(progress * math.pi)
+      currentPosX = travelStartX + (travelTargetX - travelStartX) * u + math.sin(progress * math.pi * 2) * 8
+      currentPosY = travelStartY + (travelTargetY - travelStartY) * u + math.cos(progress * math.pi * 2) * 5
       if progress >= 1.0 then
-        zigZagLeg = zigZagLeg + 1
-        if zigZagLeg <= #zigZagPoints then
-          local nxt = zigZagPoints[zigZagLeg]
-          StartDash(nxt[1], nxt[2], 1.6, false)
-        else
-          f:TransitionTo("RESTING")
-        end
+        f:TransitionTo("RESTING")
       end
 
     elseif flightState == "DEATH_BOUNCE" then
@@ -1125,30 +1099,30 @@ function FG:CreateSparkFrame()
       local targetEdgeX = (deathBounceSide == "RIGHT") and (maxX - 15) or (minX + 15)
 
       -- Snap smoothly to screen side
-      currentPosX = currentPosX + (targetEdgeX - currentPosX) * math.min(1.0, dt * 8.0)
+      currentPosX = currentPosX + (targetEdgeX - currentPosX) * math.min(1.0, dt * 6.0)
 
       -- Rubber-ball bounce physics along the side of the screen!
       local bouncePeriod = 0.50 -- Brisk, comedic bounce cadence
       local phase = (deathBounceTimer % bouncePeriod) / bouncePeriod
-      local bounceHeight = 175 + math.sin(deathBounceTimer * 2.2) * 35
+      local bounceHeight = 165 + math.sin(deathBounceTimer * 2.2) * 30
       local groundY = minY + 50
       local arc = 4 * phase * (1 - phase) -- Parabola 0 -> 1 -> 0
       currentPosY = groundY + arc * bounceHeight
 
       -- Side-wall impact wobble
-      local wallKick = math.sin(phase * math.pi) * 18
+      local wallKick = math.sin(phase * math.pi) * 16
       currentPosX = targetEdgeX + ((deathBounceSide == "RIGHT") and -wallKick or wallKick)
 
       -- Impact squash & stretch
       if phase < 0.12 or phase > 0.88 then
-        visual:SetSize(38, 20) -- Squashed on bounce floor!
+        visual:SetSize(36, 20) -- Squashed on bounce floor!
         if self.Aura then self.Aura:SetVertexColor(1.0, 0.30, 0.95, 0.90) end
       else
-        visual:SetSize(22, 34) -- Stretched tall soaring upward!
+        visual:SetSize(22, 32) -- Stretched tall soaring upward!
         if self.Aura then self.Aura:SetVertexColor(0.78, 0.22, 1.0, 0.70) end
       end
 
-      -- If player has revived, celebrate and exit death bounce!
+      -- If player has revived, celebrate and return home!
       if not UnitIsDeadOrGhost("player") then
         f:TransitionTo("CELEBRATE")
       end
@@ -1157,50 +1131,50 @@ function FG:CreateSparkFrame()
       stateTimer = stateTimer + dt
       travelElapsed = travelElapsed + dt
       local progress = math.min(1.0, travelElapsed / travelDuration)
-      local u = progress * progress * (3 - 2 * progress)
+      local u = 0.5 - 0.5 * math.cos(progress * math.pi)
       local invU = 1.0 - u
-      currentPosX = invU * travelStartX + u * travelTargetX + math.sin(progress * math.pi * 4) * 45
-      currentPosY = invU * travelStartY + u * travelTargetY + math.cos(progress * math.pi * 4) * 20
+      currentPosX = invU * travelStartX + u * anchorX + math.sin(progress * math.pi * 3) * 20
+      currentPosY = invU * travelStartY + u * anchorY + math.cos(progress * math.pi * 3) * 15
 
       if progress >= 1.0 or stateTimer >= stateDuration then
         f:TransitionTo("RESTING")
       end
     end
 
-    -- Velocity tracking & dynamic squash/stretch along movement vector
+    -- Smooth velocity tracking & subtle wisp tilt
     currentVelX = (currentPosX - lastPosX) / (dt > 0.0001 and dt or 0.01)
     currentVelY = (currentPosY - lastPosY) / (dt > 0.0001 and dt or 0.01)
     lastPosX, lastPosY = currentPosX, currentPosY
     local speedMag = math.sqrt(currentVelX * currentVelX + currentVelY * currentVelY)
 
     if flightState ~= "DEATH_BOUNCE" then
-      local stretch = math.min(0.40, (speedMag / 900) * 0.40)
+      local stretch = math.min(0.20, (speedMag / 400) * 0.20)
       visual:SetSize(28 * (1.0 + stretch), 28 / (1.0 + stretch * 0.5))
     end
 
-    -- Spring-damper trailing smoke puffs (real physics particle lag behind Sparky)
-    local lagFactor = math.min(1.0, dt * 18.0)
-    local targetLagX = -currentVelX * 0.032
-    local targetLagY = -currentVelY * 0.032
+    -- Gentle particle trailing for satellite puffs
+    local lagFactor = math.min(1.0, dt * 14.0)
+    local targetLagX = -currentVelX * 0.025
+    local targetLagY = -currentVelY * 0.025
     puff1LagX = puff1LagX + (targetLagX - puff1LagX) * lagFactor
     puff1LagY = puff1LagY + (targetLagY - puff1LagY) * lagFactor
 
     if self.Puff1 then
-      local p1R = 13 + math.sin(t * 1.2) * 3.5
-      local p1X = math.cos(t * 2.2) * p1R + puff1LagX * 0.8
-      local p1Y = math.sin(t * 2.2) * (p1R * 0.75) + puff1LagY * 0.8
+      local p1R = 12 + math.sin(t * 1.0) * 3.0
+      local p1X = math.cos(t * 1.8) * p1R + puff1LagX * 0.6
+      local p1Y = math.sin(t * 1.8) * (p1R * 0.75) + puff1LagY * 0.6
       self.Puff1:SetPoint("CENTER", visual, "CENTER", p1X, p1Y)
     end
     if self.Puff2 then
-      local p2R = 10 + math.cos(t * 1.4) * 3.0
-      local p2X = math.cos(-t * 1.8 + 2.1) * p2R + puff1LagX * 1.1
-      local p2Y = math.sin(-t * 1.8 + 2.1) * (p2R * 0.8) + puff1LagY * 1.1
+      local p2R = 9 + math.cos(t * 1.2) * 2.5
+      local p2X = math.cos(-t * 1.5 + 2.1) * p2R + puff1LagX * 0.8
+      local p2Y = math.sin(-t * 1.5 + 2.1) * (p2R * 0.8) + puff1LagY * 0.8
       self.Puff2:SetPoint("CENTER", visual, "CENTER", p2X, p2Y)
     end
     if self.Puff3 then
-      local p3R = 8 + math.sin(t * 1.6 + 1.2) * 2.5
-      local p3X = math.sin(t * 1.5 + 4.0) * p3R + puff1LagX * 1.4
-      local p3Y = math.cos(t * 1.5 + 4.0) * (p3R * 0.65) + puff1LagY * 1.4
+      local p3R = 7 + math.sin(t * 1.4 + 1.2) * 2.0
+      local p3X = math.sin(t * 1.3 + 4.0) * p3R + puff1LagX * 1.0
+      local p3Y = math.cos(t * 1.3 + 4.0) * (p3R * 0.65) + puff1LagY * 1.0
       self.Puff3:SetPoint("CENTER", visual, "CENTER", p3X, p3Y)
     end
 
@@ -1249,10 +1223,15 @@ function FG:CreateSparkFrame()
         self.wasDragged = true
         self.homeX = upX - (self.dragOffsetX or 0)
         self.homeY = upY - (self.dragOffsetY or 0)
-        flightState = ForeverGuideDB.hasInteracted and "RESTING" or "DORMANT"
-        self.flightState = flightState
-        restTimer = 0
-        restDuration = 40.0 + math.random() * 40.0
+        anchorX = self.homeX
+        anchorY = self.homeY
+        ForeverGuideDB.hasInteracted = true
+        if self.TransitionTo then
+          self:TransitionTo("RESTING")
+        else
+          flightState = "RESTING"
+          self.flightState = flightState
+        end
         ForeverGuideDB.sparkPosition = {
           point = "BOTTOMLEFT",
           relativePoint = "BOTTOMLEFT",
@@ -1604,8 +1583,9 @@ function FG:CreateCodexWindow()
 
   local bSub = blank:CreateFontString(nil, "OVERLAY", "GameFontDisable")
   bSub:SetPoint("TOP", bTitle, "BOTTOM", 0, -5)
-  bSub:SetText("Instant in-game search for 2,400+ items, quests, NPCs & dungeons.")
+  bSub:SetText("Instant in-game search for 40,000+ items, quests, NPCs & loot drops.")
   SharpenFontString(bSub, 11, "OUTLINE")
+  blank.Sub = bSub
 
   local bPrompt = blank:CreateFontString(nil, "OVERLAY", "GameFontNormalSmall")
   bPrompt:SetPoint("TOP", bSub, "BOTTOM", 0, -18)
@@ -1843,7 +1823,13 @@ function FG:ShowDetailPanel(entityType, data)
   end
   p.Body.Lines = p.Body.Lines or {}
 
+  if p.Body.LootButtons then
+    for _, btn in ipairs(p.Body.LootButtons) do btn:Hide() end
+  end
+  p.Body.LootButtons = p.Body.LootButtons or {}
+
   local lineIndex = 0
+  local lootBtnIndex = 0
   local yOffset = -2
 
   local function AddLine(text, size, r, g, b, extraY)
@@ -1872,6 +1858,86 @@ function FG:ShowDetailPanel(entityType, data)
   local function AddSection(heading)
     yOffset = yOffset - 6
     AddLine("|cffdf80ff" .. heading .. "|r", 12, nil, nil, nil, 3)
+  end
+
+  local function AddLootButton(drop)
+    lootBtnIndex = lootBtnIndex + 1
+    local btn = p.Body.LootButtons[lootBtnIndex]
+    if not btn then
+      btn = CreateFrame("Button", nil, p.Body, "BackdropTemplate")
+      btn:SetSize(286, 26)
+      MakePixelSharp(btn)
+      btn:SetBackdrop({
+        bgFile = "Interface\\Buttons\\WHITE8X8",
+        edgeFile = "Interface\\Tooltips\\UI-Tooltip-Border",
+        tile = false,
+        tileSize = 12,
+        edgeSize = 10,
+        insets = { left = 3, right = 3, top = 3, bottom = 3 },
+      })
+      btn:SetBackdropColor(0.10, 0.12, 0.17, 0.90)
+      btn:SetBackdropBorderColor(0.25, 0.28, 0.38, 0.80)
+
+      local titleText = btn:CreateFontString(nil, "OVERLAY", "GameFontHighlight")
+      titleText:SetPoint("LEFT", btn, "LEFT", 8, 0)
+      titleText:SetWidth(196)
+      titleText:SetJustifyH("LEFT")
+      SharpenFontString(titleText, 11, "OUTLINE")
+      btn.Title = titleText
+
+      local rateText = btn:CreateFontString(nil, "OVERLAY", "GameFontNormalSmall")
+      rateText:SetPoint("RIGHT", btn, "RIGHT", -8, 0)
+      rateText:SetJustifyH("RIGHT")
+      SharpenFontString(rateText, 11, "OUTLINE")
+      btn.Rate = rateText
+
+      btn:SetScript("OnEnter", function(self)
+        self:SetBackdropColor(0.20, 0.16, 0.32, 0.95)
+        self:SetBackdropBorderColor(0.65, 0.35, 1.0, 0.95)
+        if self.itemData then
+          GameTooltip:SetOwner(self, "ANCHOR_RIGHT")
+          if self.itemData.id and GameTooltip.SetItemByID then
+            pcall(GameTooltip.SetItemByID, GameTooltip, self.itemData.id)
+          else
+            GameTooltip:SetText(self.itemData.name)
+          end
+          if self.itemData.pct then
+            GameTooltip:AddLine("Drop Chance: |cff71d5ff" .. self.itemData.pct .. "|r")
+          end
+          GameTooltip:AddLine("|cffdf80ffClick to inspect in Codex|r", 0.8, 0.8, 0.8)
+          GameTooltip:Show()
+        end
+      end)
+
+      btn:SetScript("OnLeave", function(self)
+        self:SetBackdropColor(0.10, 0.12, 0.17, 0.90)
+        self:SetBackdropBorderColor(0.25, 0.28, 0.38, 0.80)
+        GameTooltip:Hide()
+      end)
+
+      btn:SetScript("OnClick", function(self)
+        if self.itemData then
+          local fullItem = self.itemData.id and FG.Data.Items and FG.Data.Items[self.itemData.id]
+          if fullItem then
+            FG:ShowDetailPanel("item", fullItem)
+          elseif ForeverGuideSearchBox then
+            ForeverGuideSearchBox:SetText(self.itemData.name)
+          end
+        end
+      end)
+
+      p.Body.LootButtons[lootBtnIndex] = btn
+    end
+
+    btn:ClearAllPoints()
+    btn:SetPoint("TOPLEFT", p.Body, "TOPLEFT", 6, yOffset)
+    btn.itemData = drop
+    local qColor = FG.QualityColors[drop.quality] or "ffffffff"
+    btn.Title:SetText("|c" .. qColor .. (drop.name or "Item") .. "|r")
+    btn.Rate:SetText("|cff71d5ff" .. (drop.pct or "") .. "|r")
+    btn:Show()
+
+    yOffset = yOffset - 28
   end
 
   if entityType == "quest" then
@@ -1946,18 +2012,32 @@ function FG:ShowDetailPanel(entityType, data)
     local classColor = (data.classification == "Boss" or data.classification == "Rare Elite") and "ffff4040" or (data.classification == "Elite" and "ffffd24d" or "ff52b8ff")
     local lvlStr = (data.minLevel and data.maxLevel and data.minLevel ~= data.maxLevel) and (data.minLevel .. "-" .. data.maxLevel) or (data.maxLevel or data.minLevel or "?")
     AddLine("|c" .. classColor .. (data.name or "Creature") .. "|r", 15, nil, nil, nil, 6)
-    AddLine("Level: |cff20ff20" .. lvlStr .. "|r (" .. (data.classification or "Normal") .. ")", 12)
-    if data.health and data.health > 0 then AddLine("Health: |cffff6060" .. data.health .. "|r", 11) end
+    
+    local typeStr = (data.classification or "Normal")
+    if data.family and data.family ~= "" and data.family ~= "Unknown" then
+      typeStr = typeStr .. " • |cff00e5ff" .. data.family .. "|r"
+    end
+    AddLine("Level: |cff20ff20" .. lvlStr .. "|r (" .. typeStr .. ")", 12)
+    if data.health and data.health > 0 then AddLine("Health: |cffff6060" .. FormatNumber(data.health) .. " HP|r", 11) end
 
     AddSection("SPAWN & LOCATION")
     AddLine("Zone: |cffffffff" .. (data.zone or "Various") .. "|r", 12)
     if data.location and data.location ~= "" then
-      AddLine("Coordinates/Area: |cff20ff20" .. data.location .. "|r", 12)
+      AddLine("Area / Wing: |cff20ff20" .. data.location .. "|r", 12)
     end
 
     if data.strategy and data.strategy ~= "" then
-      AddSection("COMBAT STRATEGY")
-      AddLine(data.strategy, 11, 0.85, 0.85, 0.85, 6)
+      AddSection("COMBAT STRATEGY & TACTICS")
+      AddLine(data.strategy, 11, 0.85, 0.90, 0.95, 6)
+    end
+
+    AddSection("NOTABLE LOOT & DROPS")
+    if data.loot and #data.loot > 0 then
+      for _, drop in ipairs(data.loot) do
+        AddLootButton(drop)
+      end
+    else
+      AddLine("|cff888899No unique rare or high-value drops recorded.|r", 11)
     end
 
     p.LinkBtn:SetText("Share to Chat")
@@ -1982,6 +2062,16 @@ function FG:ShowDetailPanel(entityType, data)
     AddLine("Zone: |cffffffff" .. (data.zone or "Various") .. "|r", 12)
     if data.coords and data.coords ~= "" then
       AddLine("Entrance: |cff20ff20" .. data.coords .. "|r", 12)
+    end
+
+    if data.bosses and data.bosses ~= "" then
+      AddSection("NOTABLE BOSSES")
+      AddLine(data.bosses, 11, 1.0, 0.85, 0.40, 6)
+    end
+
+    if data.notableLoot and data.notableLoot ~= "" then
+      AddSection("NOTABLE LOOT")
+      AddLine(data.notableLoot, 11, 0.20, 0.85, 1.0, 6)
     end
 
     if data.strategy and data.strategy ~= "" then
@@ -2046,7 +2136,19 @@ function FG:PopulateCodexResults(query)
 
   -- Start off BLANK when search query is empty and category is 'all'
   if q == "" and cat == "all" then
-    if content.BlankState then content.BlankState:Show() end
+    if content.BlankState then
+      content.BlankState:Show()
+      if content.BlankState.Sub and FG.Data then
+        local totalCount = 0
+        if FG.Data.Items then for _ in pairs(FG.Data.Items) do totalCount = totalCount + 1 end end
+        if FG.Data.Quests then for _ in pairs(FG.Data.Quests) do totalCount = totalCount + 1 end end
+        if FG.Data.Creatures then for _ in pairs(FG.Data.Creatures) do totalCount = totalCount + 1 end end
+        if FG.Data.Dungeons then totalCount = totalCount + #FG.Data.Dungeons end
+        if totalCount > 0 then
+          content.BlankState.Sub:SetText(string.format("Instant in-game search for %s+ items, quests, NPCs & loot drops.", FormatNumber(math.floor(totalCount / 100) * 100)))
+        end
+      end
+    end
     if content.NoResultsState then content.NoResultsState:Hide() end
     content:SetHeight(450)
     if cw and cw.StatusText then
