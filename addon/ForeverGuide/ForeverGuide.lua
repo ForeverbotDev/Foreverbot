@@ -14,7 +14,9 @@ FG.Data = ForeverGuide_Data or {}
 
 -- Default Configuration
 local DEFAULT_CONFIG = {
-  sparkLocked = false,
+  sparkShown = true,
+  sparkLocked = true,           -- Locked by default so it never moves accidentally
+  sparkClickThrough = true,    -- When locked, world clicks (NPCs, mobs, quests) pass 100% through
   sparkScale = 1.0,
   codexScale = 1.0,
   combatFade = true,
@@ -78,21 +80,35 @@ SlashCmdList["FOREVERGUIDE"] = function(msg)
   -- 1. Companion Controls & High-Density UI Scaling
   elseif cmd == "spark" or cmd == "toggle" then
     FG:ToggleSpark()
+  elseif cmd == "hide" or cmd == "dismiss" or cmd == "off" then
+    if FG.SparkFrame then FG.SparkFrame:Hide() end
+    ForeverGuideDB.sparkShown = false
+    print("|cff52b8ff[The Blue Spark]|r Companion dismissed. Type |cff71d5ff/spark show|r to summon.")
+  elseif cmd == "show" or cmd == "summon" or cmd == "on" then
+    if FG.SparkFrame then FG.SparkFrame:Show() end
+    ForeverGuideDB.sparkShown = true
+    print("|cff52b8ff[The Blue Spark]|r Companion summoned.")
+  elseif cmd == "clickthrough" or cmd == "passthrough" or cmd == "pass" then
+    ForeverGuideDB.sparkClickThrough = not ForeverGuideDB.sparkClickThrough
+    FG:UpdateSparkMouseState()
+    local state = ForeverGuideDB.sparkClickThrough and "|cff20ff20Enabled (World clicks pass through)|r" or "|cffff4040Disabled (Directly Clickable)|r"
+    print("|cff52b8ff[The Blue Spark]|r Click-through mode is now " .. state)
   elseif cmd == "lock" then
-    ForeverGuideDB.sparkLocked = not ForeverGuideDB.sparkLocked
+    ForeverGuideDB.sparkLocked = true
     if FG.SparkFrame and FG.SparkFrame.StopMovingOrSizing then
       FG.SparkFrame:StopMovingOrSizing()
       FG.SparkFrame.isMoving = false
       FG.SparkFrame.wasDragged = false
     end
-    local state = ForeverGuideDB.sparkLocked and "|cffff2020Locked|r" or "|cff20ff20Unlocked|r"
-    print("|cff00bfff[The Blue Spark]|r Position is now " .. state)
+    FG:UpdateSparkMouseState()
+    print("|cff52b8ff[The Blue Spark]|r Position is now |cffff4040Locked|r (World Clicks Pass Through)")
     if FG.CodexWindow and FG.CodexWindow.LockBtn then
-      FG.CodexWindow.LockBtn:SetText(ForeverGuideDB.sparkLocked and "Unlock" or "Lock")
+      FG.CodexWindow.LockBtn:SetText("Unlock")
     end
   elseif cmd == "unlock" then
     ForeverGuideDB.sparkLocked = false
-    print("|cff00bfff[The Blue Spark]|r Position is now |cff20ff20Unlocked|r")
+    FG:UpdateSparkMouseState()
+    print("|cff52b8ff[The Blue Spark]|r Position is now |cff20ff20Unlocked|r (Draggable)")
     if FG.CodexWindow and FG.CodexWindow.LockBtn then
       FG.CodexWindow.LockBtn:SetText("Lock")
     end
@@ -107,7 +123,8 @@ SlashCmdList["FOREVERGUIDE"] = function(msg)
       FG.SparkFrame:ClearAllPoints()
       FG.SparkFrame:SetPoint("CENTER", UIParent, "CENTER", 240, 60)
     end
-    print("|cff00bfff[The Blue Spark]|r Position reset to screen center.")
+    FG:UpdateSparkMouseState()
+    print("|cff52b8ff[The Blue Spark]|r Position reset to screen center.")
   elseif cmd == "scale" or cmd == "size" then
     local target, sVal = rest:match("^(%a+)%s+(%S+)$")
     if not target then
@@ -708,18 +725,35 @@ local function SharpenFontString(fs, size, outline, shadowOffset)
   end
 end
 
+function FG:UpdateSparkMouseState()
+  if not FG.SparkFrame then return end
+  if ForeverGuideDB.sparkLocked and ForeverGuideDB.sparkClickThrough then
+    FG.SparkFrame:EnableMouse(false)
+  else
+    FG.SparkFrame:EnableMouse(true)
+  end
+end
+
 --------------------------------------------------------------------------------
 -- The Blue Spark Companion Frame
 --------------------------------------------------------------------------------
 function FG:CreateSparkFrame()
   local f = CreateFrame("Button", "ForeverGuideSparkFrame", UIParent)
-  f:SetSize(52, 52)
-  f:SetFrameStrata("HIGH")
+  f:SetSize(48, 48)
+  f:SetFrameStrata("LOW")       -- Render at low strata below all dialogue, quest, and action panels
+  f:SetFrameLevel(2)
   f:SetClampedToScreen(true)
   f:SetMovable(true)
-  f:EnableMouse(true)
+  f:SetHitRectInsets(8, 8, 8, 8) -- Tight hitbox so stray clicks pass directly to game world
+
+  -- Ensure right-clicks pass through to 3D NPCs and objects
+  if f.SetPassThroughButtons then
+    pcall(f.SetPassThroughButtons, f, "RightButton")
+  end
+
+  -- Only register Left clicks so right-clicking NPCs is never hijacked
+  f:RegisterForClicks("LeftButtonUp")
   f:RegisterForDrag("LeftButton")
-  f:RegisterForClicks("LeftButtonUp", "RightButtonUp")
 
   MakePixelSharp(f)
 
@@ -727,13 +761,13 @@ function FG:CreateSparkFrame()
   f:SetPoint(pos.point or "CENTER", UIParent, pos.relativePoint or "CENTER", pos.x or 240, pos.y or 60)
   f:SetScale(ForeverGuideDB.sparkScale or 1.0)
 
-  -- Outer Pulsing Aura
+  -- Outer Pulsing Aura (Soft celestial glow - easy on the eyes)
   local aura = f:CreateTexture(nil, "BACKGROUND")
   aura:SetTexture("Interface\\Cooldown\\star4")
   aura:SetBlendMode("ADD")
   aura:SetPoint("CENTER", f, "CENTER", 0, 0)
-  aura:SetSize(74, 74)
-  aura:SetVertexColor(0.1, 0.7, 1.0, 0.75)
+  aura:SetSize(68, 68)
+  aura:SetVertexColor(0.12, 0.55, 0.80, 0.65)
   f.Aura = aura
 
   -- Core Luminous Spark Sphere
@@ -741,8 +775,8 @@ function FG:CreateSparkFrame()
   core:SetTexture("Interface\\CHARACTERFRAME\\UI-Player-Status")
   core:SetTexCoord(0.15, 0.40, 0.15, 0.40)
   core:SetPoint("CENTER", f, "CENTER", 0, 0)
-  core:SetSize(42, 42)
-  core:SetVertexColor(0.5, 0.88, 1.0, 1.0)
+  core:SetSize(38, 38)
+  core:SetVertexColor(0.40, 0.75, 0.95, 0.90)
   f.Core = core
 
   -- Celestial Sparkle Highlight
@@ -751,21 +785,16 @@ function FG:CreateSparkFrame()
   spark:SetTexCoord(0.2, 0.8, 0.2, 0.8)
   spark:SetBlendMode("ADD")
   spark:SetPoint("CENTER", f, "CENTER", 0, 0)
-  spark:SetSize(36, 36)
-  spark:SetVertexColor(0.8, 0.95, 1.0, 0.9)
+  spark:SetSize(32, 32)
+  spark:SetVertexColor(0.70, 0.88, 0.98, 0.85)
   f.Spark = spark
 
-  -- Breathing / Pulse Animation
+  -- Lightweight Zero-Lag Alpha Animation (No geometry recalculation)
   local ag = f:CreateAnimationGroup()
-  local scaleAnim = ag:CreateAnimation("Scale")
-  scaleAnim:SetScale(1.12, 1.12)
-  scaleAnim:SetDuration(1.6)
-  scaleAnim:SetSmoothing("IN_OUT")
-
   local alphaAnim = ag:CreateAnimation("Alpha")
-  alphaAnim:SetFromAlpha(0.65)
+  alphaAnim:SetFromAlpha(0.68)
   alphaAnim:SetToAlpha(1.0)
-  alphaAnim:SetDuration(1.6)
+  alphaAnim:SetDuration(2.0)
   alphaAnim:SetSmoothing("IN_OUT")
 
   ag:SetLooping("BOUNCE")
@@ -785,6 +814,7 @@ function FG:CreateSparkFrame()
           y = math.floor(y + 0.5),
         }
       end
+      FG:UpdateSparkMouseState()
     end
   end
 
@@ -819,46 +849,46 @@ function FG:CreateSparkFrame()
     if button == "LeftButton" then
       FG:ToggleCodex()
       FG:PlaySparkSound("shimmer")
-    elseif button == "RightButton" then
-      if IsShiftKeyDown and IsShiftKeyDown() then
-        FG:ToggleSpark()
-      else
-        FG:ShowCurrentZoneIntel()
-        FG:PlaySparkSound("pulse")
-      end
     end
   end)
 
   f:SetScript("OnEnter", function(self)
-    aura:SetVertexColor(0.3, 0.9, 1.0, 1.0)
+    if ForeverGuideDB.sparkLocked and ForeverGuideDB.sparkClickThrough then return end
+    aura:SetVertexColor(0.25, 0.75, 0.95, 0.95)
     GameTooltip:SetOwner(self, "ANCHOR_RIGHT")
-    GameTooltip:AddLine("|cff00bfffThe Blue Spark|r", 1, 1, 1)
+    GameTooltip:AddLine("|cff52b8ffThe Blue Spark|r", 1, 1, 1)
     GameTooltip:AddLine("Celestial companion for Warcraft Forever.", 0.8, 0.8, 0.8, true)
     GameTooltip:AddLine(" ")
     GameTooltip:AddLine("|cff71d5ff<Left-Click>|r Open Forever Codex", 0.9, 0.9, 0.9)
-    GameTooltip:AddLine("|cff71d5ff<Right-Click>|r Current Zone Intel", 0.9, 0.9, 0.9)
-    GameTooltip:AddLine("|cff71d5ff<Shift+Right-Click>|r Dismiss Spark", 0.9, 0.9, 0.9)
-    GameTooltip:AddLine("|cff71d5ff<Drag>|r Move (" .. (ForeverGuideDB.sparkLocked and "|cffff2020Locked|r" or "|cff20ff20Unlocked|r") .. ")", 0.7, 0.7, 0.7)
+    GameTooltip:AddLine("|cff71d5ff<Drag>|r Move (" .. (ForeverGuideDB.sparkLocked and "|cffff4040Locked (Click-Through)|r" or "|cff20ff20Unlocked|r") .. ")", 0.7, 0.7, 0.7)
+    GameTooltip:AddLine("|cff71d5ff/spark lock|r - Toggle click-through mode", 0.6, 0.7, 0.8)
     GameTooltip:Show()
   end)
 
   f:SetScript("OnLeave", function(self)
-    aura:SetVertexColor(0.1, 0.7, 1.0, 0.75)
+    aura:SetVertexColor(0.12, 0.55, 0.80, 0.65)
     GameTooltip:Hide()
   end)
 
   FG.SparkFrame = f
+  FG:UpdateSparkMouseState()
+
+  if ForeverGuideDB.sparkShown == false then
+    f:Hide()
+  end
 end
 
 function FG:ToggleSpark()
   if not FG.SparkFrame then return end
   if FG.SparkFrame:IsShown() then
     FG.SparkFrame:Hide()
-    print("|cff00bfff[The Blue Spark]|r Companion dismissed.")
+    ForeverGuideDB.sparkShown = false
+    print("|cff52b8ff[The Blue Spark]|r Companion dismissed.")
   else
     FG.SparkFrame:Show()
+    ForeverGuideDB.sparkShown = true
     FG:PlaySparkSound("shimmer")
-    print("|cff00bfff[The Blue Spark]|r Companion summoned.")
+    print("|cff52b8ff[The Blue Spark]|r Companion summoned.")
   end
 end
 
@@ -929,6 +959,7 @@ function FG:CreateCodexWindow()
 
   MakePixelSharp(f)
 
+  -- Comfortable dark charcoal slate backdrop (easy on the eyes)
   f:SetBackdrop({
     bgFile = "Interface\\Buttons\\WHITE8X8",
     edgeFile = "Interface\\Tooltips\\UI-Tooltip-Border",
@@ -937,27 +968,30 @@ function FG:CreateCodexWindow()
     edgeSize = 14,
     insets = { left = 4, right = 4, top = 4, bottom = 4 },
   })
-  f:SetBackdropColor(0.04, 0.06, 0.10, 0.96)
-  f:SetBackdropBorderColor(0.0, 0.65, 1.0, 0.85)
+  f:SetBackdropColor(0.08, 0.09, 0.12, 0.96)
+  f:SetBackdropBorderColor(0.20, 0.38, 0.54, 0.85)
 
   f:SetScript("OnDragStart", f.StartMoving)
   f:SetScript("OnDragStop", f.StopMovingOrSizing)
   f:SetScript("OnHide", f.StopMovingOrSizing)
 
+  -- Register with standard UI Special Frames so ESC closes this window
+  tinsert(UISpecialFrames, "ForeverGuideCodexWindow")
+
   local title = f:CreateFontString(nil, "OVERLAY", "GameFontHighlightLarge")
   title:SetPoint("TOPLEFT", f, "TOPLEFT", 18, -14)
-  title:SetText("|cff00bfffForever Guide:|r |cff71d5ffThe Blue Spark Codex|r")
+  title:SetText("|cff52b8ffForever Guide:|r |cff8ad0ffThe Blue Spark Codex|r")
   SharpenFontString(title, 15, "OUTLINE")
   f.Title = title
 
   local subtitle = f:CreateFontString(nil, "OVERLAY", "GameFontDisableSmall")
   subtitle:SetPoint("TOPLEFT", title, "BOTTOMLEFT", 0, -2)
-  subtitle:SetText("|cff6688aaWarcraft Forever High-Density Codex|r")
+  subtitle:SetText("|cff8899aaWarcraft Forever High-Density Codex|r")
   SharpenFontString(subtitle, 10, "OUTLINE")
   f.Subtitle = subtitle
 
   local divider = f:CreateTexture(nil, "ARTWORK")
-  divider:SetColorTexture(0.0, 0.65, 1.0, 0.35)
+  divider:SetColorTexture(0.20, 0.45, 0.65, 0.30)
   divider:SetHeight(1)
   divider:SetPoint("TOPLEFT", f, "TOPLEFT", 14, -46)
   divider:SetPoint("TOPRIGHT", f, "TOPRIGHT", -14, -46)
@@ -1040,8 +1074,9 @@ function FG:CreateCodexWindow()
       FG.SparkFrame.isMoving = false
       FG.SparkFrame.wasDragged = false
     end
+    FG:UpdateSparkMouseState()
     StyleFilterBtn(self, ForeverGuideDB.sparkLocked and "Unlock" or "Lock")
-    print("|cff00bfff[The Blue Spark]|r Position is now " .. (ForeverGuideDB.sparkLocked and "|cffff2020Locked|r" or "|cff20ff20Unlocked|r"))
+    print("|cff52b8ff[The Blue Spark]|r Position is now " .. (ForeverGuideDB.sparkLocked and "|cffff4040Locked (Click-Through)|r" or "|cff20ff20Unlocked|r"))
   end)
   f.LockBtn = lockBtn
 
@@ -1147,8 +1182,8 @@ function FG:PopulateCodexResults(query)
         edgeSize = 10,
         insets = { left = 3, right = 3, top = 3, bottom = 3 },
       })
-      btn:SetBackdropColor(0.06, 0.09, 0.15, 0.88)
-      btn:SetBackdropBorderColor(0.12, 0.22, 0.35, 0.70)
+      btn:SetBackdropColor(0.10, 0.12, 0.16, 0.90)
+      btn:SetBackdropBorderColor(0.18, 0.24, 0.33, 0.70)
 
       local titleText = btn:CreateFontString(nil, "OVERLAY", "GameFontHighlight")
       titleText:SetPoint("TOPLEFT", btn, "TOPLEFT", 10, -7)
@@ -1171,26 +1206,26 @@ function FG:PopulateCodexResults(query)
       local item = match.data
       local qColor = FG.QualityColors[item.quality] or "ffffffff"
       local foreverTag = item.isForever and " |cffe6cc80[Forever]|r" or ""
-      btn.Title:SetText("|c" .. qColor .. item.name .. "|r" .. foreverTag .. " |cff888888(iLvl " .. item.ilvl .. ")|r")
+      btn.Title:SetText("|c" .. qColor .. item.name .. "|r" .. foreverTag .. " |cff8899aa(iLvl " .. item.ilvl .. ")|r")
 
       local desc = (item.slot and item.slot ~= "" and (item.slot .. " • ") or "") .. (item.source or "World Drop")
-      if item.tip and item.tip ~= "" then desc = desc .. " |cff71d5ffNote:|r " .. item.tip end
+      if item.tip and item.tip ~= "" then desc = desc .. " |cff52b8ffNote:|r |cffb0c4de" .. item.tip .. "|r" end
       btn.Sub:SetText(desc)
 
       btn:SetScript("OnEnter", function(self)
-        self:SetBackdropColor(0.08, 0.18, 0.30, 0.95)
-        self:SetBackdropBorderColor(0.0, 0.75, 1.0, 0.95)
+        self:SetBackdropColor(0.14, 0.18, 0.26, 0.95)
+        self:SetBackdropBorderColor(0.28, 0.58, 0.82, 0.90)
         GameTooltip:SetOwner(self, "ANCHOR_TOPLEFT")
         GameTooltip:SetItemByID(item.id)
         if item.tip and item.tip ~= "" then
           GameTooltip:AddLine(" ")
-          GameTooltip:AddLine("|cff00bfffSpark Intel:|r " .. item.tip, 0.2, 0.8, 1.0, true)
+          GameTooltip:AddLine("|cff52b8ffSpark Intel:|r " .. item.tip, 0.3, 0.8, 1.0, true)
         end
         GameTooltip:Show()
       end)
       btn:SetScript("OnLeave", function(self)
-        self:SetBackdropColor(0.06, 0.09, 0.15, 0.88)
-        self:SetBackdropBorderColor(0.12, 0.22, 0.35, 0.70)
+        self:SetBackdropColor(0.10, 0.12, 0.16, 0.90)
+        self:SetBackdropBorderColor(0.18, 0.24, 0.33, 0.70)
         GameTooltip:Hide()
       end)
       btn:SetScript("OnClick", function()
@@ -1203,14 +1238,14 @@ function FG:PopulateCodexResults(query)
     elseif match.type == "quest" then
       local qData = match.data
       local foreverTag = qData.isForever and " |cffe6cc80[Forever]|r" or ""
-      btn.Title:SetText("|cffffd100" .. qData.title .. "|r" .. foreverTag .. " |cff20ff20(Lvl " .. qData.questLevel .. ")|r")
-      btn.Sub:SetText("|cff71d5ffZone:|r " .. (qData.zone or "Various") .. " |cff71d5ffStart:|r " .. (qData.npc or "Unknown"))
+      btn.Title:SetText("|cffffd24d" .. qData.title .. "|r" .. foreverTag .. " |cff20ff20(Lvl " .. qData.questLevel .. ")|r")
+      btn.Sub:SetText("|cff52b8ffZone:|r " .. (qData.zone or "Various") .. " |cff52b8ffStart:|r " .. (qData.npc or "Unknown"))
 
       btn:SetScript("OnEnter", function(self)
-        self:SetBackdropColor(0.08, 0.20, 0.15, 0.95)
-        self:SetBackdropBorderColor(0.20, 0.85, 0.30, 0.95)
+        self:SetBackdropColor(0.10, 0.18, 0.14, 0.95)
+        self:SetBackdropBorderColor(0.28, 0.68, 0.40, 0.90)
         GameTooltip:SetOwner(self, "ANCHOR_TOPLEFT")
-        GameTooltip:AddLine(qData.title, 1, 0.82, 0)
+        GameTooltip:AddLine(qData.title, 1, 0.85, 0.2)
         GameTooltip:AddLine("Level: " .. qData.questLevel .. " (Req " .. qData.reqLevel .. ")", 1, 1, 1)
         if qData.objectives and qData.objectives ~= "" then
           GameTooltip:AddLine(" ")
@@ -1219,22 +1254,22 @@ function FG:PopulateCodexResults(query)
         GameTooltip:Show()
       end)
       btn:SetScript("OnLeave", function(self)
-        self:SetBackdropColor(0.06, 0.09, 0.15, 0.88)
-        self:SetBackdropBorderColor(0.12, 0.22, 0.35, 0.70)
+        self:SetBackdropColor(0.10, 0.12, 0.16, 0.90)
+        self:SetBackdropBorderColor(0.18, 0.24, 0.33, 0.70)
         GameTooltip:Hide()
       end)
 
     elseif match.type == "dungeon" then
       local d = match.data
       local foreverTag = d.isForever and " |cffe6cc80[Forever]|r" or ""
-      btn.Title:SetText("|cffffd100" .. d.name .. "|r" .. foreverTag .. " |cff20ff20(Lvl " .. d.recLevel .. ")|r")
-      btn.Sub:SetText("|cff71d5ffZone:|r " .. d.zone .. " |cff71d5ffEntrance:|r " .. (d.coords or "N/A"))
+      btn.Title:SetText("|cffffd24d" .. d.name .. "|r" .. foreverTag .. " |cff20ff20(Lvl " .. d.recLevel .. ")|r")
+      btn.Sub:SetText("|cff52b8ffZone:|r " .. d.zone .. " |cff52b8ffEntrance:|r " .. (d.coords or "N/A"))
 
       btn:SetScript("OnEnter", function(self)
-        self:SetBackdropColor(0.15, 0.10, 0.25, 0.95)
-        self:SetBackdropBorderColor(0.70, 0.40, 1.0, 0.95)
+        self:SetBackdropColor(0.15, 0.12, 0.22, 0.95)
+        self:SetBackdropBorderColor(0.55, 0.38, 0.78, 0.90)
         GameTooltip:SetOwner(self, "ANCHOR_TOPLEFT")
-        GameTooltip:AddLine(d.name, 1, 0.82, 0)
+        GameTooltip:AddLine(d.name, 1, 0.85, 0.2)
         GameTooltip:AddLine("Level: " .. d.recLevel .. " (" .. d.zone .. ")", 1, 1, 1)
         if d.coords and d.coords ~= "" then GameTooltip:AddLine("Coords: " .. d.coords, 0.2, 1, 0.2) end
         if d.strategy and d.strategy ~= "" then
@@ -1244,8 +1279,8 @@ function FG:PopulateCodexResults(query)
         GameTooltip:Show()
       end)
       btn:SetScript("OnLeave", function(self)
-        self:SetBackdropColor(0.06, 0.09, 0.15, 0.88)
-        self:SetBackdropBorderColor(0.12, 0.22, 0.35, 0.70)
+        self:SetBackdropColor(0.10, 0.12, 0.16, 0.90)
+        self:SetBackdropBorderColor(0.18, 0.24, 0.33, 0.70)
         GameTooltip:Hide()
       end)
     end
@@ -1286,8 +1321,8 @@ function FG:PopulateDungeons()
         edgeSize = 10,
         insets = { left = 3, right = 3, top = 3, bottom = 3 },
       })
-      btn:SetBackdropColor(0.06, 0.09, 0.15, 0.88)
-      btn:SetBackdropBorderColor(0.12, 0.22, 0.35, 0.70)
+      btn:SetBackdropColor(0.10, 0.12, 0.16, 0.90)
+      btn:SetBackdropBorderColor(0.18, 0.24, 0.33, 0.70)
 
       local titleText = btn:CreateFontString(nil, "OVERLAY", "GameFontHighlight")
       titleText:SetPoint("TOPLEFT", btn, "TOPLEFT", 10, -7)
@@ -1307,25 +1342,25 @@ function FG:PopulateDungeons()
     btn:SetPoint("TOPLEFT", content, "TOPLEFT", 0, yOffset)
 
     local foreverTag = d.isForever and " |cffe6cc80[Forever]|r" or ""
-    btn.Title:SetText("|cffffd100" .. d.name .. "|r" .. foreverTag .. " |cff20ff20(Lvl " .. d.recLevel .. ")|r")
-    btn.Sub:SetText("|cff71d5ffZone:|r " .. d.zone .. " |cff71d5ffEntrance:|r " .. (d.coords or "N/A"))
+    btn.Title:SetText("|cffffd24d" .. d.name .. "|r" .. foreverTag .. " |cff20ff20(Lvl " .. d.recLevel .. ")|r")
+    btn.Sub:SetText("|cff52b8ffZone:|r " .. d.zone .. " |cff52b8ffEntrance:|r " .. (d.coords or "N/A"))
 
     btn:SetScript("OnEnter", function(self)
-      self:SetBackdropColor(0.08, 0.18, 0.30, 0.95)
-      self:SetBackdropBorderColor(0.0, 0.75, 1.0, 0.95)
+      self:SetBackdropColor(0.14, 0.18, 0.26, 0.95)
+      self:SetBackdropBorderColor(0.28, 0.58, 0.82, 0.90)
       GameTooltip:SetOwner(self, "ANCHOR_TOPLEFT")
-      GameTooltip:AddLine(d.name, 1, 0.82, 0)
+      GameTooltip:AddLine(d.name, 1, 0.85, 0.2)
       GameTooltip:AddLine("Level: " .. d.recLevel .. " | Zone: " .. d.zone, 1, 1, 1)
       if d.coords and d.coords ~= "" then GameTooltip:AddLine("Coords: " .. d.coords, 0.2, 1, 0.2) end
       if d.strategy and d.strategy ~= "" then
         GameTooltip:AddLine(" ")
-        GameTooltip:AddLine("Tactics: " .. d.strategy, 0.7, 0.8, 1, true)
+        GameTooltip:AddLine("Tactics: " .. d.strategy, 0.8, 0.85, 0.95, true)
       end
       GameTooltip:Show()
     end)
     btn:SetScript("OnLeave", function(self)
-      self:SetBackdropColor(0.06, 0.09, 0.15, 0.88)
-      self:SetBackdropBorderColor(0.12, 0.22, 0.35, 0.70)
+      self:SetBackdropColor(0.10, 0.12, 0.16, 0.90)
+      self:SetBackdropBorderColor(0.18, 0.24, 0.33, 0.70)
       GameTooltip:Hide()
     end)
 
@@ -1391,9 +1426,7 @@ function FG:CreateMinimapButton()
     btn:SetPoint("CENTER", Minimap, "CENTER", x, y)
   end
 
-  btn:SetScript("OnDragStart", function(self) self.isDragging = true end)
-  btn:SetScript("OnDragStop", function(self) self.isDragging = false end)
-  btn:SetScript("OnUpdate", function(self)
+  local function OnMinimapUpdate(self)
     if self.isDragging then
       local mx, my = Minimap:GetCenter()
       local cx, cy = GetCursorPosition()
@@ -1403,6 +1436,16 @@ function FG:CreateMinimapButton()
       ForeverGuideDB.minimap.minimapPos = angle
       UpdatePosition(angle)
     end
+  end
+
+  btn:SetScript("OnDragStart", function(self)
+    self.isDragging = true
+    self:SetScript("OnUpdate", OnMinimapUpdate)
+  end)
+
+  btn:SetScript("OnDragStop", function(self)
+    self.isDragging = false
+    self:SetScript("OnUpdate", nil)
   end)
 
   btn:SetScript("OnClick", function(self, button)
@@ -1415,9 +1458,9 @@ function FG:CreateMinimapButton()
 
   btn:SetScript("OnEnter", function(self)
     GameTooltip:SetOwner(self, "ANCHOR_LEFT")
-    GameTooltip:AddLine("|cff00bfffForever Guide|r", 1, 1, 1)
-    GameTooltip:AddLine("|cff71d5ff<Left-Click>|r Toggle Codex", 0.9, 0.9, 0.9)
-    GameTooltip:AddLine("|cff71d5ff<Right-Click>|r Toggle Blue Spark", 0.9, 0.9, 0.9)
+    GameTooltip:AddLine("|cff52b8ffForever Guide|r", 1, 1, 1)
+    GameTooltip:AddLine("|cff71d5ff<Left-Click>|r Toggle Codex Window", 0.9, 0.9, 0.9)
+    GameTooltip:AddLine("|cff71d5ff<Right-Click>|r Summon / Dismiss Blue Spark", 0.9, 0.9, 0.9)
     GameTooltip:AddLine("|cff71d5ff<Drag>|r Move around minimap", 0.7, 0.7, 0.7)
     GameTooltip:Show()
   end)
@@ -1428,8 +1471,12 @@ function FG:CreateMinimapButton()
   FG.MinimapButton = btn
 end
 
+function FG:ToggleWayfarer()
+  FG:ShowCurrentZoneIntel()
+end
+
 --------------------------------------------------------------------------------
--- Event Dispatcher
+-- Event Dispatcher & Gameplay Non-Interference Guard
 --------------------------------------------------------------------------------
 local EventFrame = CreateFrame("Frame")
 EventFrame:RegisterEvent("ADDON_LOADED")
@@ -1437,6 +1484,15 @@ EventFrame:RegisterEvent("PLAYER_ENTERING_WORLD")
 EventFrame:RegisterEvent("ZONE_CHANGED_NEW_AREA")
 EventFrame:RegisterEvent("PLAYER_REGEN_DISABLED")
 EventFrame:RegisterEvent("PLAYER_REGEN_ENABLED")
+
+-- NPC Interaction Events: ensure UI auto-yields so dialogue is never obstructed
+EventFrame:RegisterEvent("GOSSIP_SHOW")
+EventFrame:RegisterEvent("QUEST_GREETING")
+EventFrame:RegisterEvent("QUEST_DETAIL")
+EventFrame:RegisterEvent("QUEST_PROGRESS")
+EventFrame:RegisterEvent("QUEST_COMPLETE")
+EventFrame:RegisterEvent("MERCHANT_SHOW")
+EventFrame:RegisterEvent("TAXIMAP_OPENED")
 
 EventFrame:SetScript("OnEvent", function(self, event, arg1, ...)
   if event == "ADDON_LOADED" and arg1 == ADDON_NAME then
@@ -1450,16 +1506,33 @@ EventFrame:SetScript("OnEvent", function(self, event, arg1, ...)
     FG:CreateSparkFrame()
     FG:CreateMinimapButton()
 
-    print("|cff00bfffForever Guide (The Blue Spark)|r v1.0.0 loaded! Type |cff71d5ff/spark help|r to view all in-game encyclopedia commands.")
+    print("|cff52b8ffForever Guide (The Blue Spark)|r loaded! Type |cff71d5ff/spark|r to open Codex or |cff71d5ff/spark help|r for commands.")
+
+  elseif event == "PLAYER_ENTERING_WORLD" then
+    -- Guarantee any stray cursor dragging state is stopped on world load
+    if FG.SparkFrame and FG.SparkFrame.StopMovingOrSizing then
+      FG.SparkFrame:StopMovingOrSizing()
+      FG.SparkFrame.isMoving = false
+      FG.SparkFrame.wasDragged = false
+    end
+    FG:UpdateSparkMouseState()
+
+  -- NPC Interaction: Auto-hide Codex window so NPC quest dialogue is 100% visible and accessible
+  elseif event == "GOSSIP_SHOW" or event == "QUEST_GREETING" or event == "QUEST_DETAIL" or
+         event == "QUEST_PROGRESS" or event == "QUEST_COMPLETE" or event == "MERCHANT_SHOW" or
+         event == "TAXIMAP_OPENED" then
+    if FG.CodexWindow and FG.CodexWindow:IsShown() then
+      FG.CodexWindow:Hide()
+    end
 
   elseif event == "ZONE_CHANGED_NEW_AREA" then
     if FG.SparkFrame and FG.SparkFrame:IsShown() then
       FG:PlaySparkSound("pulse")
       if FG.SparkFrame.Aura then
-        FG.SparkFrame.Aura:SetVertexColor(0.4, 0.9, 1.0, 1.0)
+        FG.SparkFrame.Aura:SetVertexColor(0.3, 0.75, 1.0, 0.85)
         C_Timer.After(1.2, function()
           if FG.SparkFrame and FG.SparkFrame.Aura then
-            FG.SparkFrame.Aura:SetVertexColor(0.1, 0.7, 1.0, 0.75)
+            FG.SparkFrame.Aura:SetVertexColor(0.12, 0.55, 0.80, 0.65)
           end
         end)
       end
