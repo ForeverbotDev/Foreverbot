@@ -1768,8 +1768,27 @@ function FG:CreateDetailPanel()
   p:SetBackdropColor(0.08, 0.09, 0.13, 0.98)
   p:SetBackdropBorderColor(0.55, 0.22, 0.85, 0.90) -- Ghastly violet border
 
+  local headerIconFrame = CreateFrame("Frame", nil, p, "BackdropTemplate")
+  headerIconFrame:SetSize(24, 24)
+  headerIconFrame:SetPoint("TOPLEFT", p, "TOPLEFT", 14, -10)
+  MakePixelSharp(headerIconFrame)
+  headerIconFrame:SetBackdrop({
+    edgeFile = "Interface\\Tooltips\\UI-Tooltip-Border",
+    tile = false,
+    tileSize = 10,
+    edgeSize = 8,
+    insets = { left = 2, right = 2, top = 2, bottom = 2 },
+  })
+  headerIconFrame:SetBackdropBorderColor(0.65, 0.35, 1.0, 0.9)
+  local headerIconTex = headerIconFrame:CreateTexture(nil, "ARTWORK")
+  headerIconTex:SetPoint("TOPLEFT", headerIconFrame, "TOPLEFT", 2, -2)
+  headerIconTex:SetPoint("BOTTOMRIGHT", headerIconFrame, "BOTTOMRIGHT", -2, 2)
+  headerIconTex:SetTexCoord(0.08, 0.92, 0.08, 0.92)
+  p.HeaderIconFrame = headerIconFrame
+  p.HeaderIcon = headerIconTex
+
   local title = p:CreateFontString(nil, "OVERLAY", "GameFontHighlightLarge")
-  title:SetPoint("TOPLEFT", p, "TOPLEFT", 16, -14)
+  title:SetPoint("LEFT", headerIconFrame, "RIGHT", 8, 0)
   title:SetText("|cffcf52ffCodex Deep Intel|r")
   SharpenFontString(title, 14, "OUTLINE")
   p.Title = title
@@ -1990,6 +2009,10 @@ function FG:ShowDetailPanel(entityType, data)
   end
 
   if entityType == "quest" then
+    if p.HeaderIcon then
+      p.HeaderIcon:SetTexture("Interface\\Icons\\inv_misc_book_07")
+      p.HeaderIconFrame:SetBackdropBorderColor(0.9, 0.7, 0.2, 0.9)
+    end
     p.Title:SetText("|cffcf52ffQuest Intel|r")
     AddLine("|cffffd24d" .. (data.title or "Quest") .. "|r", 15, nil, nil, nil, 6)
     AddLine("Level: |cff20ff20" .. (data.questLevel or "?") .. "|r  (Requires Lvl " .. (data.reqLevel or "1") .. ")", 12)
@@ -2038,6 +2061,16 @@ function FG:ShowDetailPanel(entityType, data)
     end)
 
   elseif entityType == "item" then
+    if p.HeaderIcon then
+      local iconTex = (data.icon and data.icon ~= "") and ("Interface\\Icons\\" .. data.icon) or "Interface\\Icons\\inv_misc_questionmark"
+      p.HeaderIcon:SetTexture(iconTex)
+      local q = data.quality or "Common"
+      if q == "Legendary" then p.HeaderIconFrame:SetBackdropBorderColor(1.0, 0.5, 0.0, 1.0)
+      elseif q == "Epic" then p.HeaderIconFrame:SetBackdropBorderColor(0.64, 0.21, 0.93, 1.0)
+      elseif q == "Rare" then p.HeaderIconFrame:SetBackdropBorderColor(0.0, 0.44, 0.87, 1.0)
+      elseif q == "Uncommon" then p.HeaderIconFrame:SetBackdropBorderColor(0.12, 1.0, 0.0, 1.0)
+      else p.HeaderIconFrame:SetBackdropBorderColor(0.4, 0.4, 0.5, 0.8) end
+    end
     p.Title:SetText("|cffcf52ffItem Intel|r")
     local qColor = FG.QualityColors[data.quality] or "ffffffff"
     AddLine("|c" .. qColor .. (data.name or "Item") .. "|r", 15, nil, nil, nil, 6)
@@ -2054,9 +2087,19 @@ function FG:ShowDetailPanel(entityType, data)
 
     if data.isForever then AddLine("|cffe6cc80★ Forever Exclusive Item|r", 11, nil, nil, nil, 4) end
 
+    if data.itemSet and data.itemSet ~= "" then
+      AddSection("ITEM SET")
+      AddLine("|cffffd24dSet: " .. data.itemSet .. "|r", 12, 1.0, 0.85, 0.2, 4)
+    end
+
     if data.stats and data.stats ~= "" then
       AddSection("STATS & ATTRIBUTES")
       AddLine(data.stats, 12, 0.20, 1.0, 0.30, 6)
+    end
+
+    if data.effects and data.effects ~= "" then
+      AddSection("SPECIAL EFFECTS & ABILITIES")
+      AddLine(data.effects, 12, 0.12, 1.0, 0.12, 6)
     end
 
     if data.desc and data.desc ~= "" then
@@ -2090,6 +2133,11 @@ function FG:ShowDetailPanel(entityType, data)
     end)
 
   elseif entityType == "creature" then
+    if p.HeaderIcon then
+      local cTex = (data.classification == "Boss" or data.classification == "World Boss") and "Interface\\Icons\\inv_misc_head_dragon_01" or ((data.classification == "Elite" or data.classification == "Rare Elite") and "Interface\\Icons\\spell_shadow_summoninfernal" or "Interface\\Icons\\inv_misc_monsterhead_01")
+      p.HeaderIcon:SetTexture(cTex)
+      p.HeaderIconFrame:SetBackdropBorderColor(1.0, 0.2, 0.2, 1.0)
+    end
     p.Title:SetText("|cffcf52ffCreature Intel|r")
     local classColor = (data.classification == "Boss" or data.classification == "Rare Elite") and "ffff4040" or (data.classification == "Elite" and "ffffd24d" or "ff52b8ff")
     local lvlStr = (data.minLevel and data.maxLevel and data.minLevel ~= data.maxLevel) and (data.minLevel .. "-" .. data.maxLevel) or (data.maxLevel or data.minLevel or "?")
@@ -2106,6 +2154,9 @@ function FG:ShowDetailPanel(entityType, data)
     AddLine("Zone: |cffffffff" .. (data.zone or "Various") .. "|r", 12)
     if data.location and data.location ~= "" then
       AddLine("Area / Wing: |cff20ff20" .. data.location .. "|r", 12)
+    end
+    if data.coords and data.coords ~= "" then
+      AddLine("Pinpoint Coordinates: |cff20ff20(" .. data.coords .. ")|r", 12, 0.3, 1.0, 0.3, 4)
     end
 
     if data.strategy and data.strategy ~= "" then
@@ -2130,14 +2181,20 @@ function FG:ShowDetailPanel(entityType, data)
     p.ActBtn:SetText("Target Macro")
     p.ActBtn:SetScript("OnClick", function()
       local editBox = ChatEdit_GetActiveWindow and ChatEdit_GetActiveWindow() or (ChatFrame1EditBox)
+      local macroText = "/target " .. data.name
       if editBox then
         ChatEdit_ActivateChat(editBox)
-        editBox:SetText("/target " .. data.name)
+        editBox:SetText(macroText)
       end
-      print("|cffcf52ff[Target]|r Prepared: /target " .. data.name)
+      local coordText = (data.coords and data.coords ~= "") and (" at (" .. data.coords .. ") in " .. (data.zone or "current zone")) or ""
+      print("|cffcf52ff[Target]|r Prepared: " .. macroText .. coordText)
     end)
 
   elseif entityType == "dungeon" then
+    if p.HeaderIcon then
+      p.HeaderIcon:SetTexture("Interface\\Icons\\inv_helmet_08")
+      p.HeaderIconFrame:SetBackdropBorderColor(0.7, 0.4, 0.9, 0.9)
+    end
     p.Title:SetText("|cffcf52ffDungeon Intel|r")
     AddLine("|cffffd24d" .. (data.name or "Dungeon") .. "|r", 15, nil, nil, nil, 6)
     AddLine("Recommended Level: |cff20ff20" .. (data.recLevel or "?") .. "|r", 12)
@@ -2172,6 +2229,10 @@ function FG:ShowDetailPanel(entityType, data)
     end)
 
   elseif entityType == "vendor" then
+    if p.HeaderIcon then
+      p.HeaderIcon:SetTexture("Interface\\Icons\\inv_misc_bag_07")
+      p.HeaderIconFrame:SetBackdropBorderColor(0.4, 0.8, 0.5, 0.9)
+    end
     p.Title:SetText("|cffcf52ffVendor Intel|r")
     AddLine("|cffffd24d" .. (data.name or "Vendor") .. "|r", 15, nil, nil, nil, 6)
     AddLine("Zone: |cffffffff" .. (data.zone or "Various") .. "|r", 12)
@@ -2914,14 +2975,34 @@ function FG:PopulateCodexResults(query)
       btn:SetBackdropColor(0.10, 0.12, 0.16, 0.90)
       btn:SetBackdropBorderColor(0.18, 0.24, 0.33, 0.70)
 
+      local iconFrame = CreateFrame("Frame", nil, btn, "BackdropTemplate")
+      iconFrame:SetSize(34, 34)
+      iconFrame:SetPoint("LEFT", btn, "LEFT", 8, 0)
+      MakePixelSharp(iconFrame)
+      iconFrame:SetBackdrop({
+        edgeFile = "Interface\\Tooltips\\UI-Tooltip-Border",
+        tile = false,
+        tileSize = 10,
+        edgeSize = 8,
+        insets = { left = 2, right = 2, top = 2, bottom = 2 },
+      })
+      iconFrame:SetBackdropBorderColor(0.4, 0.4, 0.5, 0.8)
+
+      local iconTex = iconFrame:CreateTexture(nil, "ARTWORK")
+      iconTex:SetPoint("TOPLEFT", iconFrame, "TOPLEFT", 2, -2)
+      iconTex:SetPoint("BOTTOMRIGHT", iconFrame, "BOTTOMRIGHT", -2, 2)
+      iconTex:SetTexCoord(0.08, 0.92, 0.08, 0.92)
+      btn.IconFrame = iconFrame
+      btn.Icon = iconTex
+
       local titleText = btn:CreateFontString(nil, "OVERLAY", "GameFontHighlight")
-      titleText:SetPoint("TOPLEFT", btn, "TOPLEFT", 10, -7)
+      titleText:SetPoint("TOPLEFT", btn, "TOPLEFT", 48, -7)
       SharpenFontString(titleText, 13, "OUTLINE")
       btn.Title = titleText
 
       local subText = btn:CreateFontString(nil, "OVERLAY", "GameFontNormalSmall")
       subText:SetPoint("TOPLEFT", titleText, "BOTTOMLEFT", 0, -3)
-      subText:SetWidth(440)
+      subText:SetWidth(400)
       subText:SetJustifyH("LEFT")
       SharpenFontString(subText, 11, "OUTLINE")
       btn.Sub = subText
@@ -2942,6 +3023,13 @@ function FG:PopulateCodexResults(query)
       btn:SetHeight(38)
       btn:SetBackdropColor(0.08, 0.11, 0.16, 0.95)
       btn:SetBackdropBorderColor(0.24, 0.38, 0.58, 0.85)
+
+      if btn.IconFrame then btn.IconFrame:Hide() end
+      btn.Title:ClearAllPoints()
+      btn.Title:SetPoint("TOPLEFT", btn, "TOPLEFT", 10, -7)
+      btn.Sub:ClearAllPoints()
+      btn.Sub:SetPoint("TOPLEFT", btn.Title, "BOTTOMLEFT", 0, -3)
+      btn.Sub:SetWidth(440)
 
       btn.Title:SetText("|cff66ccff" .. (folder.icon or "📁") .. " " .. folder.name .. "|r")
       btn.Sub:SetText("|cff8899aa" .. (folder.desc or folder.count or "Folder") .. "|r")
@@ -2971,6 +3059,23 @@ function FG:PopulateCodexResults(query)
       btn:SetBackdropColor(0.10, 0.12, 0.16, 0.90)
       btn:SetBackdropBorderColor(0.18, 0.24, 0.33, 0.70)
       btn.Hint:SetText("|cffdf80ffInspect ▶|r")
+
+      if btn.IconFrame then
+        btn.IconFrame:Show()
+        local tex = (item.icon and item.icon ~= "") and ("Interface\\Icons\\" .. item.icon) or "Interface\\Icons\\inv_misc_questionmark"
+        btn.Icon:SetTexture(tex)
+        local q = item.quality or "Common"
+        if q == "Legendary" then btn.IconFrame:SetBackdropBorderColor(1.0, 0.5, 0.0, 1.0)
+        elseif q == "Epic" then btn.IconFrame:SetBackdropBorderColor(0.64, 0.21, 0.93, 1.0)
+        elseif q == "Rare" then btn.IconFrame:SetBackdropBorderColor(0.0, 0.44, 0.87, 1.0)
+        elseif q == "Uncommon" then btn.IconFrame:SetBackdropBorderColor(0.12, 1.0, 0.0, 1.0)
+        else btn.IconFrame:SetBackdropBorderColor(0.4, 0.4, 0.5, 0.8) end
+      end
+      btn.Title:ClearAllPoints()
+      btn.Title:SetPoint("TOPLEFT", btn, "TOPLEFT", 48, -7)
+      btn.Sub:ClearAllPoints()
+      btn.Sub:SetPoint("TOPLEFT", btn.Title, "BOTTOMLEFT", 0, -3)
+      btn.Sub:SetWidth(400)
 
       local qColor = FG.QualityColors[item.quality] or "ffffffff"
       local foreverTag = item.isForever and " |cffe6cc80[Forever]|r" or ""
@@ -3015,6 +3120,17 @@ function FG:PopulateCodexResults(query)
       btn:SetBackdropBorderColor(0.18, 0.24, 0.33, 0.70)
       btn.Hint:SetText("|cffdf80ffInspect ▶|r")
 
+      if btn.IconFrame then
+        btn.IconFrame:Show()
+        btn.Icon:SetTexture("Interface\\Icons\\inv_misc_book_07")
+        btn.IconFrame:SetBackdropBorderColor(0.9, 0.7, 0.2, 0.9)
+      end
+      btn.Title:ClearAllPoints()
+      btn.Title:SetPoint("TOPLEFT", btn, "TOPLEFT", 48, -7)
+      btn.Sub:ClearAllPoints()
+      btn.Sub:SetPoint("TOPLEFT", btn.Title, "BOTTOMLEFT", 0, -3)
+      btn.Sub:SetWidth(400)
+
       local foreverTag = qData.isForever and " |cffe6cc80[Forever]|r" or ""
       btn.Title:SetText("|cffffd24d" .. qData.title .. "|r" .. foreverTag .. " |cff20ff20(Lvl " .. qData.questLevel .. ")|r")
       btn.Sub:SetText("|cff52b8ffZone:|r " .. (qData.zone or "Various") .. " |cff52b8ffStart:|r " .. (qData.npc or "Unknown"))
@@ -3054,6 +3170,17 @@ function FG:PopulateCodexResults(query)
       btn:SetBackdropColor(0.10, 0.12, 0.16, 0.90)
       btn:SetBackdropBorderColor(0.18, 0.24, 0.33, 0.70)
       btn.Hint:SetText("|cffdf80ffInspect ▶|r")
+
+      if btn.IconFrame then
+        btn.IconFrame:Show()
+        btn.Icon:SetTexture("Interface\\Icons\\inv_helmet_08")
+        btn.IconFrame:SetBackdropBorderColor(0.7, 0.4, 0.9, 0.9)
+      end
+      btn.Title:ClearAllPoints()
+      btn.Title:SetPoint("TOPLEFT", btn, "TOPLEFT", 48, -7)
+      btn.Sub:ClearAllPoints()
+      btn.Sub:SetPoint("TOPLEFT", btn.Title, "BOTTOMLEFT", 0, -3)
+      btn.Sub:SetWidth(400)
 
       local foreverTag = d.isForever and " |cffe6cc80[Forever]|r" or ""
       btn.Title:SetText("|cffffd24d" .. d.name .. "|r" .. foreverTag .. " |cff20ff20(Lvl " .. d.recLevel .. ")|r")
@@ -3096,6 +3223,24 @@ function FG:PopulateCodexResults(query)
       btn:SetBackdropBorderColor(0.18, 0.24, 0.33, 0.70)
       btn.Hint:SetText("|cffdf80ffInspect ▶|r")
 
+      if btn.IconFrame then
+        btn.IconFrame:Show()
+        local cTex = (c.classification == "Boss" or c.classification == "World Boss") and "Interface\\Icons\\inv_misc_head_dragon_01" or ((c.classification == "Elite" or c.classification == "Rare Elite") and "Interface\\Icons\\spell_shadow_summoninfernal" or "Interface\\Icons\\inv_misc_monsterhead_01")
+        btn.Icon:SetTexture(cTex)
+        if c.classification == "Boss" or c.classification == "World Boss" then
+          btn.IconFrame:SetBackdropBorderColor(1.0, 0.2, 0.2, 1.0)
+        elseif c.classification == "Elite" or c.classification == "Rare Elite" then
+          btn.IconFrame:SetBackdropBorderColor(1.0, 0.8, 0.2, 1.0)
+        else
+          btn.IconFrame:SetBackdropBorderColor(0.3, 0.6, 0.9, 0.8)
+        end
+      end
+      btn.Title:ClearAllPoints()
+      btn.Title:SetPoint("TOPLEFT", btn, "TOPLEFT", 48, -7)
+      btn.Sub:ClearAllPoints()
+      btn.Sub:SetPoint("TOPLEFT", btn.Title, "BOTTOMLEFT", 0, -3)
+      btn.Sub:SetWidth(400)
+
       local foreverTag = c.isForever and " |cffe6cc80[Forever]|r" or ""
       local classColor = (c.classification == "Boss" or c.classification == "Rare Elite" or c.classification == "World Boss") and "ffff4040" or (c.classification == "Elite" and "ffffd24d" or "ff52b8ff")
       local lvlStr = (c.minLevel and c.maxLevel and c.minLevel ~= c.maxLevel) and (c.minLevel .. "-" .. c.maxLevel) or (c.maxLevel or c.minLevel or "?")
@@ -3103,6 +3248,9 @@ function FG:PopulateCodexResults(query)
       local desc = "|cff52b8ffZone:|r " .. (c.zone ~= "" and c.zone or "Various")
       if c.location and c.location ~= "" then
         desc = desc .. " |cff52b8ffLocation:|r " .. c.location
+      end
+      if c.coords and c.coords ~= "" then
+        desc = desc .. " (" .. c.coords .. ")"
       end
       btn.Sub:SetText(desc)
 
@@ -3114,6 +3262,7 @@ function FG:PopulateCodexResults(query)
         GameTooltip:AddLine("Level: " .. lvlStr .. " (" .. (c.classification or "Normal") .. ")", 1, 1, 1)
         if c.zone and c.zone ~= "" then GameTooltip:AddLine("Zone: " .. c.zone, 0.3, 0.8, 1.0) end
         if c.location and c.location ~= "" then GameTooltip:AddLine("Location: " .. c.location, 0.2, 1, 0.2) end
+        if c.coords and c.coords ~= "" then GameTooltip:AddLine("Coords: " .. c.coords, 0.2, 1, 0.2) end
         if c.health and c.health > 0 then GameTooltip:AddLine("Health: " .. c.health, 1, 0.3, 0.3) end
         if c.strategy and c.strategy ~= "" then
           GameTooltip:AddLine(" ")
@@ -3144,6 +3293,17 @@ function FG:PopulateCodexResults(query)
       btn:SetBackdropColor(0.10, 0.12, 0.16, 0.90)
       btn:SetBackdropBorderColor(0.18, 0.24, 0.33, 0.70)
       btn.Hint:SetText("|cffdf80ffInspect ▶|r")
+
+      if btn.IconFrame then
+        btn.IconFrame:Show()
+        btn.Icon:SetTexture("Interface\\Icons\\inv_misc_bag_07")
+        btn.IconFrame:SetBackdropBorderColor(0.4, 0.8, 0.5, 0.9)
+      end
+      btn.Title:ClearAllPoints()
+      btn.Title:SetPoint("TOPLEFT", btn, "TOPLEFT", 48, -7)
+      btn.Sub:ClearAllPoints()
+      btn.Sub:SetPoint("TOPLEFT", btn.Title, "BOTTOMLEFT", 0, -3)
+      btn.Sub:SetWidth(400)
 
       btn.Title:SetText("|cffffd24d" .. v.name .. "|r |cff20ff20[Vendor]|r")
       local desc = "|cff52b8ffSells:|r " .. (v.item or "Goods") .. " |cff52b8ffZone:|r " .. (v.zone or "Various")

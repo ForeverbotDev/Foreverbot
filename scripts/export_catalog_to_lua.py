@@ -128,7 +128,7 @@ def export_vendors(cursor) -> str:
 
 def export_items(cursor) -> str:
     cursor.execute("""
-        SELECT id, name, quality, item_level, req_level, slot, item_type, stats, description, source, pro_tip, is_forever_content, bonding, sell_price
+        SELECT id, name, quality, item_level, req_level, slot, item_type, stats, description, source, pro_tip, is_forever_content, bonding, sell_price, icon, effects, item_set
         FROM items
         WHERE forever_status = 'live'
           AND quality != 'Poor'
@@ -137,7 +137,7 @@ def export_items(cursor) -> str:
     rows = cursor.fetchall()
     lua = ["ForeverGuide_Data.Items = {"]
     for r in rows:
-        i_id, name, quality, ilvl, req_lvl, slot, itype, stats, desc, source, tip, is_forever, bonding, sell_price = r
+        i_id, name, quality, ilvl, req_lvl, slot, itype, stats, desc, source, tip, is_forever, bonding, sell_price, icon, effects, item_set = r
         clean_source = source or ""
         clean_tip = tip or ""
         # Guarantee no datamine or alpha patch notes strings
@@ -151,6 +151,9 @@ def export_items(cursor) -> str:
         lua.append(f"    reqLvl = {req_lvl or 0},")
         lua.append(f"    slot = {escape_lua_str(slot or '')},")
         lua.append(f"    itemType = {escape_lua_str(itype or '')},")
+        lua.append(f"    icon = {escape_lua_str(icon or '')},")
+        lua.append(f"    effects = {escape_lua_str(effects or '')},")
+        lua.append(f"    itemSet = {escape_lua_str(item_set or '')},")
         lua.append(f"    source = {escape_lua_str(clean_source)},")
         lua.append(f"    stats = {escape_lua_str(stats or '')},")
         lua.append(f"    desc = {escape_lua_str(desc or '')},")
@@ -225,14 +228,14 @@ def export_creatures(cursor) -> str:
             })
 
     cursor.execute("""
-        SELECT id, name, level_min, level_max, classification, family, zone, location_details, health, strategy_notes, is_forever_content
+        SELECT id, name, level_min, level_max, classification, family, zone, location_details, health, strategy_notes, is_forever_content, coords
         FROM creatures
         ORDER BY level_max DESC, name ASC
     """)
     rows = cursor.fetchall()
     lua = ["ForeverGuide_Data.Creatures = {"]
     for r in rows:
-        c_id, name, l_min, l_max, classification, family, zone, loc, hp, strat, is_forever = r
+        c_id, name, l_min, l_max, classification, family, zone, loc, hp, strat, is_forever, coords = r
         lua.append(f"  [{c_id}] = {{")
         lua.append(f"    id = {c_id},")
         lua.append(f"    name = {escape_lua_str(name)},")
@@ -242,6 +245,7 @@ def export_creatures(cursor) -> str:
         lua.append(f"    family = {escape_lua_str(family or 'Humanoid')},")
         lua.append(f"    zone = {escape_lua_str(zone or '')},")
         lua.append(f"    location = {escape_lua_str(loc or '')},")
+        lua.append(f"    coords = {escape_lua_str(coords or '')},")
         lua.append(f"    health = {hp or 0},")
         lua.append(f"    strategy = {escape_lua_str(strat or '')},")
         lua.append(f"    isForever = {'true' if is_forever else 'false'},")
