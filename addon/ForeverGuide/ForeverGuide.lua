@@ -1,6 +1,6 @@
 --[[
   ForeverGuide.lua
-  Warcraft Forever Addon: The Ghastly Sprite Companion
+  Warcraft Forever Addon: Sparky the Cloud Wisp Companion
   Version: 1.0.0
   Complete In-Game Encyclopedia (All 43 GitHub Bot Commands Ported to Lua)
   CurseForge Compliant (Blizzard AddOn Policy Approved)
@@ -69,6 +69,7 @@ end
 SLASH_FOREVERGUIDE1 = "/fg"
 SLASH_FOREVERGUIDE2 = "/spark"
 SLASH_FOREVERGUIDE3 = "/foreverguide"
+SLASH_FOREVERGUIDE4 = "/sparky"
 
 SlashCmdList["FOREVERGUIDE"] = function(msg)
   local cmd, rest = msg:match("^(%S*)%s*(.-)$")
@@ -79,21 +80,21 @@ SlashCmdList["FOREVERGUIDE"] = function(msg)
     FG:ToggleCodex()
 
   -- 1. Companion Controls & High-Density UI Scaling
-  elseif cmd == "spark" or cmd == "toggle" or cmd == "sprite" then
+  elseif cmd == "spark" or cmd == "sparky" or cmd == "toggle" or cmd == "sprite" or cmd == "wisp" then
     FG:ToggleSpark()
   elseif cmd == "hide" or cmd == "dismiss" or cmd == "off" then
     if FG.SparkFrame then FG.SparkFrame:Hide() end
     ForeverGuideDB.sparkShown = false
-    print("|cffdf80ff[The Ghastly Sprite]|r Companion dismissed. Type |cffcf52ff/spark show|r to summon.")
+    print("|cffdf80ff[Sparky]|r Companion dismissed. Type |cffcf52ff/sparky show|r to summon.")
   elseif cmd == "show" or cmd == "summon" or cmd == "on" then
     if FG.SparkFrame then FG.SparkFrame:Show() end
     ForeverGuideDB.sparkShown = true
-    print("|cffdf80ff[The Ghastly Sprite]|r Companion summoned.")
+    print("|cffdf80ff[Sparky]|r Companion summoned.")
   elseif cmd == "clickthrough" or cmd == "passthrough" or cmd == "pass" then
     ForeverGuideDB.sparkClickThrough = not ForeverGuideDB.sparkClickThrough
     FG:UpdateSparkMouseState()
     local state = ForeverGuideDB.sparkClickThrough and "|cff20ff20Enabled (World clicks pass through)|r" or "|cffff4040Disabled (Directly Clickable)|r"
-    print("|cffdf80ff[The Ghastly Sprite]|r Click-through mode is now " .. state)
+    print("|cffdf80ff[Sparky]|r Click-through mode is now " .. state)
   elseif cmd == "lock" then
     ForeverGuideDB.sparkLocked = true
     if FG.SparkFrame and FG.SparkFrame.StopMovingOrSizing then
@@ -102,14 +103,14 @@ SlashCmdList["FOREVERGUIDE"] = function(msg)
       FG.SparkFrame.wasDragged = false
     end
     FG:UpdateSparkMouseState()
-    print("|cffdf80ff[The Ghastly Sprite]|r Position is now |cffff4040Locked|r (Hold Shift+Drag to move)")
+    print("|cffdf80ff[Sparky]|r Position is now |cffff4040Locked|r (Hold Shift+Drag to move)")
     if FG.CodexWindow and FG.CodexWindow.LockBtn then
       FG.CodexWindow.LockBtn:SetText("Unlock")
     end
   elseif cmd == "unlock" then
     ForeverGuideDB.sparkLocked = false
     FG:UpdateSparkMouseState()
-    print("|cffdf80ff[The Ghastly Sprite]|r Position is now |cff20ff20Unlocked|r (Draggable)")
+    print("|cffdf80ff[Sparky]|r Position is now |cff20ff20Unlocked|r (Draggable)")
     if FG.CodexWindow and FG.CodexWindow.LockBtn then
       FG.CodexWindow.LockBtn:SetText("Lock")
     end
@@ -125,7 +126,7 @@ SlashCmdList["FOREVERGUIDE"] = function(msg)
       FG.SparkFrame:SetPoint("CENTER", UIParent, "CENTER", 240, 60)
     end
     FG:UpdateSparkMouseState()
-    print("|cffdf80ff[The Ghastly Sprite]|r Position reset to screen center.")
+    print("|cffdf80ff[Sparky]|r Position reset to screen center.")
   elseif cmd == "scale" or cmd == "size" then
     local target, sVal = rest:match("^(%a+)%s+(%S+)$")
     if not target then
@@ -134,28 +135,28 @@ SlashCmdList["FOREVERGUIDE"] = function(msg)
     end
     local num = tonumber(sVal)
     if num and num >= 0.5 and num <= 2.5 then
-      if target == "spark" or target == "sprite" then
+      if target == "spark" or target == "sparky" or target == "sprite" or target == "wisp" then
         ForeverGuideDB.sparkScale = num
         if FG.SparkFrame then FG.SparkFrame:SetScale(num) end
-        print(string.format("|cffdf80ff[The Ghastly Sprite]|r Sprite scale set to |cffffffff%.2f|r", num))
+        print(string.format("|cffdf80ff[Sparky]|r Scale set to |cffffffff%.2f|r", num))
       elseif target == "codex" then
         ForeverGuideDB.codexScale = num
         if FG.CodexWindow then FG.CodexWindow:SetScale(num) end
-        print(string.format("|cffdf80ff[The Ghastly Sprite]|r Codex scale set to |cffffffff%.2f|r", num))
+        print(string.format("|cffdf80ff[Sparky]|r Codex scale set to |cffffffff%.2f|r", num))
       else
         ForeverGuideDB.sparkScale = num
         ForeverGuideDB.codexScale = num
         if FG.SparkFrame then FG.SparkFrame:SetScale(num) end
         if FG.CodexWindow then FG.CodexWindow:SetScale(num) end
-        print(string.format("|cffdf80ff[The Ghastly Sprite]|r UI scale set to |cffffffff%.2f|r (Pixel Density: |cffcf52ff%.2fx|r)", num, num))
+        print(string.format("|cffdf80ff[Sparky]|r UI scale set to |cffffffff%.2f|r (Pixel Density: |cffcf52ff%.2fx|r)", num, num))
       end
     else
-      print("|cffdf80ff[The Ghastly Sprite]|r Usage: |cffcf52ff/spark scale <0.5-2.0>|r or |cffcf52ff/spark scale [sprite|codex] <0.5-2.0>|r")
+      print("|cffdf80ff[Sparky]|r Usage: |cffcf52ff/sparky scale <0.5-2.0>|r or |cffcf52ff/sparky scale [sparky|codex] <0.5-2.0>|r")
     end
   elseif cmd == "density" or cmd == "sharp" then
     ForeverGuideDB.sharpText = not ForeverGuideDB.sharpText
     local state = ForeverGuideDB.sharpText and "|cff20ff20Enabled (Razor-Sharp Outlined)|r" or "|cffff2020Standard|r"
-    print("|cffdf80ff[The Ghastly Sprite]|r High-Density Sharp Text is now " .. state)
+    print("|cffdf80ff[Sparky]|r High-Density Sharp Text is now " .. state)
     if FG.ApplyTextSharpening then
       FG:ApplyTextSharpening()
     end
@@ -258,12 +259,12 @@ end
 
 function FG:PrintHelpManual()
   print(" ")
-  print("|cffdf80ff✨ [Forever Guide: The Ghastly Sprite] — In-Game Commands:|r")
-  print("  |cffcf52ff/spark|r - Open Forever Codex search window")
-  print("  |cffcf52ff/spark scale [0.5-2.0]|r - Adjust UI pixel density & window scale")
-  print("  |cffcf52ff/spark sharp|r - Toggle razor-sharp font outlining mode")
-  print("  |cffcf52ff/spark lock / /spark unlock|r - Lock or unlock sprite cursor movement")
-  print("  |cffcf52ff/spark reset|r - Safely detach and center Ghastly Sprite on screen")
+  print("|cffdf80ff✨ [Forever Guide: Sparky] — In-Game Commands:|r")
+  print("  |cffcf52ff/sparky|r or |cffcf52ff/spark|r - Open Forever Codex search window")
+  print("  |cffcf52ff/sparky scale [0.5-2.0]|r - Adjust UI pixel density & window scale")
+  print("  |cffcf52ff/sparky sharp|r - Toggle razor-sharp font outlining mode")
+  print("  |cffcf52ff/sparky lock / /sparky unlock|r - Lock or unlock Sparky's cursor movement")
+  print("  |cffcf52ff/sparky reset|r - Safely detach and center Sparky on screen")
   print("  |cff71d5ff/spark item <name>|r - Look up item stats, drop rates, and notes")
   print("  |cff71d5ff/spark quest <name>|r - Quest givers, coords, objectives & rewards")
   print("  |cff71d5ff/spark mob <name>|r - Boss locations, health, and strategy")
@@ -736,11 +737,11 @@ function FG:UpdateSparkMouseState()
 end
 
 --------------------------------------------------------------------------------
--- The Ghastly Sprite Companion Frame
+-- Sparky: The Cloud Wisp Companion Frame
 --------------------------------------------------------------------------------
 function FG:CreateSparkFrame()
   local f = CreateFrame("Button", "ForeverGuideSparkFrame", UIParent)
-  f:SetSize(36, 36)
+  f:SetSize(38, 38)
   f:SetFrameStrata("MEDIUM")
   f:SetFrameLevel(12)
   f:SetClampedToScreen(true)
@@ -780,100 +781,109 @@ function FG:CreateSparkFrame()
   visual:EnableMouse(false)
   f.Visual = visual
 
-  -- Native circular gradient mask: crops all inner layers to a smooth, perfect sphere
-  local circleMask
-  if visual.CreateMaskTexture then
-    local mask = visual:CreateMaskTexture()
-    mask:SetTexture("Interface\\CharacterFrame\\TempPortraitAlphaMask")
-    mask:SetSize(32, 32)
-    mask:SetPoint("CENTER", visual, "CENTER", 0, 0)
-    circleMask = mask
-    visual.CircleMask = mask
-  end
+  local MEDIA = "Interface\\AddOns\\" .. ADDON_NAME .. "\\Media\\"
+  local TEX_CLOUD_MAIN = MEDIA .. "sparky_cloud_main.tga"
+  local TEX_CLOUD_WISP = MEDIA .. "sparky_cloud_wisp.tga"
+  local TEX_CLOUD_CORE = MEDIA .. "sparky_cloud_core.tga"
+  local TEX_CLOUD_PUFF = MEDIA .. "sparky_cloud_puff.tga"
 
-  -- Layer 1: Spherical Ambient Ghastly Violet Halo Glow (Soft radial falloff, zero square box)
+  -- Layer 1: Outer Ambient Ethereal Violet Haze (Soft drifting mist fog)
   local aura = visual:CreateTexture(nil, "BACKGROUND")
-  aura:SetTexture("Interface\\CharacterFrame\\TempPortraitAlphaMask")
+  aura:SetTexture(TEX_CLOUD_MAIN)
   aura:SetBlendMode("ADD")
   aura:SetPoint("CENTER", visual, "CENTER", 0, 0)
-  aura:SetSize(34, 34)
-  aura:SetVertexColor(0.68, 0.12, 0.98, 0.45)
+  aura:SetSize(42, 42)
+  aura:SetVertexColor(0.55, 0.12, 0.85, 0.40)
   f.Aura = aura
 
-  -- Layer 2: Outer Luminous Corona (Spectral Wisp Flare)
-  local corona = visual:CreateTexture(nil, "BORDER")
-  corona:SetTexture("Interface\\COMMON\\friendship-manaorb")
-  corona:SetBlendMode("ADD")
-  corona:SetPoint("CENTER", visual, "CENTER", 0, 0)
-  corona:SetSize(28, 28)
-  corona:SetVertexColor(0.85, 0.22, 0.95, 0.55)
-  if circleMask and corona.AddMaskTexture then
-    pcall(corona.AddMaskTexture, corona, circleMask)
-  end
-  f.Corona = corona
+  -- Layer 2: Billowing Cloud Lobe A (Asymmetric puff, rotates counter-clockwise)
+  local cloudA = visual:CreateTexture(nil, "BORDER")
+  cloudA:SetTexture(TEX_CLOUD_MAIN)
+  cloudA:SetBlendMode("ADD")
+  cloudA:SetPoint("CENTER", visual, "CENTER", -1.5, 1.0)
+  cloudA:SetSize(34, 34)
+  cloudA:SetVertexColor(0.72, 0.20, 0.98, 0.65)
+  f.CloudA = cloudA
 
-  -- Layer 3: 3D Spherical Core (Deep shaded violet-amethyst sprite body)
-  local orb = visual:CreateTexture(nil, "ARTWORK")
-  orb:SetTexture("Interface\\COMMON\\friendship-manaorb")
-  orb:SetBlendMode("BLEND")
-  orb:SetPoint("CENTER", visual, "CENTER", 0, 0)
-  orb:SetSize(24, 24)
-  orb:SetVertexColor(0.90, 0.45, 1.0, 0.95)
-  if circleMask and orb.AddMaskTexture then
-    pcall(orb.AddMaskTexture, orb, circleMask)
-  end
-  f.Orb = orb
+  local rotAgA = visual:CreateAnimationGroup()
+  local rotAnimA = rotAgA:CreateAnimation("Rotation")
+  rotAnimA:SetDegrees(360)
+  rotAnimA:SetDuration(22.0)
+  rotAgA:SetLooping("REPEAT")
+  rotAgA:Play()
+  f.RotAnimGroupA = rotAgA
 
-  -- Layer 4: Internal Swirling Spirit Nebula (Rotates inside the sprite for living 3D fluid depth)
-  local swirl = visual:CreateTexture(nil, "ARTWORK", nil, 1)
-  swirl:SetTexture("Interface\\COMMON\\friendship-manaorb")
-  swirl:SetBlendMode("ADD")
-  swirl:SetPoint("CENTER", visual, "CENTER", 0, 0)
-  swirl:SetSize(20, 20)
-  swirl:SetVertexColor(0.80, 0.20, 1.0, 0.65)
-  if circleMask and swirl.AddMaskTexture then
-    pcall(swirl.AddMaskTexture, swirl, circleMask)
-  end
-  f.Swirl = swirl
+  -- Layer 3: Billowing Counter Cloud Lobe B (Opposite rotation constantly morphs silhouette)
+  local cloudB = visual:CreateTexture(nil, "ARTWORK")
+  cloudB:SetTexture(TEX_CLOUD_MAIN)
+  cloudB:SetBlendMode("ADD")
+  cloudB:SetPoint("CENTER", visual, "CENTER", 1.8, -1.2)
+  cloudB:SetSize(30, 30)
+  cloudB:SetVertexColor(0.82, 0.30, 1.00, 0.60)
+  f.CloudB = cloudB
 
-  local rotAg = visual:CreateAnimationGroup()
-  local rotAnim = rotAg:CreateAnimation("Rotation")
-  rotAnim:SetDegrees(360)
-  rotAnim:SetDuration(12.0)
-  rotAg:SetLooping("REPEAT")
-  rotAg:Play()
-  f.RotAnimGroup = rotAg
+  local rotAgB = visual:CreateAnimationGroup()
+  local rotAnimB = rotAgB:CreateAnimation("Rotation")
+  rotAnimB:SetDegrees(-360)
+  rotAnimB:SetDuration(16.0)
+  rotAgB:SetLooping("REPEAT")
+  rotAgB:Play()
+  f.RotAnimGroupB = rotAgB
 
-  -- Layer 5: 3D Volumetric Specular Glint (Simulates spherical curvature & reflection)
-  local spec = visual:CreateTexture(nil, "OVERLAY")
-  spec:SetTexture("Interface\\CharacterFrame\\TempPortraitAlphaMask")
-  spec:SetBlendMode("ADD")
-  spec:SetPoint("CENTER", visual, "CENTER", -3.5, 3.5)
-  spec:SetSize(7, 7)
-  spec:SetVertexColor(1.0, 0.88, 1.0, 0.90)
-  f.Specular = spec
+  -- Layer 4: Twisting Vapor Tendril Wisp (Curling smoke plume wafts through the cloud)
+  local wispTendril = visual:CreateTexture(nil, "ARTWORK", nil, 1)
+  wispTendril:SetTexture(TEX_CLOUD_WISP)
+  wispTendril:SetBlendMode("ADD")
+  wispTendril:SetPoint("CENTER", visual, "CENTER", 0, 0)
+  wispTendril:SetSize(32, 32)
+  wispTendril:SetVertexColor(0.90, 0.45, 1.00, 0.75)
+  f.WispTendril = wispTendril
 
-  -- Layer 6: Ambient Orbiting Micro-Orblets (Elliptical 3D satellite depth)
-  local orbit1 = visual:CreateTexture(nil, "OVERLAY", nil, 1)
-  orbit1:SetTexture("Interface\\CharacterFrame\\TempPortraitAlphaMask")
-  orbit1:SetBlendMode("ADD")
-  orbit1:SetSize(4, 4)
-  orbit1:SetVertexColor(0.85, 0.35, 1.0, 0.75)
-  f.Orbit1 = orbit1
+  local rotAgW = visual:CreateAnimationGroup()
+  local rotAnimW = rotAgW:CreateAnimation("Rotation")
+  rotAnimW:SetDegrees(360)
+  rotAnimW:SetDuration(11.0)
+  rotAgW:SetLooping("REPEAT")
+  rotAgW:Play()
+  f.RotAnimGroupW = rotAgW
 
-  local orbit2 = visual:CreateTexture(nil, "OVERLAY", nil, 1)
-  orbit2:SetTexture("Interface\\CharacterFrame\\TempPortraitAlphaMask")
-  orbit2:SetBlendMode("ADD")
-  orbit2:SetSize(3, 3)
-  orbit2:SetVertexColor(0.95, 0.55, 1.0, 0.65)
-  f.Orbit2 = orbit2
+  -- Layer 5: Nebulous Heart Mist (Soft, uneven spirit smoke center - NOT a geometric shape)
+  local cloudCore = visual:CreateTexture(nil, "OVERLAY")
+  cloudCore:SetTexture(TEX_CLOUD_CORE)
+  cloudCore:SetBlendMode("ADD")
+  cloudCore:SetPoint("CENTER", visual, "CENTER", 0, 0)
+  cloudCore:SetSize(22, 22)
+  cloudCore:SetVertexColor(0.95, 0.65, 1.00, 0.85)
+  f.CloudCore = cloudCore
+
+  -- Layer 6: Drifting Satellite Vapor Puffs (Organic smoky eddies trailing around the wisp)
+  local puff1 = visual:CreateTexture(nil, "OVERLAY", nil, 1)
+  puff1:SetTexture(TEX_CLOUD_PUFF)
+  puff1:SetBlendMode("ADD")
+  puff1:SetSize(10, 10)
+  puff1:SetVertexColor(0.85, 0.35, 1.0, 0.70)
+  f.Puff1 = puff1
+
+  local puff2 = visual:CreateTexture(nil, "OVERLAY", nil, 1)
+  puff2:SetTexture(TEX_CLOUD_PUFF)
+  puff2:SetBlendMode("ADD")
+  puff2:SetSize(8, 8)
+  puff2:SetVertexColor(0.75, 0.25, 0.95, 0.60)
+  f.Puff2 = puff2
+
+  local puff3 = visual:CreateTexture(nil, "OVERLAY", nil, 1)
+  puff3:SetTexture(TEX_CLOUD_PUFF)
+  puff3:SetBlendMode("ADD")
+  puff3:SetSize(6, 6)
+  puff3:SetVertexColor(0.95, 0.55, 1.0, 0.65)
+  f.Puff3 = puff3
 
   -- Breathing Alpha Pulse
   local ag = visual:CreateAnimationGroup()
   local alphaAnim = ag:CreateAnimation("Alpha")
-  alphaAnim:SetFromAlpha(0.85)
+  alphaAnim:SetFromAlpha(0.80)
   alphaAnim:SetToAlpha(1.0)
-  alphaAnim:SetDuration(2.2)
+  alphaAnim:SetDuration(2.6)
   alphaAnim:SetSmoothing("IN_OUT")
   ag:SetLooping("BOUNCE")
   ag:Play()
@@ -902,16 +912,24 @@ function FG:CreateSparkFrame()
   local function OnOrbUpdate(self, elapsed)
     local t = GetTime()
 
-    -- Orbiting micro-sparks update in 3D tilted ellipses
-    if self.Orbit1 then
-      local o1X = math.cos(t * 1.5) * 14
-      local o1Y = math.sin(t * 1.5) * 8
-      self.Orbit1:SetPoint("CENTER", visual, "CENTER", o1X, o1Y)
+    -- Drifting satellite vapor puffs waft along smoky currents around Sparky
+    if self.Puff1 then
+      local p1R = 13 + math.sin(t * 0.75) * 3.5
+      local p1X = math.cos(t * 1.35) * p1R
+      local p1Y = math.sin(t * 1.35) * (p1R * 0.75) + math.sin(t * 2.2) * 2.0
+      self.Puff1:SetPoint("CENTER", visual, "CENTER", p1X, p1Y)
     end
-    if self.Orbit2 then
-      local o2X = math.cos(-t * 1.1 + 2.0) * 12
-      local o2Y = math.sin(-t * 1.1 + 2.0) * 11
-      self.Orbit2:SetPoint("CENTER", visual, "CENTER", o2X, o2Y)
+    if self.Puff2 then
+      local p2R = 11 + math.cos(t * 0.85) * 3.0
+      local p2X = math.cos(-t * 1.1 + 2.1) * p2R
+      local p2Y = math.sin(-t * 1.1 + 2.1) * (p2R * 0.8) + math.cos(t * 1.9) * 2.0
+      self.Puff2:SetPoint("CENTER", visual, "CENTER", p2X, p2Y)
+    end
+    if self.Puff3 then
+      local p3R = 9 + math.sin(t * 1.15 + 1.2) * 2.5
+      local p3X = math.sin(t * 0.95 + 4.0) * p3R
+      local p3Y = math.cos(t * 0.95 + 4.0) * (p3R * 0.65)
+      self.Puff3:SetPoint("CENTER", visual, "CENTER", p3X, p3Y)
     end
 
     if self.isDragging then
@@ -1103,13 +1121,13 @@ function FG:CreateSparkFrame()
   end)
 
   f:SetScript("OnEnter", function(self)
-    if self.Aura then self.Aura:SetVertexColor(0.88, 0.35, 1.0, 0.85) end
+    if self.Aura then self.Aura:SetVertexColor(0.85, 0.30, 1.0, 0.75) end
     GameTooltip:SetOwner(self, "ANCHOR_RIGHT")
-    GameTooltip:AddLine("|cffcf52ffThe Ghastly Sprite|r", 1, 1, 1)
-    GameTooltip:AddLine("Ethereal 3D Spirit for Warcraft Forever.", 0.8, 0.8, 0.8, true)
+    GameTooltip:AddLine("|cffcf52ffSparky|r", 1, 1, 1)
+    GameTooltip:AddLine("Ethereal Cloud Wisp for Warcraft Forever.", 0.8, 0.8, 0.8, true)
     GameTooltip:AddLine(" ")
     if not ForeverGuideDB.hasInteracted then
-      GameTooltip:AddLine("|cffdf80ff<Left-Click>|r Open Forever Codex (Awakens Sprite)", 0.9, 0.9, 0.9)
+      GameTooltip:AddLine("|cffdf80ff<Left-Click>|r Open Forever Codex (Awakens Sparky)", 0.9, 0.9, 0.9)
     else
       GameTooltip:AddLine("|cffdf80ff<Left-Click>|r Open Forever Codex", 0.9, 0.9, 0.9)
     end
@@ -1118,7 +1136,7 @@ function FG:CreateSparkFrame()
   end)
 
   f:SetScript("OnLeave", function(self)
-    if self.Aura then self.Aura:SetVertexColor(0.68, 0.12, 0.98, 0.45) end
+    if self.Aura then self.Aura:SetVertexColor(0.55, 0.12, 0.85, 0.40) end
     GameTooltip:Hide()
   end)
 
@@ -1134,12 +1152,12 @@ function FG:ToggleSpark()
   if FG.SparkFrame:IsShown() then
     FG.SparkFrame:Hide()
     ForeverGuideDB.sparkShown = false
-    print("|cffdf80ff[The Ghastly Sprite]|r Companion dismissed.")
+    print("|cffdf80ff[Sparky]|r Companion dismissed.")
   else
     FG.SparkFrame:Show()
     ForeverGuideDB.sparkShown = true
     FG:PlaySparkSound("shimmer")
-    print("|cffdf80ff[The Ghastly Sprite]|r Companion summoned.")
+    print("|cffdf80ff[Sparky]|r Companion summoned.")
   end
 end
 
@@ -1166,7 +1184,7 @@ function FG:ShowCurrentZoneIntel()
   local faction = UnitFactionGroup("player")
 
   print(" ")
-  print("|cffdf80ff✨ The Ghastly Sprite whispers concerning:|r |cffffffff" .. currentZone .. "|r")
+  print("|cffdf80ff✨ Sparky whispers concerning:|r |cffffffff" .. currentZone .. "|r")
   if zoneInfo then
     print("  |cff71d5ffLevel Range:|r |cff20ff20" .. zoneInfo.level .. "|r  |cff71d5ffFaction:|r " .. zoneInfo.faction)
     print("  |cff71d5ffContinent:|r " .. zoneInfo.continent)
@@ -1237,7 +1255,7 @@ function FG:CreateCodexWindow()
 
   local title = f:CreateFontString(nil, "OVERLAY", "GameFontHighlightLarge")
   title:SetPoint("TOPLEFT", f, "TOPLEFT", 18, -14)
-  title:SetText("|cffcf52ffForever Guide:|r |cffdf80ffThe Ghastly Sprite Codex|r")
+  title:SetText("|cffcf52ffForever Guide:|r |cffdf80ffSparky's Codex|r")
   SharpenFontString(title, 15, "OUTLINE")
   f.Title = title
 
@@ -1333,7 +1351,7 @@ function FG:CreateCodexWindow()
     end
     FG:UpdateSparkMouseState()
     StyleFilterBtn(self, ForeverGuideDB.sparkLocked and "Unlock" or "Lock")
-    print("|cffdf80ff[The Ghastly Sprite]|r Position is now " .. (ForeverGuideDB.sparkLocked and "|cffff4040Locked (Click-Through)|r" or "|cff20ff20Unlocked|r"))
+    print("|cffdf80ff[Sparky]|r Position is now " .. (ForeverGuideDB.sparkLocked and "|cffff4040Locked (Click-Through)|r" or "|cff20ff20Unlocked|r"))
   end)
   f.LockBtn = lockBtn
 
@@ -2202,9 +2220,9 @@ function FG:CreateMinimapButton()
 
   btn:SetScript("OnEnter", function(self)
     GameTooltip:SetOwner(self, "ANCHOR_LEFT")
-    GameTooltip:AddLine("|cffcf52ffForever Guide|r", 1, 1, 1)
+    GameTooltip:AddLine("|cffcf52ffForever Guide|r |cffdf80ff(Sparky)|r", 1, 1, 1)
     GameTooltip:AddLine("|cffdf80ff<Left-Click>|r Toggle Codex Window", 0.9, 0.9, 0.9)
-    GameTooltip:AddLine("|cffdf80ff<Right-Click>|r Summon / Dismiss Ghastly Sprite", 0.9, 0.9, 0.9)
+    GameTooltip:AddLine("|cffdf80ff<Right-Click>|r Summon / Dismiss Sparky", 0.9, 0.9, 0.9)
     GameTooltip:AddLine("|cffdf80ff<Drag>|r Move around minimap", 0.7, 0.7, 0.7)
     GameTooltip:Show()
   end)
@@ -2252,7 +2270,7 @@ EventFrame:SetScript("OnEvent", function(self, event, arg1, ...)
     FG:CreateSparkFrame()
     FG:CreateMinimapButton()
 
-    print("|cffcf52ffForever Guide|r |cffdf80ff(The Ghastly Sprite)|r loaded! Type |cffdf80ff/spark|r to open Codex or |cffdf80ff/spark help|r for commands.")
+    print("|cffcf52ffForever Guide|r |cffdf80ff(Sparky)|r loaded! Type |cffdf80ff/sparky|r to open Codex or |cffdf80ff/sparky help|r for commands.")
 
   elseif event == "PLAYER_ENTERING_WORLD" then
     -- Guarantee any stray cursor dragging state is stopped on world load

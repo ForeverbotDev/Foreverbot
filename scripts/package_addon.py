@@ -39,9 +39,11 @@ def package():
         "ForeverGuide.lua",
         "ForeverGuide_Data.lua",
         "Bindings.xml",
-        "Media/blue_spark_core.tga",
-        "Media/blue_spark_aura.tga",
     ]
+    media_folder = os.path.join(ADDON_DIR, "Media")
+    if os.path.exists(media_folder):
+        for mfile in sorted(os.listdir(media_folder)):
+            files_to_pack.append(os.path.join("Media", mfile))
 
     with zipfile.ZipFile(zip_path, "w", zipfile.ZIP_DEFLATED) as zf:
         for fname in files_to_pack:
