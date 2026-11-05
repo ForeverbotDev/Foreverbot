@@ -14,6 +14,7 @@ FG.Data = ForeverGuide_Data or {}
 
 -- Default Configuration
 local DEFAULT_CONFIG = {
+  hasInteracted = false,
   sparkShown = true,
   sparkLocked = false,          -- Unlocked by default so player can drag anywhere
   sparkClickThrough = false,    -- Default false; right-clicks already pass 100% through to 3D NPCs/world
@@ -739,12 +740,12 @@ end
 --------------------------------------------------------------------------------
 function FG:CreateSparkFrame()
   local f = CreateFrame("Button", "ForeverGuideSparkFrame", UIParent)
-  f:SetSize(38, 38)
+  f:SetSize(36, 36)
   f:SetFrameStrata("MEDIUM")
   f:SetFrameLevel(12)
   f:SetClampedToScreen(true)
   f:EnableMouse(true)
-  f:SetHitRectInsets(-2, -2, -2, -2)
+  f:SetHitRectInsets(-4, -4, -4, -4)
 
   -- Ensure right-clicks pass through to 3D NPCs and objects
   if f.SetPassThroughButtons then
@@ -767,115 +768,144 @@ function FG:CreateSparkFrame()
   visual:EnableMouse(false)
   f.Visual = visual
 
-  -- Circular gradient mask: completely eliminates outside box/square edges
+  -- Native circular gradient mask: crops all inner layers to a smooth, perfect sphere
   local circleMask
   if visual.CreateMaskTexture then
     local mask = visual:CreateMaskTexture()
-    mask:SetTexture("Interface\\Masks\\CircleMaskScalable")
+    mask:SetTexture("Interface\\CharacterFrame\\TempPortraitAlphaMask")
     mask:SetSize(32, 32)
     mask:SetPoint("CENTER", visual, "CENTER", 0, 0)
     circleMask = mask
     visual.CircleMask = mask
   end
 
-  -- Layer 1: Ethereal Celestial Starlight Aura (Clamped to 3/4 diameter so it fades out to 0 well before edges)
+  -- Layer 1: Spherical Ambient Blue Halo Glow (Soft radial falloff, zero square box)
   local aura = visual:CreateTexture(nil, "BACKGROUND")
-  aura:SetTexture("Interface\\Cooldown\\star4")
+  aura:SetTexture("Interface\\CharacterFrame\\TempPortraitAlphaMask")
   aura:SetBlendMode("ADD")
   aura:SetPoint("CENTER", visual, "CENTER", 0, 0)
-  aura:SetSize(26, 26) -- 3/4 diameter of frame, zero border clipping
-  aura:SetVertexColor(0.12, 0.55, 1.0, 0.55)
-  if circleMask and aura.AddMaskTexture then
-    pcall(aura.AddMaskTexture, aura, circleMask)
-  end
+  aura:SetSize(34, 34)
+  aura:SetVertexColor(0.10, 0.45, 1.0, 0.40)
   f.Aura = aura
 
-  -- Layer 2: Rotating Ethereal Rays (Slow 360 degree spin)
-  local rotAura = visual:CreateTexture(nil, "BORDER")
-  rotAura:SetTexture("Interface\\Cooldown\\star4")
-  rotAura:SetBlendMode("ADD")
-  rotAura:SetPoint("CENTER", visual, "CENTER", 0, 0)
-  rotAura:SetSize(22, 22)
-  rotAura:SetVertexColor(0.25, 0.75, 1.0, 0.45)
-  if circleMask and rotAura.AddMaskTexture then
-    pcall(rotAura.AddMaskTexture, rotAura, circleMask)
+  -- Layer 2: Outer Luminous Corona
+  local corona = visual:CreateTexture(nil, "BORDER")
+  corona:SetTexture("Interface\\COMMON\\friendship-manaorb")
+  corona:SetBlendMode("ADD")
+  corona:SetPoint("CENTER", visual, "CENTER", 0, 0)
+  corona:SetSize(28, 28)
+  corona:SetVertexColor(0.25, 0.65, 1.0, 0.50)
+  if circleMask and corona.AddMaskTexture then
+    pcall(corona.AddMaskTexture, corona, circleMask)
   end
-  f.RotAura = rotAura
+  f.Corona = corona
+
+  -- Layer 3: 3D Spherical Core (Deep shaded blue orb)
+  local orb = visual:CreateTexture(nil, "ARTWORK")
+  orb:SetTexture("Interface\\COMMON\\friendship-manaorb")
+  orb:SetBlendMode("BLEND")
+  orb:SetPoint("CENTER", visual, "CENTER", 0, 0)
+  orb:SetSize(24, 24)
+  orb:SetVertexColor(0.85, 0.95, 1.0, 0.95)
+  if circleMask and orb.AddMaskTexture then
+    pcall(orb.AddMaskTexture, orb, circleMask)
+  end
+  f.Orb = orb
+
+  -- Layer 4: Internal Swirling Nebula Plasma (Rotates inside the sphere for living 3D fluid depth)
+  local swirl = visual:CreateTexture(nil, "ARTWORK", nil, 1)
+  swirl:SetTexture("Interface\\COMMON\\friendship-manaorb")
+  swirl:SetBlendMode("ADD")
+  swirl:SetPoint("CENTER", visual, "CENTER", 0, 0)
+  swirl:SetSize(20, 20)
+  swirl:SetVertexColor(0.40, 0.80, 1.0, 0.55)
+  if circleMask and swirl.AddMaskTexture then
+    pcall(swirl.AddMaskTexture, swirl, circleMask)
+  end
+  f.Swirl = swirl
 
   local rotAg = visual:CreateAnimationGroup()
   local rotAnim = rotAg:CreateAnimation("Rotation")
   rotAnim:SetDegrees(360)
-  rotAnim:SetDuration(10.0)
+  rotAnim:SetDuration(12.0)
   rotAg:SetLooping("REPEAT")
   rotAg:Play()
   f.RotAnimGroup = rotAg
 
-  -- Layer 3: Authentic 3D Night Elf Wisp Creature Model (Creature 3681)
-  -- High-detail close-up camera focusing on the core swirling essence
-  local model = CreateFrame("PlayerModel", "ForeverGuideSparkModel", visual)
-  model:SetSize(36, 36)
-  model:SetPoint("CENTER", visual, "CENTER", 0, 0)
-  model:EnableMouse(false)
-  pcall(model.SetCreature, model, 3681)     -- Native 3D Night Elf Wisp!
-  pcall(model.SetDisplayInfo, model, 10045)  -- Male Wisp display ID
-  pcall(model.SetCamDistanceScale, model, 0.80) -- Close-up for crisp, high-detail swirling plasma
-  pcall(model.SetPortraitZoom, model, 0.35)
-  f.Model = model
+  -- Layer 5: 3D Volumetric Specular Glint (Simulates spherical curvature & reflection)
+  local spec = visual:CreateTexture(nil, "OVERLAY")
+  spec:SetTexture("Interface\\CharacterFrame\\TempPortraitAlphaMask")
+  spec:SetBlendMode("ADD")
+  spec:SetPoint("CENTER", visual, "CENTER", -3.5, 3.5)
+  spec:SetSize(7, 7)
+  spec:SetVertexColor(1.0, 1.0, 1.0, 0.85)
+  f.Specular = spec
 
-  -- Layer 4: Central Brilliant Lens Flare
-  local spark = visual:CreateTexture(nil, "OVERLAY")
-  spark:SetTexture("Interface\\CastingBar\\UI-CastingBar-Spark")
-  spark:SetBlendMode("ADD")
-  spark:SetPoint("CENTER", visual, "CENTER", 0, 0)
-  spark:SetSize(8, 22)
-  spark:SetVertexColor(0.85, 0.95, 1.0, 0.85)
-  f.Spark = spark
+  -- Layer 6: Ambient Orbiting Micro-Orblets (Elliptical 3D satellite depth)
+  local orbit1 = visual:CreateTexture(nil, "OVERLAY", nil, 1)
+  orbit1:SetTexture("Interface\\CharacterFrame\\TempPortraitAlphaMask")
+  orbit1:SetBlendMode("ADD")
+  orbit1:SetSize(4, 4)
+  orbit1:SetVertexColor(0.55, 0.85, 1.0, 0.70)
+  f.Orbit1 = orbit1
 
-  local sparkH = visual:CreateTexture(nil, "OVERLAY")
-  sparkH:SetTexture("Interface\\CastingBar\\UI-CastingBar-Spark")
-  sparkH:SetBlendMode("ADD")
-  sparkH:SetPoint("CENTER", visual, "CENTER", 0, 0)
-  sparkH:SetSize(22, 8)
-  sparkH:SetVertexColor(0.85, 0.95, 1.0, 0.85)
-  if sparkH.SetRotation then
-    pcall(sparkH.SetRotation, sparkH, 1.570796)
-  end
-  f.SparkH = sparkH
+  local orbit2 = visual:CreateTexture(nil, "OVERLAY", nil, 1)
+  orbit2:SetTexture("Interface\\CharacterFrame\\TempPortraitAlphaMask")
+  orbit2:SetBlendMode("ADD")
+  orbit2:SetSize(3, 3)
+  orbit2:SetVertexColor(0.75, 0.95, 1.0, 0.60)
+  f.Orbit2 = orbit2
 
   -- Breathing Alpha Pulse
   local ag = visual:CreateAnimationGroup()
   local alphaAnim = ag:CreateAnimation("Alpha")
   alphaAnim:SetFromAlpha(0.85)
   alphaAnim:SetToAlpha(1.0)
-  alphaAnim:SetDuration(1.8)
+  alphaAnim:SetDuration(2.2)
   alphaAnim:SetSmoothing("IN_OUT")
   ag:SetLooping("BOUNCE")
   ag:Play()
   f.AnimGroup = ag
 
-  -- Hover & Quick Dash Flight Engine (Organic floating + playful quick dashes across the screen)
-  local flightState = "HOVER" -- "HOVER" or "DASH"
-  local hoverTimer = 0
-  local nextHoverDuration = 3.5 + math.random() * 3.5
+  -- Resting & Full-Screen Smooth Travel Engine
+  local flightState = ForeverGuideDB.hasInteracted and "RESTING" or "DORMANT"
+  f.flightState = flightState
+  local restTimer = 0
+  local restDuration = 35.0 + math.random() * 35.0 -- Stays at resting point for 35 to 70s!
 
   local currentPosX = f.homeX
   local currentPosY = f.homeY
-  local dashStartX, dashStartY = f.homeX, f.homeY
-  local dashTargetX, dashTargetY = f.homeX, f.homeY
-  local dashDuration = 0.70
-  local dashElapsed = 0
-  local dashCurvature = 20
+  local travelStartX, travelStartY = f.homeX, f.homeY
+  local travelTargetX, travelTargetY = f.homeX, f.homeY
+  local travelCtrlX, travelCtrlY = f.homeX, f.homeY
+  local travelDuration = 5.5
+  local travelElapsed = 0
 
   local function GetScreenBounds()
     local sw = UIParent:GetWidth() or 1920
     local sh = UIParent:GetHeight() or 1080
-    return 70, sw - 70, 70, sh - 70
+    return 80, sw - 80, 80, sh - 80
   end
 
-  local function OnWispUpdate(self, elapsed)
+  local function OnOrbUpdate(self, elapsed)
+    local t = GetTime()
+
+    -- Orbiting micro-sparks update in 3D tilted ellipses
+    if self.Orbit1 then
+      local o1X = math.cos(t * 1.5) * 14
+      local o1Y = math.sin(t * 1.5) * 8
+      self.Orbit1:SetPoint("CENTER", visual, "CENTER", o1X, o1Y)
+    end
+    if self.Orbit2 then
+      local o2X = math.cos(-t * 1.1 + 2.0) * 12
+      local o2Y = math.sin(-t * 1.1 + 2.0) * 11
+      self.Orbit2:SetPoint("CENTER", visual, "CENTER", o2X, o2Y)
+    end
+
     if self.isDragging then
-      flightState = "HOVER"
-      hoverTimer = 0
+      flightState = ForeverGuideDB.hasInteracted and "RESTING" or "DORMANT"
+      self.flightState = flightState
+      restTimer = 0
       local cx, cy = GetCursorPosition()
       local scale = UIParent:GetEffectiveScale()
       local curX, curY = cx / scale, cy / scale
@@ -888,70 +918,97 @@ function FG:CreateSparkFrame()
       return
     end
 
-    if flightState == "HOVER" then
-      hoverTimer = hoverTimer + elapsed
-      local t = GetTime()
-      -- Gentle organic multi-frequency floating wave around home position
-      local waveX = math.sin(t * 0.42) * 12 + math.sin(t * 0.21 + 1.2) * 6
-      local waveY = math.cos(t * 0.35) * 14 + math.sin(t * 0.16 + 2.1) * 6
+    if flightState == "DORMANT" then
+      -- Unawakened: peaceful stationary breathing at spawn point until opened once
+      local waveX = math.sin(t * 0.40) * 2.5
+      local waveY = math.cos(t * 0.32) * 2.5
       currentPosX = (self.homeX or 240) + waveX
       currentPosY = (self.homeY or 120) + waveY
 
-      if hoverTimer >= nextHoverDuration then
-        -- Initiate a quick wisp across the screen!
-        flightState = "DASH"
-        dashElapsed = 0
-        dashDuration = 0.55 + math.random() * 0.35 -- Snappy 0.55 to 0.90s quick dart
-        dashStartX = currentPosX
-        dashStartY = currentPosY
+    elseif flightState == "RESTING" then
+      -- Resting at its current outpost: very gentle, organic floating in place
+      restTimer = restTimer + elapsed
+      local waveX = math.sin(t * 0.45) * 3.5 + math.sin(t * 0.22 + 1.0) * 1.5
+      local waveY = math.cos(t * 0.38) * 3.5 + math.sin(t * 0.17 + 1.8) * 1.5
+      currentPosX = (self.homeX or 240) + waveX
+      currentPosY = (self.homeY or 120) + waveY
 
-        local angle = math.random() * math.pi * 2
-        local dist = 120 + math.random() * 180 -- Traverse 120 to 300px across screen
-        local targetX = (self.homeX or 240) + math.cos(angle) * dist
-        local targetY = (self.homeY or 120) + math.sin(angle) * dist
-
+      if restTimer >= restDuration and ForeverGuideDB.hasInteracted then
+        -- Embark on a grand travel across the entire screen!
         local minX, maxX, minY, maxY = GetScreenBounds()
-        dashTargetX = math.max(minX, math.min(maxX, targetX))
-        dashTargetY = math.max(minY, math.min(maxY, targetY))
-        dashCurvature = (math.random() > 0.5 and 1 or -1) * (16 + math.random() * 22)
+        local targetX, targetY
+
+        -- Search for a distant vantage point across the screen (>= 280px away)
+        for _ = 1, 12 do
+          local candX = minX + math.random() * (maxX - minX)
+          local candY = minY + math.random() * (maxY - minY)
+          local d2 = (candX - currentPosX)^2 + (candY - currentPosY)^2
+          if d2 >= 280 * 280 then
+            targetX = candX
+            targetY = candY
+            break
+          end
+        end
+        targetX = targetX or (minX + math.random() * (maxX - minX))
+        targetY = targetY or (minY + math.random() * (maxY - minY))
+
+        flightState = "TRAVEL"
+        self.flightState = flightState
+        travelElapsed = 0
+        travelStartX = currentPosX
+        travelStartY = currentPosY
+        travelTargetX = targetX
+        travelTargetY = targetY
+
+        local dx = travelTargetX - travelStartX
+        local dy = travelTargetY - travelStartY
+        local dist = math.sqrt(dx * dx + dy * dy)
+        -- Leisurely, majestic travel speed (~160 px/sec), 4.5s to 7.5s
+        travelDuration = math.max(4.5, math.min(7.5, 3.2 + (dist / 175)))
+
+        -- Curved Bezier control point
+        local midX = (travelStartX + travelTargetX) * 0.5
+        local midY = (travelStartY + travelTargetY) * 0.5
+        local perpX = -dy / (dist > 0.01 and dist or 1)
+        local perpY = dx / (dist > 0.01 and dist or 1)
+        local curve = (math.random() > 0.5 and 1 or -1) * (50 + math.random() * 110)
+        travelCtrlX = math.max(minX, math.min(maxX, midX + perpX * curve))
+        travelCtrlY = math.max(minY, math.min(maxY, midY + perpY * curve))
       end
 
-    elseif flightState == "DASH" then
-      dashElapsed = dashElapsed + elapsed
-      local progress = math.min(1.0, dashElapsed / dashDuration)
+    elseif flightState == "TRAVEL" then
+      travelElapsed = travelElapsed + elapsed
+      local progress = math.min(1.0, travelElapsed / travelDuration)
 
-      -- Snappy cubic ease-in-out curve
-      local p = progress
-      local ease = p < 0.5 and (4 * p * p * p) or (1 - math.pow(-2 * p + 2, 3) / 2)
+      -- Smooth cosine ease-in-ease-out (continuous velocity, 0 jerk)
+      local u = 0.5 - 0.5 * math.cos(progress * math.pi)
+      local invU = 1.0 - u
 
-      -- Organic swooping arc perpendicular to the flight path
-      local arc = math.sin(progress * math.pi) * dashCurvature
-      local dx = dashTargetX - dashStartX
-      local dy = dashTargetY - dashStartY
-      local dlen = math.sqrt(dx * dx + dy * dy)
-      local px, py = 0, 0
-      if dlen > 0.01 then
-        px = -dy / dlen
-        py = dx / dlen
-      end
+      -- Quadratic Bezier position across screen
+      local bX = invU * invU * travelStartX + 2 * invU * u * travelCtrlX + u * u * travelTargetX
+      local bY = invU * invU * travelStartY + 2 * invU * u * travelCtrlY + u * u * travelTargetY
 
-      currentPosX = dashStartX + dx * ease + px * arc
-      currentPosY = dashStartY + dy * ease + py * arc
-
-      -- Transient flare effect while wisps are darting
-      local flare = 1.0 + math.sin(progress * math.pi) * 0.45
-      if self.Spark then self.Spark:SetSize(8 * flare, 22 * flare) end
-      if self.SparkH then self.SparkH:SetSize(22 * flare, 8 * flare) end
+      -- Gentle floating undulation in flight
+      local ripple = math.sin(progress * math.pi * 2) * 3
+      currentPosX = bX
+      currentPosY = bY + ripple
 
       if progress >= 1.0 then
-        -- Land at the new destination as the new home base
-        self.homeX = dashTargetX
-        self.homeY = dashTargetY
-        flightState = "HOVER"
-        hoverTimer = 0
-        nextHoverDuration = 3.0 + math.random() * 4.0
-        if self.Spark then self.Spark:SetSize(8, 22) end
-        if self.SparkH then self.SparkH:SetSize(22, 8) end
+        -- Arrived at the new resting point!
+        self.homeX = travelTargetX
+        self.homeY = travelTargetY
+        currentPosX = self.homeX
+        currentPosY = self.homeY
+        flightState = "RESTING"
+        self.flightState = flightState
+        restTimer = 0
+        restDuration = 35.0 + math.random() * 40.0 -- Stays resting for 35 to 75 seconds!
+        ForeverGuideDB.sparkPosition = {
+          point = "BOTTOMLEFT",
+          relativePoint = "BOTTOMLEFT",
+          x = math.floor(self.homeX + 0.5),
+          y = math.floor(self.homeY + 0.5),
+        }
       end
     end
 
@@ -959,7 +1016,7 @@ function FG:CreateSparkFrame()
     self:SetPoint("CENTER", UIParent, "BOTTOMLEFT", currentPosX, currentPosY)
   end
 
-  f:SetScript("OnUpdate", OnWispUpdate)
+  f:SetScript("OnUpdate", OnOrbUpdate)
 
   f:SetScript("OnMouseDown", function(self, button)
     if button == "LeftButton" then
@@ -997,8 +1054,10 @@ function FG:CreateSparkFrame()
         self.wasDragged = true
         self.homeX = upX - (self.dragOffsetX or 0)
         self.homeY = upY - (self.dragOffsetY or 0)
-        flightState = "HOVER"
-        hoverTimer = 0
+        flightState = ForeverGuideDB.hasInteracted and "RESTING" or "DORMANT"
+        self.flightState = flightState
+        restTimer = 0
+        restDuration = 40.0 + math.random() * 40.0
         ForeverGuideDB.sparkPosition = {
           point = "BOTTOMLEFT",
           relativePoint = "BOTTOMLEFT",
@@ -1017,6 +1076,12 @@ function FG:CreateSparkFrame()
       return
     end
     if button == "LeftButton" then
+      ForeverGuideDB.hasInteracted = true
+      if flightState == "DORMANT" then
+        flightState = "RESTING"
+        self.flightState = flightState
+        restTimer = 0
+      end
       FG:ToggleCodex()
       FG:PlaySparkSound("shimmer")
     end
@@ -1026,15 +1091,19 @@ function FG:CreateSparkFrame()
     if self.Aura then self.Aura:SetVertexColor(0.25, 0.75, 1.0, 0.85) end
     GameTooltip:SetOwner(self, "ANCHOR_RIGHT")
     GameTooltip:AddLine("|cff52b8ffThe Blue Spark|r", 1, 1, 1)
-    GameTooltip:AddLine("Celestial 3D companion for Warcraft Forever.", 0.8, 0.8, 0.8, true)
+    GameTooltip:AddLine("Celestial 3D Orb for Warcraft Forever.", 0.8, 0.8, 0.8, true)
     GameTooltip:AddLine(" ")
-    GameTooltip:AddLine("|cff71d5ff<Left-Click>|r Open Forever Codex", 0.9, 0.9, 0.9)
-    GameTooltip:AddLine("|cff71d5ff<Left-Drag>|r Move Home Territory", 0.7, 0.7, 0.7)
+    if not ForeverGuideDB.hasInteracted then
+      GameTooltip:AddLine("|cff71d5ff<Left-Click>|r Open Forever Codex (Awakens Companion)", 0.9, 0.9, 0.9)
+    else
+      GameTooltip:AddLine("|cff71d5ff<Left-Click>|r Open Forever Codex", 0.9, 0.9, 0.9)
+    end
+    GameTooltip:AddLine("|cff71d5ff<Left-Drag>|r Move Resting Point", 0.7, 0.7, 0.7)
     GameTooltip:Show()
   end)
 
   f:SetScript("OnLeave", function(self)
-    if self.Aura then self.Aura:SetVertexColor(0.12, 0.55, 1.0, 0.55) end
+    if self.Aura then self.Aura:SetVertexColor(0.10, 0.45, 1.0, 0.40) end
     GameTooltip:Hide()
   end)
 
@@ -1631,6 +1700,10 @@ function FG:PopulateDungeons()
 end
 
 function FG:ToggleCodex()
+  ForeverGuideDB.hasInteracted = true
+  if FG.SparkFrame and FG.SparkFrame.flightState == "DORMANT" then
+    FG.SparkFrame.flightState = "RESTING"
+  end
   if not FG.CodexWindow then FG:CreateCodexWindow() end
   if FG.CodexWindow:IsShown() then
     FG.CodexWindow:Hide()
@@ -1642,6 +1715,10 @@ function FG:ToggleCodex()
 end
 
 function FG:OpenCodexWithSearch(query)
+  ForeverGuideDB.hasInteracted = true
+  if FG.SparkFrame and FG.SparkFrame.flightState == "DORMANT" then
+    FG.SparkFrame.flightState = "RESTING"
+  end
   if not FG.CodexWindow then FG:CreateCodexWindow() end
   FG.CodexWindow:Show()
   if ForeverGuideSearchBox then ForeverGuideSearchBox:SetText(query or "") end
