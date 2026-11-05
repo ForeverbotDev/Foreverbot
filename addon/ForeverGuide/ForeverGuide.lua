@@ -739,12 +739,12 @@ end
 --------------------------------------------------------------------------------
 function FG:CreateSparkFrame()
   local f = CreateFrame("Button", "ForeverGuideSparkFrame", UIParent)
-  f:SetSize(52, 52)
+  f:SetSize(38, 38)
   f:SetFrameStrata("MEDIUM")
   f:SetFrameLevel(12)
   f:SetClampedToScreen(true)
   f:EnableMouse(true)
-  f:SetHitRectInsets(0, 0, 0, 0)
+  f:SetHitRectInsets(-2, -2, -2, -2)
 
   -- Ensure right-clicks pass through to 3D NPCs and objects
   if f.SetPassThroughButtons then
@@ -767,13 +767,27 @@ function FG:CreateSparkFrame()
   visual:EnableMouse(false)
   f.Visual = visual
 
-  -- Layer 1: Ethereal Celestial Starlight Aura (Universal built-in texture, instant /reload)
+  -- Circular gradient mask: completely eliminates outside box/square edges
+  local circleMask
+  if visual.CreateMaskTexture then
+    local mask = visual:CreateMaskTexture()
+    mask:SetTexture("Interface\\Masks\\CircleMaskScalable")
+    mask:SetSize(32, 32)
+    mask:SetPoint("CENTER", visual, "CENTER", 0, 0)
+    circleMask = mask
+    visual.CircleMask = mask
+  end
+
+  -- Layer 1: Ethereal Celestial Starlight Aura (Clamped to 3/4 diameter so it fades out to 0 well before edges)
   local aura = visual:CreateTexture(nil, "BACKGROUND")
   aura:SetTexture("Interface\\Cooldown\\star4")
   aura:SetBlendMode("ADD")
   aura:SetPoint("CENTER", visual, "CENTER", 0, 0)
-  aura:SetSize(68, 68)
-  aura:SetVertexColor(0.15, 0.65, 1.0, 0.75)
+  aura:SetSize(26, 26) -- 3/4 diameter of frame, zero border clipping
+  aura:SetVertexColor(0.12, 0.55, 1.0, 0.55)
+  if circleMask and aura.AddMaskTexture then
+    pcall(aura.AddMaskTexture, aura, circleMask)
+  end
   f.Aura = aura
 
   -- Layer 2: Rotating Ethereal Rays (Slow 360 degree spin)
@@ -781,28 +795,31 @@ function FG:CreateSparkFrame()
   rotAura:SetTexture("Interface\\Cooldown\\star4")
   rotAura:SetBlendMode("ADD")
   rotAura:SetPoint("CENTER", visual, "CENTER", 0, 0)
-  rotAura:SetSize(50, 50)
-  rotAura:SetVertexColor(0.30, 0.80, 1.0, 0.60)
+  rotAura:SetSize(22, 22)
+  rotAura:SetVertexColor(0.25, 0.75, 1.0, 0.45)
+  if circleMask and rotAura.AddMaskTexture then
+    pcall(rotAura.AddMaskTexture, rotAura, circleMask)
+  end
   f.RotAura = rotAura
 
   local rotAg = visual:CreateAnimationGroup()
   local rotAnim = rotAg:CreateAnimation("Rotation")
   rotAnim:SetDegrees(360)
-  rotAnim:SetDuration(12.0)
+  rotAnim:SetDuration(10.0)
   rotAg:SetLooping("REPEAT")
   rotAg:Play()
   f.RotAnimGroup = rotAg
 
   -- Layer 3: Authentic 3D Night Elf Wisp Creature Model (Creature 3681)
-  -- The model moves within itself with real 3D particle streams, glowing nebula, and idle life!
+  -- High-detail close-up camera focusing on the core swirling essence
   local model = CreateFrame("PlayerModel", "ForeverGuideSparkModel", visual)
-  model:SetSize(52, 52)
+  model:SetSize(36, 36)
   model:SetPoint("CENTER", visual, "CENTER", 0, 0)
   model:EnableMouse(false)
   pcall(model.SetCreature, model, 3681)     -- Native 3D Night Elf Wisp!
   pcall(model.SetDisplayInfo, model, 10045)  -- Male Wisp display ID
-  pcall(model.SetCamDistanceScale, model, 1.0)
-  pcall(model.SetPortraitZoom, model, 0.0)
+  pcall(model.SetCamDistanceScale, model, 0.80) -- Close-up for crisp, high-detail swirling plasma
+  pcall(model.SetPortraitZoom, model, 0.35)
   f.Model = model
 
   -- Layer 4: Central Brilliant Lens Flare
@@ -810,7 +827,7 @@ function FG:CreateSparkFrame()
   spark:SetTexture("Interface\\CastingBar\\UI-CastingBar-Spark")
   spark:SetBlendMode("ADD")
   spark:SetPoint("CENTER", visual, "CENTER", 0, 0)
-  spark:SetSize(14, 38)
+  spark:SetSize(8, 22)
   spark:SetVertexColor(0.85, 0.95, 1.0, 0.85)
   f.Spark = spark
 
@@ -818,7 +835,7 @@ function FG:CreateSparkFrame()
   sparkH:SetTexture("Interface\\CastingBar\\UI-CastingBar-Spark")
   sparkH:SetBlendMode("ADD")
   sparkH:SetPoint("CENTER", visual, "CENTER", 0, 0)
-  sparkH:SetSize(38, 14)
+  sparkH:SetSize(22, 8)
   sparkH:SetVertexColor(0.85, 0.95, 1.0, 0.85)
   if sparkH.SetRotation then
     pcall(sparkH.SetRotation, sparkH, 1.570796)
@@ -828,55 +845,118 @@ function FG:CreateSparkFrame()
   -- Breathing Alpha Pulse
   local ag = visual:CreateAnimationGroup()
   local alphaAnim = ag:CreateAnimation("Alpha")
-  alphaAnim:SetFromAlpha(0.80)
+  alphaAnim:SetFromAlpha(0.85)
   alphaAnim:SetToAlpha(1.0)
-  alphaAnim:SetDuration(2.0)
+  alphaAnim:SetDuration(1.8)
   alphaAnim:SetSmoothing("IN_OUT")
   ag:SetLooping("BOUNCE")
   ag:Play()
   f.AnimGroup = ag
 
-  -- Gentle Wandering & Gliding Flight Engine (Organic non-repeating wisp flight)
-  local wanderTimer = 0
-  local currentDriftX, currentDriftY = 0, 0
-  local targetDriftX, targetDriftY = 0, 0
+  -- Hover & Quick Dash Flight Engine (Organic floating + playful quick dashes across the screen)
+  local flightState = "HOVER" -- "HOVER" or "DASH"
+  local hoverTimer = 0
+  local nextHoverDuration = 3.5 + math.random() * 3.5
+
+  local currentPosX = f.homeX
+  local currentPosY = f.homeY
+  local dashStartX, dashStartY = f.homeX, f.homeY
+  local dashTargetX, dashTargetY = f.homeX, f.homeY
+  local dashDuration = 0.70
+  local dashElapsed = 0
+  local dashCurvature = 20
+
+  local function GetScreenBounds()
+    local sw = UIParent:GetWidth() or 1920
+    local sh = UIParent:GetHeight() or 1080
+    return 70, sw - 70, 70, sh - 70
+  end
 
   local function OnWispUpdate(self, elapsed)
     if self.isDragging then
+      flightState = "HOVER"
+      hoverTimer = 0
       local cx, cy = GetCursorPosition()
       local scale = UIParent:GetEffectiveScale()
       local curX, curY = cx / scale, cy / scale
+      currentPosX = curX - (self.dragOffsetX or 0)
+      currentPosY = curY - (self.dragOffsetY or 0)
+      self.homeX = currentPosX
+      self.homeY = currentPosY
       self:ClearAllPoints()
-      self:SetPoint("CENTER", UIParent, "BOTTOMLEFT", curX - (self.dragOffsetX or 0), curY - (self.dragOffsetY or 0))
+      self:SetPoint("CENTER", UIParent, "BOTTOMLEFT", currentPosX, currentPosY)
       return
     end
 
-    -- Organic wandering target calculation
-    wanderTimer = wanderTimer + elapsed
-    if wanderTimer > (self.nextWander or 7.0) then
-      wanderTimer = 0
-      self.nextWander = 6.0 + math.random() * 8.0
-      local angle = math.random() * math.pi * 2
-      local dist = 35 + math.random() * 55
-      targetDriftX = math.cos(angle) * dist
-      targetDriftY = math.sin(angle) * dist
+    if flightState == "HOVER" then
+      hoverTimer = hoverTimer + elapsed
+      local t = GetTime()
+      -- Gentle organic multi-frequency floating wave around home position
+      local waveX = math.sin(t * 0.42) * 12 + math.sin(t * 0.21 + 1.2) * 6
+      local waveY = math.cos(t * 0.35) * 14 + math.sin(t * 0.16 + 2.1) * 6
+      currentPosX = (self.homeX or 240) + waveX
+      currentPosY = (self.homeY or 120) + waveY
+
+      if hoverTimer >= nextHoverDuration then
+        -- Initiate a quick wisp across the screen!
+        flightState = "DASH"
+        dashElapsed = 0
+        dashDuration = 0.55 + math.random() * 0.35 -- Snappy 0.55 to 0.90s quick dart
+        dashStartX = currentPosX
+        dashStartY = currentPosY
+
+        local angle = math.random() * math.pi * 2
+        local dist = 120 + math.random() * 180 -- Traverse 120 to 300px across screen
+        local targetX = (self.homeX or 240) + math.cos(angle) * dist
+        local targetY = (self.homeY or 120) + math.sin(angle) * dist
+
+        local minX, maxX, minY, maxY = GetScreenBounds()
+        dashTargetX = math.max(minX, math.min(maxX, targetX))
+        dashTargetY = math.max(minY, math.min(maxY, targetY))
+        dashCurvature = (math.random() > 0.5 and 1 or -1) * (16 + math.random() * 22)
+      end
+
+    elseif flightState == "DASH" then
+      dashElapsed = dashElapsed + elapsed
+      local progress = math.min(1.0, dashElapsed / dashDuration)
+
+      -- Snappy cubic ease-in-out curve
+      local p = progress
+      local ease = p < 0.5 and (4 * p * p * p) or (1 - math.pow(-2 * p + 2, 3) / 2)
+
+      -- Organic swooping arc perpendicular to the flight path
+      local arc = math.sin(progress * math.pi) * dashCurvature
+      local dx = dashTargetX - dashStartX
+      local dy = dashTargetY - dashStartY
+      local dlen = math.sqrt(dx * dx + dy * dy)
+      local px, py = 0, 0
+      if dlen > 0.01 then
+        px = -dy / dlen
+        py = dx / dlen
+      end
+
+      currentPosX = dashStartX + dx * ease + px * arc
+      currentPosY = dashStartY + dy * ease + py * arc
+
+      -- Transient flare effect while wisps are darting
+      local flare = 1.0 + math.sin(progress * math.pi) * 0.45
+      if self.Spark then self.Spark:SetSize(8 * flare, 22 * flare) end
+      if self.SparkH then self.SparkH:SetSize(22 * flare, 8 * flare) end
+
+      if progress >= 1.0 then
+        -- Land at the new destination as the new home base
+        self.homeX = dashTargetX
+        self.homeY = dashTargetY
+        flightState = "HOVER"
+        hoverTimer = 0
+        nextHoverDuration = 3.0 + math.random() * 4.0
+        if self.Spark then self.Spark:SetSize(8, 22) end
+        if self.SparkH then self.SparkH:SetSize(22, 8) end
+      end
     end
 
-    -- Smooth asymptotic gliding interpolation (slow & gentle)
-    local ease = elapsed * 0.5
-    currentDriftX = currentDriftX + (targetDriftX - currentDriftX) * ease
-    currentDriftY = currentDriftY + (targetDriftY - currentDriftY) * ease
-
-    -- Multi-frequency non-repeating sinusoidal curves (wisp floating waves)
-    local t = GetTime()
-    local waveX = math.sin(t * 0.38) * 14 + math.sin(t * 0.17 + 1.1) * 8
-    local waveY = math.cos(t * 0.32) * 16 + math.sin(t * 0.13 + 2.3) * 7
-
-    local totalX = (self.homeX or 240) + currentDriftX + waveX
-    local totalY = (self.homeY or 120) + currentDriftY + waveY
-
     self:ClearAllPoints()
-    self:SetPoint("CENTER", UIParent, "BOTTOMLEFT", totalX, totalY)
+    self:SetPoint("CENTER", UIParent, "BOTTOMLEFT", currentPosX, currentPosY)
   end
 
   f:SetScript("OnUpdate", OnWispUpdate)
@@ -917,10 +997,8 @@ function FG:CreateSparkFrame()
         self.wasDragged = true
         self.homeX = upX - (self.dragOffsetX or 0)
         self.homeY = upY - (self.dragOffsetY or 0)
-        currentDriftX = 0
-        currentDriftY = 0
-        targetDriftX = 0
-        targetDriftY = 0
+        flightState = "HOVER"
+        hoverTimer = 0
         ForeverGuideDB.sparkPosition = {
           point = "BOTTOMLEFT",
           relativePoint = "BOTTOMLEFT",
@@ -945,7 +1023,7 @@ function FG:CreateSparkFrame()
   end)
 
   f:SetScript("OnEnter", function(self)
-    if self.Aura then self.Aura:SetVertexColor(0.35, 0.85, 1.0, 0.95) end
+    if self.Aura then self.Aura:SetVertexColor(0.25, 0.75, 1.0, 0.85) end
     GameTooltip:SetOwner(self, "ANCHOR_RIGHT")
     GameTooltip:AddLine("|cff52b8ffThe Blue Spark|r", 1, 1, 1)
     GameTooltip:AddLine("Celestial 3D companion for Warcraft Forever.", 0.8, 0.8, 0.8, true)
@@ -956,7 +1034,7 @@ function FG:CreateSparkFrame()
   end)
 
   f:SetScript("OnLeave", function(self)
-    if self.Aura then self.Aura:SetVertexColor(0.15, 0.65, 1.0, 0.75) end
+    if self.Aura then self.Aura:SetVertexColor(0.12, 0.55, 1.0, 0.55) end
     GameTooltip:Hide()
   end)
 
