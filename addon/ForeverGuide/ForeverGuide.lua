@@ -1889,7 +1889,7 @@ function FG:CreateCodexWindow()
   closeBtn:SetScript("OnClick", function() f:Hide() end)
 
   local searchBox = CreateFrame("EditBox", "ForeverGuideSearchBox", f, "InputBoxTemplate")
-  searchBox:SetSize(185, 24)
+  searchBox:SetSize(190, 24)
   searchBox:SetPoint("TOPLEFT", divider, "BOTTOMLEFT", 6, -10)
   searchBox:SetAutoFocus(false)
   searchBox:SetFontObject("ChatFontNormal")
@@ -1898,7 +1898,10 @@ function FG:CreateCodexWindow()
 
   local placeholder = searchBox:CreateFontString(nil, "OVERLAY", "GameFontDisable")
   placeholder:SetPoint("LEFT", searchBox, "LEFT", 6, 0)
-  placeholder:SetText("Search items, quests, mobs, dungeons...")
+  placeholder:SetPoint("RIGHT", searchBox, "RIGHT", -22, 0)
+  placeholder:SetJustifyH("LEFT")
+  placeholder:SetWordWrap(false)
+  placeholder:SetText("Search codex...")
   SharpenFontString(placeholder, 11, "OUTLINE")
   searchBox.Placeholder = placeholder
 
@@ -1969,7 +1972,7 @@ function FG:CreateCodexWindow()
     return btn
   end
 
-  local allBtn    = CreateCategoryPill("all", "All", 32, 8, searchBox)
+  local allBtn    = CreateCategoryPill("all", "All", 36, 8, searchBox)
   local nearbyBtn = CreateCategoryPill("nearby", "Nearby", 52, 4, allBtn)
   local itemsBtn  = CreateCategoryPill("items", "Items", 42, 4, nearbyBtn)
   local questBtn  = CreateCategoryPill("quests", "Quests", 50, 4, itemsBtn)
