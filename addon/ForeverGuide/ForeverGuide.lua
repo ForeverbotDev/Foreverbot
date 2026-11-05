@@ -1146,21 +1146,52 @@ function FG:PopulateCodexResults(query)
       end
     end
 
-    -- Search Quests
+    -- Search Quests (Title, NPC/Questgiver, Zone, Objectives, Tips)
     if FG.Data.Quests and #matches < 60 then
       for _, quest in pairs(FG.Data.Quests) do
-        if quest.title and (quest.title:lower():find(q, 1, true) or (quest.zone and quest.zone:lower():find(q, 1, true))) then
+        local matchTitle = quest.title and quest.title:lower():find(q, 1, true)
+        local matchNpc = quest.npc and quest.npc:lower():find(q, 1, true)
+        local matchZone = quest.zone and quest.zone:lower():find(q, 1, true)
+        local matchObj = quest.objectives and quest.objectives:lower():find(q, 1, true)
+        local matchTip = quest.tip and quest.tip:lower():find(q, 1, true)
+        if matchTitle or matchNpc or matchZone or matchObj or matchTip then
           table.insert(matches, { type = "quest", data = quest })
           if #matches >= 60 then break end
         end
       end
     end
 
+    -- Search Creatures & NPCs (Name, Zone, Location, Strategy)
+    if FG.Data.Creatures and #matches < 75 then
+      for _, c in pairs(FG.Data.Creatures) do
+        local matchName = c.name and c.name:lower():find(q, 1, true)
+        local matchZone = c.zone and c.zone:lower():find(q, 1, true)
+        local matchLoc = c.location and c.location:lower():find(q, 1, true)
+        if matchName or matchZone or matchLoc then
+          table.insert(matches, { type = "creature", data = c })
+          if #matches >= 75 then break end
+        end
+      end
+    end
+
     -- Search Dungeons
-    if FG.Data.Dungeons and #matches < 70 then
+    if FG.Data.Dungeons and #matches < 80 then
       for _, d in pairs(FG.Data.Dungeons) do
         if d.name and (d.name:lower():find(q, 1, true) or d.zone:lower():find(q, 1, true)) then
           table.insert(matches, { type = "dungeon", data = d })
+        end
+      end
+    end
+
+    -- Search Vendors
+    if FG.Data.Vendors and #matches < 85 then
+      for _, v in pairs(FG.Data.Vendors) do
+        local matchName = v.name and v.name:lower():find(q, 1, true)
+        local matchItem = v.item and v.item:lower():find(q, 1, true)
+        local matchZone = v.zone and v.zone:lower():find(q, 1, true)
+        if matchName or matchItem or matchZone then
+          table.insert(matches, { type = "vendor", data = v })
+          if #matches >= 85 then break end
         end
       end
     end
@@ -1275,6 +1306,68 @@ function FG:PopulateCodexResults(query)
         if d.strategy and d.strategy ~= "" then
           GameTooltip:AddLine(" ")
           GameTooltip:AddLine("Tactics: " .. d.strategy, 0.8, 0.8, 0.8, true)
+        end
+        GameTooltip:Show()
+      end)
+      btn:SetScript("OnLeave", function(self)
+        self:SetBackdropColor(0.10, 0.12, 0.16, 0.90)
+        self:SetBackdropBorderColor(0.18, 0.24, 0.33, 0.70)
+        GameTooltip:Hide()
+      end)
+
+    elseif match.type == "creature" then
+      local c = match.data
+      local foreverTag = c.isForever and " |cffe6cc80[Forever]|r" or ""
+      local classColor = (c.classification == "Boss" or c.classification == "Rare Elite") and "ffff4040" or (c.classification == "Elite" and "ffffd24d" or "ff52b8ff")
+      local lvlStr = (c.minLevel and c.maxLevel and c.minLevel ~= c.maxLevel) and (c.minLevel .. "-" .. c.maxLevel) or (c.maxLevel or c.minLevel or "?")
+      btn.Title:SetText("|c" .. classColor .. c.name .. "|r" .. foreverTag .. " |cff20ff20(Lvl " .. lvlStr .. " " .. (c.classification or "NPC") .. ")|r")
+      local desc = "|cff52b8ffZone:|r " .. (c.zone ~= "" and c.zone or "Various")
+      if c.location and c.location ~= "" then
+        desc = desc .. " |cff52b8ffLocation:|r " .. c.location
+      end
+      btn.Sub:SetText(desc)
+
+      btn:SetScript("OnEnter", function(self)
+        self:SetBackdropColor(0.18, 0.14, 0.10, 0.95)
+        self:SetBackdropBorderColor(0.85, 0.55, 0.20, 0.90)
+        GameTooltip:SetOwner(self, "ANCHOR_TOPLEFT")
+        GameTooltip:AddLine(c.name, 1, 0.85, 0.2)
+        GameTooltip:AddLine("Level: " .. lvlStr .. " (" .. (c.classification or "Normal") .. ")", 1, 1, 1)
+        if c.zone and c.zone ~= "" then GameTooltip:AddLine("Zone: " .. c.zone, 0.3, 0.8, 1.0) end
+        if c.location and c.location ~= "" then GameTooltip:AddLine("Location: " .. c.location, 0.2, 1, 0.2) end
+        if c.health and c.health > 0 then GameTooltip:AddLine("Health: " .. c.health, 1, 0.3, 0.3) end
+        if c.strategy and c.strategy ~= "" then
+          GameTooltip:AddLine(" ")
+          GameTooltip:AddLine("Notes: " .. c.strategy, 0.8, 0.8, 0.8, true)
+        end
+        GameTooltip:Show()
+      end)
+      btn:SetScript("OnLeave", function(self)
+        self:SetBackdropColor(0.10, 0.12, 0.16, 0.90)
+        self:SetBackdropBorderColor(0.18, 0.24, 0.33, 0.70)
+        GameTooltip:Hide()
+      end)
+
+    elseif match.type == "vendor" then
+      local v = match.data
+      btn.Title:SetText("|cffffd24d" .. v.name .. "|r |cff20ff20[Vendor]|r")
+      local desc = "|cff52b8ffSells:|r " .. (v.item or "Goods") .. " |cff52b8ffZone:|r " .. (v.zone or "Various")
+      if v.coords and v.coords ~= "" then
+        desc = desc .. " (" .. v.coords .. ")"
+      end
+      btn.Sub:SetText(desc)
+
+      btn:SetScript("OnEnter", function(self)
+        self:SetBackdropColor(0.12, 0.18, 0.16, 0.95)
+        self:SetBackdropBorderColor(0.30, 0.75, 0.55, 0.90)
+        GameTooltip:SetOwner(self, "ANCHOR_TOPLEFT")
+        GameTooltip:AddLine(v.name, 1, 0.85, 0.2)
+        GameTooltip:AddLine("Sells: " .. (v.item or "Goods"), 1, 1, 1)
+        if v.zone and v.zone ~= "" then GameTooltip:AddLine("Zone: " .. v.zone, 0.3, 0.8, 1.0) end
+        if v.coords and v.coords ~= "" then GameTooltip:AddLine("Coords: " .. v.coords, 0.2, 1, 0.2) end
+        if v.tip and v.tip ~= "" then
+          GameTooltip:AddLine(" ")
+          GameTooltip:AddLine("Note: " .. v.tip, 0.8, 0.8, 0.8, true)
         end
         GameTooltip:Show()
       end)

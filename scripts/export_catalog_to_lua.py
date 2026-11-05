@@ -13,7 +13,7 @@ import sqlite3
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.insert(0, BASE_DIR)
-import bot
+import knowledge_engine as ke
 
 DB_PATH = os.path.join(BASE_DIR, "wow_forever.db")
 OUTPUT_DIR = os.path.join(BASE_DIR, "addon", "ForeverGuide")
@@ -185,7 +185,7 @@ def export_creatures(cursor) -> str:
     cursor.execute("""
         SELECT id, name, level_min, level_max, classification, zone, location_details, health, strategy_notes, is_forever_content
         FROM creatures
-        WHERE classification IN ('Boss', 'Elite', 'Rare Elite', 'Rare') OR is_forever_content = 1
+        WHERE classification IN ('Boss', 'Elite', 'Rare Elite', 'Rare') OR is_forever_content = 1 OR name IN (SELECT DISTINCT start_npc FROM quests WHERE start_npc IS NOT NULL)
         ORDER BY level_max DESC, name ASC
     """)
     rows = cursor.fetchall()
@@ -257,20 +257,20 @@ def export_zone_guide() -> str:
 
 def export_bot_knowledge() -> str:
     modules = [
-        ("Attunements", getattr(bot, "ATTUNEMENTS", {})),
-        ("ClassBuilds", getattr(bot, "CLASS_BUILDS", {})),
-        ("Consumables", getattr(bot, "CONSUMABLES_DATA", {})),
-        ("DungeonKeys", getattr(bot, "DUNGEON_KEYS", {})),
-        ("Gathering", getattr(bot, "GATHERING_NODES", {})),
-        ("Professions", getattr(bot, "PROFESSIONS_DATA", {})),
-        ("PvP", getattr(bot, "PVP_SYSTEM_DATA", {})),
-        ("Racials", getattr(bot, "RACIAL_TRAITS", {})),
-        ("RaidBosses", getattr(bot, "RAID_BOSSES_DATA", {})),
-        ("Reputations", getattr(bot, "REPUTATIONS_DATA", {})),
-        ("Resistance", getattr(bot, "RESIST_SCHOOLS", {})),
-        ("Talents", getattr(bot, "TALENTS_DATA", {})),
-        ("Twinks", getattr(bot, "TWINK_DATA", {})),
-        ("WorldBuffs", getattr(bot, "WORLD_BUFFS_DATA", {})),
+        ("Attunements", getattr(ke, "ATTUNEMENTS", {})),
+        ("ClassBuilds", getattr(ke, "CLASS_BUILDS", {})),
+        ("Consumables", getattr(ke, "CONSUMABLES_DATA", {})),
+        ("DungeonKeys", getattr(ke, "DUNGEON_KEYS", {})),
+        ("Gathering", getattr(ke, "GATHERING_NODES", {})),
+        ("Professions", getattr(ke, "PROFESSIONS_DATA", {})),
+        ("PvP", getattr(ke, "PVP_SYSTEM_DATA", {})),
+        ("Racials", getattr(ke, "RACIAL_TRAITS", {})),
+        ("RaidBosses", getattr(ke, "RAID_BOSSES_DATA", {})),
+        ("Reputations", getattr(ke, "REPUTATIONS_DATA", {})),
+        ("Resistance", getattr(ke, "RESIST_SCHOOLS", {})),
+        ("Talents", getattr(ke, "TALENTS_DATA", {})),
+        ("Twinks", getattr(ke, "TWINK_DATA", {})),
+        ("WorldBuffs", getattr(ke, "WORLD_BUFFS_DATA", {})),
     ]
 
     parts = []
