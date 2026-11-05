@@ -93,6 +93,22 @@ class TestAddonIntegrityAndSimulation(unittest.TestCase):
 
             self.assertEqual(len(stack), 0, f"Unclosed brackets in {path}: {stack[-5:]}")
 
+            # Also validate Lua block keyword balance (if/function/do vs end) on code files
+            if path == LUA_FILE:
+                clean_code = re.sub(r'--\[\[.*?--\]\]', '', content, flags=re.DOTALL)
+                clean_code = re.sub(r'--[^\n]*', '', clean_code)
+                clean_code = re.sub(r'\"(\\.|[^\"])*\"', '\"\"', clean_code)
+                clean_code = re.sub(r'\'(\\.|[^\'])*\'', '\'\'', clean_code)
+                tokens = re.findall(r'\b(if|elseif|function|do|end)\b', clean_code)
+                block_stack = []
+                for t in tokens:
+                    if t in ('if', 'function', 'do'):
+                        block_stack.append(t)
+                    elif t == 'end':
+                        self.assertTrue(len(block_stack) > 0, f"Extra 'end' keyword found in {path}")
+                        block_stack.pop()
+                self.assertEqual(len(block_stack), 0, f"Unclosed blocks in {path}: {block_stack[-5:]}")
+
     def test_04_data_compilation_completeness(self):
         """Verify data compilation exported zones, dungeons, flightpaths, and items."""
         with open(DATA_FILE, "r", encoding="utf-8") as f:

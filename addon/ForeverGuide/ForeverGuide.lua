@@ -1,6 +1,6 @@
 --[[
   ForeverGuide.lua
-  Warcraft Forever Addon: The Blue Spark Companion
+  Warcraft Forever Addon: The Ghastly Sprite Companion
   Version: 1.0.0
   Complete In-Game Encyclopedia (All 43 GitHub Bot Commands Ported to Lua)
   CurseForge Compliant (Blizzard AddOn Policy Approved)
@@ -79,21 +79,21 @@ SlashCmdList["FOREVERGUIDE"] = function(msg)
     FG:ToggleCodex()
 
   -- 1. Companion Controls & High-Density UI Scaling
-  elseif cmd == "spark" or cmd == "toggle" then
+  elseif cmd == "spark" or cmd == "toggle" or cmd == "sprite" then
     FG:ToggleSpark()
   elseif cmd == "hide" or cmd == "dismiss" or cmd == "off" then
     if FG.SparkFrame then FG.SparkFrame:Hide() end
     ForeverGuideDB.sparkShown = false
-    print("|cff52b8ff[The Blue Spark]|r Companion dismissed. Type |cff71d5ff/spark show|r to summon.")
+    print("|cffdf80ff[The Ghastly Sprite]|r Companion dismissed. Type |cffcf52ff/spark show|r to summon.")
   elseif cmd == "show" or cmd == "summon" or cmd == "on" then
     if FG.SparkFrame then FG.SparkFrame:Show() end
     ForeverGuideDB.sparkShown = true
-    print("|cff52b8ff[The Blue Spark]|r Companion summoned.")
+    print("|cffdf80ff[The Ghastly Sprite]|r Companion summoned.")
   elseif cmd == "clickthrough" or cmd == "passthrough" or cmd == "pass" then
     ForeverGuideDB.sparkClickThrough = not ForeverGuideDB.sparkClickThrough
     FG:UpdateSparkMouseState()
     local state = ForeverGuideDB.sparkClickThrough and "|cff20ff20Enabled (World clicks pass through)|r" or "|cffff4040Disabled (Directly Clickable)|r"
-    print("|cff52b8ff[The Blue Spark]|r Click-through mode is now " .. state)
+    print("|cffdf80ff[The Ghastly Sprite]|r Click-through mode is now " .. state)
   elseif cmd == "lock" then
     ForeverGuideDB.sparkLocked = true
     if FG.SparkFrame and FG.SparkFrame.StopMovingOrSizing then
@@ -102,14 +102,14 @@ SlashCmdList["FOREVERGUIDE"] = function(msg)
       FG.SparkFrame.wasDragged = false
     end
     FG:UpdateSparkMouseState()
-    print("|cff52b8ff[The Blue Spark]|r Position is now |cffff4040Locked|r (Hold Shift+Drag to move)")
+    print("|cffdf80ff[The Ghastly Sprite]|r Position is now |cffff4040Locked|r (Hold Shift+Drag to move)")
     if FG.CodexWindow and FG.CodexWindow.LockBtn then
       FG.CodexWindow.LockBtn:SetText("Unlock")
     end
   elseif cmd == "unlock" then
     ForeverGuideDB.sparkLocked = false
     FG:UpdateSparkMouseState()
-    print("|cff52b8ff[The Blue Spark]|r Position is now |cff20ff20Unlocked|r (Draggable)")
+    print("|cffdf80ff[The Ghastly Sprite]|r Position is now |cff20ff20Unlocked|r (Draggable)")
     if FG.CodexWindow and FG.CodexWindow.LockBtn then
       FG.CodexWindow.LockBtn:SetText("Lock")
     end
@@ -125,7 +125,7 @@ SlashCmdList["FOREVERGUIDE"] = function(msg)
       FG.SparkFrame:SetPoint("CENTER", UIParent, "CENTER", 240, 60)
     end
     FG:UpdateSparkMouseState()
-    print("|cff52b8ff[The Blue Spark]|r Position reset to screen center.")
+    print("|cffdf80ff[The Ghastly Sprite]|r Position reset to screen center.")
   elseif cmd == "scale" or cmd == "size" then
     local target, sVal = rest:match("^(%a+)%s+(%S+)$")
     if not target then
@@ -134,28 +134,28 @@ SlashCmdList["FOREVERGUIDE"] = function(msg)
     end
     local num = tonumber(sVal)
     if num and num >= 0.5 and num <= 2.5 then
-      if target == "spark" then
+      if target == "spark" or target == "sprite" then
         ForeverGuideDB.sparkScale = num
         if FG.SparkFrame then FG.SparkFrame:SetScale(num) end
-        print(string.format("|cff00bfff[The Blue Spark]|r Spark scale set to |cffffffff%.2f|r", num))
+        print(string.format("|cffdf80ff[The Ghastly Sprite]|r Sprite scale set to |cffffffff%.2f|r", num))
       elseif target == "codex" then
         ForeverGuideDB.codexScale = num
         if FG.CodexWindow then FG.CodexWindow:SetScale(num) end
-        print(string.format("|cff00bfff[The Blue Spark]|r Codex scale set to |cffffffff%.2f|r", num))
+        print(string.format("|cffdf80ff[The Ghastly Sprite]|r Codex scale set to |cffffffff%.2f|r", num))
       else
         ForeverGuideDB.sparkScale = num
         ForeverGuideDB.codexScale = num
         if FG.SparkFrame then FG.SparkFrame:SetScale(num) end
         if FG.CodexWindow then FG.CodexWindow:SetScale(num) end
-        print(string.format("|cff00bfff[The Blue Spark]|r UI scale set to |cffffffff%.2f|r (Pixel Density: |cff71d5ff%.2fx|r)", num, num))
+        print(string.format("|cffdf80ff[The Ghastly Sprite]|r UI scale set to |cffffffff%.2f|r (Pixel Density: |cffcf52ff%.2fx|r)", num, num))
       end
     else
-      print("|cff00bfff[The Blue Spark]|r Usage: |cff71d5ff/spark scale <0.5-2.0>|r or |cff71d5ff/spark scale [spark|codex] <0.5-2.0>|r")
+      print("|cffdf80ff[The Ghastly Sprite]|r Usage: |cffcf52ff/spark scale <0.5-2.0>|r or |cffcf52ff/spark scale [sprite|codex] <0.5-2.0>|r")
     end
   elseif cmd == "density" or cmd == "sharp" then
     ForeverGuideDB.sharpText = not ForeverGuideDB.sharpText
     local state = ForeverGuideDB.sharpText and "|cff20ff20Enabled (Razor-Sharp Outlined)|r" or "|cffff2020Standard|r"
-    print("|cff00bfff[The Blue Spark]|r High-Density Sharp Text is now " .. state)
+    print("|cffdf80ff[The Ghastly Sprite]|r High-Density Sharp Text is now " .. state)
     if FG.ApplyTextSharpening then
       FG:ApplyTextSharpening()
     end
@@ -258,12 +258,12 @@ end
 
 function FG:PrintHelpManual()
   print(" ")
-  print("|cff00bfff✨ [Forever Guide: The Blue Spark] — In-Game Commands:|r")
-  print("  |cff71d5ff/spark|r - Open Forever Codex search window")
-  print("  |cff71d5ff/spark scale [0.5-2.0]|r - Adjust UI pixel density & window scale")
-  print("  |cff71d5ff/spark sharp|r - Toggle razor-sharp font outlining mode")
-  print("  |cff71d5ff/spark lock / /spark unlock|r - Lock or unlock spark cursor movement")
-  print("  |cff71d5ff/spark reset|r - Safely detach and center Blue Spark on screen")
+  print("|cffdf80ff✨ [Forever Guide: The Ghastly Sprite] — In-Game Commands:|r")
+  print("  |cffcf52ff/spark|r - Open Forever Codex search window")
+  print("  |cffcf52ff/spark scale [0.5-2.0]|r - Adjust UI pixel density & window scale")
+  print("  |cffcf52ff/spark sharp|r - Toggle razor-sharp font outlining mode")
+  print("  |cffcf52ff/spark lock / /spark unlock|r - Lock or unlock sprite cursor movement")
+  print("  |cffcf52ff/spark reset|r - Safely detach and center Ghastly Sprite on screen")
   print("  |cff71d5ff/spark item <name>|r - Look up item stats, drop rates, and notes")
   print("  |cff71d5ff/spark quest <name>|r - Quest givers, coords, objectives & rewards")
   print("  |cff71d5ff/spark mob <name>|r - Boss locations, health, and strategy")
@@ -736,7 +736,7 @@ function FG:UpdateSparkMouseState()
 end
 
 --------------------------------------------------------------------------------
--- The Blue Spark Companion Frame
+-- The Ghastly Sprite Companion Frame
 --------------------------------------------------------------------------------
 function FG:CreateSparkFrame()
   local f = CreateFrame("Button", "ForeverGuideSparkFrame", UIParent)
@@ -757,8 +757,20 @@ function FG:CreateSparkFrame()
   MakePixelSharp(f)
 
   local pos = ForeverGuideDB.sparkPosition or DEFAULT_CONFIG.sparkPosition
-  f.homeX = pos.x or 240
-  f.homeY = pos.y or 120
+  local sw = UIParent:GetWidth() or 1920
+  local sh = UIParent:GetHeight() or 1080
+  local rawX = tonumber(pos.x) or 240
+  local rawY = tonumber(pos.y) or 120
+  if rawX < 60 or rawX > (sw - 60) then
+    rawX = math.max(60, math.min(sw - 60, rawX))
+    if rawX < 60 or rawX > (sw - 60) then rawX = 240 end
+  end
+  if rawY < 60 or rawY > (sh - 60) then
+    rawY = math.max(60, math.min(sh - 60, rawY))
+    if rawY < 60 or rawY > (sh - 60) then rawY = 120 end
+  end
+  f.homeX = rawX
+  f.homeY = rawY
   f:SetPoint("CENTER", UIParent, "BOTTOMLEFT", f.homeX, f.homeY)
   f:SetScale(ForeverGuideDB.sparkScale or 1.0)
 
@@ -1012,6 +1024,9 @@ function FG:CreateSparkFrame()
       end
     end
 
+    local minX, maxX, minY, maxY = GetScreenBounds()
+    currentPosX = math.max(minX, math.min(maxX, currentPosX))
+    currentPosY = math.max(minY, math.min(maxY, currentPosY))
     self:ClearAllPoints()
     self:SetPoint("CENTER", UIParent, "BOTTOMLEFT", currentPosX, currentPosY)
   end
@@ -1119,12 +1134,12 @@ function FG:ToggleSpark()
   if FG.SparkFrame:IsShown() then
     FG.SparkFrame:Hide()
     ForeverGuideDB.sparkShown = false
-    print("|cff52b8ff[The Blue Spark]|r Companion dismissed.")
+    print("|cffdf80ff[The Ghastly Sprite]|r Companion dismissed.")
   else
     FG.SparkFrame:Show()
     ForeverGuideDB.sparkShown = true
     FG:PlaySparkSound("shimmer")
-    print("|cff52b8ff[The Blue Spark]|r Companion summoned.")
+    print("|cffdf80ff[The Ghastly Sprite]|r Companion summoned.")
   end
 end
 
@@ -1151,7 +1166,7 @@ function FG:ShowCurrentZoneIntel()
   local faction = UnitFactionGroup("player")
 
   print(" ")
-  print("|cff00bfff✨ The Blue Spark whispers concerning:|r |cffffffff" .. currentZone .. "|r")
+  print("|cffdf80ff✨ The Ghastly Sprite whispers concerning:|r |cffffffff" .. currentZone .. "|r")
   if zoneInfo then
     print("  |cff71d5ffLevel Range:|r |cff20ff20" .. zoneInfo.level .. "|r  |cff71d5ffFaction:|r " .. zoneInfo.faction)
     print("  |cff71d5ffContinent:|r " .. zoneInfo.continent)
@@ -1318,7 +1333,7 @@ function FG:CreateCodexWindow()
     end
     FG:UpdateSparkMouseState()
     StyleFilterBtn(self, ForeverGuideDB.sparkLocked and "Unlock" or "Lock")
-    print("|cff52b8ff[The Blue Spark]|r Position is now " .. (ForeverGuideDB.sparkLocked and "|cffff4040Locked (Click-Through)|r" or "|cff20ff20Unlocked|r"))
+    print("|cffdf80ff[The Ghastly Sprite]|r Position is now " .. (ForeverGuideDB.sparkLocked and "|cffff4040Locked (Click-Through)|r" or "|cff20ff20Unlocked|r"))
   end)
   f.LockBtn = lockBtn
 
@@ -1353,6 +1368,8 @@ function FG:ApplyTextSharpening()
       if btn.Title then SharpenFontString(btn.Title, 13, "OUTLINE") end
       if btn.Sub then SharpenFontString(btn.Sub, 11, "OUTLINE") end
     end
+  end
+end
 --------------------------------------------------------------------------------
 -- Codex Deep Intel Inspector Panel ("Click for More Data")
 --------------------------------------------------------------------------------
@@ -2185,10 +2202,10 @@ function FG:CreateMinimapButton()
 
   btn:SetScript("OnEnter", function(self)
     GameTooltip:SetOwner(self, "ANCHOR_LEFT")
-    GameTooltip:AddLine("|cff52b8ffForever Guide|r", 1, 1, 1)
-    GameTooltip:AddLine("|cff71d5ff<Left-Click>|r Toggle Codex Window", 0.9, 0.9, 0.9)
-    GameTooltip:AddLine("|cff71d5ff<Right-Click>|r Summon / Dismiss Blue Spark", 0.9, 0.9, 0.9)
-    GameTooltip:AddLine("|cff71d5ff<Drag>|r Move around minimap", 0.7, 0.7, 0.7)
+    GameTooltip:AddLine("|cffcf52ffForever Guide|r", 1, 1, 1)
+    GameTooltip:AddLine("|cffdf80ff<Left-Click>|r Toggle Codex Window", 0.9, 0.9, 0.9)
+    GameTooltip:AddLine("|cffdf80ff<Right-Click>|r Summon / Dismiss Ghastly Sprite", 0.9, 0.9, 0.9)
+    GameTooltip:AddLine("|cffdf80ff<Drag>|r Move around minimap", 0.7, 0.7, 0.7)
     GameTooltip:Show()
   end)
 
@@ -2235,7 +2252,7 @@ EventFrame:SetScript("OnEvent", function(self, event, arg1, ...)
     FG:CreateSparkFrame()
     FG:CreateMinimapButton()
 
-    print("|cff52b8ffForever Guide (The Blue Spark)|r loaded! Type |cff71d5ff/spark|r to open Codex or |cff71d5ff/spark help|r for commands.")
+    print("|cffcf52ffForever Guide|r |cffdf80ff(The Ghastly Sprite)|r loaded! Type |cffdf80ff/spark|r to open Codex or |cffdf80ff/spark help|r for commands.")
 
   elseif event == "PLAYER_ENTERING_WORLD" then
     -- Guarantee any stray cursor dragging state is stopped on world load
@@ -2258,10 +2275,10 @@ EventFrame:SetScript("OnEvent", function(self, event, arg1, ...)
     if FG.SparkFrame and FG.SparkFrame:IsShown() then
       FG:PlaySparkSound("pulse")
       if FG.SparkFrame.Aura then
-        FG.SparkFrame.Aura:SetVertexColor(0.3, 0.75, 1.0, 0.85)
+        FG.SparkFrame.Aura:SetVertexColor(0.85, 0.25, 1.0, 0.85)
         C_Timer.After(1.2, function()
           if FG.SparkFrame and FG.SparkFrame.Aura then
-            FG.SparkFrame.Aura:SetVertexColor(0.12, 0.55, 0.80, 0.65)
+            FG.SparkFrame.Aura:SetVertexColor(0.68, 0.12, 0.98, 0.65)
           end
         end)
       end
