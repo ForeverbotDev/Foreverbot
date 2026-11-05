@@ -53,7 +53,7 @@ class TestVirtualScrollAndNearby(unittest.TestCase):
         self.assertEqual(count, 2658, f"Expected 2658 Leather Armor items, got {count}")
 
         # Check Lua matching condition
-        self.assertIn('elseif subName == "Leather Armor" and item.itemType and item.itemType:find("Leather") then matchesFilter = true', self.lua_code)
+        self.assertIn('elseif subName == "Leather Armor" and not isRecipe and item.itemType and item.itemType:find("Leather") then matchesFilter = true', self.lua_code)
 
     def test_04_creature_family_singular_plural_matching(self):
         """Verify singular/plural family matching resolves Elementals, Beasts, Demons, Giants, Humanoids."""
@@ -144,8 +144,11 @@ class TestVirtualScrollAndNearby(unittest.TestCase):
         self.assertIn('cur == "creatures/by_zone_kalimdor"', self.lua_code)
 
         # Universal strict alphabetical sorting
-        self.assertIn("-- Universal strict alphabetical sorting (A to Z)", self.lua_code)
         self.assertIn("return nameA:lower() < nameB:lower()", self.lua_code)
+
+        # Items iLvl ascending sorting (lowest to highest)
+        self.assertIn("return ilvlA < ilvlB", self.lua_code)
+        self.assertIn("items in view (iLvl: Lowest to Highest)", self.lua_code)
 
 
 if __name__ == "__main__":

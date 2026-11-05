@@ -3599,42 +3599,47 @@ function FG:PopulateCodexResults(query)
     elseif cur:find("^items/sub/") and FG.Data.Items then
       local subName = cur:sub(11)
       for _, item in pairs(FG.Data.Items) do
-        local matchesFilter = false
-        if subName == "One-Handed Axes" and item.slot == "One-Hand" and item.itemType and item.itemType:find("Axe") then matchesFilter = true
-        elseif subName == "Two-Handed Axes" and item.slot == "Two-Hand" and item.itemType and item.itemType:find("Axe") then matchesFilter = true
-        elseif subName == "One-Handed Swords" and item.slot == "One-Hand" and item.itemType and item.itemType:find("Sword") then matchesFilter = true
-        elseif subName == "Two-Handed Swords" and item.slot == "Two-Hand" and item.itemType and item.itemType:find("Sword") then matchesFilter = true
-        elseif subName == "One-Handed Maces" and item.slot == "One-Hand" and item.itemType and item.itemType:find("Mace") then matchesFilter = true
-        elseif subName == "Two-Handed Maces" and item.slot == "Two-Hand" and item.itemType and item.itemType:find("Mace") then matchesFilter = true
-        elseif subName == "Daggers" and item.itemType and item.itemType:find("Dagger") then matchesFilter = true
-        elseif subName == "Polearms" and item.itemType and item.itemType:find("Polearm") then matchesFilter = true
-        elseif subName == "Staves" and item.itemType and item.itemType:find("Staff") then matchesFilter = true
-        elseif subName == "Bows" and item.itemType and (item.itemType:find("Bow") or item.itemType:find("Crossbow")) then matchesFilter = true
-        elseif subName == "Guns" and item.itemType and item.itemType:find("Gun") then matchesFilter = true
-        elseif subName == "Wands" and item.itemType and item.itemType:find("Wand") then matchesFilter = true
-        elseif subName == "Fist Weapons" and item.itemType and item.itemType:find("Fist") then matchesFilter = true
-        elseif subName == "Cloth Armor" and item.itemType and item.itemType:find("Cloth") then matchesFilter = true
-        elseif subName == "Leather Armor" and item.itemType and item.itemType:find("Leather") then matchesFilter = true
-        elseif subName == "Mail Armor" and item.itemType and item.itemType:find("Mail") then matchesFilter = true
-        elseif subName == "Plate Armor" and item.itemType and item.itemType:find("Plate") then matchesFilter = true
-        elseif subName == "Shields" and item.slot and item.slot:find("Shield") then matchesFilter = true
-        elseif subName == "Amulets" and item.slot and item.slot:find("Neck") then matchesFilter = true
-        elseif subName == "Rings" and item.slot and item.slot:find("Finger") then matchesFilter = true
-        elseif subName == "Trinkets" and item.slot and item.slot:find("Trinket") then matchesFilter = true
-        elseif subName == "Cloaks" and item.slot and item.slot:find("Back") then matchesFilter = true
-        elseif subName == "Potions" and item.itemType and (item.itemType:find("Potion") or item.itemType:find("Elixir") or item.itemType:find("Flask")) then matchesFilter = true
-        elseif subName == "Food" and item.itemType and item.itemType:find("Food") then matchesFilter = true
-        elseif subName == "Bandages" and item.itemType and item.itemType:find("Bandage") then matchesFilter = true
-        elseif subName == "Scrolls" and item.itemType and item.itemType:find("Scroll") then matchesFilter = true
-        elseif subName == "Herbs" and item.itemType and item.itemType:find("Herb") then matchesFilter = true
-        elseif subName == "Ore" and item.itemType and (item.itemType:find("Metal") or item.itemType:find("Stone")) then matchesFilter = true
-        elseif subName == "Parts" and item.itemType and (item.itemType:find("Parts") or item.itemType:find("Device")) then matchesFilter = true
-        elseif subName == "Reagents" and item.itemType and item.itemType:find("Reagent") then matchesFilter = true
-        elseif subName == "All Recipes" and item.itemType and item.itemType:find("Recipe") then matchesFilter = true
-        end
+        local name = item.name or ""
+        local isInternal = name:find("^OLD") or name:find("^zzOLD") or name:find("^Monster %-") or name:find("^TEST") or name:find("%[PH%]")
+        if not isInternal then
+          local isRecipe = name:find("^Plans:") or name:find("^Pattern:") or name:find("^Schematic:") or name:find("^Formula:") or name:find("^Recipe:")
+          local matchesFilter = false
+          if subName == "One-Handed Axes" and not isRecipe and item.slot == "One-Hand" and item.itemType and item.itemType:find("Axe") then matchesFilter = true
+          elseif subName == "Two-Handed Axes" and not isRecipe and item.slot == "Two-Hand" and item.itemType and item.itemType:find("Axe") then matchesFilter = true
+          elseif subName == "One-Handed Swords" and not isRecipe and item.slot == "One-Hand" and item.itemType and item.itemType:find("Sword") then matchesFilter = true
+          elseif subName == "Two-Handed Swords" and not isRecipe and item.slot == "Two-Hand" and item.itemType and item.itemType:find("Sword") then matchesFilter = true
+          elseif subName == "One-Handed Maces" and not isRecipe and item.slot == "One-Hand" and item.itemType and item.itemType:find("Mace") then matchesFilter = true
+          elseif subName == "Two-Handed Maces" and not isRecipe and item.slot == "Two-Hand" and item.itemType and item.itemType:find("Mace") then matchesFilter = true
+          elseif subName == "Daggers" and not isRecipe and item.itemType and item.itemType:find("Dagger") then matchesFilter = true
+          elseif subName == "Polearms" and not isRecipe and item.itemType and item.itemType:find("Polearm") then matchesFilter = true
+          elseif subName == "Staves" and not isRecipe and item.itemType and item.itemType:find("Staff") then matchesFilter = true
+          elseif subName == "Bows" and not isRecipe and item.itemType and (item.itemType:find("Bow") or item.itemType:find("Crossbow")) then matchesFilter = true
+          elseif subName == "Guns" and not isRecipe and item.itemType and item.itemType:find("Gun") then matchesFilter = true
+          elseif subName == "Wands" and not isRecipe and item.itemType and item.itemType:find("Wand") then matchesFilter = true
+          elseif subName == "Fist Weapons" and not isRecipe and item.itemType and item.itemType:find("Fist") then matchesFilter = true
+          elseif subName == "Cloth Armor" and not isRecipe and item.itemType and item.itemType:find("Cloth") then matchesFilter = true
+          elseif subName == "Leather Armor" and not isRecipe and item.itemType and item.itemType:find("Leather") then matchesFilter = true
+          elseif subName == "Mail Armor" and not isRecipe and item.itemType and item.itemType:find("Mail") then matchesFilter = true
+          elseif subName == "Plate Armor" and not isRecipe and item.itemType and item.itemType:find("Plate") then matchesFilter = true
+          elseif subName == "Shields" and not isRecipe and item.slot and item.slot:find("Shield") then matchesFilter = true
+          elseif subName == "Amulets" and not isRecipe and item.slot and item.slot:find("Neck") then matchesFilter = true
+          elseif subName == "Rings" and not isRecipe and item.slot and item.slot:find("Finger") then matchesFilter = true
+          elseif subName == "Trinkets" and not isRecipe and item.slot and item.slot:find("Trinket") then matchesFilter = true
+          elseif subName == "Cloaks" and not isRecipe and item.slot and item.slot:find("Back") then matchesFilter = true
+          elseif subName == "Potions" and item.itemType and (item.itemType:find("Potion") or item.itemType:find("Elixir") or item.itemType:find("Flask")) then matchesFilter = true
+          elseif subName == "Food" and item.itemType and item.itemType:find("Food") then matchesFilter = true
+          elseif subName == "Bandages" and item.itemType and item.itemType:find("Bandage") then matchesFilter = true
+          elseif subName == "Scrolls" and item.itemType and item.itemType:find("Scroll") then matchesFilter = true
+          elseif subName == "Herbs" and item.itemType and item.itemType:find("Herb") then matchesFilter = true
+          elseif subName == "Ore" and item.itemType and (item.itemType:find("Metal") or item.itemType:find("Stone")) then matchesFilter = true
+          elseif subName == "Parts" and item.itemType and (item.itemType:find("Parts") or item.itemType:find("Device")) then matchesFilter = true
+          elseif subName == "Reagents" and item.itemType and item.itemType:find("Reagent") then matchesFilter = true
+          elseif subName == "All Recipes" and (isRecipe or (item.itemType and item.itemType:find("Recipe"))) then matchesFilter = true
+          end
 
-        if matchesFilter then
-          table.insert(matches, { type = "item", data = item })
+          if matchesFilter then
+            table.insert(matches, { type = "item", data = item })
+          end
         end
       end
     elseif cur == "creatures/by_zone_ek" and FG.Data.Creatures then
@@ -3871,12 +3876,28 @@ function FG:PopulateCodexResults(query)
     end
   end
 
-  -- Universal strict alphabetical sorting (A to Z)
+  -- Sorting:
   -- 1. Folders always come first, sorted alphabetically A-Z.
-  -- 2. Non-folder content items sorted alphabetically A-Z.
+  -- 2. Items & Item Subsets: sorted by item level (iLvl) ascending (lowest at top, highest at bottom).
+  --    If iLvl is tied, sort alphabetically A-Z.
+  -- 3. All other categories: sorted strictly alphabetically A-Z.
+  local isItemView = (cur:find("^items") ~= nil) or (cat == "items") or (cur:find("^forever/items") ~= nil)
   table.sort(matches, function(a, b)
     if a.type == "folder" and b.type ~= "folder" then return true end
     if a.type ~= "folder" and b.type == "folder" then return false end
+    if a.type == "folder" and b.type == "folder" then
+      local nameA = (a.data and (a.data.title or a.data.name or "")) or ""
+      local nameB = (b.data and (b.data.title or b.data.name or "")) or ""
+      return nameA:lower() < nameB:lower()
+    end
+
+    if isItemView and a.type == "item" and b.type == "item" then
+      local ilvlA = tonumber(a.data and a.data.ilvl) or 0
+      local ilvlB = tonumber(b.data and b.data.ilvl) or 0
+      if ilvlA ~= ilvlB then
+        return ilvlA < ilvlB
+      end
+    end
 
     local nameA = (a.data and (a.data.title or a.data.name or "")) or ""
     local nameB = (b.data and (b.data.title or b.data.name or "")) or ""
@@ -3907,6 +3928,8 @@ function FG:PopulateCodexResults(query)
     if cw and cw.StatusText then
       if cur == "nearby" or cat == "nearby" then
         cw.StatusText:SetText("|cff20ff20" .. countStr .. " nearby points of interest (" .. (FG.lastKnownZone or "Local Area") .. ")|r")
+      elseif isItemView then
+        cw.StatusText:SetText("|cffdf80ff" .. countStr .. " items in view (iLvl: Lowest to Highest)|r")
       else
         cw.StatusText:SetText("|cffdf80ff" .. countStr .. " items in view (A-Z)|r")
       end
