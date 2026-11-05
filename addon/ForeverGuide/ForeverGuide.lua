@@ -1277,71 +1277,128 @@ function FG:CreateCodexWindow()
   closeBtn:SetScript("OnClick", function() f:Hide() end)
 
   local searchBox = CreateFrame("EditBox", "ForeverGuideSearchBox", f, "InputBoxTemplate")
-  searchBox:SetSize(280, 26)
-  searchBox:SetPoint("TOPLEFT", divider, "BOTTOMLEFT", 4, -10)
+  searchBox:SetSize(220, 24)
+  searchBox:SetPoint("TOPLEFT", divider, "BOTTOMLEFT", 6, -10)
   searchBox:SetAutoFocus(false)
   searchBox:SetFontObject("ChatFontNormal")
-  SharpenFontString(searchBox, 13, "OUTLINE")
+  SharpenFontString(searchBox, 12, "OUTLINE")
   MakePixelSharp(searchBox)
 
   local placeholder = searchBox:CreateFontString(nil, "OVERLAY", "GameFontDisable")
   placeholder:SetPoint("LEFT", searchBox, "LEFT", 6, 0)
-  placeholder:SetText("Search items, quests, NPCs, dungeons...")
+  placeholder:SetText("Search items, quests, mobs, dungeons...")
   SharpenFontString(placeholder, 11, "OUTLINE")
   searchBox.Placeholder = placeholder
+
+  local clearBtn = CreateFrame("Button", nil, searchBox)
+  clearBtn:SetSize(16, 16)
+  clearBtn:SetPoint("RIGHT", searchBox, "RIGHT", -4, 0)
+  local clearTxt = clearBtn:CreateFontString(nil, "OVERLAY", "GameFontHighlightSmall")
+  clearTxt:SetPoint("CENTER", clearBtn, "CENTER", 0, 0)
+  clearTxt:SetText("|cffaaaaaa✕|r")
+  clearBtn.Text = clearTxt
+  clearBtn:Hide()
+  searchBox.ClearBtn = clearBtn
+
+  clearBtn:SetScript("OnClick", function()
+    searchBox:SetText("")
+    searchBox:ClearFocus()
+    clearBtn:Hide()
+    placeholder:Show()
+    FG:SetActiveCategory("all")
+  end)
 
   searchBox:SetScript("OnTextChanged", function(self)
     local query = self:GetText():trim()
     if query == "" then
       placeholder:Show()
+      clearBtn:Hide()
       FG:PopulateCodexResults("")
     else
       placeholder:Hide()
+      clearBtn:Show()
       FG:PopulateCodexResults(query)
     end
   end)
 
   searchBox:SetScript("OnEscapePressed", function(self) self:ClearFocus() end)
 
-  local function StyleFilterBtn(btn, text)
-    btn:SetText(text)
-    local fs = btn:GetFontString()
-    if fs then
-      SharpenFontString(fs, 11, "OUTLINE")
-    end
+  -- Category Filter Pills
+  f.FilterButtons = {}
+  local function CreateCategoryPill(name, label, width, xOffset, relativeTo)
+    local btn = CreateFrame("Button", nil, f, "BackdropTemplate")
+    btn:SetSize(width, 22)
+    btn:SetPoint("LEFT", relativeTo, "RIGHT", xOffset, 0)
     MakePixelSharp(btn)
+
+    btn:SetBackdrop({
+      bgFile = "Interface\\Buttons\\WHITE8X8",
+      edgeFile = "Interface\\Tooltips\\UI-Tooltip-Border",
+      tile = false,
+      tileSize = 10,
+      edgeSize = 8,
+      insets = { left = 2, right = 2, top = 2, bottom = 2 },
+    })
+    btn:SetBackdropColor(0.10, 0.12, 0.16, 0.85)
+    btn:SetBackdropBorderColor(0.24, 0.28, 0.36, 0.70)
+
+    local txt = btn:CreateFontString(nil, "OVERLAY", "GameFontHighlightSmall")
+    txt:SetPoint("CENTER", btn, "CENTER", 0, 0)
+    txt:SetText(label)
+    txt:SetTextColor(0.75, 0.75, 0.80)
+    SharpenFontString(txt, 11, "OUTLINE")
+    btn.Text = txt
+
+    btn:SetScript("OnClick", function()
+      FG:SetActiveCategory(name)
+    end)
+
+    f.FilterButtons[name] = btn
+    return btn
   end
 
-  local allBtn = CreateFrame("Button", nil, f, "UIPanelButtonTemplate")
-  allBtn:SetSize(45, 24)
-  allBtn:SetPoint("LEFT", searchBox, "RIGHT", 8, 0)
-  StyleFilterBtn(allBtn, "All")
-  allBtn:SetScript("OnClick", function()
-    searchBox:SetText("")
-    FG:PopulateCodexResults("")
-  end)
+  local allBtn   = CreateCategoryPill("all", "All", 34, 10, searchBox)
+  local itemsBtn = CreateCategoryPill("items", "Items", 44, 4, allBtn)
+  local questBtn = CreateCategoryPill("quests", "Quests", 52, 4, itemsBtn)
+  local npcBtn   = CreateCategoryPill("creatures", "NPCs", 44, 4, questBtn)
+  local dungBtn  = CreateCategoryPill("dungeons", "Dungeons", 66, 4, npcBtn)
+  local vendBtn  = CreateCategoryPill("vendors", "Vendors", 58, 4, dungBtn)
 
-  local dBtn = CreateFrame("Button", nil, f, "UIPanelButtonTemplate")
-  dBtn:SetSize(75, 24)
-  dBtn:SetPoint("LEFT", allBtn, "RIGHT", 4, 0)
-  StyleFilterBtn(dBtn, "Dungeons")
-  dBtn:SetScript("OnClick", function()
-    searchBox:SetText("")
-    FG:PopulateDungeons()
-  end)
+  -- Bottom status bar / footer
+  local botDivider = f:CreateTexture(nil, "ARTWORK")
+  botDivider:SetColorTexture(0.55, 0.22, 0.85, 0.25)
+  botDivider:SetHeight(1)
+  botDivider:SetPoint("BOTTOMLEFT", f, "BOTTOMLEFT", 14, 28)
+  botDivider:SetPoint("BOTTOMRIGHT", f, "BOTTOMRIGHT", -14, 28)
+  MakePixelSharp(botDivider)
 
-  local fBtn = CreateFrame("Button", nil, f, "UIPanelButtonTemplate")
-  fBtn:SetSize(65, 24)
-  fBtn:SetPoint("LEFT", dBtn, "RIGHT", 4, 0)
-  StyleFilterBtn(fBtn, "Forever")
-  fBtn:SetScript("OnClick", function()
-    searchBox:SetText("forever")
-  end)
+  local statusText = f:CreateFontString(nil, "OVERLAY", "GameFontNormalSmall")
+  statusText:SetPoint("BOTTOMLEFT", f, "BOTTOMLEFT", 18, 9)
+  statusText:SetText("|cff888899Ready • Type to search or select a category|r")
+  SharpenFontString(statusText, 11, "OUTLINE")
+  f.StatusText = statusText
 
-  local lockBtn = CreateFrame("Button", nil, f, "UIPanelButtonTemplate")
-  lockBtn:SetSize(60, 24)
-  lockBtn:SetPoint("LEFT", fBtn, "RIGHT", 4, 0)
-  StyleFilterBtn(lockBtn, ForeverGuideDB.sparkLocked and "Unlock" or "Lock")
+  local lockBtn = CreateFrame("Button", nil, f, "BackdropTemplate")
+  lockBtn:SetSize(88, 18)
+  lockBtn:SetPoint("BOTTOMRIGHT", f, "BOTTOMRIGHT", -16, 5)
+  MakePixelSharp(lockBtn)
+  lockBtn:SetBackdrop({
+    bgFile = "Interface\\Buttons\\WHITE8X8",
+    edgeFile = "Interface\\Tooltips\\UI-Tooltip-Border",
+    tile = false,
+    tileSize = 8,
+    edgeSize = 8,
+    insets = { left = 2, right = 2, top = 2, bottom = 2 },
+  })
+  lockBtn:SetBackdropColor(0.10, 0.12, 0.16, 0.85)
+  lockBtn:SetBackdropBorderColor(0.24, 0.28, 0.36, 0.70)
+
+  local lockTxt = lockBtn:CreateFontString(nil, "OVERLAY", "GameFontHighlightSmall")
+  lockTxt:SetPoint("CENTER", lockBtn, "CENTER", 0, 0)
+  lockTxt:SetText(ForeverGuideDB.sparkLocked and "|cffff6666Unlock Sparky|r" or "|cff88cc88Lock Sparky|r")
+  SharpenFontString(lockTxt, 10, "OUTLINE")
+  lockBtn.Text = lockTxt
+
   lockBtn:SetScript("OnClick", function(self)
     ForeverGuideDB.sparkLocked = not ForeverGuideDB.sparkLocked
     if FG.SparkFrame and FG.SparkFrame.StopMovingOrSizing then
@@ -1350,14 +1407,14 @@ function FG:CreateCodexWindow()
       FG.SparkFrame.wasDragged = false
     end
     FG:UpdateSparkMouseState()
-    StyleFilterBtn(self, ForeverGuideDB.sparkLocked and "Unlock" or "Lock")
+    lockTxt:SetText(ForeverGuideDB.sparkLocked and "|cffff6666Unlock Sparky|r" or "|cff88cc88Lock Sparky|r")
     print("|cffdf80ff[Sparky]|r Position is now " .. (ForeverGuideDB.sparkLocked and "|cffff4040Locked (Click-Through)|r" or "|cff20ff20Unlocked|r"))
   end)
   f.LockBtn = lockBtn
 
   local scrollFrame = CreateFrame("ScrollFrame", "ForeverGuideScrollFrame", f, "UIPanelScrollFrameTemplate")
-  scrollFrame:SetPoint("TOPLEFT", searchBox, "BOTTOMLEFT", -2, -12)
-  scrollFrame:SetPoint("BOTTOMRIGHT", f, "BOTTOMRIGHT", -30, 16)
+  scrollFrame:SetPoint("TOPLEFT", searchBox, "BOTTOMLEFT", -4, -10)
+  scrollFrame:SetPoint("BOTTOMRIGHT", f, "BOTTOMRIGHT", -30, 34)
   MakePixelSharp(scrollFrame)
 
   local content = CreateFrame("Frame", "ForeverGuideScrollContent", scrollFrame)
@@ -1366,8 +1423,117 @@ function FG:CreateCodexWindow()
   MakePixelSharp(content)
   f.Content = content
 
+  -- Blank State / Ready View (Shown on open or empty query)
+  local blank = CreateFrame("Frame", nil, content)
+  blank:SetSize(540, 320)
+  blank:SetPoint("TOP", content, "TOP", 0, -45)
+
+  local bIcon = blank:CreateTexture(nil, "ARTWORK")
+  bIcon:SetSize(46, 46)
+  bIcon:SetPoint("TOP", blank, "TOP", 0, 0)
+  bIcon:SetTexture("Interface\\AddOns\\" .. ADDON_NAME .. "\\Media\\sparky_cloud_main.tga")
+  bIcon:SetVertexColor(0.80, 0.35, 1.0, 0.80)
+  bIcon:SetBlendMode("ADD")
+
+  local bTitle = blank:CreateFontString(nil, "OVERLAY", "GameFontHighlightLarge")
+  bTitle:SetPoint("TOP", bIcon, "BOTTOM", 0, -10)
+  bTitle:SetText("|cffdf80ffSparky's Codex is Ready|r")
+  SharpenFontString(bTitle, 15, "OUTLINE")
+
+  local bSub = blank:CreateFontString(nil, "OVERLAY", "GameFontDisable")
+  bSub:SetPoint("TOP", bTitle, "BOTTOM", 0, -5)
+  bSub:SetText("Instant in-game search for 2,400+ items, quests, NPCs & dungeons.")
+  SharpenFontString(bSub, 11, "OUTLINE")
+
+  local bPrompt = blank:CreateFontString(nil, "OVERLAY", "GameFontNormalSmall")
+  bPrompt:SetPoint("TOP", bSub, "BOTTOM", 0, -18)
+  bPrompt:SetText("|cff888899Type above to search, or pick a quick shortcut:|r")
+  SharpenFontString(bPrompt, 11, "OUTLINE")
+
+  local function CreateQuickPill(label, xOff, onClick)
+    local pBtn = CreateFrame("Button", nil, blank, "BackdropTemplate")
+    pBtn:SetSize(116, 26)
+    pBtn:SetPoint("TOP", bPrompt, "BOTTOM", xOff, -12)
+    MakePixelSharp(pBtn)
+    pBtn:SetBackdrop({
+      bgFile = "Interface\\Buttons\\WHITE8X8",
+      edgeFile = "Interface\\Tooltips\\UI-Tooltip-Border",
+      tile = false,
+      tileSize = 10,
+      edgeSize = 8,
+      insets = { left = 2, right = 2, top = 2, bottom = 2 },
+    })
+    pBtn:SetBackdropColor(0.12, 0.14, 0.20, 0.90)
+    pBtn:SetBackdropBorderColor(0.45, 0.22, 0.75, 0.80)
+    local pTxt = pBtn:CreateFontString(nil, "OVERLAY", "GameFontHighlightSmall")
+    pTxt:SetPoint("CENTER", pBtn, "CENTER", 0, 0)
+    pTxt:SetText(label)
+    SharpenFontString(pTxt, 11, "OUTLINE")
+    pBtn.Text = pTxt
+    pBtn:SetScript("OnEnter", function(self)
+      self:SetBackdropColor(0.22, 0.14, 0.34, 0.95)
+      self:SetBackdropBorderColor(0.85, 0.40, 1.0, 0.95)
+    end)
+    pBtn:SetScript("OnLeave", function(self)
+      self:SetBackdropColor(0.12, 0.14, 0.20, 0.90)
+      self:SetBackdropBorderColor(0.45, 0.22, 0.75, 0.80)
+    end)
+    pBtn:SetScript("OnClick", onClick)
+    return pBtn
+  end
+
+  CreateQuickPill("⚔ Dungeons", -180, function() FG:SetActiveCategory("dungeons") end)
+  CreateQuickPill("✦ Forever Gear", -60, function()
+    searchBox:SetText("forever")
+    FG:SetActiveCategory("all")
+  end)
+  CreateQuickPill("📜 Quests", 60, function() FG:SetActiveCategory("quests") end)
+  CreateQuickPill("🛒 Key Vendors", 180, function() FG:SetActiveCategory("vendors") end)
+
+  content.BlankState = blank
+
+  -- No Results State
+  local noRes = CreateFrame("Frame", nil, content)
+  noRes:SetSize(520, 180)
+  noRes:SetPoint("TOP", content, "TOP", 0, -80)
+
+  local nrTitle = noRes:CreateFontString(nil, "OVERLAY", "GameFontHighlightLarge")
+  nrTitle:SetPoint("TOP", noRes, "TOP", 0, 0)
+  nrTitle:SetText("|cffff8080No results found|r")
+  SharpenFontString(nrTitle, 15, "OUTLINE")
+  noRes.Title = nrTitle
+
+  local nrSub = noRes:CreateFontString(nil, "OVERLAY", "GameFontDisable")
+  nrSub:SetPoint("TOP", nrTitle, "BOTTOM", 0, -8)
+  nrSub:SetText("Try searching for a different keyword, zone, or boss name.")
+  SharpenFontString(nrSub, 11, "OUTLINE")
+  noRes.Sub = nrSub
+
+  noRes:Hide()
+  content.NoResultsState = noRes
+
   f:Hide()
   FG.CodexWindow = f
+end
+
+function FG:SetActiveCategory(cat)
+  FG.activeCategory = cat or "all"
+  local cw = FG.CodexWindow
+  if cw and cw.FilterButtons then
+    for c, btn in pairs(cw.FilterButtons) do
+      if c == FG.activeCategory then
+        btn:SetBackdropBorderColor(0.85, 0.40, 1.0, 0.95)
+        btn:SetBackdropColor(0.28, 0.14, 0.42, 0.95)
+        if btn.Text then btn.Text:SetTextColor(1.0, 0.9, 1.0) end
+      else
+        btn:SetBackdropBorderColor(0.24, 0.28, 0.36, 0.70)
+        btn:SetBackdropColor(0.10, 0.12, 0.16, 0.85)
+        if btn.Text then btn.Text:SetTextColor(0.70, 0.70, 0.75) end
+      end
+    end
+  end
+  local q = ForeverGuideSearchBox and ForeverGuideSearchBox:GetText():trim() or ""
+  FG:PopulateCodexResults(q)
 end
 
 function FG:ApplyTextSharpening()
@@ -1712,21 +1878,56 @@ function FG:PopulateCodexResults(query)
   end
   content.Buttons = content.Buttons or {}
 
-  local q = query:lower():trim()
+  local q = (query or ""):lower():trim()
+  local cat = FG.activeCategory or "all"
+  local cw = FG.CodexWindow
+
+  -- Start off BLANK when search query is empty and category is 'all'
+  if q == "" and cat == "all" then
+    if content.BlankState then content.BlankState:Show() end
+    if content.NoResultsState then content.NoResultsState:Hide() end
+    content:SetHeight(450)
+    if cw and cw.StatusText then
+      cw.StatusText:SetText("|cff888899Ready • Type to search or select a category|r")
+    end
+    return
+  end
+
+  if content.BlankState then content.BlankState:Hide() end
+
   local matches = {}
 
   if q == "" then
-    if FG.Data.Items then
+    -- When a category is explicitly clicked without search text, browse that category
+    if cat == "items" and FG.Data.Items then
       for _, item in pairs(FG.Data.Items) do
-        if item.isForever then
-          table.insert(matches, { type = "item", data = item })
-          if #matches >= 40 then break end
-        end
+        table.insert(matches, { type = "item", data = item })
+        if #matches >= 45 then break end
+      end
+    elseif cat == "quests" and FG.Data.Quests then
+      for _, quest in pairs(FG.Data.Quests) do
+        table.insert(matches, { type = "quest", data = quest })
+        if #matches >= 45 then break end
+      end
+    elseif cat == "creatures" and FG.Data.Creatures then
+      for _, c in pairs(FG.Data.Creatures) do
+        table.insert(matches, { type = "creature", data = c })
+        if #matches >= 45 then break end
+      end
+    elseif cat == "dungeons" and FG.Data.Dungeons then
+      for _, d in pairs(FG.Data.Dungeons) do
+        table.insert(matches, { type = "dungeon", data = d })
+      end
+      table.sort(matches, function(a, b) return (a.data.recLevel or 0) < (b.data.recLevel or 0) end)
+    elseif cat == "vendors" and FG.Data.Vendors then
+      for _, v in pairs(FG.Data.Vendors) do
+        table.insert(matches, { type = "vendor", data = v })
+        if #matches >= 45 then break end
       end
     end
   else
-    -- Search Items
-    if FG.Data.Items then
+    -- Active search query filtered by category
+    if (cat == "all" or cat == "items") and FG.Data.Items and #matches < 50 then
       for _, item in pairs(FG.Data.Items) do
         if item.name and (item.name:lower():find(q, 1, true) or (item.source and item.source:lower():find(q, 1, true))) then
           table.insert(matches, { type = "item", data = item })
@@ -1735,8 +1936,7 @@ function FG:PopulateCodexResults(query)
       end
     end
 
-    -- Search Quests (Title, NPC/Questgiver, Zone, Objectives, Tips)
-    if FG.Data.Quests and #matches < 60 then
+    if (cat == "all" or cat == "quests") and FG.Data.Quests and #matches < 65 then
       for _, quest in pairs(FG.Data.Quests) do
         local matchTitle = quest.title and quest.title:lower():find(q, 1, true)
         local matchNpc = quest.npc and quest.npc:lower():find(q, 1, true)
@@ -1745,13 +1945,12 @@ function FG:PopulateCodexResults(query)
         local matchTip = quest.tip and quest.tip:lower():find(q, 1, true)
         if matchTitle or matchNpc or matchZone or matchObj or matchTip then
           table.insert(matches, { type = "quest", data = quest })
-          if #matches >= 60 then break end
+          if #matches >= 65 then break end
         end
       end
     end
 
-    -- Search Creatures & NPCs (Name, Zone, Location, Strategy)
-    if FG.Data.Creatures and #matches < 75 then
+    if (cat == "all" or cat == "creatures") and FG.Data.Creatures and #matches < 75 then
       for _, c in pairs(FG.Data.Creatures) do
         local matchName = c.name and c.name:lower():find(q, 1, true)
         local matchZone = c.zone and c.zone:lower():find(q, 1, true)
@@ -1763,17 +1962,15 @@ function FG:PopulateCodexResults(query)
       end
     end
 
-    -- Search Dungeons
-    if FG.Data.Dungeons and #matches < 80 then
+    if (cat == "all" or cat == "dungeons") and FG.Data.Dungeons and #matches < 80 then
       for _, d in pairs(FG.Data.Dungeons) do
-        if d.name and (d.name:lower():find(q, 1, true) or d.zone:lower():find(q, 1, true)) then
+        if d.name and (d.name:lower():find(q, 1, true) or (d.zone and d.zone:lower():find(q, 1, true))) then
           table.insert(matches, { type = "dungeon", data = d })
         end
       end
     end
 
-    -- Search Vendors
-    if FG.Data.Vendors and #matches < 85 then
+    if (cat == "all" or cat == "vendors") and FG.Data.Vendors and #matches < 85 then
       for _, v in pairs(FG.Data.Vendors) do
         local matchName = v.name and v.name:lower():find(q, 1, true)
         local matchItem = v.item and v.item:lower():find(q, 1, true)
@@ -1784,6 +1981,21 @@ function FG:PopulateCodexResults(query)
         end
       end
     end
+  end
+
+  if #matches == 0 then
+    if content.NoResultsState then
+      content.NoResultsState:Show()
+      if content.NoResultsState.Title then
+        content.NoResultsState.Title:SetText("|cffff8080No results found for \"|r|cffffffff" .. (query or "") .. "|r|cffff8080\"|r")
+      end
+    end
+    content:SetHeight(450)
+    if cw and cw.StatusText then cw.StatusText:SetText("|cffff80800 results found|r") end
+    return
+  else
+    if content.NoResultsState then content.NoResultsState:Hide() end
+    if cw and cw.StatusText then cw.StatusText:SetText("|cffdf80ff" .. #matches .. " results found|r") end
   end
 
   local yOffset = -2
@@ -2134,6 +2346,12 @@ function FG:ToggleCodex()
     FG.CodexWindow:Hide()
   else
     FG.CodexWindow:Show()
+    FG:SetActiveCategory("all")
+    if ForeverGuideSearchBox then
+      ForeverGuideSearchBox:SetText("")
+      if ForeverGuideSearchBox.Placeholder then ForeverGuideSearchBox.Placeholder:Show() end
+      if ForeverGuideSearchBox.ClearBtn then ForeverGuideSearchBox.ClearBtn:Hide() end
+    end
     FG:PopulateCodexResults("")
     FG:PlaySparkSound("shimmer")
   end
