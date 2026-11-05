@@ -158,23 +158,101 @@ DUNGEON_LOCATIONS = {
 }
 
 
+JUNK_CREATURE_PATTERNS = [
+    # Player shapeshifts & forms
+    r'\b(bear|cat|aquatic|travel|moonkin|flight|tree of life|ghost wolf|dire bear|serpent|owl|master angler)\s+form\b',
+    r'\(.*(druid|shapeshift).*\)',
+    r'\b(druid - (night elf|tauren))\b',
+    r'\bform \(.*\)',
+    r'^ruul snowhoof bear form$',
+    r'^serpent form$',
+    r'^owl form$',
+    r'^tree form \d',
+    r'^master angler form$',
+    r'\"plucky\" johnson\'s human form',
+
+    # Internal triggers, cameras, controllers, spawners, visual effects
+    r'\btrigger\b',
+    r'\bcredit marker\b',
+    r'\bcontroller\b',
+    r'\bspawner\b',
+    r'\binvisible\b',
+    r'\bcamera\b',
+    r'\bbunny\b',
+    r'\bteleport\b',
+    r'\bvisual\b',
+    r'\bspell effect\b',
+    r'\b\(dnd\)',
+    r'\[dnd\]',
+    r'\bdnd dnr\b',
+
+    # Test dummies, test mobs, placeholders
+    r'\bdummy\b',
+    r'\btest\b',
+    r'\btester\b',
+    r'\btesting\b',
+    r'^spawn test\b',
+    r'\btest mob\b',
+    r'\btest dude\b',
+    r'\[ph\]',
+    r'\[ph\[',
+    r'^placeholder\b',
+    r'\bplaceholder\b',
+    r'\btest banker\b',
+    r'\btest battlemaster\b',
+    r'^world [a-z]+ (riding )?trainer$',
+]
+
+
+def is_internal_or_junk_creature(name: str) -> bool:
+    lower = name.lower()
+    for p in JUNK_CREATURE_PATTERNS:
+        if re.search(p, lower):
+            return True
+    return False
+
+
 def infer_family_from_name(name: str) -> str:
     n = name.lower()
-    if any(k in n for k in ["wolf", "bear", "boar", "spider", "tiger", "raptor", "lion", "cat", "crawler", "stag", "crocolisk", "basilisk", "gorilla", "hyena", "scorpid", "serpent", "bat", "bird", "strider", "owl", "crab", "turtle", "wasp", "tarantula", "mastiff", "lynx"]):
+    # Check Humanoid / NPC titles first
+    if any(re.search(r'\b' + k + r'\b', n) for k in [
+        "druid", "priest", "paladin", "mage", "rogue", "warlock", "hunter", "warrior", "shaman",
+        "chief", "chieftain", "lord", "lady", "duke", "baron", "commander", "captain", "sergeant",
+        "general", "marshal", "inquisitor", "crusader", "artisan", "syndicate", "defias", "scarlet",
+        "trainer", "guard", "battleguard", "battlemaster", "vendor", "peon", "grunt", "footman",
+        "knight", "staghelm", "sartura"
+    ]):
+        return "Humanoid"
+
+    # Exact animal words with boundaries
+    beast_words = [
+        "wolf", "wolves", "worg", "worgs", "bear", "bears", "boar", "boars",
+        "spider", "spiders", "tiger", "tigers", "raptor", "raptors", "lion", "lions",
+        "cat", "cats", "crawler", "crawlers", "crocolisk", "crocolisks", "basilisk", "basilisks",
+        "gorilla", "gorillas", "hyena", "hyenas", "scorpid", "scorpids", "serpent", "serpents",
+        "bat", "bats", "bird", "birds", "tallstrider", "tallstriders", "owl", "owls",
+        "crab", "crabs", "turtle", "turtles", "wasp", "wasps", "tarantula", "tarantulas",
+        "mastiff", "mastiffs", "lynx", "chimaera", "chimera", "hydra", "hydras", "kodo", "kodos",
+        "strider", "striders", "vulture", "vultures", "eagle", "eagles", "falcon", "falcons",
+        "hound", "hounds", "panther", "panthers", "cougar", "cougars", "leopard", "leopards",
+        "condor", "condors", "roc", "beetle", "beetles"
+    ]
+    if any(re.search(r'\b' + k + r'\b', n) for k in beast_words):
         return "Beast"
-    if any(k in n for k in ["skeleton", "zombie", "ghoul", "geist", "ghost", "spectre", "wraith", "shade", "lich", "banshee", "abomination", "servitor", "mummy", "corpse", "haunted"]):
+
+    if any(re.search(r'\b' + k + r'\b', n) for k in ["skeleton", "zombie", "ghoul", "geist", "ghost", "spectre", "wraith", "shade", "lich", "banshee", "abomination", "servitor", "mummy", "corpse", "haunted"]):
         return "Undead"
-    if any(k in n for k in ["demon", "succubus", "felhound", "imp", "voidwalker", "infernal", "doomguard", "dreadlord", "satyr", "incubus", "hellhound"]):
+    if any(re.search(r'\b' + k + r'\b', n) for k in ["demon", "succubus", "felhound", "imp", "voidwalker", "infernal", "doomguard", "dreadlord", "satyr", "incubus", "hellhound"]):
         return "Demon"
-    if any(k in n for k in ["elemental", "water", "fire", "air", "earth", "slime", "ooze", "spark", "ember"]):
+    if any(re.search(r'\b' + k + r'\b', n) for k in ["elemental", "water", "fire", "air", "earth", "slime", "ooze", "spark", "ember"]):
         return "Elemental"
-    if any(k in n for k in ["dragon", "whelp", "drake", "wyrm", "dragonkin"]):
+    if any(re.search(r'\b' + k + r'\b', n) for k in ["dragon", "whelp", "drake", "wyrm", "dragonkin"]):
         return "Dragonkin"
-    if any(k in n for k in ["giant", "colossus", "goliath", "ettin", "cyclops"]):
+    if any(re.search(r'\b' + k + r'\b', n) for k in ["giant", "colossus", "goliath", "ettin", "cyclops"]):
         return "Giant"
-    if any(k in n for k in ["golem", "mech", "robot", "clockwork", "shredder", "alarm-o-bot"]):
+    if any(re.search(r'\b' + k + r'\b', n) for k in ["golem", "mech", "robot", "clockwork", "shredder", "alarm-o-bot"]):
         return "Mechanical"
-    if any(k in n for k in ["rabbit", "frog", "toad", "squirrel", "prairie dog", "cockroach", "deer", "hare", "sheep", "fawn", "chicken"]):
+    if any(re.search(r'\b' + k + r'\b', n) for k in ["rabbit", "frog", "toad", "squirrel", "prairie dog", "cockroach", "deer", "hare", "sheep", "fawn", "chicken"]):
         return "Critter"
     return "Humanoid"
 
@@ -242,6 +320,11 @@ def run_enrichment():
     cache_files = glob.glob(os.path.join(CACHE_DIR, "*.json"))
     print(f"Loaded {len(cache_files)} NPC cache files...")
 
+    tooltip_regex = re.compile(
+        r'(?:Level\s+(?:\d+(?:\s*-\s*\d+)?|\?\?)\s+)?\b(Beast|Dragonkin|Demon|Elemental|Giant|Undead|Humanoid|Critter|Mechanical)\b(?:\s*\((.*?)\))?</td>',
+        re.IGNORECASE
+    )
+
     cache_family_map = {}
     for fpath in cache_files:
         fname = os.path.basename(fpath)
@@ -253,52 +336,62 @@ def run_enrichment():
             with open(fpath, "r", encoding="utf-8") as fp:
                 d = json.load(fp)
                 tt = d.get("tooltip", "")
-                m = re.search(r"Level\s+\d+(?:\s*-\s*\d+)?\s+([A-Za-z\s]+?)(?:\s*\((.*?)\))?</td>", tt)
+                m = tooltip_regex.search(tt)
                 if m:
-                    fam = m.group(1).strip()
+                    fam = m.group(1).capitalize()
                     cls_found = m.group(2).strip() if m.group(2) else None
                     cache_family_map[cid] = (fam, cls_found)
         except Exception:
             pass
 
     # Step 2: Fetch all creatures
-    c.execute("SELECT id, name, level_min, level_max, classification, zone, location_details, health, strategy_notes, family FROM creatures")
+    c.execute("SELECT id, name, level_min, level_max, classification, zone, location_details, health, strategy_notes, family, forever_status FROM creatures")
     creatures = c.fetchall()
     print(f"Processing {len(creatures)} creatures...")
 
     updated_rows = []
+    internal_count = 0
     for row in creatures:
-        cid, name, l_min, l_max, classification, zone, loc, hp, strat, fam = row
+        cid, name, l_min, l_max, classification, zone, loc, hp, strat, fam, f_status = row
 
-        # Determine family
-        new_fam = fam
-        new_class = classification
-        if cid in cache_family_map:
-            cached_fam, cached_cls = cache_family_map[cid]
-            if cached_fam:
-                new_fam = cached_fam
-            if cached_cls and cached_cls != "Normal":
-                new_class = cached_cls
-        
-        if not new_fam:
-            new_fam = infer_family_from_name(name)
+        is_junk = is_internal_or_junk_creature(name)
+        if is_junk:
+            internal_count += 1
+            new_status = "internal"
+            new_fam = "Internal"
+            new_class = classification
+            new_loc = loc or ""
+            new_strat = "Internal system template / script mechanism. Excluded from world player codex."
+        else:
+            new_status = "live"
+            new_fam = None
+            new_class = classification
+            if cid in cache_family_map:
+                cached_fam, cached_cls = cache_family_map[cid]
+                if cached_fam and cached_fam != "Internal":
+                    new_fam = cached_fam
+                if cached_cls and cached_cls != "Normal":
+                    new_class = cached_cls
 
-        # Determine location details
-        new_loc = loc or ""
-        if not new_loc and zone in DUNGEON_LOCATIONS:
-            new_loc = DUNGEON_LOCATIONS[zone]
+            if not new_fam:
+                new_fam = infer_family_from_name(name)
 
-        # Generate strategy
-        new_strat = strat or ""
-        if not new_strat or len(new_strat) < 15:
-            new_strat = generate_strategy_notes(name, new_class, new_fam, zone, hp, l_min or 1, l_max or 1)
+            # Determine location details
+            new_loc = loc or ""
+            if not new_loc and zone in DUNGEON_LOCATIONS:
+                new_loc = DUNGEON_LOCATIONS[zone]
 
-        updated_rows.append((new_fam, new_class, new_loc, new_strat, cid))
+            # Generate strategy
+            new_strat = strat or ""
+            if not new_strat or len(new_strat) < 15 or "CC Vulnerabilities: Hibernate" in new_strat and new_fam != "Beast":
+                new_strat = generate_strategy_notes(name, new_class, new_fam, zone, hp, l_min or 1, l_max or 1)
 
-    print(f"Applying updates for {len(updated_rows)} creatures...")
+        updated_rows.append((new_fam, new_class, new_loc, new_strat, new_status, cid))
+
+    print(f"Applying updates for {len(updated_rows)} creatures ({internal_count} flagged as internal)...")
     c.executemany("""
         UPDATE creatures
-        SET family = ?, classification = ?, location_details = ?, strategy_notes = ?
+        SET family = ?, classification = ?, location_details = ?, strategy_notes = ?, forever_status = ?
         WHERE id = ?
     """, updated_rows)
     conn.commit()

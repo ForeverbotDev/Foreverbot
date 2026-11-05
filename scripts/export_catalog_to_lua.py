@@ -230,12 +230,17 @@ def export_creatures(cursor) -> str:
     cursor.execute("""
         SELECT id, name, level_min, level_max, classification, family, zone, location_details, health, strategy_notes, is_forever_content, coords
         FROM creatures
+        WHERE forever_status = 'live'
+          AND family != 'Internal'
         ORDER BY level_max DESC, name ASC
     """)
     rows = cursor.fetchall()
     lua = ["ForeverGuide_Data.Creatures = {"]
     for r in rows:
         c_id, name, l_min, l_max, classification, family, zone, loc, hp, strat, is_forever, coords = r
+        n_lower = name.lower()
+        if any(k in n_lower for k in [" form (", "druid - ", "ruul snowhoof bear form", "serpent form", "owl form", "combat dummy", "target dummy", "trigger", "credit marker", "camera", "controller", "spawner", "test mob", "test dude", "[ph]"]):
+            continue
         lua.append(f"  [{c_id}] = {{")
         lua.append(f"    id = {c_id},")
         lua.append(f"    name = {escape_lua_str(name)},")

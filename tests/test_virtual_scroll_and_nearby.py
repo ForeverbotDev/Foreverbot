@@ -57,10 +57,9 @@ class TestVirtualScrollAndNearby(unittest.TestCase):
 
     def test_04_creature_family_singular_plural_matching(self):
         """Verify singular/plural family matching resolves Elementals, Beasts, Demons, Giants, Humanoids."""
-        # Query database counts for each family
         c = self.db.cursor()
-        for fam, expected_min in [("Elemental", 380), ("Beast", 1100), ("Demon", 200), ("Giant", 50), ("Humanoid", 7000)]:
-            c.execute("SELECT COUNT(*) FROM creatures WHERE family = ?", (fam,))
+        for fam, expected_min in [("Elemental", 350), ("Beast", 1100), ("Demon", 200), ("Giant", 50), ("Humanoid", 6800)]:
+            c.execute("SELECT COUNT(*) FROM creatures WHERE family = ? AND forever_status = 'live'", (fam,))
             cnt = c.fetchone()[0]
             self.assertGreaterEqual(cnt, expected_min, f"Family {fam} count {cnt} below expected {expected_min}")
 
@@ -103,6 +102,50 @@ class TestVirtualScrollAndNearby(unittest.TestCase):
         self.assertIn('["crystal lake"] = "Elwynn Forest"', data_head)
         self.assertIn('["moonbrook"] = "Westfall"', data_head)
         self.assertIn('["longshore"] = "Westfall"', data_head)
+
+    def test_08_no_player_shapeshift_or_internal_dummies_in_creatures(self):
+        """Verify shapeshift forms (Bear Form, Cat Form) and internal triggers/dummies are purged."""
+        # 1. Database check
+        c = self.db.cursor()
+        c.execute("SELECT COUNT(*) FROM creatures WHERE forever_status = 'live' AND (name LIKE '%Bear Form%' OR name LIKE '%Cat Form%' OR name LIKE '%Dummy%')")
+        live_junk = c.fetchone()[0]
+        self.assertEqual(live_junk, 0, f"Found {live_junk} live shapeshift/dummy creatures in database")
+
+        # 2. Lua exporter check
+        with open(DATA_FILE, "r", encoding="utf-8") as f:
+            data_content = f.read()
+        self.assertNotIn('name = "Bear Form (Night Elf Druid)"', data_content)
+        self.assertNotIn('name = "Bear Form (Tauren Druid)"', data_content)
+        self.assertNotIn('name = "Combat Dummy"', data_content)
+
+        # 3. Lua filter check
+        self.assertIn("function FG:IsInternalCreature(name, family)", self.lua_code)
+        self.assertIn('n:find(" form%f[%A]")', self.lua_code)
+
+    def test_09_nearby_kde_folder_structure(self):
+        """Verify Nearby tab features the 6 authentic KDE Dolphin folders."""
+        for path in ["nearby/quests", "nearby/rares", "nearby/creatures", "nearby/vendors", "nearby/dungeons", "nearby/loot"]:
+            self.assertIn(f'path = "{path}"', self.lua_code)
+        self.assertIn('name = "Nearby Quests"', self.lua_code)
+        self.assertIn('name = "Nearby Rares & Bosses"', self.lua_code)
+        self.assertIn('name = "Nearby Creatures & Mobs"', self.lua_code)
+        self.assertIn('name = "Nearby Vendors & Flight Masters"', self.lua_code)
+        self.assertIn('name = "Nearby Dungeons & Raids"', self.lua_code)
+        self.assertIn('name = "Nearby Notable Loot & Drops"', self.lua_code)
+
+    def test_10_creatures_by_zone_and_strict_alphabetical_order(self):
+        """Verify Creatures by Zone (EK & Kalimdor) and universal strict alphabetical sorting."""
+        # Zone lists present
+        self.assertIn("local EK_ZONE_NAMES = {", self.lua_code)
+        self.assertIn("local KALIMDOR_ZONE_NAMES = {", self.lua_code)
+        self.assertIn('path = "creatures/by_zone_ek"', self.lua_code)
+        self.assertIn('path = "creatures/by_zone_kalimdor"', self.lua_code)
+        self.assertIn('cur == "creatures/by_zone_ek"', self.lua_code)
+        self.assertIn('cur == "creatures/by_zone_kalimdor"', self.lua_code)
+
+        # Universal strict alphabetical sorting
+        self.assertIn("-- Universal strict alphabetical sorting (A to Z)", self.lua_code)
+        self.assertIn("return nameA:lower() < nameB:lower()", self.lua_code)
 
 
 if __name__ == "__main__":
