@@ -836,11 +836,16 @@ function FG:CreateSparkFrame()
   glint:SetVertexColor(1.0, 1.0, 1.0, 1.0)
   f.Glint = glint
 
-  -- Layer 6: Blizzard Native AutoCastShine (Crucial: EnableMouse(false))
+  -- Layer 6: Blizzard Native AutoCastShine (Crucial: EnableMouse(false) on shine AND all child frames)
   local shine = CreateFrame("Frame", "ForeverGuideSparkShine", visual, "AutoCastShineTemplate")
   shine:SetSize(38, 38)
   shine:SetPoint("CENTER", visual, "CENTER", 0, 0)
   shine:EnableMouse(false)
+  if shine.GetChildren then
+    for _, child in ipairs({shine:GetChildren()}) do
+      if child and child.EnableMouse then child:EnableMouse(false) end
+    end
+  end
   shine:Show()
   if AutoCastShine_AutoCastStart then
     pcall(AutoCastShine_AutoCastStart, shine, 0.30, 0.80, 1.0)
@@ -873,10 +878,24 @@ function FG:CreateSparkFrame()
   ag:Play()
   f.AnimGroup = ag
 
+  local function StartSparkMoving(self)
+    if self.isMoving then return end
+    self.isMoving = true
+    self.wasDragged = false
+    self.startX, self.startY = GetCursorPosition()
+    self:StartMoving()
+  end
+
   local function StopSparkMoving(self)
     if self.isMoving then
       self:StopMovingOrSizing()
       self.isMoving = false
+      if self.startX and self.startY then
+        local curX, curY = GetCursorPosition()
+        if (math.abs(curX - self.startX) + math.abs(curY - self.startY)) > 4 then
+          self.wasDragged = true
+        end
+      end
       local point, _, relPoint, x, y = self:GetPoint()
       if point and relPoint and x and y then
         ForeverGuideDB.sparkPosition = {
@@ -889,27 +908,28 @@ function FG:CreateSparkFrame()
     end
   end
 
-  f:SetScript("OnDragStart", function(self)
-    if not ForeverGuideDB.sparkLocked or IsShiftKeyDown() or IsAltKeyDown() then
-      self.isMoving = true
-      self.wasDragged = true
-      self:StartMoving()
+  f:SetScript("OnMouseDown", function(self, button)
+    if button == "LeftButton" then
+      StartSparkMoving(self)
     end
   end)
 
-  f:SetScript("OnDragStop", StopSparkMoving)
+  f:SetScript("OnDragStart", function(self)
+    StartSparkMoving(self)
+  end)
 
   f:SetScript("OnMouseUp", function(self, button)
-    if button == "LeftButton" and self.isMoving then
+    if button == "LeftButton" then
       StopSparkMoving(self)
     end
   end)
 
+  f:SetScript("OnDragStop", function(self)
+    StopSparkMoving(self)
+  end)
+
   f:SetScript("OnHide", function(self)
-    if self.isMoving then
-      self:StopMovingOrSizing()
-      self.isMoving = false
-    end
+    StopSparkMoving(self)
   end)
 
   f:SetScript("OnClick", function(self, button)
@@ -1668,6 +1688,8 @@ EventFrame:SetScript("OnEvent", function(self, event, arg1, ...)
         ForeverGuideDB[k] = v
       end
     end
+    ForeverGuideDB.sparkLocked = false
+    ForeverGuideDB.sparkClickThrough = false
 
     FG:CreateSparkFrame()
     FG:CreateMinimapButton()
