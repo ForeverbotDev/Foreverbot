@@ -740,8 +740,8 @@ end
 function FG:CreateSparkFrame()
   local f = CreateFrame("Button", "ForeverGuideSparkFrame", UIParent)
   f:SetSize(48, 48)
-  f:SetFrameStrata("LOW")       -- Render at low strata below all dialogue, quest, and action panels
-  f:SetFrameLevel(2)
+  f:SetFrameStrata("MEDIUM")
+  f:SetFrameLevel(10)
   f:SetClampedToScreen(true)
   f:SetMovable(true)
   f:EnableMouse(true)
@@ -878,58 +878,88 @@ function FG:CreateSparkFrame()
   ag:Play()
   f.AnimGroup = ag
 
-  local function StartSparkMoving(self)
-    if self.isMoving then return end
-    self.isMoving = true
-    self.wasDragged = false
-    self.startX, self.startY = GetCursorPosition()
-    self:StartMoving()
+  local function OnSparkUpdate(self)
+    if self.isDragging then
+      local cx, cy = GetCursorPosition()
+      local scale = UIParent:GetEffectiveScale()
+      local curX, curY = cx / scale, cy / scale
+      self:ClearAllPoints()
+      self:SetPoint("CENTER", UIParent, "BOTTOMLEFT", curX - (self.offsetX or 0), curY - (self.offsetY or 0))
+    end
   end
 
-  local function StopSparkMoving(self)
-    if self.isMoving then
-      self:StopMovingOrSizing()
-      self.isMoving = false
-      if self.startX and self.startY then
-        local curX, curY = GetCursorPosition()
-        if (math.abs(curX - self.startX) + math.abs(curY - self.startY)) > 4 then
-          self.wasDragged = true
-        end
+  local function StartSparkDrag(self)
+    if self.isDragging then return end
+    self.isDragging = true
+    self.wasDragged = false
+    local cx, cy = GetCursorPosition()
+    local scale = UIParent:GetEffectiveScale()
+    self.downX = cx / scale
+    self.downY = cy / scale
+    local fx, fy = self:GetCenter()
+    if fx and fy then
+      self.offsetX = self.downX - fx
+      self.offsetY = self.downY - fy
+    else
+      self.offsetX = 0
+      self.offsetY = 0
+    end
+    self:SetScript("OnUpdate", OnSparkUpdate)
+  end
+
+  local function StopSparkDrag(self)
+    if self.isDragging then
+      self.isDragging = false
+      self:SetScript("OnUpdate", nil)
+      local cx, cy = GetCursorPosition()
+      local scale = UIParent:GetEffectiveScale()
+      local upX = cx / scale
+      local upY = cy / scale
+      local dist = 0
+      if self.downX and self.downY then
+        local dx = upX - self.downX
+        local dy = upY - self.downY
+        dist = math.sqrt(dx * dx + dy * dy)
       end
-      local point, _, relPoint, x, y = self:GetPoint()
-      if point and relPoint and x and y then
-        ForeverGuideDB.sparkPosition = {
-          point = point,
-          relativePoint = relPoint,
-          x = math.floor(x + 0.5),
-          y = math.floor(y + 0.5),
-        }
+      if dist > 4 then
+        self.wasDragged = true
+        local point, _, relPoint, x, y = self:GetPoint()
+        if point and relPoint and x and y then
+          ForeverGuideDB.sparkPosition = {
+            point = point,
+            relativePoint = relPoint,
+            x = math.floor(x + 0.5),
+            y = math.floor(y + 0.5),
+          }
+        end
+      else
+        self.wasDragged = false
       end
     end
   end
 
   f:SetScript("OnMouseDown", function(self, button)
     if button == "LeftButton" then
-      StartSparkMoving(self)
+      StartSparkDrag(self)
     end
   end)
 
   f:SetScript("OnDragStart", function(self)
-    StartSparkMoving(self)
+    StartSparkDrag(self)
   end)
 
   f:SetScript("OnMouseUp", function(self, button)
     if button == "LeftButton" then
-      StopSparkMoving(self)
+      StopSparkDrag(self)
     end
   end)
 
   f:SetScript("OnDragStop", function(self)
-    StopSparkMoving(self)
+    StopSparkDrag(self)
   end)
 
   f:SetScript("OnHide", function(self)
-    StopSparkMoving(self)
+    StopSparkDrag(self)
   end)
 
   f:SetScript("OnClick", function(self, button)

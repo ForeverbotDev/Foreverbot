@@ -1,11 +1,11 @@
 <Bindings>
-  <Binding name="FOREVERGUIDE_TOGGLE_SPARK" header="FOREVERGUIDE">
+  <Binding name="FOREVERGUIDE_TOGGLE_SPARK" category="FOREVERGUIDE">
     ForeverGuide:ToggleSpark()
   </Binding>
-  <Binding name="FOREVERGUIDE_TOGGLE_CODEX">
+  <Binding name="FOREVERGUIDE_TOGGLE_CODEX" category="FOREVERGUIDE">
     ForeverGuide:ToggleCodex()
   </Binding>
-  <Binding name="FOREVERGUIDE_TOGGLE_WAYFARER">
+  <Binding name="FOREVERGUIDE_TOGGLE_WAYFARER" category="FOREVERGUIDE">
     ForeverGuide:ToggleWayfarer()
   </Binding>
 </Bindings>
