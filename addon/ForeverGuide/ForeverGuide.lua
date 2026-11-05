@@ -739,178 +739,170 @@ end
 --------------------------------------------------------------------------------
 function FG:CreateSparkFrame()
   local f = CreateFrame("Button", "ForeverGuideSparkFrame", UIParent)
-  f:SetSize(48, 48)
+  f:SetSize(52, 52)
   f:SetFrameStrata("MEDIUM")
-  f:SetFrameLevel(10)
+  f:SetFrameLevel(12)
   f:SetClampedToScreen(true)
-  f:SetMovable(true)
   f:EnableMouse(true)
-  f:SetHitRectInsets(0, 0, 0, 0) -- Full responsive area for clicking and dragging
+  f:SetHitRectInsets(0, 0, 0, 0)
 
-  -- Ensure right-clicks always pass through to 3D NPCs and objects
+  -- Ensure right-clicks pass through to 3D NPCs and objects
   if f.SetPassThroughButtons then
     pcall(f.SetPassThroughButtons, f, "RightButton")
   end
 
-  -- Only register Left clicks so right-clicking NPCs is never hijacked
   f:RegisterForClicks("LeftButtonUp")
-  f:RegisterForDrag("LeftButton")
 
   MakePixelSharp(f)
 
   local pos = ForeverGuideDB.sparkPosition or DEFAULT_CONFIG.sparkPosition
-  f:SetPoint(pos.point or "CENTER", UIParent, pos.relativePoint or "CENTER", pos.x or 240, pos.y or 60)
+  f.homeX = pos.x or 240
+  f.homeY = pos.y or 120
+  f:SetPoint("CENTER", UIParent, "BOTTOMLEFT", f.homeX, f.homeY)
   f:SetScale(ForeverGuideDB.sparkScale or 1.0)
 
-  -- Inner visual container: all animations and textures live here so f:StartMoving() is NEVER constrained
+  -- Inner visual container
   local visual = CreateFrame("Frame", nil, f)
   visual:SetAllPoints(f)
   visual:EnableMouse(false)
   f.Visual = visual
 
-  -- Circular Alpha Masking (Eliminates all possible square corners or cutoff edges)
-  if visual.CreateMaskTexture then
-    local mask = visual:CreateMaskTexture()
-    mask:SetTexture("Interface\\Masks\\CircleMaskScalable", "CLAMPTOBLACKADDITIVE", "CLAMPTOBLACKADDITIVE")
-    mask:SetSize(42, 42)
-    mask:SetPoint("CENTER", visual, "CENTER", 0, 0)
-    visual.CircleMask = mask
-  end
-
-  -- Layer 1: Outer Ambient Celestial Aura (Soft radiant halo)
+  -- Layer 1: Ethereal Celestial Starlight Aura (Universal built-in texture, instant /reload)
   local aura = visual:CreateTexture(nil, "BACKGROUND")
+  aura:SetTexture("Interface\\Cooldown\\star4")
   aura:SetBlendMode("ADD")
   aura:SetPoint("CENTER", visual, "CENTER", 0, 0)
-  aura:SetSize(64, 64)
-  aura:SetTexture("Interface\\AddOns\\ForeverGuide\\Media\\blue_spark_aura")
-  aura:SetVertexColor(0.18, 0.65, 1.0, 0.70)
+  aura:SetSize(68, 68)
+  aura:SetVertexColor(0.15, 0.65, 1.0, 0.75)
   f.Aura = aura
 
-  -- Layer 2: Rotating Ethereal Rays (Whimsical celestial wisp motion)
+  -- Layer 2: Rotating Ethereal Rays (Slow 360 degree spin)
   local rotAura = visual:CreateTexture(nil, "BORDER")
   rotAura:SetTexture("Interface\\Cooldown\\star4")
   rotAura:SetBlendMode("ADD")
   rotAura:SetPoint("CENTER", visual, "CENTER", 0, 0)
-  rotAura:SetSize(44, 44)
-  rotAura:SetVertexColor(0.25, 0.70, 1.0, 0.50)
+  rotAura:SetSize(50, 50)
+  rotAura:SetVertexColor(0.30, 0.80, 1.0, 0.60)
   f.RotAura = rotAura
 
-  -- Layer 3: Core Luminous Plasma Orb (High-res smooth gaussian sphere)
-  local core = visual:CreateTexture(nil, "ARTWORK")
-  core:SetBlendMode("ADD")
-  core:SetPoint("CENTER", visual, "CENTER", 0, 0)
-  core:SetSize(32, 32)
-  core:SetTexture("Interface\\AddOns\\ForeverGuide\\Media\\blue_spark_core")
-  core:SetVertexColor(0.40, 0.85, 1.0, 0.95)
-  if visual.CircleMask and core.AddMaskTexture then
-    pcall(core.AddMaskTexture, core, visual.CircleMask)
-  end
-  f.Core = core
+  local rotAg = visual:CreateAnimationGroup()
+  local rotAnim = rotAg:CreateAnimation("Rotation")
+  rotAnim:SetDegrees(360)
+  rotAnim:SetDuration(12.0)
+  rotAg:SetLooping("REPEAT")
+  rotAg:Play()
+  f.RotAnimGroup = rotAg
 
-  -- Layer 4: Cross Spark Flares (The bright sparkling twinkle)
-  local sparkV = visual:CreateTexture(nil, "OVERLAY")
-  sparkV:SetTexture("Interface\\CastingBar\\UI-CastingBar-Spark")
-  sparkV:SetBlendMode("ADD")
-  sparkV:SetPoint("CENTER", visual, "CENTER", 0, 0)
-  sparkV:SetSize(10, 36)
-  sparkV:SetVertexColor(0.75, 0.92, 1.0, 0.85)
-  f.SparkV = sparkV
+  -- Layer 3: Authentic 3D Night Elf Wisp Creature Model (Creature 3681)
+  -- The model moves within itself with real 3D particle streams, glowing nebula, and idle life!
+  local model = CreateFrame("PlayerModel", "ForeverGuideSparkModel", visual)
+  model:SetSize(52, 52)
+  model:SetPoint("CENTER", visual, "CENTER", 0, 0)
+  model:EnableMouse(false)
+  pcall(model.SetCreature, model, 3681)     -- Native 3D Night Elf Wisp!
+  pcall(model.SetDisplayInfo, model, 10045)  -- Male Wisp display ID
+  pcall(model.SetCamDistanceScale, model, 1.0)
+  pcall(model.SetPortraitZoom, model, 0.0)
+  f.Model = model
+
+  -- Layer 4: Central Brilliant Lens Flare
+  local spark = visual:CreateTexture(nil, "OVERLAY")
+  spark:SetTexture("Interface\\CastingBar\\UI-CastingBar-Spark")
+  spark:SetBlendMode("ADD")
+  spark:SetPoint("CENTER", visual, "CENTER", 0, 0)
+  spark:SetSize(14, 38)
+  spark:SetVertexColor(0.85, 0.95, 1.0, 0.85)
+  f.Spark = spark
 
   local sparkH = visual:CreateTexture(nil, "OVERLAY")
   sparkH:SetTexture("Interface\\CastingBar\\UI-CastingBar-Spark")
   sparkH:SetBlendMode("ADD")
   sparkH:SetPoint("CENTER", visual, "CENTER", 0, 0)
-  sparkH:SetSize(36, 10)
-  sparkH:SetVertexColor(0.75, 0.92, 1.0, 0.85)
+  sparkH:SetSize(38, 14)
+  sparkH:SetVertexColor(0.85, 0.95, 1.0, 0.85)
   if sparkH.SetRotation then
-    pcall(sparkH.SetRotation, sparkH, 1.570796) -- 90 degrees
+    pcall(sparkH.SetRotation, sparkH, 1.570796)
   end
   f.SparkH = sparkH
 
-  -- Layer 5: Central Brilliant Glint
-  local glint = visual:CreateTexture(nil, "OVERLAY")
-  glint:SetTexture("Interface\\CastingBar\\UI-CastingBar-Spark")
-  glint:SetBlendMode("ADD")
-  glint:SetPoint("CENTER", visual, "CENTER", 0, 0)
-  glint:SetSize(14, 14)
-  glint:SetVertexColor(1.0, 1.0, 1.0, 1.0)
-  f.Glint = glint
-
-  -- Layer 6: Blizzard Native AutoCastShine (Crucial: EnableMouse(false) on shine AND all child frames)
-  local shine = CreateFrame("Frame", "ForeverGuideSparkShine", visual, "AutoCastShineTemplate")
-  shine:SetSize(38, 38)
-  shine:SetPoint("CENTER", visual, "CENTER", 0, 0)
-  shine:EnableMouse(false)
-  if shine.GetChildren then
-    for _, child in ipairs({shine:GetChildren()}) do
-      if child and child.EnableMouse then child:EnableMouse(false) end
-    end
-  end
-  shine:Show()
-  if AutoCastShine_AutoCastStart then
-    pcall(AutoCastShine_AutoCastStart, shine, 0.30, 0.80, 1.0)
-  end
-  f.Shine = shine
-
-  -- Continuous slow rotation for the ethereal rays (on visual)
-  local rotAg = visual:CreateAnimationGroup()
-  local rotAnim = rotAg:CreateAnimation("Rotation")
-  rotAnim:SetDegrees(360)
-  rotAnim:SetDuration(16.0)
-  rotAg:SetLooping("REPEAT")
-  rotAg:Play()
-  f.RotAnimGroup = rotAg
-
-  -- Breathing Pulse & Gentle Floating Hover (on visual, completely decoupled from f)
+  -- Breathing Alpha Pulse
   local ag = visual:CreateAnimationGroup()
   local alphaAnim = ag:CreateAnimation("Alpha")
-  alphaAnim:SetFromAlpha(0.72)
+  alphaAnim:SetFromAlpha(0.80)
   alphaAnim:SetToAlpha(1.0)
-  alphaAnim:SetDuration(2.2)
+  alphaAnim:SetDuration(2.0)
   alphaAnim:SetSmoothing("IN_OUT")
-
-  local transAnim = ag:CreateAnimation("Translation")
-  transAnim:SetOffset(0, 3)
-  transAnim:SetDuration(2.2)
-  transAnim:SetSmoothing("IN_OUT")
-
   ag:SetLooping("BOUNCE")
   ag:Play()
   f.AnimGroup = ag
 
-  local function OnSparkUpdate(self)
+  -- Gentle Wandering & Gliding Flight Engine (Organic non-repeating wisp flight)
+  local wanderTimer = 0
+  local currentDriftX, currentDriftY = 0, 0
+  local targetDriftX, targetDriftY = 0, 0
+
+  local function OnWispUpdate(self, elapsed)
     if self.isDragging then
       local cx, cy = GetCursorPosition()
       local scale = UIParent:GetEffectiveScale()
       local curX, curY = cx / scale, cy / scale
       self:ClearAllPoints()
-      self:SetPoint("CENTER", UIParent, "BOTTOMLEFT", curX - (self.offsetX or 0), curY - (self.offsetY or 0))
+      self:SetPoint("CENTER", UIParent, "BOTTOMLEFT", curX - (self.dragOffsetX or 0), curY - (self.dragOffsetY or 0))
+      return
     end
+
+    -- Organic wandering target calculation
+    wanderTimer = wanderTimer + elapsed
+    if wanderTimer > (self.nextWander or 7.0) then
+      wanderTimer = 0
+      self.nextWander = 6.0 + math.random() * 8.0
+      local angle = math.random() * math.pi * 2
+      local dist = 35 + math.random() * 55
+      targetDriftX = math.cos(angle) * dist
+      targetDriftY = math.sin(angle) * dist
+    end
+
+    -- Smooth asymptotic gliding interpolation (slow & gentle)
+    local ease = elapsed * 0.5
+    currentDriftX = currentDriftX + (targetDriftX - currentDriftX) * ease
+    currentDriftY = currentDriftY + (targetDriftY - currentDriftY) * ease
+
+    -- Multi-frequency non-repeating sinusoidal curves (wisp floating waves)
+    local t = GetTime()
+    local waveX = math.sin(t * 0.38) * 14 + math.sin(t * 0.17 + 1.1) * 8
+    local waveY = math.cos(t * 0.32) * 16 + math.sin(t * 0.13 + 2.3) * 7
+
+    local totalX = (self.homeX or 240) + currentDriftX + waveX
+    local totalY = (self.homeY or 120) + currentDriftY + waveY
+
+    self:ClearAllPoints()
+    self:SetPoint("CENTER", UIParent, "BOTTOMLEFT", totalX, totalY)
   end
 
-  local function StartSparkDrag(self)
-    if self.isDragging then return end
-    self.isDragging = true
-    self.wasDragged = false
-    local cx, cy = GetCursorPosition()
-    local scale = UIParent:GetEffectiveScale()
-    self.downX = cx / scale
-    self.downY = cy / scale
-    local fx, fy = self:GetCenter()
-    if fx and fy then
-      self.offsetX = self.downX - fx
-      self.offsetY = self.downY - fy
-    else
-      self.offsetX = 0
-      self.offsetY = 0
-    end
-    self:SetScript("OnUpdate", OnSparkUpdate)
-  end
+  f:SetScript("OnUpdate", OnWispUpdate)
 
-  local function StopSparkDrag(self)
-    if self.isDragging then
+  f:SetScript("OnMouseDown", function(self, button)
+    if button == "LeftButton" then
+      self.isDragging = true
+      self.wasDragged = false
+      local cx, cy = GetCursorPosition()
+      local scale = UIParent:GetEffectiveScale()
+      self.downX = cx / scale
+      self.downY = cy / scale
+      local fx, fy = self:GetCenter()
+      if fx and fy then
+        self.dragOffsetX = self.downX - fx
+        self.dragOffsetY = self.downY - fy
+      else
+        self.dragOffsetX = 0
+        self.dragOffsetY = 0
+      end
+    end
+  end)
+
+  f:SetScript("OnMouseUp", function(self, button)
+    if button == "LeftButton" and self.isDragging then
       self.isDragging = false
-      self:SetScript("OnUpdate", nil)
       local cx, cy = GetCursorPosition()
       local scale = UIParent:GetEffectiveScale()
       local upX = cx / scale
@@ -921,45 +913,24 @@ function FG:CreateSparkFrame()
         local dy = upY - self.downY
         dist = math.sqrt(dx * dx + dy * dy)
       end
-      if dist > 4 then
+      if dist > 6 then
         self.wasDragged = true
-        local point, _, relPoint, x, y = self:GetPoint()
-        if point and relPoint and x and y then
-          ForeverGuideDB.sparkPosition = {
-            point = point,
-            relativePoint = relPoint,
-            x = math.floor(x + 0.5),
-            y = math.floor(y + 0.5),
-          }
-        end
+        self.homeX = upX - (self.dragOffsetX or 0)
+        self.homeY = upY - (self.dragOffsetY or 0)
+        currentDriftX = 0
+        currentDriftY = 0
+        targetDriftX = 0
+        targetDriftY = 0
+        ForeverGuideDB.sparkPosition = {
+          point = "BOTTOMLEFT",
+          relativePoint = "BOTTOMLEFT",
+          x = math.floor(self.homeX + 0.5),
+          y = math.floor(self.homeY + 0.5),
+        }
       else
         self.wasDragged = false
       end
     end
-  end
-
-  f:SetScript("OnMouseDown", function(self, button)
-    if button == "LeftButton" then
-      StartSparkDrag(self)
-    end
-  end)
-
-  f:SetScript("OnDragStart", function(self)
-    StartSparkDrag(self)
-  end)
-
-  f:SetScript("OnMouseUp", function(self, button)
-    if button == "LeftButton" then
-      StopSparkDrag(self)
-    end
-  end)
-
-  f:SetScript("OnDragStop", function(self)
-    StopSparkDrag(self)
-  end)
-
-  f:SetScript("OnHide", function(self)
-    StopSparkDrag(self)
   end)
 
   f:SetScript("OnClick", function(self, button)
@@ -974,27 +945,22 @@ function FG:CreateSparkFrame()
   end)
 
   f:SetScript("OnEnter", function(self)
-    if ForeverGuideDB.sparkClickThrough then return end
     if self.Aura then self.Aura:SetVertexColor(0.35, 0.85, 1.0, 0.95) end
-    if self.Core then self.Core:SetVertexColor(0.60, 0.95, 1.0, 1.0) end
     GameTooltip:SetOwner(self, "ANCHOR_RIGHT")
     GameTooltip:AddLine("|cff52b8ffThe Blue Spark|r", 1, 1, 1)
-    GameTooltip:AddLine("Celestial companion for Warcraft Forever.", 0.8, 0.8, 0.8, true)
+    GameTooltip:AddLine("Celestial 3D companion for Warcraft Forever.", 0.8, 0.8, 0.8, true)
     GameTooltip:AddLine(" ")
     GameTooltip:AddLine("|cff71d5ff<Left-Click>|r Open Forever Codex", 0.9, 0.9, 0.9)
-    GameTooltip:AddLine("|cff71d5ff<Left-Drag>|r Move anywhere" .. (ForeverGuideDB.sparkLocked and " (|cff71d5ffShift-Drag|r if locked)" or ""), 0.7, 0.7, 0.7)
-    GameTooltip:AddLine("|cff71d5ff/spark lock|r - Toggle position lock", 0.6, 0.7, 0.8)
+    GameTooltip:AddLine("|cff71d5ff<Left-Drag>|r Move Home Territory", 0.7, 0.7, 0.7)
     GameTooltip:Show()
   end)
 
   f:SetScript("OnLeave", function(self)
-    if self.Aura then self.Aura:SetVertexColor(0.18, 0.65, 1.0, 0.70) end
-    if self.Core then self.Core:SetVertexColor(0.40, 0.85, 1.0, 0.95) end
+    if self.Aura then self.Aura:SetVertexColor(0.15, 0.65, 1.0, 0.75) end
     GameTooltip:Hide()
   end)
 
   FG.SparkFrame = f
-  FG:UpdateSparkMouseState()
 
   if ForeverGuideDB.sparkShown == false then
     f:Hide()
