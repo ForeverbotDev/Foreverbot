@@ -161,6 +161,26 @@ class TestAddonIntegrityAndSimulation(unittest.TestCase):
         self.assertLess(size_mb, 5.0, f"Zip file excessively large: {size_mb:.2f} MB")
         self.assertGreater(size_mb, 0.1, "Zip file suspiciously small")
 
+    def test_06_sparky_ai_and_death_bounce_integrity(self):
+        """Verify Sparky autonomous behavioral state machine, dash curves, and death bounce reactions."""
+        with open(LUA_FILE, "r", encoding="utf-8") as f:
+            code = f.read()
+
+        # Check required state machine definitions
+        self.assertIn("DEATH_BOUNCE", code, "DEATH_BOUNCE state missing")
+        self.assertIn("ZIG_ZAG", code, "ZIG_ZAG state missing")
+        self.assertIn("TransitionTo", code, "TransitionTo helper missing")
+        self.assertIn("PLAYER_DEAD", code, "PLAYER_DEAD event registration missing")
+        self.assertIn("PLAYER_ALIVE", code, "PLAYER_ALIVE event registration missing")
+        self.assertIn("PLAYER_UNGHOST", code, "PLAYER_UNGHOST event registration missing")
+
+        # Verify no datamine or placeholder text in data or code
+        with open(DATA_FILE, "r", encoding="utf-8") as f:
+            data_code = f.read()
+        self.assertNotIn("datamine", data_code.lower(), "Datamine reference found in ForeverGuide_Data.lua")
+        self.assertNotIn("alpha patch notes", data_code.lower(), "Alpha patch notes found in ForeverGuide_Data.lua")
+
 
 if __name__ == "__main__":
     unittest.main()
+

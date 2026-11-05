@@ -889,53 +889,150 @@ function FG:CreateSparkFrame()
   ag:Play()
   f.AnimGroup = ag
 
-  -- Resting & Full-Screen Smooth Travel Engine
+  -- =========================================================================
+  -- SPARKY AUTONOMOUS AI & HIGH-FPS FLUID MOTION ENGINE
+  -- =========================================================================
   local flightState = ForeverGuideDB.hasInteracted and "RESTING" or "DORMANT"
   f.flightState = flightState
-  local restTimer = 0
-  local restDuration = 35.0 + math.random() * 35.0 -- Stays at resting point for 35 to 70s!
 
-  local currentPosX = f.homeX
-  local currentPosY = f.homeY
-  local travelStartX, travelStartY = f.homeX, f.homeY
-  local travelTargetX, travelTargetY = f.homeX, f.homeY
-  local travelCtrlX, travelCtrlY = f.homeX, f.homeY
-  local travelDuration = 5.5
+  local currentPosX = f.homeX or 240
+  local currentPosY = f.homeY or 120
+  local lastPosX, lastPosY = currentPosX, currentPosY
+  local currentVelX, currentVelY = 0, 0
+
+  -- State & Decision Timers
+  local stateTimer = 0
+  local stateDuration = 7.0 + math.random() * 8.0 -- Snappy 7-15s resting duration
+
+  -- Dash / Roam Interpolation Parameters
+  local travelStartX, travelStartY = currentPosX, currentPosY
+  local travelTargetX, travelTargetY = currentPosX, currentPosY
+  local travelCtrlX, travelCtrlY = currentPosX, currentPosY
+  local travelDuration = 1.1
   local travelElapsed = 0
+
+  -- Zig-Zag Chained Dash Pathing
+  local zigZagLeg = 1
+  local zigZagPoints = {}
+
+  -- Death Bounce Physics
+  local deathBounceTimer = 0
+  local deathBounceSide = "RIGHT"
+
+  -- Lagging Spring-Damper Trails for Puffs
+  local puff1LagX, puff1LagY = 0, 0
+  local puff2LagX, puff2LagY = 0, 0
+  local puff3LagX, puff3LagY = 0, 0
 
   local function GetScreenBounds()
     local sw = UIParent:GetWidth() or 1920
     local sh = UIParent:GetHeight() or 1080
-    return 80, sw - 80, 80, sh - 80
+    return 60, sw - 60, 60, sh - 60
+  end
+
+  local function PickDistantPoint(minDist)
+    local minX, maxX, minY, maxY = GetScreenBounds()
+    minDist = minDist or 280
+    local minDistSq = minDist * minDist
+    local bestX, bestY
+    for _ = 1, 15 do
+      local cx = minX + math.random() * (maxX - minX)
+      local cy = minY + math.random() * (maxY - minY)
+      local d2 = (cx - currentPosX)^2 + (cy - currentPosY)^2
+      if d2 >= minDistSq then
+        return cx, cy
+      end
+      bestX, bestY = cx, cy
+    end
+    return bestX or (minX + 220), bestY or (minY + 220)
+  end
+
+  local function StartDash(targetX, targetY, speedMultiplier, curved)
+    travelStartX = currentPosX
+    travelStartY = currentPosY
+    travelTargetX = targetX
+    travelTargetY = targetY
+    travelElapsed = 0
+
+    local dx = travelTargetX - travelStartX
+    local dy = travelTargetY - travelStartY
+    local dist = math.sqrt(dx * dx + dy * dy)
+    if dist < 1 then dist = 1 end
+
+    speedMultiplier = speedMultiplier or 1.0
+    -- Rapid high-speed dash (650 to 1250 px/sec!)
+    local baseSpeed = (650 + math.random() * 350) * speedMultiplier
+    travelDuration = math.max(0.60, math.min(2.1, dist / baseSpeed))
+
+    if curved then
+      local minX, maxX, minY, maxY = GetScreenBounds()
+      local midX = (travelStartX + travelTargetX) * 0.5
+      local midY = (travelStartY + travelTargetY) * 0.5
+      local perpX = -dy / dist
+      local perpY = dx / dist
+      local curveDist = (math.random() > 0.5 and 1 or -1) * (50 + math.random() * 110)
+      travelCtrlX = math.max(minX, math.min(maxX, midX + perpX * curveDist))
+      travelCtrlY = math.max(minY, math.min(maxY, midY + perpY * curveDist))
+    else
+      travelCtrlX = (travelStartX + travelTargetX) * 0.5
+      travelCtrlY = (travelStartY + travelTargetY) * 0.5
+    end
+  end
+
+  function f:TransitionTo(newState)
+    flightState = newState
+    self.flightState = newState
+    stateTimer = 0
+
+    if newState == "RESTING" then
+      stateDuration = 6.0 + math.random() * 10.0 -- 6 to 16 seconds rest
+      self.homeX = currentPosX
+      self.homeY = currentPosY
+      ForeverGuideDB.sparkPosition = {
+        point = "BOTTOMLEFT",
+        relativePoint = "BOTTOMLEFT",
+        x = math.floor(self.homeX + 0.5),
+        y = math.floor(self.homeY + 0.5),
+      }
+      if visual then visual:SetSize(28, 28) end
+
+    elseif newState == "DASH" then
+      local tx, ty = PickDistantPoint(320)
+      StartDash(tx, ty, 1.25, true)
+
+    elseif newState == "ZIG_ZAG" then
+      zigZagLeg = 1
+      local minX, maxX, minY, maxY = GetScreenBounds()
+      local p1X = minX + math.random() * (maxX - minX)
+      local p1Y = minY + math.random() * (maxY - minY)
+      local p2X = minX + math.random() * (maxX - minX)
+      local p2Y = minY + math.random() * (maxY - minY)
+      local p3X = minX + math.random() * (maxX - minX)
+      local p3Y = minY + math.random() * (maxY - minY)
+      zigZagPoints = { {p1X, p1Y}, {p2X, p2Y}, {p3X, p3Y} }
+      StartDash(p1X, p1Y, 1.6, false)
+
+    elseif newState == "DEATH_BOUNCE" then
+      deathBounceTimer = 0
+      local sw = UIParent:GetWidth() or 1920
+      deathBounceSide = (currentPosX > sw * 0.5) and "RIGHT" or "LEFT"
+      if f.Aura then f.Aura:SetVertexColor(0.95, 0.20, 1.0, 0.90) end
+      FG:PlaySparkSound("shimmer")
+
+    elseif newState == "CELEBRATE" then
+      stateDuration = 2.0
+      StartDash(currentPosX, math.min((UIParent:GetHeight() or 1080) - 80, currentPosY + 160), 1.8, true)
+    end
   end
 
   local function OnOrbUpdate(self, elapsed)
+    local dt = math.min(elapsed, 0.05) -- Clamp delta-time for silky smooth frame rendering
     local t = GetTime()
-
-    -- Drifting satellite vapor puffs waft along smoky currents around Sparky
-    if self.Puff1 then
-      local p1R = 13 + math.sin(t * 0.75) * 3.5
-      local p1X = math.cos(t * 1.35) * p1R
-      local p1Y = math.sin(t * 1.35) * (p1R * 0.75) + math.sin(t * 2.2) * 2.0
-      self.Puff1:SetPoint("CENTER", visual, "CENTER", p1X, p1Y)
-    end
-    if self.Puff2 then
-      local p2R = 11 + math.cos(t * 0.85) * 3.0
-      local p2X = math.cos(-t * 1.1 + 2.1) * p2R
-      local p2Y = math.sin(-t * 1.1 + 2.1) * (p2R * 0.8) + math.cos(t * 1.9) * 2.0
-      self.Puff2:SetPoint("CENTER", visual, "CENTER", p2X, p2Y)
-    end
-    if self.Puff3 then
-      local p3R = 9 + math.sin(t * 1.15 + 1.2) * 2.5
-      local p3X = math.sin(t * 0.95 + 4.0) * p3R
-      local p3Y = math.cos(t * 0.95 + 4.0) * (p3R * 0.65)
-      self.Puff3:SetPoint("CENTER", visual, "CENTER", p3X, p3Y)
-    end
 
     if self.isDragging then
       flightState = ForeverGuideDB.hasInteracted and "RESTING" or "DORMANT"
       self.flightState = flightState
-      restTimer = 0
+      stateTimer = 0
       local cx, cy = GetCursorPosition()
       local scale = UIParent:GetEffectiveScale()
       local curX, curY = cx / scale, cy / scale
@@ -945,6 +1042,7 @@ function FG:CreateSparkFrame()
       self.homeY = currentPosY
       self:ClearAllPoints()
       self:SetPoint("CENTER", UIParent, "BOTTOMLEFT", currentPosX, currentPosY)
+      lastPosX, lastPosY = currentPosX, currentPosY
       return
     end
 
@@ -957,89 +1055,153 @@ function FG:CreateSparkFrame()
 
     elseif flightState == "RESTING" then
       -- Resting at its current outpost: very gentle, organic floating in place
-      restTimer = restTimer + elapsed
-      local waveX = math.sin(t * 0.45) * 3.5 + math.sin(t * 0.22 + 1.0) * 1.5
-      local waveY = math.cos(t * 0.38) * 3.5 + math.sin(t * 0.17 + 1.8) * 1.5
-      currentPosX = (self.homeX or 240) + waveX
-      currentPosY = (self.homeY or 120) + waveY
+      stateTimer = stateTimer + dt
+      local bobX = math.sin(t * 1.1) * 3.5 + math.sin(t * 0.45) * 1.5
+      local bobY = math.cos(t * 0.95) * 3.5 + math.sin(t * 0.30) * 1.5
+      currentPosX = (self.homeX or 240) + bobX
+      currentPosY = (self.homeY or 120) + bobY
 
-      if restTimer >= restDuration and ForeverGuideDB.hasInteracted then
-        -- Embark on a grand travel across the entire screen!
-        local minX, maxX, minY, maxY = GetScreenBounds()
-        local targetX, targetY
-
-        -- Search for a distant vantage point across the screen (>= 280px away)
-        for _ = 1, 12 do
-          local candX = minX + math.random() * (maxX - minX)
-          local candY = minY + math.random() * (maxY - minY)
-          local d2 = (candX - currentPosX)^2 + (candY - currentPosY)^2
-          if d2 >= 280 * 280 then
-            targetX = candX
-            targetY = candY
-            break
-          end
+      -- Autonomous AI wandering decisions
+      if stateTimer >= stateDuration and ForeverGuideDB.hasInteracted then
+        local roll = math.random()
+        if roll < 0.45 then
+          f:TransitionTo("DASH")
+        elseif roll < 0.75 then
+          f:TransitionTo("ZIG_ZAG")
+        else
+          -- Short curious meander
+          local tx, ty = PickDistantPoint(180)
+          StartDash(tx, ty, 0.9, true)
+          flightState = "DASH"
+          self.flightState = flightState
         end
-        targetX = targetX or (minX + math.random() * (maxX - minX))
-        targetY = targetY or (minY + math.random() * (maxY - minY))
-
-        flightState = "TRAVEL"
-        self.flightState = flightState
-        travelElapsed = 0
-        travelStartX = currentPosX
-        travelStartY = currentPosY
-        travelTargetX = targetX
-        travelTargetY = targetY
-
-        local dx = travelTargetX - travelStartX
-        local dy = travelTargetY - travelStartY
-        local dist = math.sqrt(dx * dx + dy * dy)
-        -- Leisurely, majestic travel speed (~160 px/sec), 4.5s to 7.5s
-        travelDuration = math.max(4.5, math.min(7.5, 3.2 + (dist / 175)))
-
-        -- Curved Bezier control point
-        local midX = (travelStartX + travelTargetX) * 0.5
-        local midY = (travelStartY + travelTargetY) * 0.5
-        local perpX = -dy / (dist > 0.01 and dist or 1)
-        local perpY = dx / (dist > 0.01 and dist or 1)
-        local curve = (math.random() > 0.5 and 1 or -1) * (50 + math.random() * 110)
-        travelCtrlX = math.max(minX, math.min(maxX, midX + perpX * curve))
-        travelCtrlY = math.max(minY, math.min(maxY, midY + perpY * curve))
       end
 
-    elseif flightState == "TRAVEL" then
-      travelElapsed = travelElapsed + elapsed
+    elseif flightState == "DASH" then
+      travelElapsed = travelElapsed + dt
       local progress = math.min(1.0, travelElapsed / travelDuration)
 
-      -- Smooth cosine ease-in-ease-out (continuous velocity, 0 jerk)
-      local u = 0.5 - 0.5 * math.cos(progress * math.pi)
+      -- Smooth S-curve with rapid mid-flight velocity snap
+      local u = progress * progress * (3 - 2 * progress)
+      local surge = math.sin(progress * math.pi) * 0.08
+      u = math.max(0.0, math.min(1.0, u + surge))
       local invU = 1.0 - u
 
       -- Quadratic Bezier position across screen
       local bX = invU * invU * travelStartX + 2 * invU * u * travelCtrlX + u * u * travelTargetX
       local bY = invU * invU * travelStartY + 2 * invU * u * travelCtrlY + u * u * travelTargetY
 
-      -- Gentle floating undulation in flight
-      local ripple = math.sin(progress * math.pi * 2) * 3
+      -- High-frequency ethereal vibration in flight
+      local ripple = math.sin(progress * math.pi * 3) * 3.5
       currentPosX = bX
       currentPosY = bY + ripple
 
       if progress >= 1.0 then
-        -- Arrived at the new resting point!
-        self.homeX = travelTargetX
-        self.homeY = travelTargetY
-        currentPosX = self.homeX
-        currentPosY = self.homeY
-        flightState = "RESTING"
-        self.flightState = flightState
-        restTimer = 0
-        restDuration = 35.0 + math.random() * 40.0 -- Stays resting for 35 to 75 seconds!
-        ForeverGuideDB.sparkPosition = {
-          point = "BOTTOMLEFT",
-          relativePoint = "BOTTOMLEFT",
-          x = math.floor(self.homeX + 0.5),
-          y = math.floor(self.homeY + 0.5),
-        }
+        f:TransitionTo("RESTING")
       end
+
+    elseif flightState == "ZIG_ZAG" then
+      travelElapsed = travelElapsed + dt
+      local progress = math.min(1.0, travelElapsed / travelDuration)
+
+      local u = progress * progress * (3 - 2 * progress)
+      currentPosX = travelStartX + (travelTargetX - travelStartX) * u
+      currentPosY = travelStartY + (travelTargetY - travelStartY) * u
+
+      if progress >= 1.0 then
+        zigZagLeg = zigZagLeg + 1
+        if zigZagLeg <= #zigZagPoints then
+          local nxt = zigZagPoints[zigZagLeg]
+          StartDash(nxt[1], nxt[2], 1.6, false)
+        else
+          f:TransitionTo("RESTING")
+        end
+      end
+
+    elseif flightState == "DEATH_BOUNCE" then
+      -- Player died! Sparky dashes to the screen side and bounces with elastic cartoon physics
+      deathBounceTimer = deathBounceTimer + dt
+      local minX, maxX, minY, maxY = GetScreenBounds()
+      local targetEdgeX = (deathBounceSide == "RIGHT") and (maxX - 15) or (minX + 15)
+
+      -- Snap smoothly to screen side
+      currentPosX = currentPosX + (targetEdgeX - currentPosX) * math.min(1.0, dt * 8.0)
+
+      -- Rubber-ball bounce physics along the side of the screen!
+      local bouncePeriod = 0.50 -- Brisk, comedic bounce cadence
+      local phase = (deathBounceTimer % bouncePeriod) / bouncePeriod
+      local bounceHeight = 175 + math.sin(deathBounceTimer * 2.2) * 35
+      local groundY = minY + 50
+      local arc = 4 * phase * (1 - phase) -- Parabola 0 -> 1 -> 0
+      currentPosY = groundY + arc * bounceHeight
+
+      -- Side-wall impact wobble
+      local wallKick = math.sin(phase * math.pi) * 18
+      currentPosX = targetEdgeX + ((deathBounceSide == "RIGHT") and -wallKick or wallKick)
+
+      -- Impact squash & stretch
+      if phase < 0.12 or phase > 0.88 then
+        visual:SetSize(38, 20) -- Squashed on bounce floor!
+        if self.Aura then self.Aura:SetVertexColor(1.0, 0.30, 0.95, 0.90) end
+      else
+        visual:SetSize(22, 34) -- Stretched tall soaring upward!
+        if self.Aura then self.Aura:SetVertexColor(0.78, 0.22, 1.0, 0.70) end
+      end
+
+      -- If player has revived, celebrate and exit death bounce!
+      if not UnitIsDeadOrGhost("player") then
+        f:TransitionTo("CELEBRATE")
+      end
+
+    elseif flightState == "CELEBRATE" then
+      stateTimer = stateTimer + dt
+      travelElapsed = travelElapsed + dt
+      local progress = math.min(1.0, travelElapsed / travelDuration)
+      local u = progress * progress * (3 - 2 * progress)
+      local invU = 1.0 - u
+      currentPosX = invU * travelStartX + u * travelTargetX + math.sin(progress * math.pi * 4) * 45
+      currentPosY = invU * travelStartY + u * travelTargetY + math.cos(progress * math.pi * 4) * 20
+
+      if progress >= 1.0 or stateTimer >= stateDuration then
+        f:TransitionTo("RESTING")
+      end
+    end
+
+    -- Velocity tracking & dynamic squash/stretch along movement vector
+    currentVelX = (currentPosX - lastPosX) / (dt > 0.0001 and dt or 0.01)
+    currentVelY = (currentPosY - lastPosY) / (dt > 0.0001 and dt or 0.01)
+    lastPosX, lastPosY = currentPosX, currentPosY
+    local speedMag = math.sqrt(currentVelX * currentVelX + currentVelY * currentVelY)
+
+    if flightState ~= "DEATH_BOUNCE" then
+      local stretch = math.min(0.40, (speedMag / 900) * 0.40)
+      visual:SetSize(28 * (1.0 + stretch), 28 / (1.0 + stretch * 0.5))
+    end
+
+    -- Spring-damper trailing smoke puffs (real physics particle lag behind Sparky)
+    local lagFactor = math.min(1.0, dt * 18.0)
+    local targetLagX = -currentVelX * 0.032
+    local targetLagY = -currentVelY * 0.032
+    puff1LagX = puff1LagX + (targetLagX - puff1LagX) * lagFactor
+    puff1LagY = puff1LagY + (targetLagY - puff1LagY) * lagFactor
+
+    if self.Puff1 then
+      local p1R = 13 + math.sin(t * 1.2) * 3.5
+      local p1X = math.cos(t * 2.2) * p1R + puff1LagX * 0.8
+      local p1Y = math.sin(t * 2.2) * (p1R * 0.75) + puff1LagY * 0.8
+      self.Puff1:SetPoint("CENTER", visual, "CENTER", p1X, p1Y)
+    end
+    if self.Puff2 then
+      local p2R = 10 + math.cos(t * 1.4) * 3.0
+      local p2X = math.cos(-t * 1.8 + 2.1) * p2R + puff1LagX * 1.1
+      local p2Y = math.sin(-t * 1.8 + 2.1) * (p2R * 0.8) + puff1LagY * 1.1
+      self.Puff2:SetPoint("CENTER", visual, "CENTER", p2X, p2Y)
+    end
+    if self.Puff3 then
+      local p3R = 8 + math.sin(t * 1.6 + 1.2) * 2.5
+      local p3X = math.sin(t * 1.5 + 4.0) * p3R + puff1LagX * 1.4
+      local p3Y = math.cos(t * 1.5 + 4.0) * (p3R * 0.65) + puff1LagY * 1.4
+      self.Puff3:SetPoint("CENTER", visual, "CENTER", p3X, p3Y)
     end
 
     local minX, maxX, minY, maxY = GetScreenBounds()
@@ -2474,6 +2636,12 @@ EventFrame:RegisterEvent("QUEST_COMPLETE")
 EventFrame:RegisterEvent("MERCHANT_SHOW")
 EventFrame:RegisterEvent("TAXIMAP_OPENED")
 
+-- Dynamic Game Interactivity: Player Death, Resurrection & Level Up
+EventFrame:RegisterEvent("PLAYER_DEAD")
+EventFrame:RegisterEvent("PLAYER_ALIVE")
+EventFrame:RegisterEvent("PLAYER_UNGHOST")
+EventFrame:RegisterEvent("PLAYER_LEVEL_UP")
+
 EventFrame:SetScript("OnEvent", function(self, event, arg1, ...)
   if event == "ADDON_LOADED" and arg1 == ADDON_NAME then
     ForeverGuideDB = ForeverGuideDB or {}
@@ -2529,5 +2697,22 @@ EventFrame:SetScript("OnEvent", function(self, event, arg1, ...)
     if ForeverGuideDB.combatFade and FG.SparkFrame then
       FG.SparkFrame:SetAlpha(1.0)
     end
+
+  elseif event == "PLAYER_DEAD" then
+    -- Interactive death reaction: Sparky dashes to screen edge and bounces!
+    if FG.SparkFrame and FG.SparkFrame.TransitionTo then
+      FG.SparkFrame:TransitionTo("DEATH_BOUNCE")
+    end
+
+  elseif event == "PLAYER_ALIVE" or event == "PLAYER_UNGHOST" then
+    if FG.SparkFrame and FG.SparkFrame.flightState == "DEATH_BOUNCE" and FG.SparkFrame.TransitionTo then
+      FG.SparkFrame:TransitionTo("CELEBRATE")
+    end
+
+  elseif event == "PLAYER_LEVEL_UP" then
+    if FG.SparkFrame and FG.SparkFrame.TransitionTo then
+      FG.SparkFrame:TransitionTo("CELEBRATE")
+    end
   end
 end)
+
