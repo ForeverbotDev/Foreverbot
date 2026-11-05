@@ -16,8 +16,11 @@ FG.Data = ForeverGuide_Data or {}
 local DEFAULT_CONFIG = {
   sparkLocked = false,
   sparkScale = 1.0,
+  codexScale = 1.0,
   combatFade = true,
   soundEnabled = true,
+  sharpText = true,
+  pixelDensity = 1.0,
   activeFilter = "all",
   minimap = {
     hide = false,
@@ -72,20 +75,72 @@ SlashCmdList["FOREVERGUIDE"] = function(msg)
   if cmd == "" then
     FG:ToggleCodex()
 
-  -- 1. Companion Controls
+  -- 1. Companion Controls & High-Density UI Scaling
   elseif cmd == "spark" or cmd == "toggle" then
     FG:ToggleSpark()
   elseif cmd == "lock" then
     ForeverGuideDB.sparkLocked = not ForeverGuideDB.sparkLocked
+    if FG.SparkFrame and FG.SparkFrame.StopMovingOrSizing then
+      FG.SparkFrame:StopMovingOrSizing()
+      FG.SparkFrame.isMoving = false
+      FG.SparkFrame.wasDragged = false
+    end
     local state = ForeverGuideDB.sparkLocked and "|cffff2020Locked|r" or "|cff20ff20Unlocked|r"
     print("|cff00bfff[The Blue Spark]|r Position is now " .. state)
+    if FG.CodexWindow and FG.CodexWindow.LockBtn then
+      FG.CodexWindow.LockBtn:SetText(ForeverGuideDB.sparkLocked and "Unlock" or "Lock")
+    end
+  elseif cmd == "unlock" then
+    ForeverGuideDB.sparkLocked = false
+    print("|cff00bfff[The Blue Spark]|r Position is now |cff20ff20Unlocked|r")
+    if FG.CodexWindow and FG.CodexWindow.LockBtn then
+      FG.CodexWindow.LockBtn:SetText("Lock")
+    end
   elseif cmd == "reset" then
+    if FG.SparkFrame and FG.SparkFrame.StopMovingOrSizing then
+      FG.SparkFrame:StopMovingOrSizing()
+      FG.SparkFrame.isMoving = false
+      FG.SparkFrame.wasDragged = false
+    end
     ForeverGuideDB.sparkPosition = { point = "CENTER", relativePoint = "CENTER", x = 240, y = 60 }
     if FG.SparkFrame then
       FG.SparkFrame:ClearAllPoints()
       FG.SparkFrame:SetPoint("CENTER", UIParent, "CENTER", 240, 60)
     end
     print("|cff00bfff[The Blue Spark]|r Position reset to screen center.")
+  elseif cmd == "scale" or cmd == "size" then
+    local target, sVal = rest:match("^(%a+)%s+(%S+)$")
+    if not target then
+      sVal = rest
+      target = "all"
+    end
+    local num = tonumber(sVal)
+    if num and num >= 0.5 and num <= 2.5 then
+      if target == "spark" then
+        ForeverGuideDB.sparkScale = num
+        if FG.SparkFrame then FG.SparkFrame:SetScale(num) end
+        print(string.format("|cff00bfff[The Blue Spark]|r Spark scale set to |cffffffff%.2f|r", num))
+      elseif target == "codex" then
+        ForeverGuideDB.codexScale = num
+        if FG.CodexWindow then FG.CodexWindow:SetScale(num) end
+        print(string.format("|cff00bfff[The Blue Spark]|r Codex scale set to |cffffffff%.2f|r", num))
+      else
+        ForeverGuideDB.sparkScale = num
+        ForeverGuideDB.codexScale = num
+        if FG.SparkFrame then FG.SparkFrame:SetScale(num) end
+        if FG.CodexWindow then FG.CodexWindow:SetScale(num) end
+        print(string.format("|cff00bfff[The Blue Spark]|r UI scale set to |cffffffff%.2f|r (Pixel Density: |cff71d5ff%.2fx|r)", num, num))
+      end
+    else
+      print("|cff00bfff[The Blue Spark]|r Usage: |cff71d5ff/spark scale <0.5-2.0>|r or |cff71d5ff/spark scale [spark|codex] <0.5-2.0>|r")
+    end
+  elseif cmd == "density" or cmd == "sharp" then
+    ForeverGuideDB.sharpText = not ForeverGuideDB.sharpText
+    local state = ForeverGuideDB.sharpText and "|cff20ff20Enabled (Razor-Sharp Outlined)|r" or "|cffff2020Standard|r"
+    print("|cff00bfff[The Blue Spark]|r High-Density Sharp Text is now " .. state)
+    if FG.ApplyTextSharpening then
+      FG:ApplyTextSharpening()
+    end
 
   -- 2. Items & Equipment (/spark item <query>)
   elseif cmd == "item" or cmd == "find" or cmd == "search" then
@@ -187,6 +242,10 @@ function FG:PrintHelpManual()
   print(" ")
   print("|cff00bfff✨ [Forever Guide: The Blue Spark] — In-Game Commands:|r")
   print("  |cff71d5ff/spark|r - Open Forever Codex search window")
+  print("  |cff71d5ff/spark scale [0.5-2.0]|r - Adjust UI pixel density & window scale")
+  print("  |cff71d5ff/spark sharp|r - Toggle razor-sharp font outlining mode")
+  print("  |cff71d5ff/spark lock / /spark unlock|r - Lock or unlock spark cursor movement")
+  print("  |cff71d5ff/spark reset|r - Safely detach and center Blue Spark on screen")
   print("  |cff71d5ff/spark item <name>|r - Look up item stats, drop rates, and notes")
   print("  |cff71d5ff/spark quest <name>|r - Quest givers, coords, objectives & rewards")
   print("  |cff71d5ff/spark mob <name>|r - Boss locations, health, and strategy")
@@ -201,7 +260,6 @@ function FG:PrintHelpManual()
   print("  |cff71d5ff/spark zone [name]|r - Level ranges, flight masters, and hubs")
   print("  |cff71d5ff/spark pvp [rank]|r - Honor ranks 1-14, weekly decay math")
   print("  |cff71d5ff/spark resist <val>|r - Magic resistance mitigation tiers")
-  print("  |cff71d5ff/spark lock|r - Toggle spark dragging lock")
   print(" ")
 end
 
@@ -624,6 +682,33 @@ function FG:CmdForever(query)
 end
 
 --------------------------------------------------------------------------------
+-- Pixel Density & High-Definition Rendering Helpers
+--------------------------------------------------------------------------------
+local function MakePixelSharp(frame)
+  if not frame then return end
+  if frame.SetSnapToPixelGrid then
+    pcall(frame.SetSnapToPixelGrid, frame, true)
+  end
+  if frame.SetTexelSnappingBias then
+    pcall(frame.SetTexelSnappingBias, frame, 0.0)
+  end
+end
+
+local function SharpenFontString(fs, size, outline, shadowOffset)
+  if not fs then return end
+  local font, fsize = fs:GetFont()
+  if font then
+    local targetOutline = (ForeverGuideDB and ForeverGuideDB.sharpText == false) and "" or (outline or "OUTLINE")
+    fs:SetFont(font, size or fsize or 12, targetOutline)
+    fs:SetShadowOffset(shadowOffset or 1, -(shadowOffset or 1))
+    fs:SetShadowColor(0, 0, 0, 0.95)
+  end
+  if fs.SetSnapToPixelGrid then
+    pcall(fs.SetSnapToPixelGrid, fs, true)
+  end
+end
+
+--------------------------------------------------------------------------------
 -- The Blue Spark Companion Frame
 --------------------------------------------------------------------------------
 function FG:CreateSparkFrame()
@@ -634,6 +719,9 @@ function FG:CreateSparkFrame()
   f:SetMovable(true)
   f:EnableMouse(true)
   f:RegisterForDrag("LeftButton")
+  f:RegisterForClicks("LeftButtonUp", "RightButtonUp")
+
+  MakePixelSharp(f)
 
   local pos = ForeverGuideDB.sparkPosition or DEFAULT_CONFIG.sparkPosition
   f:SetPoint(pos.point or "CENTER", UIParent, pos.relativePoint or "CENTER", pos.x or 240, pos.y or 60)
@@ -642,6 +730,7 @@ function FG:CreateSparkFrame()
   -- Outer Pulsing Aura
   local aura = f:CreateTexture(nil, "BACKGROUND")
   aura:SetTexture("Interface\\Cooldown\\star4")
+  aura:SetBlendMode("ADD")
   aura:SetPoint("CENTER", f, "CENTER", 0, 0)
   aura:SetSize(74, 74)
   aura:SetVertexColor(0.1, 0.7, 1.0, 0.75)
@@ -660,6 +749,7 @@ function FG:CreateSparkFrame()
   local spark = f:CreateTexture(nil, "OVERLAY")
   spark:SetTexture("Interface\\Buttons\\UI-AutoCastableOverlay")
   spark:SetTexCoord(0.2, 0.8, 0.2, 0.8)
+  spark:SetBlendMode("ADD")
   spark:SetPoint("CENTER", f, "CENTER", 0, 0)
   spark:SetSize(36, 36)
   spark:SetVertexColor(0.8, 0.95, 1.0, 0.9)
@@ -682,30 +772,60 @@ function FG:CreateSparkFrame()
   ag:Play()
   f.AnimGroup = ag
 
+  local function StopSparkMoving(self)
+    if self.isMoving then
+      self:StopMovingOrSizing()
+      self.isMoving = false
+      local point, _, relPoint, x, y = self:GetPoint()
+      if point and relPoint and x and y then
+        ForeverGuideDB.sparkPosition = {
+          point = point,
+          relativePoint = relPoint,
+          x = math.floor(x + 0.5),
+          y = math.floor(y + 0.5),
+        }
+      end
+    end
+  end
+
   f:SetScript("OnDragStart", function(self)
     if not ForeverGuideDB.sparkLocked then
+      self.isMoving = true
+      self.wasDragged = true
       self:StartMoving()
     end
   end)
 
-  f:SetScript("OnDragStop", function(self)
-    self:StopMovingOrMoving()
-    local point, _, relPoint, x, y = self:GetPoint()
-    ForeverGuideDB.sparkPosition = {
-      point = point,
-      relativePoint = relPoint,
-      x = math.floor(x + 0.5),
-      y = math.floor(y + 0.5),
-    }
+  f:SetScript("OnDragStop", StopSparkMoving)
+
+  f:SetScript("OnMouseUp", function(self, button)
+    if button == "LeftButton" and self.isMoving then
+      StopSparkMoving(self)
+    end
+  end)
+
+  f:SetScript("OnHide", function(self)
+    if self.isMoving then
+      self:StopMovingOrSizing()
+      self.isMoving = false
+    end
   end)
 
   f:SetScript("OnClick", function(self, button)
+    if self.wasDragged then
+      self.wasDragged = false
+      return
+    end
     if button == "LeftButton" then
       FG:ToggleCodex()
       FG:PlaySparkSound("shimmer")
     elseif button == "RightButton" then
-      FG:ShowCurrentZoneIntel()
-      FG:PlaySparkSound("pulse")
+      if IsShiftKeyDown and IsShiftKeyDown() then
+        FG:ToggleSpark()
+      else
+        FG:ShowCurrentZoneIntel()
+        FG:PlaySparkSound("pulse")
+      end
     end
   end)
 
@@ -717,6 +837,7 @@ function FG:CreateSparkFrame()
     GameTooltip:AddLine(" ")
     GameTooltip:AddLine("|cff71d5ff<Left-Click>|r Open Forever Codex", 0.9, 0.9, 0.9)
     GameTooltip:AddLine("|cff71d5ff<Right-Click>|r Current Zone Intel", 0.9, 0.9, 0.9)
+    GameTooltip:AddLine("|cff71d5ff<Shift+Right-Click>|r Dismiss Spark", 0.9, 0.9, 0.9)
     GameTooltip:AddLine("|cff71d5ff<Drag>|r Move (" .. (ForeverGuideDB.sparkLocked and "|cffff2020Locked|r" or "|cff20ff20Unlocked|r") .. ")", 0.7, 0.7, 0.7)
     GameTooltip:Show()
   end)
@@ -797,44 +918,68 @@ end
 --------------------------------------------------------------------------------
 function FG:CreateCodexWindow()
   local f = CreateFrame("Frame", "ForeverGuideCodexWindow", UIParent, "BackdropTemplate")
-  f:SetSize(600, 520)
+  f:SetSize(620, 530)
   f:SetPoint("CENTER", UIParent, "CENTER", 0, 20)
   f:SetFrameStrata("MEDIUM")
   f:SetClampedToScreen(true)
   f:SetMovable(true)
   f:EnableMouse(true)
   f:RegisterForDrag("LeftButton")
+  f:SetScale(ForeverGuideDB.codexScale or 1.0)
+
+  MakePixelSharp(f)
 
   f:SetBackdrop({
-    bgFile = "Interface\\DialogFrame\\UI-DialogBox-Background-Dark",
-    edgeFile = "Interface\\DialogFrame\\UI-DialogBox-Border",
-    tile = true,
-    tileSize = 32,
-    edgeSize = 24,
-    insets = { left = 8, right = 8, top = 8, bottom = 8 },
+    bgFile = "Interface\\Buttons\\WHITE8X8",
+    edgeFile = "Interface\\Tooltips\\UI-Tooltip-Border",
+    tile = false,
+    tileSize = 16,
+    edgeSize = 14,
+    insets = { left = 4, right = 4, top = 4, bottom = 4 },
   })
-  f:SetBackdropColor(0.05, 0.08, 0.14, 0.95)
+  f:SetBackdropColor(0.04, 0.06, 0.10, 0.96)
+  f:SetBackdropBorderColor(0.0, 0.65, 1.0, 0.85)
 
   f:SetScript("OnDragStart", f.StartMoving)
-  f:SetScript("OnDragStop", f.StopMovingOrMoving)
+  f:SetScript("OnDragStop", f.StopMovingOrSizing)
+  f:SetScript("OnHide", f.StopMovingOrSizing)
 
   local title = f:CreateFontString(nil, "OVERLAY", "GameFontHighlightLarge")
-  title:SetPoint("TOPLEFT", f, "TOPLEFT", 22, -18)
+  title:SetPoint("TOPLEFT", f, "TOPLEFT", 18, -14)
   title:SetText("|cff00bfffForever Guide:|r |cff71d5ffThe Blue Spark Codex|r")
+  SharpenFontString(title, 15, "OUTLINE")
+  f.Title = title
+
+  local subtitle = f:CreateFontString(nil, "OVERLAY", "GameFontDisableSmall")
+  subtitle:SetPoint("TOPLEFT", title, "BOTTOMLEFT", 0, -2)
+  subtitle:SetText("|cff6688aaWarcraft Forever High-Density Codex|r")
+  SharpenFontString(subtitle, 10, "OUTLINE")
+  f.Subtitle = subtitle
+
+  local divider = f:CreateTexture(nil, "ARTWORK")
+  divider:SetColorTexture(0.0, 0.65, 1.0, 0.35)
+  divider:SetHeight(1)
+  divider:SetPoint("TOPLEFT", f, "TOPLEFT", 14, -46)
+  divider:SetPoint("TOPRIGHT", f, "TOPRIGHT", -14, -46)
+  MakePixelSharp(divider)
 
   local closeBtn = CreateFrame("Button", nil, f, "UIPanelCloseButton")
-  closeBtn:SetPoint("TOPRIGHT", f, "TOPRIGHT", -6, -6)
+  closeBtn:SetPoint("TOPRIGHT", f, "TOPRIGHT", -4, -4)
   closeBtn:SetScript("OnClick", function() f:Hide() end)
 
   local searchBox = CreateFrame("EditBox", "ForeverGuideSearchBox", f, "InputBoxTemplate")
-  searchBox:SetSize(340, 26)
-  searchBox:SetPoint("TOPLEFT", title, "BOTTOMLEFT", 6, -12)
+  searchBox:SetSize(280, 26)
+  searchBox:SetPoint("TOPLEFT", divider, "BOTTOMLEFT", 4, -10)
   searchBox:SetAutoFocus(false)
   searchBox:SetFontObject("ChatFontNormal")
+  SharpenFontString(searchBox, 13, "OUTLINE")
+  MakePixelSharp(searchBox)
 
   local placeholder = searchBox:CreateFontString(nil, "OVERLAY", "GameFontDisable")
   placeholder:SetPoint("LEFT", searchBox, "LEFT", 6, 0)
-  placeholder:SetText("Search items, quests, NPCs, dungeons, or forever content...")
+  placeholder:SetText("Search items, quests, NPCs, dungeons...")
+  SharpenFontString(placeholder, 11, "OUTLINE")
+  searchBox.Placeholder = placeholder
 
   searchBox:SetScript("OnTextChanged", function(self)
     local query = self:GetText():trim()
@@ -849,35 +994,89 @@ function FG:CreateCodexWindow()
 
   searchBox:SetScript("OnEscapePressed", function(self) self:ClearFocus() end)
 
-  -- Category Filter Buttons
+  local function StyleFilterBtn(btn, text)
+    btn:SetText(text)
+    local fs = btn:GetFontString()
+    if fs then
+      SharpenFontString(fs, 11, "OUTLINE")
+    end
+    MakePixelSharp(btn)
+  end
+
+  local allBtn = CreateFrame("Button", nil, f, "UIPanelButtonTemplate")
+  allBtn:SetSize(45, 24)
+  allBtn:SetPoint("LEFT", searchBox, "RIGHT", 8, 0)
+  StyleFilterBtn(allBtn, "All")
+  allBtn:SetScript("OnClick", function()
+    searchBox:SetText("")
+    FG:PopulateCodexResults("")
+  end)
+
   local dBtn = CreateFrame("Button", nil, f, "UIPanelButtonTemplate")
-  dBtn:SetSize(80, 24)
-  dBtn:SetPoint("LEFT", searchBox, "RIGHT", 10, 0)
-  dBtn:SetText("Dungeons")
+  dBtn:SetSize(75, 24)
+  dBtn:SetPoint("LEFT", allBtn, "RIGHT", 4, 0)
+  StyleFilterBtn(dBtn, "Dungeons")
   dBtn:SetScript("OnClick", function()
     searchBox:SetText("")
     FG:PopulateDungeons()
   end)
 
   local fBtn = CreateFrame("Button", nil, f, "UIPanelButtonTemplate")
-  fBtn:SetSize(75, 24)
-  fBtn:SetPoint("LEFT", dBtn, "RIGHT", 6, 0)
-  fBtn:SetText("Forever")
+  fBtn:SetSize(65, 24)
+  fBtn:SetPoint("LEFT", dBtn, "RIGHT", 4, 0)
+  StyleFilterBtn(fBtn, "Forever")
   fBtn:SetScript("OnClick", function()
     searchBox:SetText("forever")
   end)
 
+  local lockBtn = CreateFrame("Button", nil, f, "UIPanelButtonTemplate")
+  lockBtn:SetSize(60, 24)
+  lockBtn:SetPoint("LEFT", fBtn, "RIGHT", 4, 0)
+  StyleFilterBtn(lockBtn, ForeverGuideDB.sparkLocked and "Unlock" or "Lock")
+  lockBtn:SetScript("OnClick", function(self)
+    ForeverGuideDB.sparkLocked = not ForeverGuideDB.sparkLocked
+    if FG.SparkFrame and FG.SparkFrame.StopMovingOrSizing then
+      FG.SparkFrame:StopMovingOrSizing()
+      FG.SparkFrame.isMoving = false
+      FG.SparkFrame.wasDragged = false
+    end
+    StyleFilterBtn(self, ForeverGuideDB.sparkLocked and "Unlock" or "Lock")
+    print("|cff00bfff[The Blue Spark]|r Position is now " .. (ForeverGuideDB.sparkLocked and "|cffff2020Locked|r" or "|cff20ff20Unlocked|r"))
+  end)
+  f.LockBtn = lockBtn
+
   local scrollFrame = CreateFrame("ScrollFrame", "ForeverGuideScrollFrame", f, "UIPanelScrollFrameTemplate")
-  scrollFrame:SetPoint("TOPLEFT", searchBox, "BOTTOMLEFT", 0, -14)
-  scrollFrame:SetPoint("BOTTOMRIGHT", f, "BOTTOMRIGHT", -32, 18)
+  scrollFrame:SetPoint("TOPLEFT", searchBox, "BOTTOMLEFT", -2, -12)
+  scrollFrame:SetPoint("BOTTOMRIGHT", f, "BOTTOMRIGHT", -30, 16)
+  MakePixelSharp(scrollFrame)
 
   local content = CreateFrame("Frame", "ForeverGuideScrollContent", scrollFrame)
-  content:SetSize(540, 1000)
+  content:SetSize(554, 1000)
   scrollFrame:SetScrollChild(content)
+  MakePixelSharp(content)
   f.Content = content
 
   f:Hide()
   FG.CodexWindow = f
+end
+
+function FG:ApplyTextSharpening()
+  if not FG.CodexWindow then return end
+  local cw = FG.CodexWindow
+  if cw.Title then SharpenFontString(cw.Title, 15, "OUTLINE") end
+  if cw.Subtitle then SharpenFontString(cw.Subtitle, 10, "OUTLINE") end
+  if ForeverGuideSearchBox then
+    SharpenFontString(ForeverGuideSearchBox, 13, "OUTLINE")
+    if ForeverGuideSearchBox.Placeholder then
+      SharpenFontString(ForeverGuideSearchBox.Placeholder, 11, "OUTLINE")
+    end
+  end
+  if cw.Content and cw.Content.Buttons then
+    for _, btn in ipairs(cw.Content.Buttons) do
+      if btn.Title then SharpenFontString(btn.Title, 13, "OUTLINE") end
+      if btn.Sub then SharpenFontString(btn.Sub, 11, "OUTLINE") end
+    end
+  end
 end
 
 function FG:PopulateCodexResults(query)
@@ -932,30 +1131,35 @@ function FG:PopulateCodexResults(query)
     end
   end
 
-  local yOffset = -4
+  local yOffset = -2
   for i, match in ipairs(matches) do
     local btn = content.Buttons[i]
     if not btn then
       btn = CreateFrame("Button", nil, content, "BackdropTemplate")
-      btn:SetSize(534, 52)
+      btn:SetSize(548, 52)
+      MakePixelSharp(btn)
+
       btn:SetBackdrop({
-        bgFile = "Interface\\Tooltips\\UI-Tooltip-Background",
+        bgFile = "Interface\\Buttons\\WHITE8X8",
         edgeFile = "Interface\\Tooltips\\UI-Tooltip-Border",
-        tile = true,
-        tileSize = 16,
-        edgeSize = 12,
+        tile = false,
+        tileSize = 12,
+        edgeSize = 10,
         insets = { left = 3, right = 3, top = 3, bottom = 3 },
       })
-      btn:SetBackdropColor(0.1, 0.15, 0.22, 0.85)
+      btn:SetBackdropColor(0.06, 0.09, 0.15, 0.88)
+      btn:SetBackdropBorderColor(0.12, 0.22, 0.35, 0.70)
 
       local titleText = btn:CreateFontString(nil, "OVERLAY", "GameFontHighlight")
-      titleText:SetPoint("TOPLEFT", btn, "TOPLEFT", 10, -8)
+      titleText:SetPoint("TOPLEFT", btn, "TOPLEFT", 10, -7)
+      SharpenFontString(titleText, 13, "OUTLINE")
       btn.Title = titleText
 
       local subText = btn:CreateFontString(nil, "OVERLAY", "GameFontNormalSmall")
-      subText:SetPoint("TOPLEFT", titleText, "BOTTOMLEFT", 0, -4)
-      subText:SetWidth(510)
+      subText:SetPoint("TOPLEFT", titleText, "BOTTOMLEFT", 0, -3)
+      subText:SetWidth(524)
       subText:SetJustifyH("LEFT")
+      SharpenFontString(subText, 11, "OUTLINE")
       btn.Sub = subText
 
       content.Buttons[i] = btn
@@ -974,7 +1178,8 @@ function FG:PopulateCodexResults(query)
       btn.Sub:SetText(desc)
 
       btn:SetScript("OnEnter", function(self)
-        self:SetBackdropColor(0.2, 0.3, 0.45, 0.95)
+        self:SetBackdropColor(0.08, 0.18, 0.30, 0.95)
+        self:SetBackdropBorderColor(0.0, 0.75, 1.0, 0.95)
         GameTooltip:SetOwner(self, "ANCHOR_TOPLEFT")
         GameTooltip:SetItemByID(item.id)
         if item.tip and item.tip ~= "" then
@@ -984,7 +1189,8 @@ function FG:PopulateCodexResults(query)
         GameTooltip:Show()
       end)
       btn:SetScript("OnLeave", function(self)
-        self:SetBackdropColor(0.1, 0.15, 0.22, 0.85)
+        self:SetBackdropColor(0.06, 0.09, 0.15, 0.88)
+        self:SetBackdropBorderColor(0.12, 0.22, 0.35, 0.70)
         GameTooltip:Hide()
       end)
       btn:SetScript("OnClick", function()
@@ -1001,7 +1207,8 @@ function FG:PopulateCodexResults(query)
       btn.Sub:SetText("|cff71d5ffZone:|r " .. (qData.zone or "Various") .. " |cff71d5ffStart:|r " .. (qData.npc or "Unknown"))
 
       btn:SetScript("OnEnter", function(self)
-        self:SetBackdropColor(0.2, 0.35, 0.25, 0.95)
+        self:SetBackdropColor(0.08, 0.20, 0.15, 0.95)
+        self:SetBackdropBorderColor(0.20, 0.85, 0.30, 0.95)
         GameTooltip:SetOwner(self, "ANCHOR_TOPLEFT")
         GameTooltip:AddLine(qData.title, 1, 0.82, 0)
         GameTooltip:AddLine("Level: " .. qData.questLevel .. " (Req " .. qData.reqLevel .. ")", 1, 1, 1)
@@ -1012,7 +1219,8 @@ function FG:PopulateCodexResults(query)
         GameTooltip:Show()
       end)
       btn:SetScript("OnLeave", function(self)
-        self:SetBackdropColor(0.1, 0.15, 0.22, 0.85)
+        self:SetBackdropColor(0.06, 0.09, 0.15, 0.88)
+        self:SetBackdropBorderColor(0.12, 0.22, 0.35, 0.70)
         GameTooltip:Hide()
       end)
 
@@ -1023,7 +1231,8 @@ function FG:PopulateCodexResults(query)
       btn.Sub:SetText("|cff71d5ffZone:|r " .. d.zone .. " |cff71d5ffEntrance:|r " .. (d.coords or "N/A"))
 
       btn:SetScript("OnEnter", function(self)
-        self:SetBackdropColor(0.25, 0.2, 0.4, 0.95)
+        self:SetBackdropColor(0.15, 0.10, 0.25, 0.95)
+        self:SetBackdropBorderColor(0.70, 0.40, 1.0, 0.95)
         GameTooltip:SetOwner(self, "ANCHOR_TOPLEFT")
         GameTooltip:AddLine(d.name, 1, 0.82, 0)
         GameTooltip:AddLine("Level: " .. d.recLevel .. " (" .. d.zone .. ")", 1, 1, 1)
@@ -1035,7 +1244,8 @@ function FG:PopulateCodexResults(query)
         GameTooltip:Show()
       end)
       btn:SetScript("OnLeave", function(self)
-        self:SetBackdropColor(0.1, 0.15, 0.22, 0.85)
+        self:SetBackdropColor(0.06, 0.09, 0.15, 0.88)
+        self:SetBackdropBorderColor(0.12, 0.22, 0.35, 0.70)
         GameTooltip:Hide()
       end)
     end
@@ -1060,30 +1270,35 @@ function FG:PopulateDungeons()
   for _, d in pairs(FG.Data.Dungeons) do table.insert(sorted, d) end
   table.sort(sorted, function(a, b) return (a.minLevel or 0) < (b.minLevel or 0) end)
 
-  local yOffset = -4
+  local yOffset = -2
   for i, d in ipairs(sorted) do
     local btn = content.Buttons[i]
     if not btn then
       btn = CreateFrame("Button", nil, content, "BackdropTemplate")
-      btn:SetSize(534, 52)
+      btn:SetSize(548, 52)
+      MakePixelSharp(btn)
+
       btn:SetBackdrop({
-        bgFile = "Interface\\Tooltips\\UI-Tooltip-Background",
+        bgFile = "Interface\\Buttons\\WHITE8X8",
         edgeFile = "Interface\\Tooltips\\UI-Tooltip-Border",
-        tile = true,
-        tileSize = 16,
-        edgeSize = 12,
+        tile = false,
+        tileSize = 12,
+        edgeSize = 10,
         insets = { left = 3, right = 3, top = 3, bottom = 3 },
       })
-      btn:SetBackdropColor(0.1, 0.15, 0.22, 0.85)
+      btn:SetBackdropColor(0.06, 0.09, 0.15, 0.88)
+      btn:SetBackdropBorderColor(0.12, 0.22, 0.35, 0.70)
 
       local titleText = btn:CreateFontString(nil, "OVERLAY", "GameFontHighlight")
-      titleText:SetPoint("TOPLEFT", btn, "TOPLEFT", 10, -8)
+      titleText:SetPoint("TOPLEFT", btn, "TOPLEFT", 10, -7)
+      SharpenFontString(titleText, 13, "OUTLINE")
       btn.Title = titleText
 
       local subText = btn:CreateFontString(nil, "OVERLAY", "GameFontNormalSmall")
-      subText:SetPoint("TOPLEFT", titleText, "BOTTOMLEFT", 0, -4)
-      subText:SetWidth(510)
+      subText:SetPoint("TOPLEFT", titleText, "BOTTOMLEFT", 0, -3)
+      subText:SetWidth(524)
       subText:SetJustifyH("LEFT")
+      SharpenFontString(subText, 11, "OUTLINE")
       btn.Sub = subText
 
       content.Buttons[i] = btn
@@ -1096,7 +1311,8 @@ function FG:PopulateDungeons()
     btn.Sub:SetText("|cff71d5ffZone:|r " .. d.zone .. " |cff71d5ffEntrance:|r " .. (d.coords or "N/A"))
 
     btn:SetScript("OnEnter", function(self)
-      self:SetBackdropColor(0.2, 0.3, 0.45, 0.95)
+      self:SetBackdropColor(0.08, 0.18, 0.30, 0.95)
+      self:SetBackdropBorderColor(0.0, 0.75, 1.0, 0.95)
       GameTooltip:SetOwner(self, "ANCHOR_TOPLEFT")
       GameTooltip:AddLine(d.name, 1, 0.82, 0)
       GameTooltip:AddLine("Level: " .. d.recLevel .. " | Zone: " .. d.zone, 1, 1, 1)
@@ -1108,7 +1324,8 @@ function FG:PopulateDungeons()
       GameTooltip:Show()
     end)
     btn:SetScript("OnLeave", function(self)
-      self:SetBackdropColor(0.1, 0.15, 0.22, 0.85)
+      self:SetBackdropColor(0.06, 0.09, 0.15, 0.88)
+      self:SetBackdropBorderColor(0.12, 0.22, 0.35, 0.70)
       GameTooltip:Hide()
     end)
 
@@ -1147,6 +1364,7 @@ function FG:CreateMinimapButton()
   btn:RegisterForClicks("LeftButtonUp", "RightButtonUp")
   btn:RegisterForDrag("LeftButton")
   btn:SetHighlightTexture("Interface\\Minimap\\UI-Minimap-ZoomButton-Highlight")
+  MakePixelSharp(btn)
 
   local bg = btn:CreateTexture(nil, "BACKGROUND")
   bg:SetSize(25, 25)
