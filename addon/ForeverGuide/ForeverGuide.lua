@@ -779,46 +779,46 @@ function FG:CreateSparkFrame()
     visual.CircleMask = mask
   end
 
-  -- Layer 1: Spherical Ambient Blue Halo Glow (Soft radial falloff, zero square box)
+  -- Layer 1: Spherical Ambient Ghastly Violet Halo Glow (Soft radial falloff, zero square box)
   local aura = visual:CreateTexture(nil, "BACKGROUND")
   aura:SetTexture("Interface\\CharacterFrame\\TempPortraitAlphaMask")
   aura:SetBlendMode("ADD")
   aura:SetPoint("CENTER", visual, "CENTER", 0, 0)
   aura:SetSize(34, 34)
-  aura:SetVertexColor(0.10, 0.45, 1.0, 0.40)
+  aura:SetVertexColor(0.68, 0.12, 0.98, 0.45)
   f.Aura = aura
 
-  -- Layer 2: Outer Luminous Corona
+  -- Layer 2: Outer Luminous Corona (Spectral Wisp Flare)
   local corona = visual:CreateTexture(nil, "BORDER")
   corona:SetTexture("Interface\\COMMON\\friendship-manaorb")
   corona:SetBlendMode("ADD")
   corona:SetPoint("CENTER", visual, "CENTER", 0, 0)
   corona:SetSize(28, 28)
-  corona:SetVertexColor(0.25, 0.65, 1.0, 0.50)
+  corona:SetVertexColor(0.85, 0.22, 0.95, 0.55)
   if circleMask and corona.AddMaskTexture then
     pcall(corona.AddMaskTexture, corona, circleMask)
   end
   f.Corona = corona
 
-  -- Layer 3: 3D Spherical Core (Deep shaded blue orb)
+  -- Layer 3: 3D Spherical Core (Deep shaded violet-amethyst sprite body)
   local orb = visual:CreateTexture(nil, "ARTWORK")
   orb:SetTexture("Interface\\COMMON\\friendship-manaorb")
   orb:SetBlendMode("BLEND")
   orb:SetPoint("CENTER", visual, "CENTER", 0, 0)
   orb:SetSize(24, 24)
-  orb:SetVertexColor(0.85, 0.95, 1.0, 0.95)
+  orb:SetVertexColor(0.90, 0.45, 1.0, 0.95)
   if circleMask and orb.AddMaskTexture then
     pcall(orb.AddMaskTexture, orb, circleMask)
   end
   f.Orb = orb
 
-  -- Layer 4: Internal Swirling Nebula Plasma (Rotates inside the sphere for living 3D fluid depth)
+  -- Layer 4: Internal Swirling Spirit Nebula (Rotates inside the sprite for living 3D fluid depth)
   local swirl = visual:CreateTexture(nil, "ARTWORK", nil, 1)
   swirl:SetTexture("Interface\\COMMON\\friendship-manaorb")
   swirl:SetBlendMode("ADD")
   swirl:SetPoint("CENTER", visual, "CENTER", 0, 0)
   swirl:SetSize(20, 20)
-  swirl:SetVertexColor(0.40, 0.80, 1.0, 0.55)
+  swirl:SetVertexColor(0.80, 0.20, 1.0, 0.65)
   if circleMask and swirl.AddMaskTexture then
     pcall(swirl.AddMaskTexture, swirl, circleMask)
   end
@@ -838,7 +838,7 @@ function FG:CreateSparkFrame()
   spec:SetBlendMode("ADD")
   spec:SetPoint("CENTER", visual, "CENTER", -3.5, 3.5)
   spec:SetSize(7, 7)
-  spec:SetVertexColor(1.0, 1.0, 1.0, 0.85)
+  spec:SetVertexColor(1.0, 0.88, 1.0, 0.90)
   f.Specular = spec
 
   -- Layer 6: Ambient Orbiting Micro-Orblets (Elliptical 3D satellite depth)
@@ -846,14 +846,14 @@ function FG:CreateSparkFrame()
   orbit1:SetTexture("Interface\\CharacterFrame\\TempPortraitAlphaMask")
   orbit1:SetBlendMode("ADD")
   orbit1:SetSize(4, 4)
-  orbit1:SetVertexColor(0.55, 0.85, 1.0, 0.70)
+  orbit1:SetVertexColor(0.85, 0.35, 1.0, 0.75)
   f.Orbit1 = orbit1
 
   local orbit2 = visual:CreateTexture(nil, "OVERLAY", nil, 1)
   orbit2:SetTexture("Interface\\CharacterFrame\\TempPortraitAlphaMask")
   orbit2:SetBlendMode("ADD")
   orbit2:SetSize(3, 3)
-  orbit2:SetVertexColor(0.75, 0.95, 1.0, 0.60)
+  orbit2:SetVertexColor(0.95, 0.55, 1.0, 0.65)
   f.Orbit2 = orbit2
 
   -- Breathing Alpha Pulse
@@ -1088,22 +1088,22 @@ function FG:CreateSparkFrame()
   end)
 
   f:SetScript("OnEnter", function(self)
-    if self.Aura then self.Aura:SetVertexColor(0.25, 0.75, 1.0, 0.85) end
+    if self.Aura then self.Aura:SetVertexColor(0.88, 0.35, 1.0, 0.85) end
     GameTooltip:SetOwner(self, "ANCHOR_RIGHT")
-    GameTooltip:AddLine("|cff52b8ffThe Blue Spark|r", 1, 1, 1)
-    GameTooltip:AddLine("Celestial 3D Orb for Warcraft Forever.", 0.8, 0.8, 0.8, true)
+    GameTooltip:AddLine("|cffcf52ffThe Ghastly Sprite|r", 1, 1, 1)
+    GameTooltip:AddLine("Ethereal 3D Spirit for Warcraft Forever.", 0.8, 0.8, 0.8, true)
     GameTooltip:AddLine(" ")
     if not ForeverGuideDB.hasInteracted then
-      GameTooltip:AddLine("|cff71d5ff<Left-Click>|r Open Forever Codex (Awakens Companion)", 0.9, 0.9, 0.9)
+      GameTooltip:AddLine("|cffdf80ff<Left-Click>|r Open Forever Codex (Awakens Sprite)", 0.9, 0.9, 0.9)
     else
-      GameTooltip:AddLine("|cff71d5ff<Left-Click>|r Open Forever Codex", 0.9, 0.9, 0.9)
+      GameTooltip:AddLine("|cffdf80ff<Left-Click>|r Open Forever Codex", 0.9, 0.9, 0.9)
     end
-    GameTooltip:AddLine("|cff71d5ff<Left-Drag>|r Move Resting Point", 0.7, 0.7, 0.7)
+    GameTooltip:AddLine("|cffdf80ff<Left-Drag>|r Move Resting Point", 0.7, 0.7, 0.7)
     GameTooltip:Show()
   end)
 
   f:SetScript("OnLeave", function(self)
-    if self.Aura then self.Aura:SetVertexColor(0.10, 0.45, 1.0, 0.40) end
+    if self.Aura then self.Aura:SetVertexColor(0.68, 0.12, 0.98, 0.45) end
     GameTooltip:Hide()
   end)
 
@@ -1205,29 +1205,35 @@ function FG:CreateCodexWindow()
     insets = { left = 4, right = 4, top = 4, bottom = 4 },
   })
   f:SetBackdropColor(0.08, 0.09, 0.12, 0.96)
-  f:SetBackdropBorderColor(0.20, 0.38, 0.54, 0.85)
+  f:SetBackdropBorderColor(0.48, 0.20, 0.75, 0.90)
 
   f:SetScript("OnDragStart", f.StartMoving)
-  f:SetScript("OnDragStop", f.StopMovingOrSizing)
-  f:SetScript("OnHide", f.StopMovingOrSizing)
+  f:SetScript("OnDragStop", function(self)
+    self:StopMovingOrSizing()
+    if FG.UpdateDetailPanelPosition then FG:UpdateDetailPanelPosition() end
+  end)
+  f:SetScript("OnHide", function(self)
+    self:StopMovingOrSizing()
+    if FG.DetailPanel then FG.DetailPanel:Hide() end
+  end)
 
   -- Register with standard UI Special Frames so ESC closes this window
   tinsert(UISpecialFrames, "ForeverGuideCodexWindow")
 
   local title = f:CreateFontString(nil, "OVERLAY", "GameFontHighlightLarge")
   title:SetPoint("TOPLEFT", f, "TOPLEFT", 18, -14)
-  title:SetText("|cff52b8ffForever Guide:|r |cff8ad0ffThe Blue Spark Codex|r")
+  title:SetText("|cffcf52ffForever Guide:|r |cffdf80ffThe Ghastly Sprite Codex|r")
   SharpenFontString(title, 15, "OUTLINE")
   f.Title = title
 
   local subtitle = f:CreateFontString(nil, "OVERLAY", "GameFontDisableSmall")
   subtitle:SetPoint("TOPLEFT", title, "BOTTOMLEFT", 0, -2)
-  subtitle:SetText("|cff8899aaWarcraft Forever High-Density Codex|r")
+  subtitle:SetText("|cffaa88ddWarcraft Forever High-Density Codex|r")
   SharpenFontString(subtitle, 10, "OUTLINE")
   f.Subtitle = subtitle
 
   local divider = f:CreateTexture(nil, "ARTWORK")
-  divider:SetColorTexture(0.20, 0.45, 0.65, 0.30)
+  divider:SetColorTexture(0.55, 0.22, 0.85, 0.35)
   divider:SetHeight(1)
   divider:SetPoint("TOPLEFT", f, "TOPLEFT", 14, -46)
   divider:SetPoint("TOPRIGHT", f, "TOPRIGHT", -14, -46)
@@ -1347,7 +1353,319 @@ function FG:ApplyTextSharpening()
       if btn.Title then SharpenFontString(btn.Title, 13, "OUTLINE") end
       if btn.Sub then SharpenFontString(btn.Sub, 11, "OUTLINE") end
     end
+--------------------------------------------------------------------------------
+-- Codex Deep Intel Inspector Panel ("Click for More Data")
+--------------------------------------------------------------------------------
+function FG:CreateDetailPanel()
+  if FG.DetailPanel then return FG.DetailPanel end
+  local p = CreateFrame("Frame", "ForeverGuideDetailPanel", FG.CodexWindow, "BackdropTemplate")
+  p:SetSize(340, 530)
+  p:SetFrameStrata("MEDIUM")
+  p:SetFrameLevel(16)
+  p:EnableMouse(true)
+  MakePixelSharp(p)
+
+  p:SetBackdrop({
+    bgFile = "Interface\\Buttons\\WHITE8X8",
+    edgeFile = "Interface\\Tooltips\\UI-Tooltip-Border",
+    tile = false,
+    tileSize = 16,
+    edgeSize = 14,
+    insets = { left = 4, right = 4, top = 4, bottom = 4 },
+  })
+  p:SetBackdropColor(0.08, 0.09, 0.13, 0.98)
+  p:SetBackdropBorderColor(0.55, 0.22, 0.85, 0.90) -- Ghastly violet border
+
+  local title = p:CreateFontString(nil, "OVERLAY", "GameFontHighlightLarge")
+  title:SetPoint("TOPLEFT", p, "TOPLEFT", 16, -14)
+  title:SetText("|cffcf52ffCodex Deep Intel|r")
+  SharpenFontString(title, 14, "OUTLINE")
+  p.Title = title
+
+  local closeBtn = CreateFrame("Button", nil, p, "UIPanelCloseButton")
+  closeBtn:SetPoint("TOPRIGHT", p, "TOPRIGHT", -4, -4)
+  closeBtn:SetScript("OnClick", function() p:Hide() end)
+
+  local divider = p:CreateTexture(nil, "ARTWORK")
+  divider:SetColorTexture(0.55, 0.22, 0.85, 0.35)
+  divider:SetHeight(1)
+  divider:SetPoint("TOPLEFT", p, "TOPLEFT", 12, -42)
+  divider:SetPoint("TOPRIGHT", p, "TOPRIGHT", -12, -42)
+  MakePixelSharp(divider)
+
+  local sf = CreateFrame("ScrollFrame", "ForeverGuideDetailScrollFrame", p, "UIPanelScrollFrameTemplate")
+  sf:SetPoint("TOPLEFT", divider, "BOTTOMLEFT", 0, -8)
+  sf:SetPoint("BOTTOMRIGHT", p, "BOTTOMRIGHT", -26, 46)
+  MakePixelSharp(sf)
+
+  local body = CreateFrame("Frame", nil, sf)
+  body:SetSize(296, 600)
+  sf:SetScrollChild(body)
+  p.Body = body
+
+  local linkBtn = CreateFrame("Button", nil, p, "UIPanelButtonTemplate")
+  linkBtn:SetSize(145, 26)
+  linkBtn:SetPoint("BOTTOMLEFT", p, "BOTTOMLEFT", 14, 12)
+  linkBtn:SetText("Share to Chat")
+  MakePixelSharp(linkBtn)
+  local lfs = linkBtn:GetFontString()
+  if lfs then SharpenFontString(lfs, 11, "OUTLINE") end
+  p.LinkBtn = linkBtn
+
+  local actBtn = CreateFrame("Button", nil, p, "UIPanelButtonTemplate")
+  actBtn:SetSize(145, 26)
+  actBtn:SetPoint("BOTTOMRIGHT", p, "BOTTOMRIGHT", -14, 12)
+  actBtn:SetText("Search Related")
+  MakePixelSharp(actBtn)
+  local afs = actBtn:GetFontString()
+  if afs then SharpenFontString(afs, 11, "OUTLINE") end
+  p.ActBtn = actBtn
+
+  p:Hide()
+  FG.DetailPanel = p
+  return p
+end
+
+function FG:UpdateDetailPanelPosition()
+  local codex = FG.CodexWindow
+  local panel = FG.DetailPanel
+  if not codex or not panel then return end
+  local rightSpace = (GetScreenWidth() or 1920) - (codex:GetRight() or 0)
+  panel:ClearAllPoints()
+  if rightSpace >= 350 then
+    panel:SetPoint("TOPLEFT", codex, "TOPRIGHT", 6, 0)
+    panel:SetPoint("BOTTOMLEFT", codex, "BOTTOMRIGHT", 6, 0)
+  else
+    panel:SetPoint("TOPRIGHT", codex, "TOPLEFT", -6, 0)
+    panel:SetPoint("BOTTOMRIGHT", codex, "BOTTOMLEFT", -6, 0)
   end
+end
+
+function FG:LinkEntityToChat(entityType, data)
+  local text = ""
+  if entityType == "quest" then
+    text = "[Quest: " .. (data.title or "Unknown") .. " (Lvl " .. (data.questLevel or "?") .. ", " .. (data.zone or "") .. ")]"
+  elseif entityType == "item" then
+    local _, link = GetItemInfo(data.id)
+    text = link or ("[" .. (data.name or "Item") .. "]")
+  elseif entityType == "creature" then
+    local loc = data.location and data.location ~= "" and (" @ " .. data.location) or ""
+    text = "[NPC: " .. (data.name or "Creature") .. " (" .. (data.zone or "") .. loc .. ")]"
+  elseif entityType == "dungeon" then
+    text = "[Dungeon: " .. (data.name or "") .. " (Lvl " .. (data.recLevel or "?") .. ", " .. (data.zone or "") .. ")]"
+  elseif entityType == "vendor" then
+    text = "[Vendor: " .. (data.name or "") .. " (" .. (data.zone or "") .. " sells " .. (data.item or "") .. ")]"
+  end
+
+  if ChatEdit_InsertLink and ChatEdit_InsertLink(text) then
+    return
+  end
+  local editBox = ChatEdit_GetActiveWindow and ChatEdit_GetActiveWindow() or (ChatFrame1EditBox)
+  if editBox then
+    ChatEdit_ActivateChat(editBox)
+    editBox:Insert(text)
+  else
+    print("|cffcf52ff[Codex]|r " .. text)
+  end
+end
+
+function FG:ShowDetailPanel(entityType, data)
+  if not FG.DetailPanel then FG:CreateDetailPanel() end
+  local p = FG.DetailPanel
+  FG:UpdateDetailPanelPosition()
+  p:Show()
+
+  if p.Body.Lines then
+    for _, line in ipairs(p.Body.Lines) do line:Hide() end
+  end
+  p.Body.Lines = p.Body.Lines or {}
+
+  local lineIndex = 0
+  local yOffset = -2
+
+  local function AddLine(text, size, r, g, b, extraY)
+    lineIndex = lineIndex + 1
+    local fs = p.Body.Lines[lineIndex]
+    if not fs then
+      fs = p.Body:CreateFontString(nil, "OVERLAY", "GameFontHighlight")
+      fs:SetWidth(286)
+      fs:SetJustifyH("LEFT")
+      p.Body.Lines[lineIndex] = fs
+    end
+    fs:ClearAllPoints()
+    fs:SetPoint("TOPLEFT", p.Body, "TOPLEFT", 6, yOffset)
+    SharpenFontString(fs, size or 12, "OUTLINE")
+    fs:SetText(text)
+    if r and g and b then
+      fs:SetTextColor(r, g, b)
+    else
+      fs:SetTextColor(1, 1, 1)
+    end
+    fs:Show()
+    local h = fs:GetStringHeight() or 14
+    yOffset = yOffset - h - (extraY or 4)
+  end
+
+  local function AddSection(heading)
+    yOffset = yOffset - 6
+    AddLine("|cffdf80ff" .. heading .. "|r", 12, nil, nil, nil, 3)
+  end
+
+  if entityType == "quest" then
+    p.Title:SetText("|cffcf52ffQuest Intel|r")
+    AddLine("|cffffd24d" .. (data.title or "Quest") .. "|r", 15, nil, nil, nil, 6)
+    AddLine("Level: |cff20ff20" .. (data.questLevel or "?") .. "|r  (Requires Lvl " .. (data.reqLevel or "1") .. ")", 12)
+    if data.faction and data.faction ~= "" then
+      AddLine("Faction: |cff52b8ff" .. data.faction .. "|r", 11)
+    end
+    if data.isForever then
+      AddLine("|cffe6cc80★ Warcraft Forever Custom Content|r", 11, nil, nil, nil, 4)
+    end
+
+    AddSection("LOCATION & QUESTGIVER")
+    AddLine("Zone: |cffffffff" .. (data.zone or "Various") .. "|r", 12)
+    AddLine("Questgiver: |cff52b8ff" .. (data.npc or "Unknown") .. "|r", 12)
+
+    AddSection("OBJECTIVES")
+    AddLine(data.objectives and data.objectives ~= "" and data.objectives or "No specific task listed.", 12, 0.9, 0.9, 0.9, 6)
+
+    AddSection("REWARDS")
+    AddLine(data.rewards and data.rewards ~= "" and data.rewards or "Experience & Gold", 12, 1, 0.85, 0.2, 6)
+
+    if data.tip and data.tip ~= "" then
+      AddSection("SPARK INTEL & TACTICS")
+      AddLine(data.tip, 11, 0.75, 0.88, 1.0, 6)
+    end
+
+    p.LinkBtn:SetText("Share to Chat")
+    p.LinkBtn:SetScript("OnClick", function()
+      FG:LinkEntityToChat("quest", data)
+    end)
+
+    p.ActBtn:SetText("Search NPC")
+    p.ActBtn:SetScript("OnClick", function()
+      if data.npc and ForeverGuideSearchBox then
+        ForeverGuideSearchBox:SetText(data.npc)
+      end
+    end)
+
+  elseif entityType == "item" then
+    p.Title:SetText("|cffcf52ffItem Intel|r")
+    local qColor = FG.QualityColors[data.quality] or "ffffffff"
+    AddLine("|c" .. qColor .. (data.name or "Item") .. "|r", 15, nil, nil, nil, 6)
+    AddLine("Item Level: |cffffffff" .. (data.ilvl or "?") .. "|r" .. ((data.reqLevel and data.reqLevel > 0) and ("  (Req Lvl " .. data.reqLevel .. ")") or ""), 12)
+    if data.slot and data.slot ~= "" then AddLine("Slot: |cff52b8ff" .. data.slot .. "|r", 11) end
+    if data.isForever then AddLine("|cffe6cc80★ Forever Exclusive Item|r", 11, nil, nil, nil, 4) end
+
+    AddSection("SOURCE & DROPS")
+    AddLine(data.source and data.source ~= "" and data.source or "World Drop / Various", 12, 0.9, 0.9, 0.9, 6)
+
+    if data.tip and data.tip ~= "" then
+      AddSection("ANALYSIS & NOTES")
+      AddLine(data.tip, 11, 0.75, 0.88, 1.0, 6)
+    end
+
+    p.LinkBtn:SetText("Share to Chat")
+    p.LinkBtn:SetScript("OnClick", function()
+      FG:LinkEntityToChat("item", data)
+    end)
+
+    p.ActBtn:SetText("Search Source")
+    p.ActBtn:SetScript("OnClick", function()
+      if data.source and ForeverGuideSearchBox then
+        local firstWord = data.source:match("^(%S+)")
+        if firstWord then ForeverGuideSearchBox:SetText(firstWord) end
+      end
+    end)
+
+  elseif entityType == "creature" then
+    p.Title:SetText("|cffcf52ffCreature Intel|r")
+    local classColor = (data.classification == "Boss" or data.classification == "Rare Elite") and "ffff4040" or (data.classification == "Elite" and "ffffd24d" or "ff52b8ff")
+    local lvlStr = (data.minLevel and data.maxLevel and data.minLevel ~= data.maxLevel) and (data.minLevel .. "-" .. data.maxLevel) or (data.maxLevel or data.minLevel or "?")
+    AddLine("|c" .. classColor .. (data.name or "Creature") .. "|r", 15, nil, nil, nil, 6)
+    AddLine("Level: |cff20ff20" .. lvlStr .. "|r (" .. (data.classification or "Normal") .. ")", 12)
+    if data.health and data.health > 0 then AddLine("Health: |cffff6060" .. data.health .. "|r", 11) end
+
+    AddSection("SPAWN & LOCATION")
+    AddLine("Zone: |cffffffff" .. (data.zone or "Various") .. "|r", 12)
+    if data.location and data.location ~= "" then
+      AddLine("Coordinates/Area: |cff20ff20" .. data.location .. "|r", 12)
+    end
+
+    if data.strategy and data.strategy ~= "" then
+      AddSection("COMBAT STRATEGY")
+      AddLine(data.strategy, 11, 0.85, 0.85, 0.85, 6)
+    end
+
+    p.LinkBtn:SetText("Share to Chat")
+    p.LinkBtn:SetScript("OnClick", function()
+      FG:LinkEntityToChat("creature", data)
+    end)
+
+    p.ActBtn:SetText("Target Macro")
+    p.ActBtn:SetScript("OnClick", function()
+      local editBox = ChatEdit_GetActiveWindow and ChatEdit_GetActiveWindow() or (ChatFrame1EditBox)
+      if editBox then
+        ChatEdit_ActivateChat(editBox)
+        editBox:SetText("/target " .. data.name)
+      end
+      print("|cffcf52ff[Target]|r Prepared: /target " .. data.name)
+    end)
+
+  elseif entityType == "dungeon" then
+    p.Title:SetText("|cffcf52ffDungeon Intel|r")
+    AddLine("|cffffd24d" .. (data.name or "Dungeon") .. "|r", 15, nil, nil, nil, 6)
+    AddLine("Recommended Level: |cff20ff20" .. (data.recLevel or "?") .. "|r", 12)
+    AddLine("Zone: |cffffffff" .. (data.zone or "Various") .. "|r", 12)
+    if data.coords and data.coords ~= "" then
+      AddLine("Entrance: |cff20ff20" .. data.coords .. "|r", 12)
+    end
+
+    if data.strategy and data.strategy ~= "" then
+      AddSection("TACTICS & WALKTHROUGH")
+      AddLine(data.strategy, 11, 0.85, 0.90, 0.95, 6)
+    end
+
+    p.LinkBtn:SetText("Share to Chat")
+    p.LinkBtn:SetScript("OnClick", function()
+      FG:LinkEntityToChat("dungeon", data)
+    end)
+
+    p.ActBtn:SetText("Search Loot")
+    p.ActBtn:SetScript("OnClick", function()
+      if ForeverGuideSearchBox then ForeverGuideSearchBox:SetText(data.name) end
+    end)
+
+  elseif entityType == "vendor" then
+    p.Title:SetText("|cffcf52ffVendor Intel|r")
+    AddLine("|cffffd24d" .. (data.name or "Vendor") .. "|r", 15, nil, nil, nil, 6)
+    AddLine("Zone: |cffffffff" .. (data.zone or "Various") .. "|r", 12)
+    if data.coords and data.coords ~= "" then
+      AddLine("Coords: |cff20ff20" .. data.coords .. "|r", 12)
+    end
+
+    AddSection("INVENTORY / WARES")
+    AddLine("Offers: |cff52b8ff" .. (data.item or "Goods") .. "|r", 12)
+    if data.tip and data.tip ~= "" then
+      AddSection("VENDOR NOTES")
+      AddLine(data.tip, 11, 0.85, 0.85, 0.85, 6)
+    end
+
+    p.LinkBtn:SetText("Share to Chat")
+    p.LinkBtn:SetScript("OnClick", function()
+      FG:LinkEntityToChat("vendor", data)
+    end)
+
+    p.ActBtn:SetText("Search Items")
+    p.ActBtn:SetScript("OnClick", function()
+      if data.item and ForeverGuideSearchBox then
+        local first = data.item:match("^(%S+)")
+        if first then ForeverGuideSearchBox:SetText(first) end
+      end
+    end)
+  end
+
+  p.Body:SetHeight(math.max(420, math.abs(yOffset) + 20))
 end
 
 function FG:PopulateCodexResults(query)
@@ -1459,10 +1777,16 @@ function FG:PopulateCodexResults(query)
 
       local subText = btn:CreateFontString(nil, "OVERLAY", "GameFontNormalSmall")
       subText:SetPoint("TOPLEFT", titleText, "BOTTOMLEFT", 0, -3)
-      subText:SetWidth(524)
+      subText:SetWidth(440)
       subText:SetJustifyH("LEFT")
       SharpenFontString(subText, 11, "OUTLINE")
       btn.Sub = subText
+
+      local hint = btn:CreateFontString(nil, "OVERLAY", "GameFontHighlightSmall")
+      hint:SetPoint("RIGHT", btn, "RIGHT", -12, 0)
+      hint:SetText("|cffdf80ffInspect ▶|r")
+      SharpenFontString(hint, 10, "OUTLINE")
+      btn.Hint = hint
 
       content.Buttons[i] = btn
     end
@@ -1481,13 +1805,16 @@ function FG:PopulateCodexResults(query)
 
       btn:SetScript("OnEnter", function(self)
         self:SetBackdropColor(0.14, 0.18, 0.26, 0.95)
-        self:SetBackdropBorderColor(0.28, 0.58, 0.82, 0.90)
+        self:SetBackdropBorderColor(0.45, 0.25, 0.85, 0.90)
         GameTooltip:SetOwner(self, "ANCHOR_TOPLEFT")
         GameTooltip:SetItemByID(item.id)
         if item.tip and item.tip ~= "" then
           GameTooltip:AddLine(" ")
-          GameTooltip:AddLine("|cff52b8ffSpark Intel:|r " .. item.tip, 0.3, 0.8, 1.0, true)
+          GameTooltip:AddLine("|cffcf52ffSpark Intel:|r " .. item.tip, 0.3, 0.8, 1.0, true)
         end
+        GameTooltip:AddLine(" ")
+        GameTooltip:AddLine("|cffdf80ff<Left-Click>|r Inspect full item stats & sources", 0.85, 0.85, 0.85)
+        GameTooltip:AddLine("|cffdf80ff<Shift-Click>|r Share link to chat", 0.7, 0.7, 0.7)
         GameTooltip:Show()
       end)
       btn:SetScript("OnLeave", function(self)
@@ -1496,10 +1823,12 @@ function FG:PopulateCodexResults(query)
         GameTooltip:Hide()
       end)
       btn:SetScript("OnClick", function()
-        if ChatEdit_InsertLink then
-          local _, link = GetItemInfo(item.id)
-          if link then ChatEdit_InsertLink(link) end
+        if IsShiftKeyDown() then
+          FG:LinkEntityToChat("item", item)
+        else
+          FG:ShowDetailPanel("item", item)
         end
+        FG:PlaySparkSound("shimmer")
       end)
 
     elseif match.type == "quest" then
@@ -1510,7 +1839,7 @@ function FG:PopulateCodexResults(query)
 
       btn:SetScript("OnEnter", function(self)
         self:SetBackdropColor(0.10, 0.18, 0.14, 0.95)
-        self:SetBackdropBorderColor(0.28, 0.68, 0.40, 0.90)
+        self:SetBackdropBorderColor(0.45, 0.25, 0.85, 0.90)
         GameTooltip:SetOwner(self, "ANCHOR_TOPLEFT")
         GameTooltip:AddLine(qData.title, 1, 0.85, 0.2)
         GameTooltip:AddLine("Level: " .. qData.questLevel .. " (Req " .. qData.reqLevel .. ")", 1, 1, 1)
@@ -1518,12 +1847,23 @@ function FG:PopulateCodexResults(query)
           GameTooltip:AddLine(" ")
           GameTooltip:AddLine("Objectives: " .. qData.objectives, 0.8, 0.8, 0.8, true)
         end
+        GameTooltip:AddLine(" ")
+        GameTooltip:AddLine("|cffdf80ff<Left-Click>|r Inspect full quest details, rewards & NPC", 0.85, 0.85, 0.85)
+        GameTooltip:AddLine("|cffdf80ff<Shift-Click>|r Share link to chat", 0.7, 0.7, 0.7)
         GameTooltip:Show()
       end)
       btn:SetScript("OnLeave", function(self)
         self:SetBackdropColor(0.10, 0.12, 0.16, 0.90)
         self:SetBackdropBorderColor(0.18, 0.24, 0.33, 0.70)
         GameTooltip:Hide()
+      end)
+      btn:SetScript("OnClick", function()
+        if IsShiftKeyDown() then
+          FG:LinkEntityToChat("quest", qData)
+        else
+          FG:ShowDetailPanel("quest", qData)
+        end
+        FG:PlaySparkSound("shimmer")
       end)
 
     elseif match.type == "dungeon" then
@@ -1543,12 +1883,23 @@ function FG:PopulateCodexResults(query)
           GameTooltip:AddLine(" ")
           GameTooltip:AddLine("Tactics: " .. d.strategy, 0.8, 0.8, 0.8, true)
         end
+        GameTooltip:AddLine(" ")
+        GameTooltip:AddLine("|cffdf80ff<Left-Click>|r Inspect dungeon tactics, bosses & loot", 0.85, 0.85, 0.85)
+        GameTooltip:AddLine("|cffdf80ff<Shift-Click>|r Share link to chat", 0.7, 0.7, 0.7)
         GameTooltip:Show()
       end)
       btn:SetScript("OnLeave", function(self)
         self:SetBackdropColor(0.10, 0.12, 0.16, 0.90)
         self:SetBackdropBorderColor(0.18, 0.24, 0.33, 0.70)
         GameTooltip:Hide()
+      end)
+      btn:SetScript("OnClick", function()
+        if IsShiftKeyDown() then
+          FG:LinkEntityToChat("dungeon", d)
+        else
+          FG:ShowDetailPanel("dungeon", d)
+        end
+        FG:PlaySparkSound("shimmer")
       end)
 
     elseif match.type == "creature" then
@@ -1576,12 +1927,23 @@ function FG:PopulateCodexResults(query)
           GameTooltip:AddLine(" ")
           GameTooltip:AddLine("Notes: " .. c.strategy, 0.8, 0.8, 0.8, true)
         end
+        GameTooltip:AddLine(" ")
+        GameTooltip:AddLine("|cffdf80ff<Left-Click>|r Inspect NPC intel & targeting macro", 0.85, 0.85, 0.85)
+        GameTooltip:AddLine("|cffdf80ff<Shift-Click>|r Share link to chat", 0.7, 0.7, 0.7)
         GameTooltip:Show()
       end)
       btn:SetScript("OnLeave", function(self)
         self:SetBackdropColor(0.10, 0.12, 0.16, 0.90)
         self:SetBackdropBorderColor(0.18, 0.24, 0.33, 0.70)
         GameTooltip:Hide()
+      end)
+      btn:SetScript("OnClick", function()
+        if IsShiftKeyDown() then
+          FG:LinkEntityToChat("creature", c)
+        else
+          FG:ShowDetailPanel("creature", c)
+        end
+        FG:PlaySparkSound("shimmer")
       end)
 
     elseif match.type == "vendor" then
@@ -1605,12 +1967,23 @@ function FG:PopulateCodexResults(query)
           GameTooltip:AddLine(" ")
           GameTooltip:AddLine("Note: " .. v.tip, 0.8, 0.8, 0.8, true)
         end
+        GameTooltip:AddLine(" ")
+        GameTooltip:AddLine("|cffdf80ff<Left-Click>|r Inspect vendor wares & location", 0.85, 0.85, 0.85)
+        GameTooltip:AddLine("|cffdf80ff<Shift-Click>|r Share link to chat", 0.7, 0.7, 0.7)
         GameTooltip:Show()
       end)
       btn:SetScript("OnLeave", function(self)
         self:SetBackdropColor(0.10, 0.12, 0.16, 0.90)
         self:SetBackdropBorderColor(0.18, 0.24, 0.33, 0.70)
         GameTooltip:Hide()
+      end)
+      btn:SetScript("OnClick", function()
+        if IsShiftKeyDown() then
+          FG:LinkEntityToChat("vendor", v)
+        else
+          FG:ShowDetailPanel("vendor", v)
+        end
+        FG:PlaySparkSound("shimmer")
       end)
     end
 
@@ -1660,10 +2033,16 @@ function FG:PopulateDungeons()
 
       local subText = btn:CreateFontString(nil, "OVERLAY", "GameFontNormalSmall")
       subText:SetPoint("TOPLEFT", titleText, "BOTTOMLEFT", 0, -3)
-      subText:SetWidth(524)
+      subText:SetWidth(440)
       subText:SetJustifyH("LEFT")
       SharpenFontString(subText, 11, "OUTLINE")
       btn.Sub = subText
+
+      local hint = btn:CreateFontString(nil, "OVERLAY", "GameFontHighlightSmall")
+      hint:SetPoint("RIGHT", btn, "RIGHT", -12, 0)
+      hint:SetText("|cffdf80ffInspect ▶|r")
+      SharpenFontString(hint, 10, "OUTLINE")
+      btn.Hint = hint
 
       content.Buttons[i] = btn
     end
@@ -1676,7 +2055,7 @@ function FG:PopulateDungeons()
 
     btn:SetScript("OnEnter", function(self)
       self:SetBackdropColor(0.14, 0.18, 0.26, 0.95)
-      self:SetBackdropBorderColor(0.28, 0.58, 0.82, 0.90)
+      self:SetBackdropBorderColor(0.45, 0.25, 0.85, 0.90)
       GameTooltip:SetOwner(self, "ANCHOR_TOPLEFT")
       GameTooltip:AddLine(d.name, 1, 0.85, 0.2)
       GameTooltip:AddLine("Level: " .. d.recLevel .. " | Zone: " .. d.zone, 1, 1, 1)
@@ -1685,12 +2064,23 @@ function FG:PopulateDungeons()
         GameTooltip:AddLine(" ")
         GameTooltip:AddLine("Tactics: " .. d.strategy, 0.8, 0.85, 0.95, true)
       end
+      GameTooltip:AddLine(" ")
+      GameTooltip:AddLine("|cffdf80ff<Left-Click>|r Inspect dungeon tactics, bosses & loot", 0.85, 0.85, 0.85)
+      GameTooltip:AddLine("|cffdf80ff<Shift-Click>|r Share link to chat", 0.7, 0.7, 0.7)
       GameTooltip:Show()
     end)
     btn:SetScript("OnLeave", function(self)
       self:SetBackdropColor(0.10, 0.12, 0.16, 0.90)
       self:SetBackdropBorderColor(0.18, 0.24, 0.33, 0.70)
       GameTooltip:Hide()
+    end)
+    btn:SetScript("OnClick", function()
+      if IsShiftKeyDown() then
+        FG:LinkEntityToChat("dungeon", d)
+      else
+        FG:ShowDetailPanel("dungeon", d)
+      end
+      FG:PlaySparkSound("shimmer")
     end)
 
     btn:Show()
