@@ -15,8 +15,8 @@ FG.Data = ForeverGuide_Data or {}
 -- Default Configuration
 local DEFAULT_CONFIG = {
   sparkShown = true,
-  sparkLocked = true,           -- Locked by default so it never moves accidentally
-  sparkClickThrough = true,    -- When locked, world clicks (NPCs, mobs, quests) pass 100% through
+  sparkLocked = false,          -- Unlocked by default so player can drag anywhere
+  sparkClickThrough = false,    -- Default false; right-clicks already pass 100% through to 3D NPCs/world
   sparkScale = 1.0,
   codexScale = 1.0,
   combatFade = true,
@@ -101,7 +101,7 @@ SlashCmdList["FOREVERGUIDE"] = function(msg)
       FG.SparkFrame.wasDragged = false
     end
     FG:UpdateSparkMouseState()
-    print("|cff52b8ff[The Blue Spark]|r Position is now |cffff4040Locked|r (World Clicks Pass Through)")
+    print("|cff52b8ff[The Blue Spark]|r Position is now |cffff4040Locked|r (Hold Shift+Drag to move)")
     if FG.CodexWindow and FG.CodexWindow.LockBtn then
       FG.CodexWindow.LockBtn:SetText("Unlock")
     end
@@ -727,7 +727,7 @@ end
 
 function FG:UpdateSparkMouseState()
   if not FG.SparkFrame then return end
-  if ForeverGuideDB.sparkLocked and ForeverGuideDB.sparkClickThrough then
+  if ForeverGuideDB.sparkClickThrough then
     FG.SparkFrame:EnableMouse(false)
   else
     FG.SparkFrame:EnableMouse(true)
@@ -744,9 +744,10 @@ function FG:CreateSparkFrame()
   f:SetFrameLevel(2)
   f:SetClampedToScreen(true)
   f:SetMovable(true)
-  f:SetHitRectInsets(8, 8, 8, 8) -- Tight hitbox so stray clicks pass directly to game world
+  f:EnableMouse(true)
+  f:SetHitRectInsets(0, 0, 0, 0) -- Full responsive area for clicking and dragging
 
-  -- Ensure right-clicks pass through to 3D NPCs and objects
+  -- Ensure right-clicks always pass through to 3D NPCs and objects
   if f.SetPassThroughButtons then
     pcall(f.SetPassThroughButtons, f, "RightButton")
   end
@@ -761,58 +762,64 @@ function FG:CreateSparkFrame()
   f:SetPoint(pos.point or "CENTER", UIParent, pos.relativePoint or "CENTER", pos.x or 240, pos.y or 60)
   f:SetScale(ForeverGuideDB.sparkScale or 1.0)
 
+  -- Inner visual container: all animations and textures live here so f:StartMoving() is NEVER constrained
+  local visual = CreateFrame("Frame", nil, f)
+  visual:SetAllPoints(f)
+  visual:EnableMouse(false)
+  f.Visual = visual
+
   -- Circular Alpha Masking (Eliminates all possible square corners or cutoff edges)
-  if f.CreateMaskTexture then
-    local mask = f:CreateMaskTexture()
+  if visual.CreateMaskTexture then
+    local mask = visual:CreateMaskTexture()
     mask:SetTexture("Interface\\Masks\\CircleMaskScalable", "CLAMPTOBLACKADDITIVE", "CLAMPTOBLACKADDITIVE")
     mask:SetSize(42, 42)
-    mask:SetPoint("CENTER", f, "CENTER", 0, 0)
-    f.CircleMask = mask
+    mask:SetPoint("CENTER", visual, "CENTER", 0, 0)
+    visual.CircleMask = mask
   end
 
   -- Layer 1: Outer Ambient Celestial Aura (Soft radiant halo)
-  local aura = f:CreateTexture(nil, "BACKGROUND")
+  local aura = visual:CreateTexture(nil, "BACKGROUND")
   aura:SetBlendMode("ADD")
-  aura:SetPoint("CENTER", f, "CENTER", 0, 0)
+  aura:SetPoint("CENTER", visual, "CENTER", 0, 0)
   aura:SetSize(64, 64)
   aura:SetTexture("Interface\\AddOns\\ForeverGuide\\Media\\blue_spark_aura")
   aura:SetVertexColor(0.18, 0.65, 1.0, 0.70)
   f.Aura = aura
 
   -- Layer 2: Rotating Ethereal Rays (Whimsical celestial wisp motion)
-  local rotAura = f:CreateTexture(nil, "BORDER")
+  local rotAura = visual:CreateTexture(nil, "BORDER")
   rotAura:SetTexture("Interface\\Cooldown\\star4")
   rotAura:SetBlendMode("ADD")
-  rotAura:SetPoint("CENTER", f, "CENTER", 0, 0)
+  rotAura:SetPoint("CENTER", visual, "CENTER", 0, 0)
   rotAura:SetSize(44, 44)
   rotAura:SetVertexColor(0.25, 0.70, 1.0, 0.50)
   f.RotAura = rotAura
 
   -- Layer 3: Core Luminous Plasma Orb (High-res smooth gaussian sphere)
-  local core = f:CreateTexture(nil, "ARTWORK")
+  local core = visual:CreateTexture(nil, "ARTWORK")
   core:SetBlendMode("ADD")
-  core:SetPoint("CENTER", f, "CENTER", 0, 0)
+  core:SetPoint("CENTER", visual, "CENTER", 0, 0)
   core:SetSize(32, 32)
   core:SetTexture("Interface\\AddOns\\ForeverGuide\\Media\\blue_spark_core")
   core:SetVertexColor(0.40, 0.85, 1.0, 0.95)
-  if f.CircleMask and core.AddMaskTexture then
-    pcall(core.AddMaskTexture, core, f.CircleMask)
+  if visual.CircleMask and core.AddMaskTexture then
+    pcall(core.AddMaskTexture, core, visual.CircleMask)
   end
   f.Core = core
 
   -- Layer 4: Cross Spark Flares (The bright sparkling twinkle)
-  local sparkV = f:CreateTexture(nil, "OVERLAY")
+  local sparkV = visual:CreateTexture(nil, "OVERLAY")
   sparkV:SetTexture("Interface\\CastingBar\\UI-CastingBar-Spark")
   sparkV:SetBlendMode("ADD")
-  sparkV:SetPoint("CENTER", f, "CENTER", 0, 0)
+  sparkV:SetPoint("CENTER", visual, "CENTER", 0, 0)
   sparkV:SetSize(10, 36)
   sparkV:SetVertexColor(0.75, 0.92, 1.0, 0.85)
   f.SparkV = sparkV
 
-  local sparkH = f:CreateTexture(nil, "OVERLAY")
+  local sparkH = visual:CreateTexture(nil, "OVERLAY")
   sparkH:SetTexture("Interface\\CastingBar\\UI-CastingBar-Spark")
   sparkH:SetBlendMode("ADD")
-  sparkH:SetPoint("CENTER", f, "CENTER", 0, 0)
+  sparkH:SetPoint("CENTER", visual, "CENTER", 0, 0)
   sparkH:SetSize(36, 10)
   sparkH:SetVertexColor(0.75, 0.92, 1.0, 0.85)
   if sparkH.SetRotation then
@@ -821,26 +828,27 @@ function FG:CreateSparkFrame()
   f.SparkH = sparkH
 
   -- Layer 5: Central Brilliant Glint
-  local glint = f:CreateTexture(nil, "OVERLAY")
+  local glint = visual:CreateTexture(nil, "OVERLAY")
   glint:SetTexture("Interface\\CastingBar\\UI-CastingBar-Spark")
   glint:SetBlendMode("ADD")
-  glint:SetPoint("CENTER", f, "CENTER", 0, 0)
+  glint:SetPoint("CENTER", visual, "CENTER", 0, 0)
   glint:SetSize(14, 14)
   glint:SetVertexColor(1.0, 1.0, 1.0, 1.0)
   f.Glint = glint
 
-  -- Layer 6: Blizzard Native AutoCastShine (Dancing fairy sparkles)
-  local shine = CreateFrame("Frame", "ForeverGuideSparkShine", f, "AutoCastShineTemplate")
+  -- Layer 6: Blizzard Native AutoCastShine (Crucial: EnableMouse(false))
+  local shine = CreateFrame("Frame", "ForeverGuideSparkShine", visual, "AutoCastShineTemplate")
   shine:SetSize(38, 38)
-  shine:SetPoint("CENTER", f, "CENTER", 0, 0)
+  shine:SetPoint("CENTER", visual, "CENTER", 0, 0)
+  shine:EnableMouse(false)
   shine:Show()
   if AutoCastShine_AutoCastStart then
     pcall(AutoCastShine_AutoCastStart, shine, 0.30, 0.80, 1.0)
   end
   f.Shine = shine
 
-  -- Continuous slow rotation for the ethereal rays
-  local rotAg = f:CreateAnimationGroup()
+  -- Continuous slow rotation for the ethereal rays (on visual)
+  local rotAg = visual:CreateAnimationGroup()
   local rotAnim = rotAg:CreateAnimation("Rotation")
   rotAnim:SetDegrees(360)
   rotAnim:SetDuration(16.0)
@@ -848,8 +856,8 @@ function FG:CreateSparkFrame()
   rotAg:Play()
   f.RotAnimGroup = rotAg
 
-  -- Breathing Pulse & Gentle Floating Hover
-  local ag = f:CreateAnimationGroup()
+  -- Breathing Pulse & Gentle Floating Hover (on visual, completely decoupled from f)
+  local ag = visual:CreateAnimationGroup()
   local alphaAnim = ag:CreateAnimation("Alpha")
   alphaAnim:SetFromAlpha(0.72)
   alphaAnim:SetToAlpha(1.0)
@@ -878,12 +886,11 @@ function FG:CreateSparkFrame()
           y = math.floor(y + 0.5),
         }
       end
-      FG:UpdateSparkMouseState()
     end
   end
 
   f:SetScript("OnDragStart", function(self)
-    if not ForeverGuideDB.sparkLocked then
+    if not ForeverGuideDB.sparkLocked or IsShiftKeyDown() or IsAltKeyDown() then
       self.isMoving = true
       self.wasDragged = true
       self:StartMoving()
@@ -917,7 +924,7 @@ function FG:CreateSparkFrame()
   end)
 
   f:SetScript("OnEnter", function(self)
-    if ForeverGuideDB.sparkLocked and ForeverGuideDB.sparkClickThrough then return end
+    if ForeverGuideDB.sparkClickThrough then return end
     if self.Aura then self.Aura:SetVertexColor(0.35, 0.85, 1.0, 0.95) end
     if self.Core then self.Core:SetVertexColor(0.60, 0.95, 1.0, 1.0) end
     GameTooltip:SetOwner(self, "ANCHOR_RIGHT")
@@ -925,8 +932,8 @@ function FG:CreateSparkFrame()
     GameTooltip:AddLine("Celestial companion for Warcraft Forever.", 0.8, 0.8, 0.8, true)
     GameTooltip:AddLine(" ")
     GameTooltip:AddLine("|cff71d5ff<Left-Click>|r Open Forever Codex", 0.9, 0.9, 0.9)
-    GameTooltip:AddLine("|cff71d5ff<Drag>|r Move (" .. (ForeverGuideDB.sparkLocked and "|cffff4040Locked (Click-Through)|r" or "|cff20ff20Unlocked|r") .. ")", 0.7, 0.7, 0.7)
-    GameTooltip:AddLine("|cff71d5ff/spark lock|r - Toggle click-through mode", 0.6, 0.7, 0.8)
+    GameTooltip:AddLine("|cff71d5ff<Left-Drag>|r Move anywhere" .. (ForeverGuideDB.sparkLocked and " (|cff71d5ffShift-Drag|r if locked)" or ""), 0.7, 0.7, 0.7)
+    GameTooltip:AddLine("|cff71d5ff/spark lock|r - Toggle position lock", 0.6, 0.7, 0.8)
     GameTooltip:Show()
   end)
 
