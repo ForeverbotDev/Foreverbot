@@ -203,8 +203,9 @@ class TestVirtualScrollAndNearby(unittest.TestCase):
         self.assertIn('function FG:UpdateHomeDashboard()', self.lua_code)
         self.assertIn('content.HomeDashboard = FG:CreateHomeDashboard(content)', self.lua_code)
 
-        # 2. Hero Card: Live Area Radar
-        self.assertIn('LIVE AREA RADAR', self.lua_code)
+        # 2. Hero Card: Location Bar (Clean, calm, no radar/connected tech theme)
+        self.assertIn('Current Location', self.lua_code)
+        self.assertNotIn('LIVE AREA RADAR', self.lua_code)
         self.assertIn('db.ZoneTitle = zoneTitle', self.lua_code)
         self.assertIn('db.QuestBadge = CreateStatBadge', self.lua_code)
         self.assertIn('db.RareBadge = CreateStatBadge', self.lua_code)
@@ -270,8 +271,16 @@ class TestVirtualScrollAndNearby(unittest.TestCase):
         self.assertIn('btn.Icon:SetTexture(FG:GetQuestIcon(qData))', self.lua_code)
         self.assertIn('p.HeaderIcon:SetTexture(FG:GetQuestIcon(data))', self.lua_code)
 
-        # Verify folders use folder.icon
-        self.assertIn('btn.Icon:SetTexture(folder.icon or', self.lua_code)
+        # Verify folders use FG:GetFolderIcon and explicit authentic Blizzard icons
+        self.assertIn('function FG:GetFolderIcon(folder)', self.lua_code)
+        self.assertIn('local fTex = FG:GetFolderIcon(folder)', self.lua_code)
+        self.assertIn('btn.Icon:SetTexture(fTex)', self.lua_code)
+        self.assertIn('icon = "Interface\\\\Icons\\\\INV_Chest_Cloth_23"', self.lua_code)
+        self.assertIn('icon = "Interface\\\\Icons\\\\INV_Chest_Leather_08"', self.lua_code)
+        self.assertIn('icon = "Interface\\\\Icons\\\\INV_Chest_Chain_15"', self.lua_code)
+        self.assertIn('icon = "Interface\\\\Icons\\\\INV_Chest_Plate03"', self.lua_code)
+        self.assertIn('icon = "Interface\\\\Icons\\\\INV_Shield_04"', self.lua_code)
+        self.assertIn('icon = "Interface\\\\Icons\\\\INV_Misc_Cape_19"', self.lua_code)
 
     def test_18_dropper_coords_clickable_and_exclusives(self):
         """Verify dropper coordinates, clickable dropper buttons, multiple sources, exclusives rename, and internal filtering."""
