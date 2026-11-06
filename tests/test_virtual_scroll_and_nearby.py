@@ -194,6 +194,40 @@ class TestVirtualScrollAndNearby(unittest.TestCase):
         # 3. Calm separator and soft muted palette in subtitles
         self.assertIn('table.concat(parts, " |cff475569·|r ")', self.lua_code)
 
+    def test_15_home_screen_mission_control_dashboard(self):
+        """Verify replacement of redundant Home screen vertical rows with interactive Mission Control Dashboard."""
+        # 1. Functions and frames
+        self.assertIn('function FG:CreateHomeDashboard(parent)', self.lua_code)
+        self.assertIn('function FG:UpdateHomeDashboard()', self.lua_code)
+        self.assertIn('content.HomeDashboard = FG:CreateHomeDashboard(content)', self.lua_code)
+
+        # 2. Hero Card: Live Area Radar
+        self.assertIn('LIVE AREA RADAR', self.lua_code)
+        self.assertIn('db.ZoneTitle = zoneTitle', self.lua_code)
+        self.assertIn('db.QuestBadge = CreateStatBadge', self.lua_code)
+        self.assertIn('db.RareBadge = CreateStatBadge', self.lua_code)
+        self.assertIn('db.MobBadge = CreateStatBadge', self.lua_code)
+        self.assertIn('db.DungeonBadge = CreateStatBadge', self.lua_code)
+        self.assertIn('db.RadarBtn = radarBtn', self.lua_code)
+
+        # 3. Featured 2x2 Hub Portals
+        self.assertIn('db.HubForever = CreateHubCard', self.lua_code)
+        self.assertIn('db.HubArmor = CreateHubCard', self.lua_code)
+        self.assertIn('db.HubQuests = CreateHubCard', self.lua_code)
+        self.assertIn('db.HubRares = CreateHubCard', self.lua_code)
+
+        # 4. Sparky Field Notes & Shortcuts Card
+        self.assertIn('SPARKY\'S FIELD NOTES & CONTROLS', self.lua_code)
+        self.assertIn('Shift + Left-Click', self.lua_code)
+        self.assertIn('Right-Click Row', self.lua_code)
+        self.assertIn('/fg or /forever', self.lua_code)
+
+        # 5. Root activation in PopulateCodexResults
+        self.assertIn('if cur == "root" and q == "" then', self.lua_code)
+        self.assertIn('content.HomeDashboard:Show()', self.lua_code)
+        self.assertIn('FG:UpdateHomeDashboard()', self.lua_code)
+        self.assertIn('content.HomeDashboard:Hide()', self.lua_code)
+
 
 if __name__ == "__main__":
     unittest.main()

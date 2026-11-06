@@ -1875,6 +1875,330 @@ function FG:UpdateVirtualRows()
 end
 
 --------------------------------------------------------------------------------
+-- Mission Control Home Dashboard
+--------------------------------------------------------------------------------
+function FG:CreateHomeDashboard(parent)
+  local db = CreateFrame("Frame", "ForeverGuideHomeDashboard", parent)
+  db:SetSize(554, 340)
+  db:SetPoint("TOPLEFT", parent, "TOPLEFT", 0, 0)
+  db:SetPoint("TOPRIGHT", parent, "TOPRIGHT", 0, 0)
+  MakePixelSharp(db)
+
+  -- 1. Hero Card: Live Area Radar
+  local radar = CreateFrame("Frame", nil, db, "BackdropTemplate")
+  radar:SetSize(550, 114)
+  radar:SetPoint("TOPLEFT", db, "TOPLEFT", 2, -2)
+  radar:SetPoint("TOPRIGHT", db, "TOPRIGHT", -2, -2)
+  MakePixelSharp(radar)
+  radar:SetBackdrop({
+    bgFile = "Interface\\Buttons\\WHITE8X8",
+    edgeFile = "Interface\\Tooltips\\UI-Tooltip-Border",
+    tile = false,
+    tileSize = 12,
+    edgeSize = 10,
+    insets = { left = 3, right = 3, top = 3, bottom = 3 },
+  })
+  radar:SetBackdropColor(0.08, 0.10, 0.15, 0.95)
+  radar:SetBackdropBorderColor(0.28, 0.40, 0.65, 0.85)
+
+  local radarTag = radar:CreateFontString(nil, "OVERLAY", "GameFontHighlightSmall")
+  radarTag:SetPoint("TOPLEFT", radar, "TOPLEFT", 12, -10)
+  radarTag:SetText("|cff38bdf8LIVE AREA RADAR|r |cff64748b·|r |cff22c55eCONNECTED|r")
+  SharpenFontString(radarTag, 10, "OUTLINE")
+
+  local zoneTitle = radar:CreateFontString(nil, "OVERLAY", "GameFontHighlightLarge")
+  zoneTitle:SetPoint("TOPLEFT", radarTag, "BOTTOMLEFT", 0, -4)
+  zoneTitle:SetPoint("RIGHT", radar, "RIGHT", -180, 0)
+  zoneTitle:SetJustifyH("LEFT")
+  zoneTitle:SetWordWrap(false)
+  zoneTitle:SetHeight(18)
+  zoneTitle:SetText("|cffffffffLocal Area|r")
+  SharpenFontString(zoneTitle, 15, "OUTLINE")
+  db.ZoneTitle = zoneTitle
+
+  local zoneSub = radar:CreateFontString(nil, "OVERLAY", "GameFontDisableSmall")
+  zoneSub:SetPoint("TOPLEFT", zoneTitle, "BOTTOMLEFT", 0, -3)
+  zoneSub:SetPoint("RIGHT", radar, "RIGHT", -180, 0)
+  zoneSub:SetJustifyH("LEFT")
+  zoneSub:SetWordWrap(false)
+  zoneSub:SetHeight(14)
+  zoneSub:SetText("|cff94a3b8Local telemetry active · Real-time tracking of quests, rares & dungeons|r")
+  SharpenFontString(zoneSub, 10, "OUTLINE")
+  db.ZoneSub = zoneSub
+
+  local function CreateStatBadge(parentFrame, xOff, label, targetFolder)
+    local badge = CreateFrame("Button", nil, parentFrame, "BackdropTemplate")
+    badge:SetSize(76, 24)
+    badge:SetPoint("BOTTOMLEFT", parentFrame, "BOTTOMLEFT", xOff, 10)
+    MakePixelSharp(badge)
+    badge:SetBackdrop({
+      bgFile = "Interface\\Buttons\\WHITE8X8",
+      edgeFile = "Interface\\Tooltips\\UI-Tooltip-Border",
+      tile = false,
+      tileSize = 8,
+      edgeSize = 8,
+      insets = { left = 2, right = 2, top = 2, bottom = 2 },
+    })
+    badge:SetBackdropColor(0.12, 0.14, 0.20, 0.85)
+    badge:SetBackdropBorderColor(0.24, 0.28, 0.38, 0.70)
+
+    local txt = badge:CreateFontString(nil, "OVERLAY", "GameFontHighlightSmall")
+    txt:SetPoint("CENTER", badge, "CENTER", 0, 0)
+    txt:SetWordWrap(false)
+    SharpenFontString(txt, 10, "OUTLINE")
+    badge.Text = txt
+
+    badge:SetScript("OnEnter", function(self)
+      self:SetBackdropColor(0.20, 0.24, 0.35, 0.95)
+      self:SetBackdropBorderColor(0.55, 0.70, 0.95, 0.95)
+      GameTooltip:SetOwner(self, "ANCHOR_TOP")
+      GameTooltip:AddLine("Open " .. label, 1, 1, 1)
+      GameTooltip:AddLine("Jump to nearby " .. label:lower() .. " in this zone.", 0.7, 0.7, 0.8)
+      GameTooltip:Show()
+    end)
+    badge:SetScript("OnLeave", function(self)
+      self:SetBackdropColor(0.12, 0.14, 0.20, 0.85)
+      self:SetBackdropBorderColor(0.24, 0.28, 0.38, 0.70)
+      GameTooltip:Hide()
+    end)
+    badge:SetScript("OnClick", function()
+      FG:NavigateToFolder(targetFolder)
+    end)
+    return badge
+  end
+
+  db.QuestBadge = CreateStatBadge(radar, 12, "Quests", "nearby/quests")
+  db.RareBadge = CreateStatBadge(radar, 94, "Rares", "nearby/rares")
+  db.MobBadge = CreateStatBadge(radar, 176, "Mobs", "nearby/creatures")
+  db.DungeonBadge = CreateStatBadge(radar, 258, "Dungeons", "nearby/dungeons")
+
+  local radarBtn = CreateFrame("Button", nil, radar, "BackdropTemplate")
+  radarBtn:SetSize(176, 26)
+  radarBtn:SetPoint("BOTTOMRIGHT", radar, "BOTTOMRIGHT", -12, 10)
+  MakePixelSharp(radarBtn)
+  radarBtn:SetBackdrop({
+    bgFile = "Interface\\Buttons\\WHITE8X8",
+    edgeFile = "Interface\\Tooltips\\UI-Tooltip-Border",
+    tile = false,
+    tileSize = 8,
+    edgeSize = 8,
+    insets = { left = 2, right = 2, top = 2, bottom = 2 },
+  })
+  radarBtn:SetBackdropColor(0.22, 0.14, 0.36, 0.95)
+  radarBtn:SetBackdropBorderColor(0.65, 0.30, 0.90, 0.85)
+
+  local rTxt = radarBtn:CreateFontString(nil, "OVERLAY", "GameFontHighlightSmall")
+  rTxt:SetPoint("CENTER", radarBtn, "CENTER", 0, 0)
+  rTxt:SetWordWrap(false)
+  rTxt:SetText("|cffdf80ff🧭 Explore Area Radar →|r")
+  SharpenFontString(rTxt, 11, "OUTLINE")
+  radarBtn.Text = rTxt
+
+  radarBtn:SetScript("OnEnter", function(self)
+    self:SetBackdropColor(0.32, 0.18, 0.52, 1.0)
+    self:SetBackdropBorderColor(0.90, 0.45, 1.0, 1.0)
+  end)
+  radarBtn:SetScript("OnLeave", function(self)
+    self:SetBackdropColor(0.22, 0.14, 0.36, 0.95)
+    self:SetBackdropBorderColor(0.65, 0.30, 0.90, 0.85)
+  end)
+  radarBtn:SetScript("OnClick", function()
+    FG:SetActiveCategory("nearby")
+  end)
+  db.RadarBtn = radarBtn
+
+  -- 2. Featured Codex Hubs (2x2 Grid)
+  local function CreateHubCard(x, y, iconPath, titleText, descText, targetFolder)
+    local card = CreateFrame("Button", nil, db, "BackdropTemplate")
+    card:SetSize(270, 58)
+    card:SetPoint("TOPLEFT", db, "TOPLEFT", x, y)
+    MakePixelSharp(card)
+    card:SetBackdrop({
+      bgFile = "Interface\\Buttons\\WHITE8X8",
+      edgeFile = "Interface\\Tooltips\\UI-Tooltip-Border",
+      tile = false,
+      tileSize = 8,
+      edgeSize = 8,
+      insets = { left = 2, right = 2, top = 2, bottom = 2 },
+    })
+    card:SetBackdropColor(0.09, 0.10, 0.14, 0.90)
+    card:SetBackdropBorderColor(0.24, 0.28, 0.38, 0.70)
+
+    local icon = card:CreateTexture(nil, "ARTWORK")
+    icon:SetSize(34, 34)
+    icon:SetPoint("LEFT", card, "LEFT", 10, 0)
+    icon:SetTexture(iconPath)
+    icon:SetTexCoord(0.08, 0.92, 0.08, 0.92)
+    MakePixelSharp(icon)
+
+    local title = card:CreateFontString(nil, "OVERLAY", "GameFontHighlight")
+    title:SetPoint("TOPLEFT", icon, "TOPRIGHT", 10, -3)
+    title:SetPoint("RIGHT", card, "RIGHT", -8, 0)
+    title:SetJustifyH("LEFT")
+    title:SetWordWrap(false)
+    title:SetHeight(15)
+    title:SetText(titleText)
+    SharpenFontString(title, 11, "OUTLINE")
+
+    local desc = card:CreateFontString(nil, "OVERLAY", "GameFontDisableSmall")
+    desc:SetPoint("TOPLEFT", title, "BOTTOMLEFT", 0, -2)
+    desc:SetPoint("RIGHT", card, "RIGHT", -8, 0)
+    desc:SetJustifyH("LEFT")
+    desc:SetWordWrap(false)
+    desc:SetHeight(13)
+    desc:SetText(descText)
+    SharpenFontString(desc, 9, "OUTLINE")
+
+    card:SetScript("OnEnter", function(self)
+      self:SetBackdropColor(0.18, 0.14, 0.28, 0.95)
+      self:SetBackdropBorderColor(0.70, 0.35, 0.95, 0.95)
+    end)
+    card:SetScript("OnLeave", function(self)
+      self:SetBackdropColor(0.09, 0.10, 0.14, 0.90)
+      self:SetBackdropBorderColor(0.24, 0.28, 0.38, 0.70)
+    end)
+    card:SetScript("OnClick", function()
+      FG:NavigateToFolder(targetFolder)
+    end)
+    return card
+  end
+
+  db.HubForever = CreateHubCard(2, -124, "Interface\\Icons\\INV_Misc_Book_09",
+    "|cffffd700Warcraft Forever Custom|r",
+    "|cff94a3b8Server gear, custom quests & endgame|r",
+    "forever")
+
+  db.HubArmor = CreateHubCard(278, -124, "Interface\\Icons\\INV_Chest_Cloth_23",
+    "|cff38bdf8Armor by Equipment Slot|r",
+    "|cff94a3b8Head, Chest, Boots sorted iLvl Low to High|r",
+    "items/armor")
+
+  db.HubQuests = CreateHubCard(2, -188, "Interface\\Icons\\INV_Misc_Map02",
+    "|cff4ade80Zone Questlines (A to Z)|r",
+    "|cff94a3b844 zones across EK & Kalimdor|r",
+    "quests/eastern_kingdoms")
+
+  db.HubRares = CreateHubCard(278, -188, "Interface\\Icons\\INV_Misc_Head_Dragon_01",
+    "|cfffb923cRare Spawns & Bosses|r",
+    "|cff94a3b8Silver-dragons, world encounters & loot|r",
+    "creatures/rares")
+
+  -- 3. Field Notes & Controls Card
+  local notes = CreateFrame("Frame", nil, db, "BackdropTemplate")
+  notes:SetSize(550, 74)
+  notes:SetPoint("TOPLEFT", db, "TOPLEFT", 2, -252)
+  notes:SetPoint("TOPRIGHT", db, "TOPRIGHT", -2, -252)
+  MakePixelSharp(notes)
+  notes:SetBackdrop({
+    bgFile = "Interface\\Buttons\\WHITE8X8",
+    edgeFile = "Interface\\Tooltips\\UI-Tooltip-Border",
+    tile = false,
+    tileSize = 8,
+    edgeSize = 8,
+    insets = { left = 2, right = 2, top = 2, bottom = 2 },
+  })
+  notes:SetBackdropColor(0.07, 0.08, 0.11, 0.90)
+  notes:SetBackdropBorderColor(0.30, 0.20, 0.45, 0.60)
+
+  local notesTag = notes:CreateFontString(nil, "OVERLAY", "GameFontHighlightSmall")
+  notesTag:SetPoint("TOPLEFT", notes, "TOPLEFT", 12, -8)
+  notesTag:SetText("|cffdf80ff⚡ SPARKY'S FIELD NOTES & CONTROLS|r")
+  SharpenFontString(notesTag, 10, "OUTLINE")
+
+  local function CreateTipCol(parentFrame, xOff, title, sub)
+    local tf = CreateFrame("Frame", nil, parentFrame)
+    tf:SetSize(170, 36)
+    tf:SetPoint("TOPLEFT", parentFrame, "TOPLEFT", xOff, -26)
+
+    local t1 = tf:CreateFontString(nil, "OVERLAY", "GameFontHighlightSmall")
+    t1:SetPoint("TOPLEFT", tf, "TOPLEFT", 0, 0)
+    t1:SetPoint("RIGHT", tf, "RIGHT", 0, 0)
+    t1:SetJustifyH("LEFT")
+    t1:SetWordWrap(false)
+    t1:SetText(title)
+    SharpenFontString(t1, 10, "OUTLINE")
+
+    local t2 = tf:CreateFontString(nil, "OVERLAY", "GameFontDisableSmall")
+    t2:SetPoint("TOPLEFT", t1, "BOTTOMLEFT", 0, -2)
+    t2:SetPoint("RIGHT", tf, "RIGHT", 0, 0)
+    t2:SetJustifyH("LEFT")
+    t2:SetWordWrap(false)
+    t2:SetText(sub)
+    SharpenFontString(t2, 9, "OUTLINE")
+    return tf
+  end
+
+  CreateTipCol(notes, 12, "|cffffffffShift + Left-Click|r", "|cff94a3b8Link item or quest to chat|r")
+  CreateTipCol(notes, 188, "|cffffffffRight-Click Row|r", "|cff94a3b8Inspect 3D model & map coords|r")
+  CreateTipCol(notes, 364, "|cffffffff/fg or /forever|r", "|cff94a3b8Toggle codex anytime · Esc closes|r")
+
+  db:Hide()
+  parent.HomeDashboard = db
+  FG.HomeDashboard = db
+  return db
+end
+
+function FG:UpdateHomeDashboard()
+  local db = FG.HomeDashboard
+  if not db then return end
+
+  local pZone, pSub = FG:GetPlayerZoneInfo()
+  local subZone = pSub or (GetSubZoneText and GetSubZoneText()) or ""
+  local zoneDisplay = pZone ~= "" and pZone or "Azeroth"
+  if subZone ~= "" and subZone ~= zoneDisplay then
+    zoneDisplay = zoneDisplay .. " |cff94a3b8(" .. subZone .. ")|r"
+  end
+  if db.ZoneTitle then db.ZoneTitle:SetText(zoneDisplay) end
+
+  local pZoneLower = (pZone ~= "" and pZone:lower()) or "azeroth"
+  local qCount, rCount, mCount, dCount = 0, 0, 0, 0
+
+  if FG.Data.Quests then
+    for _, q in pairs(FG.Data.Quests) do
+      if q.zone and q.zone:lower():find(pZoneLower, 1, true) then
+        qCount = qCount + 1
+      end
+    end
+  end
+
+  if FG.Data.Creatures then
+    for _, c in pairs(FG.Data.Creatures) do
+      if c.zone and c.zone:lower():find(pZoneLower, 1, true) and not FG:IsInternalCreature(c.name, c.family) then
+        mCount = mCount + 1
+        local cl = (c.classification or ""):lower()
+        if cl:find("rare") or cl:find("boss") or (c.name and c.name:find("%(Rare%)")) then
+          rCount = rCount + 1
+        end
+      end
+    end
+  end
+
+  if FG.Data.Dungeons then
+    for _, d in pairs(FG.Data.Dungeons) do
+      if d.zone and d.zone:lower():find(pZoneLower, 1, true) then
+        dCount = dCount + 1
+      end
+    end
+  end
+
+  if db.QuestBadge and db.QuestBadge.Text then
+    db.QuestBadge.Text:SetText(string.format("|cffffffff%d|r |cffcbd5e1Quests|r", qCount))
+  end
+  if db.RareBadge and db.RareBadge.Text then
+    db.RareBadge.Text:SetText(string.format("|cffffffff%d|r |cfffb923cRares|r", rCount))
+  end
+  if db.MobBadge and db.MobBadge.Text then
+    db.MobBadge.Text:SetText(string.format("|cffffffff%d|r |cff38bdf8Mobs|r", mCount))
+  end
+  if db.DungeonBadge and db.DungeonBadge.Text then
+    db.DungeonBadge.Text:SetText(string.format("|cffffffff%d|r |cffc084fcDungeon%s|r", dCount, dCount == 1 and "" or "s"))
+  end
+  if db.RadarBtn and db.RadarBtn.Text then
+    db.RadarBtn.Text:SetText("|cffdf80ff🧭 Explore " .. (pZone ~= "" and pZone or "Area") .. " Radar →|r")
+  end
+end
+
+--------------------------------------------------------------------------------
 -- Forever Codex Search & UI Window
 --------------------------------------------------------------------------------
 function FG:CreateCodexWindow()
@@ -2146,6 +2470,10 @@ function FG:CreateCodexWindow()
     content.RowPool[i]:Hide()
   end
   content.Buttons = content.RowPool
+
+  -- Mission Control Home Dashboard (shown when on root with empty query)
+  content.HomeDashboard = FG:CreateHomeDashboard(content)
+  f.HomeDashboard = content.HomeDashboard
 
   -- Blank State / Ready View (Shown on open or empty query)
   local blank = CreateFrame("Frame", nil, content)
@@ -3460,6 +3788,33 @@ function FG:PopulateCodexResults(query)
   local cur = FG.currentFolder or "root"
   local cw = FG.CodexWindow
 
+  -- Mission Control Home Dashboard:
+  -- When on the Root Home screen with no search query, display the interactive
+  -- Home Dashboard (Live Area Radar + Featured Codex Hubs + Sparky Field Notes)
+  -- instead of redundant vertical list rows that duplicate the top filter pills!
+  if cur == "root" and q == "" then
+    if content.HomeDashboard then
+      content.HomeDashboard:Show()
+      FG:UpdateHomeDashboard()
+    end
+    if content.NoResultsState then content.NoResultsState:Hide() end
+    for _, btn in ipairs(content.RowPool or {}) do btn:Hide() end
+    FG.currentMatches = {}
+    content:SetHeight(340)
+    if scrollFrame then scrollFrame:SetVerticalScroll(0) end
+
+    local pZone = FG:GetPlayerZoneInfo()
+    if cw and cw.StatusText then
+      cw.StatusText:SetText("|cffdf80ffHome Mission Control · |r|cff22c55e" .. pZone .. " Radar Active|r")
+    end
+    FG:UpdateDolphinBreadcrumbs("", 0)
+    return
+  else
+    if content.HomeDashboard then
+      content.HomeDashboard:Hide()
+    end
+  end
+
   local matches = {}
 
   if cur == "nearby" or cat == "nearby" or cur:find("^nearby/") then
@@ -4378,8 +4733,10 @@ EventFrame:SetScript("OnEvent", function(self, event, arg1, ...)
   elseif event == "ZONE_CHANGED_NEW_AREA" or event == "ZONE_CHANGED" or event == "ZONE_CHANGED_INDOORS" then
     local newZone = (GetRealZoneText and GetRealZoneText()) or (GetZoneText and GetZoneText()) or ""
     if newZone ~= "" then FG.lastKnownZone = newZone end
-    if FG.CodexWindow and FG.CodexWindow:IsShown() and FG.activeCategory == "nearby" then
-      FG:PopulateCodexResults(ForeverGuideSearchBox and ForeverGuideSearchBox:GetText():trim() or "")
+    if FG.CodexWindow and FG.CodexWindow:IsShown() then
+      if FG.activeCategory == "nearby" or (FG.currentFolder == "root" and (not ForeverGuideSearchBox or ForeverGuideSearchBox:GetText():trim() == "")) then
+        FG:PopulateCodexResults(ForeverGuideSearchBox and ForeverGuideSearchBox:GetText():trim() or "")
+      end
     end
     if FG.SparkFrame and FG.SparkFrame:IsShown() then
       FG:PlaySparkSound("pulse")
