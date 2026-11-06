@@ -2309,16 +2309,16 @@ function FG:ConfigureRowButton(btn, match)
     local statusBadge = ""
     local titleColor = "|cffffd24d"
     if st == "completed" then
-      statusBadge = " |cff22c55e[✓ Completed]|r"
+      statusBadge = " |cff22c55e[Completed]|r"
       titleColor = "|cff86efac"
     elseif st == "ready_to_turn_in" then
-      statusBadge = " |cff38bdf8[★ Ready to Turn In]|r"
+      statusBadge = " |cff38bdf8[Ready to Turn In]|r"
       titleColor = "|cff7dd3fc"
     elseif st == "active" then
-      statusBadge = " |cffffd100[● Active in Log]|r"
+      statusBadge = " |cffffd100[Active]|r"
       titleColor = "|cfffef08a"
     else
-      statusBadge = " |cff94a3b8[○ Available]|r"
+      statusBadge = " |cff94a3b8[Available]|r"
     end
 
     local foreverTag = qData.isForever and " |cffe6cc80[Forever]|r" or ""
@@ -2326,13 +2326,13 @@ function FG:ConfigureRowButton(btn, match)
 
     local parts = {}
     if st == "completed" then
-      table.insert(parts, "|cff22c55e✓ Completed|r")
+      table.insert(parts, "|cff22c55eCompleted|r")
     elseif st == "ready_to_turn_in" then
-      table.insert(parts, "|cff38bdf8★ Ready to Turn In|r")
+      table.insert(parts, "|cff38bdf8Ready to Turn In|r")
     elseif st == "active" then
-      table.insert(parts, "|cffffd100● Active in Log|r")
+      table.insert(parts, "|cffffd100Active in Log|r")
     else
-      table.insert(parts, "|cff94a3b8○ Uncompleted|r")
+      table.insert(parts, "|cff94a3b8Uncompleted|r")
     end
 
     local reqLvl = tonumber(qData.reqLevel) or 1
@@ -2444,7 +2444,7 @@ function FG:ConfigureRowButton(btn, match)
         GameTooltip:AddLine("Notes: " .. c.strategy, 0.8, 0.8, 0.8, true)
       end
       GameTooltip:AddLine(" ")
-      GameTooltip:AddLine("|cffdf80ff<Left-Click>|r Inspect NPC intel & targeting macro", 0.85, 0.85, 0.85)
+      GameTooltip:AddLine("|cffdf80ff<Left-Click>|r Inspect NPC intel & spawn location", 0.85, 0.85, 0.85)
       GameTooltip:AddLine("|cffdf80ff<Shift-Click>|r Share link to chat", 0.7, 0.7, 0.7)
       GameTooltip:Show()
     end)
@@ -3047,6 +3047,7 @@ function FG:CreateCodexWindow()
   searchBox.ClearBtn = clearBtn
 
   clearBtn:SetScript("OnClick", function()
+    searchBox.scopedSearchLock = nil
     searchBox:SetText("")
     searchBox:ClearFocus()
     clearBtn:Hide()
@@ -3057,13 +3058,18 @@ function FG:CreateCodexWindow()
   searchBox:SetScript("OnTextChanged", function(self)
     local query = self:GetText():trim()
     if query == "" then
+      self.scopedSearchLock = nil
       placeholder:Show()
       clearBtn:Hide()
       FG:PopulateCodexResults("")
     else
       placeholder:Hide()
       clearBtn:Show()
-      FG:PopulateCodexResults(query)
+      if FG.activeCategory ~= "all" and not self.scopedSearchLock then
+        FG:SetActiveCategory("all")
+      else
+        FG:PopulateCodexResults(query)
+      end
     end
   end)
 
@@ -3096,6 +3102,9 @@ function FG:CreateCodexWindow()
     btn.Text = txt
 
     btn:SetScript("OnClick", function()
+      if searchBox and searchBox:GetText():trim() ~= "" then
+        searchBox.scopedSearchLock = true
+      end
       FG:SetActiveCategory(name)
     end)
 
@@ -3438,31 +3447,13 @@ function FG:CreateDetailPanel()
 
   local sf = CreateFrame("ScrollFrame", "ForeverGuideDetailScrollFrame", p, "UIPanelScrollFrameTemplate")
   sf:SetPoint("TOPLEFT", divider, "BOTTOMLEFT", 0, -8)
-  sf:SetPoint("BOTTOMRIGHT", p, "BOTTOMRIGHT", -26, 46)
+  sf:SetPoint("BOTTOMRIGHT", p, "BOTTOMRIGHT", -26, 12)
   MakePixelSharp(sf)
 
   local body = CreateFrame("Frame", nil, sf)
   body:SetSize(296, 600)
   sf:SetScrollChild(body)
   p.Body = body
-
-  local linkBtn = CreateFrame("Button", nil, p, "UIPanelButtonTemplate")
-  linkBtn:SetSize(145, 26)
-  linkBtn:SetPoint("BOTTOMLEFT", p, "BOTTOMLEFT", 14, 12)
-  linkBtn:SetText("Share to Chat")
-  MakePixelSharp(linkBtn)
-  local lfs = linkBtn:GetFontString()
-  if lfs then SharpenFontString(lfs, 11, "OUTLINE") end
-  p.LinkBtn = linkBtn
-
-  local actBtn = CreateFrame("Button", nil, p, "UIPanelButtonTemplate")
-  actBtn:SetSize(145, 26)
-  actBtn:SetPoint("BOTTOMRIGHT", p, "BOTTOMRIGHT", -14, 12)
-  actBtn:SetText("Search Related")
-  MakePixelSharp(actBtn)
-  local afs = actBtn:GetFontString()
-  if afs then SharpenFontString(afs, 11, "OUTLINE") end
-  p.ActBtn = actBtn
 
   p:Hide()
   FG.DetailPanel = p
@@ -3761,13 +3752,13 @@ function FG:ShowDetailPanel(entityType, data)
 
     local qStatus = FG:GetQuestStatus(data.id, data.title)
     if qStatus == "completed" then
-      AddLine("Status: |cff22c55e✓ Completed (Turned In)|r", 12)
+      AddLine("Status: |cff22c55eCompleted (Turned In)|r", 12)
     elseif qStatus == "ready_to_turn_in" then
-      AddLine("Status: |cff38bdf8★ Ready to Turn In (Objectives Done)|r", 12)
+      AddLine("Status: |cff38bdf8Ready to Turn In (Objectives Done)|r", 12)
     elseif qStatus == "active" then
-      AddLine("Status: |cffffd100● Active in Quest Log (In Progress)|r", 12)
+      AddLine("Status: |cffffd100Active in Quest Log (In Progress)|r", 12)
     else
-      AddLine("Status: |cff94a3b8○ Not Completed (Available)|r", 12)
+      AddLine("Status: |cff94a3b8Not Completed (Available)|r", 12)
     end
 
     local reqLvl = data.reqLevel or "1"
@@ -3804,18 +3795,6 @@ function FG:ShowDetailPanel(entityType, data)
       AddSection("SPARK INTEL & TACTICS")
       AddLine(data.tip, 11, 0.75, 0.88, 1.0, 6)
     end
-
-    p.LinkBtn:SetText("Share to Chat")
-    p.LinkBtn:SetScript("OnClick", function()
-      FG:LinkEntityToChat("quest", data)
-    end)
-
-    p.ActBtn:SetText("Search NPC")
-    p.ActBtn:SetScript("OnClick", function()
-      if data.npc and ForeverGuideSearchBox then
-        ForeverGuideSearchBox:SetText(data.npc)
-      end
-    end)
 
   elseif entityType == "item" then
     if p.HeaderIcon then
@@ -3910,19 +3889,6 @@ function FG:ShowDetailPanel(entityType, data)
       AddLine(data.tip, 11, 0.75, 0.88, 1.0, 6)
     end
 
-    p.LinkBtn:SetText("Share to Chat")
-    p.LinkBtn:SetScript("OnClick", function()
-      FG:LinkEntityToChat("item", data)
-    end)
-
-    p.ActBtn:SetText("Search Source")
-    p.ActBtn:SetScript("OnClick", function()
-      if data.source and ForeverGuideSearchBox then
-        local firstWord = data.source:match("^(%S+)")
-        if firstWord then ForeverGuideSearchBox:SetText(firstWord) end
-      end
-    end)
-
   elseif entityType == "creature" then
     if p.HeaderIcon then
       local cTex = FG:GetCreatureIcon(data)
@@ -3970,23 +3936,6 @@ function FG:ShowDetailPanel(entityType, data)
       AddLine("|cff888899No unique rare or high-value drops recorded.|r", 11)
     end
 
-    p.LinkBtn:SetText("Share to Chat")
-    p.LinkBtn:SetScript("OnClick", function()
-      FG:LinkEntityToChat("creature", data)
-    end)
-
-    p.ActBtn:SetText("Target Macro")
-    p.ActBtn:SetScript("OnClick", function()
-      local editBox = ChatEdit_GetActiveWindow and ChatEdit_GetActiveWindow() or (ChatFrame1EditBox)
-      local macroText = "/target " .. data.name
-      if editBox then
-        ChatEdit_ActivateChat(editBox)
-        editBox:SetText(macroText)
-      end
-      local coordText = (data.coords and data.coords ~= "") and (" at (" .. data.coords .. ") in " .. (data.zone or "current zone")) or ""
-      print("|cffcf52ff[Target]|r Prepared: " .. macroText .. coordText)
-    end)
-
   elseif entityType == "dungeon" then
     if p.HeaderIcon then
       p.HeaderIcon:SetTexture(FG:GetDungeonIcon(data))
@@ -4021,16 +3970,6 @@ function FG:ShowDetailPanel(entityType, data)
       AddLine(data.strategy, 11, 0.85, 0.90, 0.95, 6)
     end
 
-    p.LinkBtn:SetText("Share to Chat")
-    p.LinkBtn:SetScript("OnClick", function()
-      FG:LinkEntityToChat("dungeon", data)
-    end)
-
-    p.ActBtn:SetText("Search Loot")
-    p.ActBtn:SetScript("OnClick", function()
-      if ForeverGuideSearchBox then ForeverGuideSearchBox:SetText(data.name) end
-    end)
-
   elseif entityType == "vendor" then
     if p.HeaderIcon then
       p.HeaderIcon:SetTexture(FG:GetVendorIcon(data))
@@ -4049,19 +3988,6 @@ function FG:ShowDetailPanel(entityType, data)
       AddSection("VENDOR NOTES")
       AddLine(data.tip, 11, 0.85, 0.85, 0.85, 6)
     end
-
-    p.LinkBtn:SetText("Share to Chat")
-    p.LinkBtn:SetScript("OnClick", function()
-      FG:LinkEntityToChat("vendor", data)
-    end)
-
-    p.ActBtn:SetText("Search Items")
-    p.ActBtn:SetScript("OnClick", function()
-      if data.item and ForeverGuideSearchBox then
-        local first = data.item:match("^(%S+)")
-        if first then ForeverGuideSearchBox:SetText(first) end
-      end
-    end)
   end
 
   p.Body:SetHeight(math.max(420, math.abs(yOffset) + 20))
@@ -5771,11 +5697,28 @@ function FG:PopulateCodexResults(query)
     end
   end
 
+  -- Search match relevance scorer
+  local function GetSearchMatchScore(match, query)
+    local name = (match.data and (match.data.name or match.data.title or "")) or ""
+    local nl = name:lower()
+    if nl == query then return 1 end -- Exact match
+    if nl:sub(1, #query) == query then return 2 end -- Prefix match
+    local pos = nl:find(query, 1, true)
+    if pos then
+      local prevChar = (pos > 1) and nl:sub(pos - 1, pos - 1) or " "
+      if prevChar:match("%s") or prevChar:match("[^%a%d]") then
+        return 3 -- Word boundary in name
+      end
+      return 4 -- Substring in name
+    end
+    return 5 -- Secondary match (source, reagents, objectives, tooltip)
+  end
+
   -- Sorting:
   -- 1. Folders always come first, sorted alphabetically A-Z.
-  -- 2. Items & Item Subsets: sorted by item level (iLvl) ascending (lowest at top, highest at bottom).
-  --    If iLvl is tied, sort alphabetically A-Z.
-  -- 3. All other categories: sorted strictly alphabetically A-Z.
+  -- 2. When searching: All items matched first at the top, ranked by match quality!
+  --    Followed by quests, creatures, dungeons, vendors.
+  -- 3. When browsing: Items sorted by iLvl ascending; all other categories sorted strictly A-Z.
   local isItemView = (cur:find("^items") ~= nil) or (cat == "items") or (cur:find("^forever/items") ~= nil)
   table.sort(matches, function(a, b)
     if a.type == "folder" and b.type ~= "folder" then return true end
@@ -5788,6 +5731,39 @@ function FG:PopulateCodexResults(query)
       return nameA:lower() < nameB:lower()
     end
 
+    if q ~= "" then
+      -- User mandate: All items should be matched first at top!
+      local typeRankA = (a.type == "item" and 1) or (a.type == "quest" and 2) or (a.type == "creature" and 3) or (a.type == "dungeon" and 4) or 5
+      local typeRankB = (b.type == "item" and 1) or (b.type == "quest" and 2) or (b.type == "creature" and 3) or (b.type == "dungeon" and 4) or 5
+      if typeRankA ~= typeRankB then
+        return typeRankA < typeRankB
+      end
+
+      -- Within the same type, best match relevance tier comes first
+      local scoreA = GetSearchMatchScore(a, q)
+      local scoreB = GetSearchMatchScore(b, q)
+      if scoreA ~= scoreB then
+        return scoreA < scoreB
+      end
+
+      -- Within same type & score tier:
+      if a.type == "item" and b.type == "item" then
+        local nameA = (a.data and (a.data.name or a.data.title or "")) or ""
+        local nameB = (b.data and (b.data.name or b.data.title or "")) or ""
+        if nameA:lower() ~= nameB:lower() then
+          return nameA:lower() < nameB:lower()
+        end
+        local ilvlA = tonumber(a.data and a.data.ilvl) or 0
+        local ilvlB = tonumber(b.data and b.data.ilvl) or 0
+        if ilvlA ~= ilvlB then return ilvlA < ilvlB end
+      end
+
+      local nameA = (a.data and (a.data.title or a.data.name or "")) or ""
+      local nameB = (b.data and (b.data.title or b.data.name or "")) or ""
+      return nameA:lower() < nameB:lower()
+    end
+
+    -- Folder browsing (q == ""):
     if isItemView and a.type == "item" and b.type == "item" then
       local ilvlA = tonumber(a.data and a.data.ilvl) or 0
       local ilvlB = tonumber(b.data and b.data.ilvl) or 0
@@ -5800,6 +5776,14 @@ function FG:PopulateCodexResults(query)
     local nameB = (b.data and (b.data.title or b.data.name or "")) or ""
     return nameA:lower() < nameB:lower()
   end)
+
+  -- Smart cross-category fallback:
+  -- If searching within a specific category yielded 0 results (e.g. user searched "thunderfury" while on Vendors),
+  -- automatically switch to "All" so the player gets the exact item or quest they were looking for!
+  if #matches == 0 and cat ~= "all" and q ~= "" then
+    FG:SetActiveCategory("all")
+    return
+  end
 
   FG:UpdateDolphinBreadcrumbs(q, #matches)
 

@@ -125,16 +125,16 @@ class TestPlayerSimulationWalkthrough(unittest.TestCase):
         self.assertIn('Embrace of the Viper', self.data_code)
 
     def test_05_creature_pinpoint_coordinates_and_targeting(self):
-        """Simulate player finding an NPC, viewing pinpoint map coordinates, and triggering target macro."""
+        """Simulate player finding an NPC, viewing pinpoint map coordinates, and verifying clean removal of target macro."""
         # Check data contains coordinates
         self.assertIn('coords =', self.data_code)
 
         # Check Detail Panel displays coordinates
         self.assertIn('Pinpoint Coordinates: |cff20ff20(', self.lua_code)
 
-        # Check target macro preparation
-        self.assertIn('/target ', self.lua_code)
-        self.assertIn('ChatFrame1EditBox', self.lua_code)
+        # Verify target macro feature has been cleanly removed to avoid combat lockdown / macro cap errors
+        self.assertNotIn('/target ', self.lua_code)
+        self.assertIn('Inspect NPC intel & spawn location', self.lua_code)
 
     def test_06_quest_lore_objectives_rewards_and_dialogue(self):
         """Simulate inspecting a quest: full lore text, objectives, rewards, and completion dialogue."""

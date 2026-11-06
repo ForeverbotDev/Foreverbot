@@ -135,34 +135,37 @@ def export_items(cursor) -> str:
         ORDER BY is_forever_content DESC, quality DESC, item_level DESC
     """)
     rows = cursor.fetchall()
-    lua = ["ForeverGuide_Data.Items = {"]
-    for r in rows:
-        i_id, name, quality, ilvl, req_lvl, slot, itype, stats, desc, source, tip, is_forever, bonding, sell_price, icon, effects, item_set = r
-        clean_source = source or ""
-        clean_tip = tip or ""
-        # Guarantee no datamine or alpha patch notes strings
-        clean_source = clean_source.replace("WoW: Forever Open Alpha (Blizzard Build 1.60.1 / Wowhead Datamine)", "World Drop: Creatures and encounters across Azeroth")
-        clean_tip = clean_tip.replace("Official Blizzard WoW: Forever content • Documented in Alpha patch notes & client datamine.", f"Official WoW: Forever {quality} {slot or itype}.")
-        lua.append(f"  [{i_id}] = {{")
-        lua.append(f"    id = {i_id},")
-        lua.append(f"    name = {escape_lua_str(name)},")
-        lua.append(f"    quality = {escape_lua_str(quality or 'Common')},")
-        lua.append(f"    ilvl = {ilvl or 0},")
-        lua.append(f"    reqLvl = {req_lvl or 0},")
-        lua.append(f"    slot = {escape_lua_str(slot or '')},")
-        lua.append(f"    itemType = {escape_lua_str(itype or '')},")
-        lua.append(f"    icon = {escape_lua_str(icon or '')},")
-        lua.append(f"    effects = {escape_lua_str(effects or '')},")
-        lua.append(f"    itemSet = {escape_lua_str(item_set or '')},")
-        lua.append(f"    source = {escape_lua_str(clean_source)},")
-        lua.append(f"    stats = {escape_lua_str(stats or '')},")
-        lua.append(f"    desc = {escape_lua_str(desc or '')},")
-        lua.append(f"    bonding = {escape_lua_str(bonding or '')},")
-        lua.append(f"    sellPrice = {escape_lua_str(sell_price or '')},")
-        lua.append(f"    tip = {escape_lua_str(clean_tip)},")
-        lua.append(f"    isForever = {'true' if is_forever else 'false'},")
-        lua.append("  },")
-    lua.append("}\n")
+    lua = ["ForeverGuide_Data.Items = ForeverGuide_Data.Items or {}"]
+    CHUNK_SIZE = 1000
+    for chunk_idx in range(0, len(rows), CHUNK_SIZE):
+        chunk_rows = rows[chunk_idx:chunk_idx + CHUNK_SIZE]
+        lua.append("(function(t)")
+        for r in chunk_rows:
+            i_id, name, quality, ilvl, req_lvl, slot, itype, stats, desc, source, tip, is_forever, bonding, sell_price, icon, effects, item_set = r
+            clean_source = source or ""
+            clean_tip = tip or ""
+            clean_source = clean_source.replace("WoW: Forever Open Alpha (Blizzard Build 1.60.1 / Wowhead Datamine)", "World Drop: Creatures and encounters across Azeroth")
+            clean_tip = clean_tip.replace("Official Blizzard WoW: Forever content • Documented in Alpha patch notes & client datamine.", f"Official WoW: Forever {quality} {slot or itype}.")
+            lua.append(f"  t[{i_id}] = {{")
+            lua.append(f"    id = {i_id},")
+            lua.append(f"    name = {escape_lua_str(name)},")
+            lua.append(f"    quality = {escape_lua_str(quality or 'Common')},")
+            lua.append(f"    ilvl = {ilvl or 0},")
+            lua.append(f"    reqLvl = {req_lvl or 0},")
+            lua.append(f"    slot = {escape_lua_str(slot or '')},")
+            lua.append(f"    itemType = {escape_lua_str(itype or '')},")
+            lua.append(f"    icon = {escape_lua_str(icon or '')},")
+            lua.append(f"    effects = {escape_lua_str(effects or '')},")
+            lua.append(f"    itemSet = {escape_lua_str(item_set or '')},")
+            lua.append(f"    source = {escape_lua_str(clean_source)},")
+            lua.append(f"    stats = {escape_lua_str(stats or '')},")
+            lua.append(f"    desc = {escape_lua_str(desc or '')},")
+            lua.append(f"    bonding = {escape_lua_str(bonding or '')},")
+            lua.append(f"    sellPrice = {escape_lua_str(sell_price or '')},")
+            lua.append(f"    tip = {escape_lua_str(clean_tip)},")
+            lua.append(f"    isForever = {'true' if is_forever else 'false'},")
+            lua.append("  }")
+        lua.append("end)(ForeverGuide_Data.Items);\n")
     return "\n".join(lua)
 
 
@@ -173,25 +176,29 @@ def export_quests(cursor) -> str:
         ORDER BY title ASC
     """)
     rows = cursor.fetchall()
-    lua = ["ForeverGuide_Data.Quests = {"]
-    for r in rows:
-        q_id, title, req_lvl, q_lvl, faction, zone, npc, objs, rewards, tip, is_forever, details, completion = r
-        lua.append(f"  [{q_id}] = {{")
-        lua.append(f"    id = {q_id},")
-        lua.append(f"    title = {escape_lua_str(title)},")
-        lua.append(f"    reqLevel = {req_lvl or 0},")
-        lua.append(f"    questLevel = {q_lvl or 0},")
-        lua.append(f"    faction = {escape_lua_str(faction or 'Both')},")
-        lua.append(f"    zone = {escape_lua_str(zone or '')},")
-        lua.append(f"    npc = {escape_lua_str(npc or '')},")
-        lua.append(f"    details = {escape_lua_str(details or '')},")
-        lua.append(f"    objectives = {escape_lua_str(objs or '')},")
-        lua.append(f"    completion = {escape_lua_str(completion or '')},")
-        lua.append(f"    rewards = {escape_lua_str(rewards or '')},")
-        lua.append(f"    tip = {escape_lua_str(tip or '')},")
-        lua.append(f"    isForever = {'true' if is_forever else 'false'},")
-        lua.append("  },")
-    lua.append("}\n")
+    lua = ["ForeverGuide_Data.Quests = ForeverGuide_Data.Quests or {}"]
+    CHUNK_SIZE = 1000
+    for chunk_idx in range(0, len(rows), CHUNK_SIZE):
+        chunk_rows = rows[chunk_idx:chunk_idx + CHUNK_SIZE]
+        lua.append("(function(t)")
+        for r in chunk_rows:
+            q_id, title, req_lvl, q_lvl, faction, zone, npc, objs, rewards, tip, is_forever, details, completion = r
+            lua.append(f"  t[{q_id}] = {{")
+            lua.append(f"    id = {q_id},")
+            lua.append(f"    title = {escape_lua_str(title)},")
+            lua.append(f"    reqLevel = {req_lvl or 0},")
+            lua.append(f"    questLevel = {q_lvl or 0},")
+            lua.append(f"    faction = {escape_lua_str(faction or 'Both')},")
+            lua.append(f"    zone = {escape_lua_str(zone or '')},")
+            lua.append(f"    npc = {escape_lua_str(npc or '')},")
+            lua.append(f"    details = {escape_lua_str(details or '')},")
+            lua.append(f"    objectives = {escape_lua_str(objs or '')},")
+            lua.append(f"    completion = {escape_lua_str(completion or '')},")
+            lua.append(f"    rewards = {escape_lua_str(rewards or '')},")
+            lua.append(f"    tip = {escape_lua_str(tip or '')},")
+            lua.append(f"    isForever = {'true' if is_forever else 'false'},")
+            lua.append("  }")
+        lua.append("end)(ForeverGuide_Data.Quests);\n")
     return "\n".join(lua)
 
 
@@ -235,32 +242,41 @@ def export_creatures(cursor) -> str:
         ORDER BY level_max DESC, name ASC
     """)
     rows = cursor.fetchall()
-    lua = ["ForeverGuide_Data.Creatures = {"]
+    lua = ["ForeverGuide_Data.Creatures = ForeverGuide_Data.Creatures or {}"]
+    valid_rows = []
     for r in rows:
-        c_id, name, l_min, l_max, classification, family, zone, loc, hp, strat, is_forever, coords = r
+        name = r[1]
         n_lower = name.lower()
         if any(k in n_lower for k in [" form (", "druid - ", "ruul snowhoof bear form", "serpent form", "owl form", "combat dummy", "target dummy", "trigger", "credit marker", "camera", "controller", "spawner", "test mob", "test dude", "[ph]"]):
             continue
-        lua.append(f"  [{c_id}] = {{")
-        lua.append(f"    id = {c_id},")
-        lua.append(f"    name = {escape_lua_str(name)},")
-        lua.append(f"    minLevel = {l_min or 0},")
-        lua.append(f"    maxLevel = {l_max or 0},")
-        lua.append(f"    classification = {escape_lua_str(classification or 'Normal')},")
-        lua.append(f"    family = {escape_lua_str(family or 'Humanoid')},")
-        lua.append(f"    zone = {escape_lua_str(zone or '')},")
-        lua.append(f"    location = {escape_lua_str(loc or '')},")
-        lua.append(f"    coords = {escape_lua_str(coords or '')},")
-        lua.append(f"    health = {hp or 0},")
-        lua.append(f"    strategy = {escape_lua_str(strat or '')},")
-        lua.append(f"    isForever = {'true' if is_forever else 'false'},")
-        if c_id in loot_by_creature and len(loot_by_creature[c_id]) > 0:
-            lua.append("    loot = {")
-            for item in loot_by_creature[c_id]:
-                lua.append(f"      {{ id = {item['id']}, name = {escape_lua_str(item['name'])}, quality = {escape_lua_str(item['quality'])}, pct = {escape_lua_str(item['pct'])}, slot = {escape_lua_str(item['slot'])}, reqLvl = {item['reqLvl']} }},")
-            lua.append("    },")
-        lua.append("  },")
-    lua.append("}\n")
+        valid_rows.append(r)
+
+    CHUNK_SIZE = 1000
+    for chunk_idx in range(0, len(valid_rows), CHUNK_SIZE):
+        chunk_rows = valid_rows[chunk_idx:chunk_idx + CHUNK_SIZE]
+        lua.append("(function(t)")
+        for r in chunk_rows:
+            c_id, name, l_min, l_max, classification, family, zone, loc, hp, strat, is_forever, coords = r
+            lua.append(f"  t[{c_id}] = {{")
+            lua.append(f"    id = {c_id},")
+            lua.append(f"    name = {escape_lua_str(name)},")
+            lua.append(f"    minLevel = {l_min or 0},")
+            lua.append(f"    maxLevel = {l_max or 0},")
+            lua.append(f"    classification = {escape_lua_str(classification or 'Normal')},")
+            lua.append(f"    family = {escape_lua_str(family or 'Humanoid')},")
+            lua.append(f"    zone = {escape_lua_str(zone or '')},")
+            lua.append(f"    location = {escape_lua_str(loc or '')},")
+            lua.append(f"    coords = {escape_lua_str(coords or '')},")
+            lua.append(f"    health = {hp or 0},")
+            lua.append(f"    strategy = {escape_lua_str(strat or '')},")
+            lua.append(f"    isForever = {'true' if is_forever else 'false'},")
+            if c_id in loot_by_creature and len(loot_by_creature[c_id]) > 0:
+                lua.append("    loot = {")
+                for item in loot_by_creature[c_id]:
+                    lua.append(f"      {{ id = {item['id']}, name = {escape_lua_str(item['name'])}, quality = {escape_lua_str(item['quality'])}, pct = {escape_lua_str(item['pct'])}, slot = {escape_lua_str(item['slot'])}, reqLvl = {item['reqLvl']} }},")
+                lua.append("    },")
+            lua.append("  }")
+        lua.append("end)(ForeverGuide_Data.Creatures);\n")
     return "\n".join(lua)
 
 

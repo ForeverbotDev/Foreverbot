@@ -338,10 +338,10 @@ class TestVirtualScrollAndNearby(unittest.TestCase):
         self.assertIn('GetNumQuestLogEntries', self.lua_code)
 
         # 2. Badges and status rendering
-        self.assertIn('[✓ Completed]', self.lua_code)
-        self.assertIn('[★ Ready to Turn In]', self.lua_code)
-        self.assertIn('[● Active in Log]', self.lua_code)
-        self.assertIn('[○ Available]', self.lua_code)
+        self.assertIn('[Completed]', self.lua_code)
+        self.assertIn('[Ready to Turn In]', self.lua_code)
+        self.assertIn('[Active]', self.lua_code)
+        self.assertIn('[Available]', self.lua_code)
 
         # 3. Dedicated Folders
         self.assertIn('{ path = "quests/active", name = "Active in Log"', self.lua_code)
