@@ -5006,30 +5006,8 @@ function FG:PopulateCodexResults(query)
   local cur = FG.currentFolder or "root"
   local cw = FG.CodexWindow
 
-  -- Mission Control Home Dashboard:
-  -- When on the Root Home screen with no search query, display the interactive
-  -- Home Dashboard (Live Area Radar + Featured Codex Hubs + Sparky Field Notes)
-  -- instead of redundant vertical list rows that duplicate the top filter pills!
-  if cur == "root" and q == "" then
-    if content.HomeDashboard then
-      content.HomeDashboard:Show()
-      FG:UpdateHomeDashboard()
-    end
-    if content.NoResultsState then content.NoResultsState:Hide() end
-    for _, btn in ipairs(content.RowPool or {}) do btn:Hide() end
-    FG.currentMatches = {}
-    content:SetHeight(340)
-    if scrollFrame then scrollFrame:SetVerticalScroll(0) end
-
-    if cw and cw.StatusText then
-      cw.StatusText:SetText("")
-    end
-    FG:UpdateDolphinBreadcrumbs("", 0)
-    return
-  else
-    if content.HomeDashboard then
-      content.HomeDashboard:Hide()
-    end
+  if content.HomeDashboard then
+    content.HomeDashboard:Hide()
   end
 
   local matches = {}

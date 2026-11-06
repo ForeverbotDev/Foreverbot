@@ -225,11 +225,11 @@ class TestVirtualScrollAndNearby(unittest.TestCase):
         self.assertIn('Right-Click Row', self.lua_code)
         self.assertIn('/fg or /forever', self.lua_code)
 
-        # 5. Root activation in PopulateCodexResults
-        self.assertIn('if cur == "root" and q == "" then', self.lua_code)
-        self.assertIn('content.HomeDashboard:Show()', self.lua_code)
-        self.assertIn('FG:UpdateHomeDashboard()', self.lua_code)
-        self.assertIn('content.HomeDashboard:Hide()', self.lua_code)
+        # 5. Root view displays categories directly in virtual row list
+        self.assertIn('["root"] = {', self.lua_code)
+        self.assertIn('Nearby Area Intel (Zone Radar)', self.lua_code)
+        self.assertIn('Items & Equipment', self.lua_code)
+        self.assertIn('Vendors & Flight Paths', self.lua_code)
 
     def test_16_available_and_recommended_dungeons_and_quests(self):
         """Verify presence of Available and Recommended across folders, list rows, and detail panels."""
