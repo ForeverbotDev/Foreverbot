@@ -165,6 +165,14 @@ class TestVirtualScrollAndNearby(unittest.TestCase):
         self.assertIn('cur:find("^items/armor/([^/]+)/([^/]+)$")', self.lua_code)
         self.assertIn('cur:find("^items/armor/([^/]+)$")', self.lua_code)
 
+    def test_12_menu_folders_status_text_not_ilvl(self):
+        """Verify menus/folders display 'categories in view (A-Z)' and never 'items in view (iLvl: Lowest to Highest)'."""
+        self.assertIn('elseif folderCount == #matches then', self.lua_code)
+        self.assertIn('categories in view (A-Z)', self.lua_code)
+        self.assertIn('items in view (iLvl: Lowest to Highest)', self.lua_code)
+        self.assertIn('quests in view (A-Z)', self.lua_code)
+        self.assertIn('creatures in view (A-Z)', self.lua_code)
+
 
 if __name__ == "__main__":
     unittest.main()

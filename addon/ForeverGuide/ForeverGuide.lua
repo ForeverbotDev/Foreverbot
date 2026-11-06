@@ -3718,7 +3718,6 @@ function FG:PopulateCodexResults(query)
           if item.slot then
             slotCounts[item.slot] = (slotCounts[item.slot] or 0) + 1
           end
-          table.insert(matches, { type = "item", data = item })
         end
       end
       for _, sdef in ipairs(ARMOR_SLOT_DEFS) do
@@ -3761,8 +3760,8 @@ function FG:PopulateCodexResults(query)
             }
           })
         end
-      end
-      for _, item in pairs(FG.Data.Items) do
+      else
+        for _, item in pairs(FG.Data.Items) do
         local name = item.name or ""
         local isInternal = name:find("^OLD") or name:find("^zzOLD") or name:find("^Monster %-") or name:find("^TEST") or name:find("%[PH%]")
         if not isInternal then
@@ -4090,12 +4089,45 @@ function FG:PopulateCodexResults(query)
     if content.NoResultsState then content.NoResultsState:Hide() end
     local countStr = FG:FormatNumber(#matches)
     if cw and cw.StatusText then
+      local folderCount = 0
+      local itemCount = 0
+      local questCount = 0
+      local creatureCount = 0
+      local dungeonCount = 0
+      for _, m in ipairs(matches) do
+        if m.type == "folder" then
+          folderCount = folderCount + 1
+        elseif m.type == "item" then
+          itemCount = itemCount + 1
+        elseif m.type == "quest" then
+          questCount = questCount + 1
+        elseif m.type == "creature" then
+          creatureCount = creatureCount + 1
+        elseif m.type == "dungeon" then
+          dungeonCount = dungeonCount + 1
+        end
+      end
+
       if cur == "nearby" or cat == "nearby" then
         cw.StatusText:SetText("|cff20ff20" .. countStr .. " nearby points of interest (" .. (FG.lastKnownZone or "Local Area") .. ")|r")
-      elseif isItemView then
-        cw.StatusText:SetText("|cffdf80ff" .. countStr .. " items in view (iLvl: Lowest to Highest)|r")
+      elseif folderCount == #matches then
+        cw.StatusText:SetText("|cffdf80ff" .. countStr .. " categories in view (A-Z)|r")
+      elseif itemCount == #matches then
+        if isItemView or cat == "items" then
+          cw.StatusText:SetText("|cffdf80ff" .. countStr .. " items in view (iLvl: Lowest to Highest)|r")
+        else
+          cw.StatusText:SetText("|cffdf80ff" .. countStr .. " items in view (A-Z)|r")
+        end
+      elseif questCount == #matches then
+        cw.StatusText:SetText("|cffdf80ff" .. countStr .. " quests in view (A-Z)|r")
+      elseif creatureCount == #matches then
+        cw.StatusText:SetText("|cffdf80ff" .. countStr .. " creatures in view (A-Z)|r")
+      elseif dungeonCount == #matches then
+        cw.StatusText:SetText("|cffdf80ff" .. countStr .. " dungeons & raids in view (A-Z)|r")
+      elseif folderCount > 0 and itemCount > 0 and (folderCount + itemCount == #matches) then
+        cw.StatusText:SetText("|cffdf80ff" .. folderCount .. " categories, " .. itemCount .. " items in view|r")
       else
-        cw.StatusText:SetText("|cffdf80ff" .. countStr .. " items in view (A-Z)|r")
+        cw.StatusText:SetText("|cffdf80ff" .. countStr .. " results in view (A-Z)|r")
       end
     end
   end
