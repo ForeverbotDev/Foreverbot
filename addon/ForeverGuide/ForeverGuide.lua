@@ -2817,12 +2817,12 @@ FG.FolderTree = {
     title = "Nearby Area Intel (Zone Radar)",
     parent = "root",
     folders = {
-      { path = "nearby/quests", name = "Nearby Quests", desc = "Active quests and storyline objectives in this zone" },
-      { path = "nearby/rares", name = "Nearby Rares & Bosses", desc = "Silver-dragon rare spawns and world encounters" },
-      { path = "nearby/creatures", name = "Nearby Creatures & Mobs", desc = "Local beasts, humanoids, and monsters in immediate area" },
-      { path = "nearby/vendors", name = "Nearby Vendors & Flight Masters", desc = "Flight paths, repairs, reagents, and local trade" },
-      { path = "nearby/dungeons", name = "Nearby Dungeons & Raids", desc = "Instance entrances, meeting stones, and portals" },
-      { path = "nearby/loot", name = "Nearby Notable Loot & Drops", desc = "Valuable BoE items, world recipes, and prized drops" },
+      { path = "nearby/quests", name = "Quests", desc = "Active quests and storyline objectives in this zone" },
+      { path = "nearby/rares", name = "Rares & Bosses", desc = "Silver-dragon rare spawns and world encounters" },
+      { path = "nearby/creatures", name = "Creatures & Mobs", desc = "Local beasts, humanoids, and monsters in immediate area" },
+      { path = "nearby/vendors", name = "Vendors & Flight Masters", desc = "Flight paths, repairs, reagents, and local trade" },
+      { path = "nearby/dungeons", name = "Dungeons & Raids", desc = "Instance entrances, meeting stones, and portals" },
+      { path = "nearby/loot", name = "Notable Loot & Drops", desc = "Valuable BoE items, world recipes, and prized drops" },
     },
   },
 
@@ -3476,7 +3476,7 @@ function FG:PopulateCodexResults(query)
       table.insert(matches, {
         type = "folder",
         data = {
-          name = "Nearby Quests",
+          name = "Quests",
           path = "nearby/quests",
           desc = string.format("%d quests in %s", qCount, pZone),
           count = qCount,
@@ -3486,7 +3486,7 @@ function FG:PopulateCodexResults(query)
       table.insert(matches, {
         type = "folder",
         data = {
-          name = "Nearby Rares & Bosses",
+          name = "Rares & Bosses",
           path = "nearby/rares",
           desc = string.format("%d rare spawns & bosses in %s", rCount, pZone),
           count = rCount,
@@ -3496,7 +3496,7 @@ function FG:PopulateCodexResults(query)
       table.insert(matches, {
         type = "folder",
         data = {
-          name = "Nearby Creatures & Mobs",
+          name = "Creatures & Mobs",
           path = "nearby/creatures",
           desc = string.format("%d creatures & NPCs in %s", cCount, pZone),
           count = cCount,
@@ -3506,7 +3506,7 @@ function FG:PopulateCodexResults(query)
       table.insert(matches, {
         type = "folder",
         data = {
-          name = "Nearby Vendors & Flight Masters",
+          name = "Vendors & Flight Masters",
           path = "nearby/vendors",
           desc = string.format("%d vendors & flight masters in %s", vCount, pZone),
           count = vCount,
@@ -3516,7 +3516,7 @@ function FG:PopulateCodexResults(query)
       table.insert(matches, {
         type = "folder",
         data = {
-          name = "Nearby Dungeons & Raids",
+          name = "Dungeons & Raids",
           path = "nearby/dungeons",
           desc = string.format("%d dungeons & raids in %s", dCount, pZone),
           count = dCount,
@@ -3526,7 +3526,7 @@ function FG:PopulateCodexResults(query)
       table.insert(matches, {
         type = "folder",
         data = {
-          name = "Nearby Notable Loot & Drops",
+          name = "Notable Loot & Drops",
           path = "nearby/loot",
           desc = string.format("%d notable items & drops in %s", lCount, pZone),
           count = lCount,

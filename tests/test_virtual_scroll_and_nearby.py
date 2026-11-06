@@ -123,15 +123,17 @@ class TestVirtualScrollAndNearby(unittest.TestCase):
         self.assertIn('n:find(" form%f[%A]")', self.lua_code)
 
     def test_09_nearby_kde_folder_structure(self):
-        """Verify Nearby tab features the 6 authentic KDE Dolphin folders."""
+        """Verify Nearby tab features the 6 authentic KDE Dolphin folders without redundant 'Nearby ' prefix."""
         for path in ["nearby/quests", "nearby/rares", "nearby/creatures", "nearby/vendors", "nearby/dungeons", "nearby/loot"]:
             self.assertIn(f'path = "{path}"', self.lua_code)
-        self.assertIn('name = "Nearby Quests"', self.lua_code)
-        self.assertIn('name = "Nearby Rares & Bosses"', self.lua_code)
-        self.assertIn('name = "Nearby Creatures & Mobs"', self.lua_code)
-        self.assertIn('name = "Nearby Vendors & Flight Masters"', self.lua_code)
-        self.assertIn('name = "Nearby Dungeons & Raids"', self.lua_code)
-        self.assertIn('name = "Nearby Notable Loot & Drops"', self.lua_code)
+        self.assertIn('name = "Quests"', self.lua_code)
+        self.assertIn('name = "Rares & Bosses"', self.lua_code)
+        self.assertIn('name = "Creatures & Mobs"', self.lua_code)
+        self.assertIn('name = "Vendors & Flight Masters"', self.lua_code)
+        self.assertIn('name = "Dungeons & Raids"', self.lua_code)
+        self.assertIn('name = "Notable Loot & Drops"', self.lua_code)
+        self.assertNotIn('name = "Nearby Quests"', self.lua_code)
+        self.assertNotIn('name = "Nearby Rares & Bosses"', self.lua_code)
 
     def test_10_creatures_by_zone_and_strict_alphabetical_order(self):
         """Verify Creatures by Zone (EK & Kalimdor) and universal strict alphabetical sorting."""
