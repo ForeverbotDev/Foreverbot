@@ -1424,19 +1424,24 @@ function FG:CreateCodexRowButton(parent, i)
 
   local titleText = btn:CreateFontString(nil, "OVERLAY", "GameFontHighlight")
   titleText:SetPoint("TOPLEFT", btn, "TOPLEFT", 48, -7)
+  titleText:SetPoint("RIGHT", btn, "RIGHT", -68, 0)
+  titleText:SetJustifyH("LEFT")
+  titleText:SetWordWrap(false)
   SharpenFontString(titleText, 13, "OUTLINE")
   btn.Title = titleText
 
   local subText = btn:CreateFontString(nil, "OVERLAY", "GameFontNormalSmall")
   subText:SetPoint("TOPLEFT", titleText, "BOTTOMLEFT", 0, -3)
-  subText:SetWidth(400)
+  subText:SetPoint("RIGHT", btn, "RIGHT", -68, 0)
+  subText:SetHeight(15)
   subText:SetJustifyH("LEFT")
+  subText:SetWordWrap(false)
   SharpenFontString(subText, 11, "OUTLINE")
   btn.Sub = subText
 
   local hint = btn:CreateFontString(nil, "OVERLAY", "GameFontHighlightSmall")
   hint:SetPoint("RIGHT", btn, "RIGHT", -12, 0)
-  hint:SetText("|cffdf80ffInspect >|r")
+  hint:SetText("|cff9d8ec2Inspect >|r")
   SharpenFontString(hint, 10, "OUTLINE")
   btn.Hint = hint
 
@@ -1460,13 +1465,19 @@ function FG:ConfigureRowButton(btn, match)
     end
     btn.Title:ClearAllPoints()
     btn.Title:SetPoint("TOPLEFT", btn, "TOPLEFT", 48, -7)
+    btn.Title:SetPoint("RIGHT", btn, "RIGHT", -68, 0)
+    btn.Title:SetJustifyH("LEFT")
+    btn.Title:SetWordWrap(false)
     btn.Sub:ClearAllPoints()
     btn.Sub:SetPoint("TOPLEFT", btn.Title, "BOTTOMLEFT", 0, -3)
-    btn.Sub:SetWidth(400)
+    btn.Sub:SetPoint("RIGHT", btn, "RIGHT", -68, 0)
+    btn.Sub:SetHeight(15)
+    btn.Sub:SetJustifyH("LEFT")
+    btn.Sub:SetWordWrap(false)
 
     btn.Title:SetText("|cff66ccff" .. folder.name .. "|r")
     btn.Sub:SetText("|cff8899aa" .. (folder.desc or folder.count or "Folder") .. "|r")
-    btn.Hint:SetText("|cff33bbffOpen >|r")
+    btn.Hint:SetText("|cff38bdf8Open >|r")
 
     btn:SetScript("OnEnter", function(self)
       self:SetBackdropColor(0.14, 0.20, 0.30, 0.98)
@@ -1491,7 +1502,7 @@ function FG:ConfigureRowButton(btn, match)
     btn:SetHeight(50)
     btn:SetBackdropColor(0.10, 0.12, 0.16, 0.90)
     btn:SetBackdropBorderColor(0.18, 0.24, 0.33, 0.70)
-    btn.Hint:SetText("|cffdf80ffInspect >|r")
+    btn.Hint:SetText("|cff9d8ec2Inspect >|r")
 
     if btn.IconFrame then
       btn.IconFrame:Show()
@@ -1506,18 +1517,38 @@ function FG:ConfigureRowButton(btn, match)
     end
     btn.Title:ClearAllPoints()
     btn.Title:SetPoint("TOPLEFT", btn, "TOPLEFT", 48, -7)
+    btn.Title:SetPoint("RIGHT", btn, "RIGHT", -68, 0)
+    btn.Title:SetJustifyH("LEFT")
+    btn.Title:SetWordWrap(false)
     btn.Sub:ClearAllPoints()
     btn.Sub:SetPoint("TOPLEFT", btn.Title, "BOTTOMLEFT", 0, -3)
-    btn.Sub:SetWidth(400)
+    btn.Sub:SetPoint("RIGHT", btn, "RIGHT", -68, 0)
+    btn.Sub:SetHeight(15)
+    btn.Sub:SetJustifyH("LEFT")
+    btn.Sub:SetWordWrap(false)
 
     local qColor = FG.QualityColors[item.quality] or "ffffffff"
     local foreverTag = item.isForever and " |cffe6cc80[Forever]|r" or ""
-    local nearbyPrefix = match.isNearby and "|cff20ff20[Loot]|r " or ""
-    btn.Title:SetText(nearbyPrefix .. "|c" .. qColor .. item.name .. "|r" .. foreverTag .. " |cff8899aa(iLvl " .. item.ilvl .. ")|r")
+    local ilvlStr = (item.ilvl and item.ilvl > 0) and (" |cff7e8c9e(iLvl " .. item.ilvl .. ")|r") or ""
+    btn.Title:SetText("|c" .. qColor .. item.name .. "|r" .. foreverTag .. ilvlStr)
 
-    local desc = (item.slot and item.slot ~= "" and (item.slot .. " - ") or "") .. (item.source or "World Drop")
-    if item.tip and item.tip ~= "" then desc = desc .. " |cff52b8ffNote:|r |cffb0c4de" .. item.tip .. "|r" end
-    btn.Sub:SetText(desc)
+    local parts = {}
+    if item.slot and item.slot ~= "" and item.slot ~= "Non-equippable" then
+      table.insert(parts, "|cff8ba5cc" .. item.slot .. "|r")
+    elseif item.itemType and item.itemType ~= "" then
+      table.insert(parts, "|cff8ba5cc" .. item.itemType .. "|r")
+    end
+
+    if item.source and item.source ~= "" then
+      local cleanSource = item.source:gsub("^Quest:%s*", "")
+      table.insert(parts, "|cff94a3b8" .. cleanSource .. "|r")
+    elseif item.bonding and item.bonding ~= "" then
+      table.insert(parts, "|cff7e8c9e" .. item.bonding .. "|r")
+    else
+      table.insert(parts, "|cff7e8c9eWorld Drop|r")
+    end
+
+    btn.Sub:SetText(table.concat(parts, " |cff475569·|r "))
 
     btn:SetScript("OnEnter", function(self)
       self:SetBackdropColor(0.14, 0.18, 0.26, 0.95)
@@ -1552,7 +1583,7 @@ function FG:ConfigureRowButton(btn, match)
     btn:SetHeight(50)
     btn:SetBackdropColor(0.10, 0.12, 0.16, 0.90)
     btn:SetBackdropBorderColor(0.18, 0.24, 0.33, 0.70)
-    btn.Hint:SetText("|cffdf80ffInspect >|r")
+    btn.Hint:SetText("|cff9d8ec2Inspect >|r")
 
     if btn.IconFrame then
       btn.IconFrame:Show()
@@ -1561,14 +1592,24 @@ function FG:ConfigureRowButton(btn, match)
     end
     btn.Title:ClearAllPoints()
     btn.Title:SetPoint("TOPLEFT", btn, "TOPLEFT", 48, -7)
+    btn.Title:SetPoint("RIGHT", btn, "RIGHT", -68, 0)
+    btn.Title:SetJustifyH("LEFT")
+    btn.Title:SetWordWrap(false)
     btn.Sub:ClearAllPoints()
     btn.Sub:SetPoint("TOPLEFT", btn.Title, "BOTTOMLEFT", 0, -3)
-    btn.Sub:SetWidth(400)
+    btn.Sub:SetPoint("RIGHT", btn, "RIGHT", -68, 0)
+    btn.Sub:SetHeight(15)
+    btn.Sub:SetJustifyH("LEFT")
+    btn.Sub:SetWordWrap(false)
 
     local foreverTag = qData.isForever and " |cffe6cc80[Forever]|r" or ""
-    local nearbyPrefix = match.isNearby and "|cff20ff20[Quest]|r " or ""
-    btn.Title:SetText(nearbyPrefix .. "|cffffd24d" .. qData.title .. "|r" .. foreverTag .. " |cff20ff20(Lvl " .. qData.questLevel .. ")|r")
-    btn.Sub:SetText("|cff52b8ffZone:|r " .. (qData.zone or "Various") .. " |cff52b8ffStart:|r " .. (qData.npc or "Unknown"))
+    local lvlStr = (qData.questLevel and qData.questLevel > 0) and (" |cff7e8c9e(Lvl " .. qData.questLevel .. ")|r") or ""
+    btn.Title:SetText("|cffffd24d" .. qData.title .. "|r" .. foreverTag .. lvlStr)
+
+    local parts = {}
+    if qData.zone and qData.zone ~= "" then table.insert(parts, "|cff8ba5cc" .. qData.zone .. "|r") end
+    if qData.npc and qData.npc ~= "" then table.insert(parts, "|cff94a3b8Starts: " .. qData.npc .. "|r") end
+    btn.Sub:SetText(table.concat(parts, " |cff475569·|r "))
 
     btn:SetScript("OnEnter", function(self)
       self:SetBackdropColor(0.10, 0.18, 0.14, 0.95)
@@ -1604,7 +1645,7 @@ function FG:ConfigureRowButton(btn, match)
     btn:SetHeight(50)
     btn:SetBackdropColor(0.10, 0.12, 0.16, 0.90)
     btn:SetBackdropBorderColor(0.18, 0.24, 0.33, 0.70)
-    btn.Hint:SetText("|cffdf80ffInspect >|r")
+    btn.Hint:SetText("|cff9d8ec2Inspect >|r")
 
     if btn.IconFrame then
       btn.IconFrame:Show()
@@ -1620,32 +1661,27 @@ function FG:ConfigureRowButton(btn, match)
     end
     btn.Title:ClearAllPoints()
     btn.Title:SetPoint("TOPLEFT", btn, "TOPLEFT", 48, -7)
+    btn.Title:SetPoint("RIGHT", btn, "RIGHT", -68, 0)
+    btn.Title:SetJustifyH("LEFT")
+    btn.Title:SetWordWrap(false)
     btn.Sub:ClearAllPoints()
     btn.Sub:SetPoint("TOPLEFT", btn.Title, "BOTTOMLEFT", 0, -3)
-    btn.Sub:SetWidth(400)
+    btn.Sub:SetPoint("RIGHT", btn, "RIGHT", -68, 0)
+    btn.Sub:SetHeight(15)
+    btn.Sub:SetJustifyH("LEFT")
+    btn.Sub:SetWordWrap(false)
 
     local foreverTag = c.isForever and " |cffe6cc80[Forever]|r" or ""
     local classColor = (c.classification == "Boss" or c.classification == "Rare Elite" or c.classification == "World Boss") and "ffff4040" or (c.classification == "Elite" and "ffffd24d" or "ff52b8ff")
     local lvlStr = (c.minLevel and c.maxLevel and c.minLevel ~= c.maxLevel) and (c.minLevel .. "-" .. c.maxLevel) or (c.maxLevel or c.minLevel or "?")
-    local tagPrefix = ""
-    if match.isNearby then
-      if c.classification == "Boss" or c.classification == "World Boss" then
-        tagPrefix = "|cffff4040[Nearby Boss]|r "
-      elseif c.classification == "Rare" or c.classification == "Rare Elite" then
-        tagPrefix = "|cff33bbff[Nearby Rare]|r "
-      else
-        tagPrefix = "|cff20ff20[Nearby NPC]|r "
-      end
-    end
-    btn.Title:SetText(tagPrefix .. "|c" .. classColor .. c.name .. "|r" .. foreverTag .. " |cff20ff20(Lvl " .. lvlStr .. " " .. (c.classification or "NPC") .. ")|r")
-    local desc = "|cff52b8ffZone:|r " .. (c.zone ~= "" and c.zone or "Various")
-    if c.location and c.location ~= "" then
-      desc = desc .. " |cff52b8ffLocation:|r " .. c.location
-    end
-    if c.coords and c.coords ~= "" then
-      desc = desc .. " (" .. c.coords .. ")"
-    end
-    btn.Sub:SetText(desc)
+    local classTag = (c.classification and c.classification ~= "Normal") and (" " .. c.classification) or ""
+    btn.Title:SetText("|c" .. classColor .. c.name .. "|r" .. foreverTag .. " |cff7e8c9e(Lvl " .. lvlStr .. classTag .. ")|r")
+
+    local parts = {}
+    if c.zone and c.zone ~= "" then table.insert(parts, "|cff8ba5cc" .. c.zone .. "|r") end
+    if c.location and c.location ~= "" then table.insert(parts, "|cff94a3b8" .. c.location .. "|r") end
+    if c.coords and c.coords ~= "" then table.insert(parts, "|cff7e8c9e(" .. c.coords .. ")|r") end
+    btn.Sub:SetText(table.concat(parts, " |cff475569·|r "))
 
     btn:SetScript("OnEnter", function(self)
       self:SetBackdropColor(0.18, 0.14, 0.10, 0.95)
@@ -1685,7 +1721,7 @@ function FG:ConfigureRowButton(btn, match)
     btn:SetHeight(50)
     btn:SetBackdropColor(0.10, 0.12, 0.16, 0.90)
     btn:SetBackdropBorderColor(0.18, 0.24, 0.33, 0.70)
-    btn.Hint:SetText("|cffdf80ffInspect >|r")
+    btn.Hint:SetText("|cff9d8ec2Inspect >|r")
 
     if btn.IconFrame then
       btn.IconFrame:Show()
@@ -1694,14 +1730,23 @@ function FG:ConfigureRowButton(btn, match)
     end
     btn.Title:ClearAllPoints()
     btn.Title:SetPoint("TOPLEFT", btn, "TOPLEFT", 48, -7)
+    btn.Title:SetPoint("RIGHT", btn, "RIGHT", -68, 0)
+    btn.Title:SetJustifyH("LEFT")
+    btn.Title:SetWordWrap(false)
     btn.Sub:ClearAllPoints()
     btn.Sub:SetPoint("TOPLEFT", btn.Title, "BOTTOMLEFT", 0, -3)
-    btn.Sub:SetWidth(400)
+    btn.Sub:SetPoint("RIGHT", btn, "RIGHT", -68, 0)
+    btn.Sub:SetHeight(15)
+    btn.Sub:SetJustifyH("LEFT")
+    btn.Sub:SetWordWrap(false)
 
     local foreverTag = d.isForever and " |cffe6cc80[Forever]|r" or ""
-    local nearbyPrefix = match.isNearby and "|cffaf50ff[Nearby Dungeon]|r " or ""
-    btn.Title:SetText(nearbyPrefix .. "|cffffd24d" .. d.name .. "|r" .. foreverTag .. " |cff20ff20(Lvl " .. d.recLevel .. ")|r")
-    btn.Sub:SetText("|cff52b8ffZone:|r " .. d.zone .. " |cff52b8ffEntrance:|r " .. (d.coords or "N/A"))
+    btn.Title:SetText("|cffffd24d" .. d.name .. "|r" .. foreverTag .. " |cff7e8c9e(Lvl " .. (d.recLevel or "?") .. ")|r")
+
+    local parts = {}
+    if d.zone and d.zone ~= "" then table.insert(parts, "|cff8ba5cc" .. d.zone .. "|r") end
+    if d.coords and d.coords ~= "" then table.insert(parts, "|cff94a3b8Entrance: " .. d.coords .. "|r") end
+    btn.Sub:SetText(table.concat(parts, " |cff475569·|r "))
 
     btn:SetScript("OnEnter", function(self)
       self:SetBackdropColor(0.15, 0.12, 0.22, 0.95)
@@ -1738,7 +1783,7 @@ function FG:ConfigureRowButton(btn, match)
     btn:SetHeight(50)
     btn:SetBackdropColor(0.10, 0.12, 0.16, 0.90)
     btn:SetBackdropBorderColor(0.18, 0.24, 0.33, 0.70)
-    btn.Hint:SetText("|cffdf80ffInspect >|r")
+    btn.Hint:SetText("|cff9d8ec2Inspect >|r")
 
     if btn.IconFrame then
       btn.IconFrame:Show()
@@ -1747,17 +1792,22 @@ function FG:ConfigureRowButton(btn, match)
     end
     btn.Title:ClearAllPoints()
     btn.Title:SetPoint("TOPLEFT", btn, "TOPLEFT", 48, -7)
+    btn.Title:SetPoint("RIGHT", btn, "RIGHT", -68, 0)
+    btn.Title:SetJustifyH("LEFT")
+    btn.Title:SetWordWrap(false)
     btn.Sub:ClearAllPoints()
     btn.Sub:SetPoint("TOPLEFT", btn.Title, "BOTTOMLEFT", 0, -3)
-    btn.Sub:SetWidth(400)
+    btn.Sub:SetPoint("RIGHT", btn, "RIGHT", -68, 0)
+    btn.Sub:SetHeight(15)
+    btn.Sub:SetJustifyH("LEFT")
+    btn.Sub:SetWordWrap(false)
 
-    local nearbyPrefix = match.isNearby and "|cff20ff20[Vendor]|r " or ""
-    btn.Title:SetText(nearbyPrefix .. "|cffffd24d" .. v.name .. "|r |cff20ff20[Vendor]|r")
-    local desc = "|cff52b8ffSells:|r " .. (v.item or "Goods") .. " |cff52b8ffZone:|r " .. (v.zone or "Various")
-    if v.coords and v.coords ~= "" then
-      desc = desc .. " (" .. v.coords .. ")"
-    end
-    btn.Sub:SetText(desc)
+    btn.Title:SetText("|cffffd24d" .. v.name .. "|r |cff7e8c9e(Vendor)|r")
+    local parts = {}
+    if v.zone and v.zone ~= "" then table.insert(parts, "|cff8ba5cc" .. v.zone .. "|r") end
+    if v.item and v.item ~= "" then table.insert(parts, "|cff94a3b8Sells: " .. v.item .. "|r") end
+    if v.coords and v.coords ~= "" then table.insert(parts, "|cff7e8c9e(" .. v.coords .. ")|r") end
+    btn.Sub:SetText(table.concat(parts, " |cff475569·|r "))
 
     btn:SetScript("OnEnter", function(self)
       self:SetBackdropColor(0.12, 0.18, 0.16, 0.95)

@@ -179,6 +179,21 @@ class TestVirtualScrollAndNearby(unittest.TestCase):
         res = subprocess.run(["luajit", "-b", LUA_FILE, "/dev/null"], capture_output=True, text=True)
         self.assertEqual(res.returncode, 0, f"Lua syntax error detected:\n{res.stderr}")
 
+    def test_14_calm_optometry_typography_and_no_overflow(self):
+        """Verify typographic hierarchy, strict single-line isolation (zero overflow), and removal of visual clutter prefixes."""
+        # 1. No noisy bracketed prefixes in titles
+        self.assertNotIn('[Loot]|r ', self.lua_code)
+        self.assertNotIn('[Nearby NPC]|r ', self.lua_code)
+        self.assertNotIn('[Nearby Dungeon]|r ', self.lua_code)
+
+        # 2. Single-line bounds and right margin clamping
+        self.assertIn('titleText:SetWordWrap(false)', self.lua_code)
+        self.assertIn('subText:SetWordWrap(false)', self.lua_code)
+        self.assertIn('subText:SetHeight(15)', self.lua_code)
+
+        # 3. Calm separator and soft muted palette in subtitles
+        self.assertIn('table.concat(parts, " |cff475569·|r ")', self.lua_code)
+
 
 if __name__ == "__main__":
     unittest.main()
