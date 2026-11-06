@@ -228,6 +228,22 @@ class TestVirtualScrollAndNearby(unittest.TestCase):
         self.assertIn('FG:UpdateHomeDashboard()', self.lua_code)
         self.assertIn('content.HomeDashboard:Hide()', self.lua_code)
 
+    def test_16_available_and_recommended_dungeons_and_quests(self):
+        """Verify presence of Available and Recommended across folders, list rows, and detail panels."""
+        # 1. Folder hierarchy
+        self.assertIn('{ path = "dungeons/available", name = "Available Dungeons"', self.lua_code)
+        self.assertIn('{ path = "dungeons/recommended", name = "Recommended Dungeons"', self.lua_code)
+        self.assertIn('{ path = "quests/available", name = "Available Quests"', self.lua_code)
+        self.assertIn('{ path = "quests/recommended", name = "Recommended Quests"', self.lua_code)
+
+        # 2. Detail panels
+        self.assertIn('Available: |cff38bdf8Level', self.lua_code)
+        self.assertIn('Recommended: |cff20ff20Level', self.lua_code)
+
+        # 3. List rows and tooltips
+        self.assertIn('Avail:', self.lua_code)
+        self.assertIn('Rec:', self.lua_code)
+
 
 if __name__ == "__main__":
     unittest.main()

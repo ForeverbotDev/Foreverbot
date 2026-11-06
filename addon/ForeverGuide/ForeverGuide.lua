@@ -1603,10 +1603,17 @@ function FG:ConfigureRowButton(btn, match)
     btn.Sub:SetWordWrap(false)
 
     local foreverTag = qData.isForever and " |cffe6cc80[Forever]|r" or ""
-    local lvlStr = (qData.questLevel and qData.questLevel > 0) and (" |cff7e8c9e(Lvl " .. qData.questLevel .. ")|r") or ""
-    btn.Title:SetText("|cffffd24d" .. qData.title .. "|r" .. foreverTag .. lvlStr)
+    btn.Title:SetText("|cffffd24d" .. qData.title .. "|r" .. foreverTag)
 
     local parts = {}
+    local reqLvl = tonumber(qData.reqLevel) or 1
+    local qLvl = tonumber(qData.questLevel) or 0
+    if reqLvl > 1 then
+      table.insert(parts, "|cff38bdf8Avail: Lvl " .. reqLvl .. "+|r")
+    end
+    if qLvl > 0 then
+      table.insert(parts, "|cff22c55eRec: Lvl " .. qLvl .. "|r")
+    end
     if qData.zone and qData.zone ~= "" then table.insert(parts, "|cff8ba5cc" .. qData.zone .. "|r") end
     if qData.npc and qData.npc ~= "" then table.insert(parts, "|cff94a3b8Starts: " .. qData.npc .. "|r") end
     btn.Sub:SetText(table.concat(parts, " |cff475569·|r "))
@@ -1616,7 +1623,8 @@ function FG:ConfigureRowButton(btn, match)
       self:SetBackdropBorderColor(0.45, 0.25, 0.85, 0.90)
       GameTooltip:SetOwner(self, "ANCHOR_TOPLEFT")
       GameTooltip:AddLine(qData.title, 1, 0.85, 0.2)
-      GameTooltip:AddLine("Level: " .. qData.questLevel .. " (Req " .. qData.reqLevel .. ")", 1, 1, 1)
+      GameTooltip:AddLine("Available: Level " .. (qData.reqLevel or "1") .. "+", 0.4, 0.8, 1.0)
+      GameTooltip:AddLine("Recommended: Level " .. (qData.questLevel or "?"), 0.2, 1.0, 0.4)
       if qData.objectives and qData.objectives ~= "" then
         GameTooltip:AddLine(" ")
         GameTooltip:AddLine("Objectives: " .. qData.objectives, 0.8, 0.8, 0.8, true)
@@ -1741,9 +1749,17 @@ function FG:ConfigureRowButton(btn, match)
     btn.Sub:SetWordWrap(false)
 
     local foreverTag = d.isForever and " |cffe6cc80[Forever]|r" or ""
-    btn.Title:SetText("|cffffd24d" .. d.name .. "|r" .. foreverTag .. " |cff7e8c9e(Lvl " .. (d.recLevel or "?") .. ")|r")
+    btn.Title:SetText("|cffffd24d" .. d.name .. "|r" .. foreverTag)
 
     local parts = {}
+    local minLvl = tonumber(d.minLevel) or 0
+    local recLvl = d.recLevel or "?"
+    if minLvl > 0 then
+      table.insert(parts, "|cff38bdf8Avail: Lvl " .. minLvl .. "+|r")
+    else
+      table.insert(parts, "|cff38bdf8Avail: Any|r")
+    end
+    table.insert(parts, "|cff22c55eRec: Lvl " .. recLvl .. "|r")
     if d.zone and d.zone ~= "" then table.insert(parts, "|cff8ba5cc" .. d.zone .. "|r") end
     if d.coords and d.coords ~= "" then table.insert(parts, "|cff94a3b8Entrance: " .. d.coords .. "|r") end
     btn.Sub:SetText(table.concat(parts, " |cff475569·|r "))
@@ -1753,7 +1769,9 @@ function FG:ConfigureRowButton(btn, match)
       self:SetBackdropBorderColor(0.55, 0.38, 0.78, 0.90)
       GameTooltip:SetOwner(self, "ANCHOR_TOPLEFT")
       GameTooltip:AddLine(d.name, 1, 0.85, 0.2)
-      GameTooltip:AddLine("Level: " .. d.recLevel .. " (" .. d.zone .. ")", 1, 1, 1)
+      GameTooltip:AddLine("Available: Level " .. (d.minLevel or "1") .. "+", 0.4, 0.8, 1.0)
+      GameTooltip:AddLine("Recommended: Level " .. (d.recLevel or "?"), 0.2, 1.0, 0.4)
+      GameTooltip:AddLine("Zone: " .. (d.zone or "Various"), 0.8, 0.8, 0.9)
       if d.coords and d.coords ~= "" then GameTooltip:AddLine("Coords: " .. d.coords, 0.2, 1, 0.2) end
       if d.strategy and d.strategy ~= "" then
         GameTooltip:AddLine(" ")
@@ -2890,7 +2908,9 @@ function FG:ShowDetailPanel(entityType, data)
     end
     p.Title:SetText("|cffcf52ffQuest Intel|r")
     AddLine("|cffffd24d" .. (data.title or "Quest") .. "|r", 15, nil, nil, nil, 6)
-    AddLine("Level: |cff20ff20" .. (data.questLevel or "?") .. "|r  (Requires Lvl " .. (data.reqLevel or "1") .. ")", 12)
+    local reqLvl = data.reqLevel or "1"
+    local qLvl = data.questLevel or "?"
+    AddLine("Available: |cff38bdf8Level " .. reqLvl .. "+|r  ·  Recommended: |cff20ff20Level " .. qLvl .. "|r", 12)
     if data.faction and data.faction ~= "" then
       AddLine("Faction: |cff52b8ff" .. data.faction .. "|r", 11)
     end
@@ -3072,7 +3092,13 @@ function FG:ShowDetailPanel(entityType, data)
     end
     p.Title:SetText("|cffcf52ffDungeon Intel|r")
     AddLine("|cffffd24d" .. (data.name or "Dungeon") .. "|r", 15, nil, nil, nil, 6)
-    AddLine("Recommended Level: |cff20ff20" .. (data.recLevel or "?") .. "|r", 12)
+    local minLvl = tonumber(data.minLevel) or 0
+    local maxLvl = tonumber(data.maxLevel) or 60
+    local availStr = (minLvl > 0) and (minLvl .. "+") or "All Levels"
+    if minLvl > 0 and maxLvl < 60 and maxLvl > minLvl then
+      availStr = minLvl .. " - " .. maxLvl
+    end
+    AddLine("Available: |cff38bdf8Level " .. availStr .. "|r  ·  Recommended: |cff20ff20Level " .. (data.recLevel or "?") .. "|r", 12)
     AddLine("Zone: |cffffffff" .. (data.zone or "Various") .. "|r", 12)
     if data.coords and data.coords ~= "" then
       AddLine("Entrance: |cff20ff20" .. data.coords .. "|r", 12)
@@ -3209,6 +3235,8 @@ FG.FolderTree = {
     title = "Quests",
     parent = "root",
     folders = {
+      { path = "quests/available", name = "Available Quests", desc = "All quests unlocked for your level" },
+      { path = "quests/recommended", name = "Recommended Quests", desc = "Quests matching your character's current level" },
       { path = "quests/eastern_kingdoms", name = "Eastern Kingdoms", desc = "24 zones alphabetically (A to Z)" },
       { path = "quests/kalimdor", name = "Kalimdor", desc = "20 zones alphabetically (A to Z)" },
       { path = "quests/dungeons", name = "Dungeons & Raids", desc = "Instance questlines across Azeroth" },
@@ -3483,6 +3511,8 @@ FG.FolderTree = {
     title = "Dungeons & Raids",
     parent = "root",
     folders = {
+      { path = "dungeons/available", name = "Available Dungeons", desc = "Dungeons unlocked for your character's level" },
+      { path = "dungeons/recommended", name = "Recommended Dungeons", desc = "Level-appropriate dungeons recommended for you" },
       { path = "dungeons/starter", name = "Starter Dungeons (Lvl 15-30)", desc = "Deadmines, WC, SFK, BFD, Stockade" },
       { path = "dungeons/mid", name = "Mid-Tier Dungeons (Lvl 30-50)", desc = "Gnomeregan, SM, RFK, RFD, Uldaman, ZF, Mara" },
       { path = "dungeons/endgame", name = "Endgame Dungeons (Lvl 50-60)", desc = "BRD, LBRS, UBRS, Strath, Scholo, DM, ST" },
@@ -3634,7 +3664,11 @@ function FG:UpdateDolphinBreadcrumbs(query, matchCount)
     end
   elseif cur:find("^quests") then
     table.insert(trail, "|cff88aaccQuests|r")
-    if cur == "quests/eastern_kingdoms" then
+    if cur == "quests/available" then
+      table.insert(trail, "|cff38bdf8Available|r")
+    elseif cur == "quests/recommended" then
+      table.insert(trail, "|cff20ff20Recommended|r")
+    elseif cur == "quests/eastern_kingdoms" then
       table.insert(trail, "|cffffffffEastern Kingdoms|r")
     elseif cur == "quests/kalimdor" then
       table.insert(trail, "|cffffffffKalimdor|r")
@@ -3722,7 +3756,9 @@ function FG:UpdateDolphinBreadcrumbs(query, matchCount)
     end
   elseif cur:find("^dungeons") then
     table.insert(trail, "|cff88aaccDungeons|r")
-    if cur == "dungeons/starter" then table.insert(trail, "|cffffffffStarter (15-30)|r")
+    if cur == "dungeons/available" then table.insert(trail, "|cff38bdf8Available|r")
+    elseif cur == "dungeons/recommended" then table.insert(trail, "|cff20ff20Recommended|r")
+    elseif cur == "dungeons/starter" then table.insert(trail, "|cffffffffStarter (15-30)|r")
     elseif cur == "dungeons/mid" then table.insert(trail, "|cffffffffMid-Tier (30-50)|r")
     elseif cur == "dungeons/endgame" then table.insert(trail, "|cffffffffEndgame (50-60)|r")
     elseif cur == "dungeons/raids" then table.insert(trail, "|cffffffffRaids (Lvl 60)|r")
@@ -4055,7 +4091,24 @@ function FG:PopulateCodexResults(query)
     end
 
     -- Leaf folders: populate matching data items
-    if cur:find("^quests/zone/") and FG.Data.Quests then
+    if cur == "quests/available" and FG.Data.Quests then
+      local pLevel = (UnitLevel and UnitLevel("player")) or 0
+      for _, quest in pairs(FG.Data.Quests) do
+        local req = quest.reqLevel or 1
+        if pLevel == 0 or pLevel >= req then
+          table.insert(matches, { type = "quest", data = quest })
+        end
+      end
+    elseif cur == "quests/recommended" and FG.Data.Quests then
+      local pLevel = (UnitLevel and UnitLevel("player")) or 0
+      for _, quest in pairs(FG.Data.Quests) do
+        local qLvl = quest.questLevel or quest.reqLevel or 1
+        local req = quest.reqLevel or 1
+        if pLevel == 0 or (pLevel >= req and math.abs(pLevel - qLvl) <= 4) then
+          table.insert(matches, { type = "quest", data = quest })
+        end
+      end
+    elseif cur:find("^quests/zone/") and FG.Data.Quests then
       local zoneName = cur:sub(13)
       for _, quest in pairs(FG.Data.Quests) do
         if quest.zone == zoneName then
@@ -4346,11 +4399,16 @@ function FG:PopulateCodexResults(query)
       end
     elseif cur:find("^dungeons/") and FG.Data.Dungeons then
       local sub = cur:sub(10)
+      local pLevel = (UnitLevel and UnitLevel("player")) or 0
       for _, d in pairs(FG.Data.Dungeons) do
         local pass = false
         local minLvl = d.minLevel or 0
         local maxLvl = d.maxLevel or 60
-        if sub == "starter" and minLvl <= 25 and not d.isForever then pass = true
+        if sub == "available" then
+          pass = (pLevel == 0 or pLevel >= minLvl)
+        elseif sub == "recommended" then
+          pass = (pLevel == 0 or (pLevel >= minLvl and pLevel <= maxLvl))
+        elseif sub == "starter" and minLvl <= 25 and not d.isForever then pass = true
         elseif sub == "mid" and minLvl > 25 and minLvl <= 45 and not d.isForever then pass = true
         elseif sub == "endgame" and minLvl > 45 and not (minLvl == 60 and maxLvl == 60) and not d.isForever then pass = true
         elseif sub == "raids" and minLvl == 60 and maxLvl == 60 and not d.isForever then pass = true
