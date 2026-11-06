@@ -1459,6 +1459,8 @@ end
 function FG:CreateCodexRowButton(parent, i)
   local btn = CreateFrame("Button", "ForeverGuideRowButton" .. i, parent, "BackdropTemplate")
   btn:SetSize(548, 50)
+  btn:EnableMouse(true)
+  btn:RegisterForClicks("LeftButtonUp", "RightButtonUp")
   MakePixelSharp(btn)
 
   btn:SetBackdrop({
@@ -1509,9 +1511,12 @@ function FG:CreateCodexRowButton(parent, i)
   SharpenFontString(subText, 10.5, "OUTLINE")
   btn.Sub = subText
 
-  local inspectBtn = CreateFrame("Button", nil, btn)
+  local inspectBtn = CreateFrame("Button", nil, btn, "BackdropTemplate")
   inspectBtn:SetSize(68, 26)
   inspectBtn:SetPoint("RIGHT", btn, "RIGHT", -8, 0)
+  inspectBtn:EnableMouse(true)
+  inspectBtn:RegisterForClicks("LeftButtonUp")
+  MakePixelSharp(inspectBtn)
   inspectBtn:SetBackdrop({
     bgFile = "Interface\\Buttons\\WHITE8X8",
     edgeFile = "Interface\\Buttons\\WHITE8X8",
@@ -3348,6 +3353,9 @@ function FG:CreateCodexWindow()
     local btn = CreateFrame("Button", nil, f, "BackdropTemplate")
     btn:SetSize(width, 22)
     btn:SetPoint("LEFT", relativeTo, "RIGHT", xOffset, 0)
+    btn:EnableMouse(true)
+    btn:RegisterForClicks("LeftButtonUp")
+    btn:SetFrameLevel((f:GetFrameLevel() or 1) + 12)
     MakePixelSharp(btn)
 
     btn:SetBackdrop({
@@ -3368,11 +3376,28 @@ function FG:CreateCodexWindow()
     SharpenFontString(txt, 11, "OUTLINE")
     btn.Text = txt
 
+    btn:SetScript("OnEnter", function(self)
+      if FG.activeCategory ~= name then
+        self:SetBackdropColor(0.22, 0.16, 0.36, 0.95)
+        self:SetBackdropBorderColor(0.75, 0.40, 1.0, 0.95)
+        if self.Text then self.Text:SetTextColor(1.0, 1.0, 1.0) end
+      end
+    end)
+
+    btn:SetScript("OnLeave", function(self)
+      if FG.activeCategory ~= name then
+        self:SetBackdropColor(0.10, 0.12, 0.16, 0.85)
+        self:SetBackdropBorderColor(0.24, 0.28, 0.36, 0.70)
+        if self.Text then self.Text:SetTextColor(0.75, 0.75, 0.80) end
+      end
+    end)
+
     btn:SetScript("OnClick", function()
       if searchBox and searchBox:GetText():trim() ~= "" then
         searchBox.scopedSearchLock = true
       end
       FG:SetActiveCategory(name)
+      FG:PlaySparkSound("shimmer")
     end)
 
     f.FilterButtons[name] = btn
@@ -3404,6 +3429,9 @@ function FG:CreateCodexWindow()
   local lockBtn = CreateFrame("Button", nil, f, "BackdropTemplate")
   lockBtn:SetSize(88, 18)
   lockBtn:SetPoint("BOTTOMRIGHT", f, "BOTTOMRIGHT", -16, 5)
+  lockBtn:EnableMouse(true)
+  lockBtn:RegisterForClicks("LeftButtonUp")
+  lockBtn:SetFrameLevel((f:GetFrameLevel() or 1) + 12)
   MakePixelSharp(lockBtn)
   lockBtn:SetBackdrop({
     bgFile = "Interface\\Buttons\\WHITE8X8",
@@ -3439,6 +3467,7 @@ function FG:CreateCodexWindow()
   local dolphinBar = CreateFrame("Frame", "ForeverGuideDolphinBar", f, "BackdropTemplate")
   dolphinBar:SetSize(588, 24)
   dolphinBar:SetPoint("TOPLEFT", searchBox, "BOTTOMLEFT", -2, -6)
+  dolphinBar:SetFrameLevel((f:GetFrameLevel() or 1) + 5)
   MakePixelSharp(dolphinBar)
   dolphinBar:SetBackdrop({
     bgFile = "Interface\\Buttons\\WHITE8X8",
@@ -3455,12 +3484,16 @@ function FG:CreateCodexWindow()
   local upBtn = CreateFrame("Button", nil, dolphinBar, "UIPanelButtonTemplate")
   upBtn:SetSize(54, 20)
   upBtn:SetPoint("LEFT", dolphinBar, "LEFT", 4, 0)
+  upBtn:EnableMouse(true)
+  upBtn:RegisterForClicks("LeftButtonUp")
+  upBtn:SetFrameLevel((dolphinBar:GetFrameLevel() or 1) + 8)
   upBtn:SetText("< Up")
   MakePixelSharp(upBtn)
   local upFs = upBtn:GetFontString()
   if upFs then SharpenFontString(upFs, 10, "OUTLINE") end
   upBtn:SetScript("OnClick", function()
     FG:NavigateUpFolder()
+    FG:PlaySparkSound("shimmer")
   end)
   dolphinBar.UpBtn = upBtn
 
@@ -3475,6 +3508,7 @@ function FG:CreateCodexWindow()
   local scrollFrame = CreateFrame("ScrollFrame", "ForeverGuideScrollFrame", f, "UIPanelScrollFrameTemplate")
   scrollFrame:SetPoint("TOPLEFT", dolphinBar, "BOTTOMLEFT", -2, -6)
   scrollFrame:SetPoint("BOTTOMRIGHT", f, "BOTTOMRIGHT", -30, 34)
+  scrollFrame:SetFrameLevel((f:GetFrameLevel() or 1) + 2)
   MakePixelSharp(scrollFrame)
 
   local content = CreateFrame("Frame", "ForeverGuideScrollContent", scrollFrame)
@@ -3500,13 +3534,10 @@ function FG:CreateCodexWindow()
   content.RowPool = {}
   for i = 1, 12 do
     content.RowPool[i] = FG:CreateCodexRowButton(content, i)
+    content.RowPool[i]:SetFrameLevel((scrollFrame:GetFrameLevel() or 1) + 4)
     content.RowPool[i]:Hide()
   end
   content.Buttons = content.RowPool
-
-  -- Mission Control Home Dashboard (shown when on root with empty query)
-  content.HomeDashboard = FG:CreateHomeDashboard(content)
-  f.HomeDashboard = content.HomeDashboard
 
   -- Blank State / Ready View (Shown on open or empty query)
   local blank = CreateFrame("Frame", nil, content)

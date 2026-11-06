@@ -197,11 +197,10 @@ class TestVirtualScrollAndNearby(unittest.TestCase):
         self.assertIn('table.concat(parts, " |cff475569·|r ")', self.lua_code)
 
     def test_15_home_screen_mission_control_dashboard(self):
-        """Verify replacement of redundant Home screen vertical rows with interactive Mission Control Dashboard."""
+        """Verify main screen categories and dashboard helper functions."""
         # 1. Functions and frames
         self.assertIn('function FG:CreateHomeDashboard(parent)', self.lua_code)
         self.assertIn('function FG:UpdateHomeDashboard()', self.lua_code)
-        self.assertIn('content.HomeDashboard = FG:CreateHomeDashboard(content)', self.lua_code)
 
         # 2. Hero Card: Location Bar (Clean, calm, no radar/connected tech theme)
         self.assertIn('Current Location', self.lua_code)

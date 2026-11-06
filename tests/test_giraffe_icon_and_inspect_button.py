@@ -40,7 +40,7 @@ class TestGiraffeIconAndInspectButton(unittest.TestCase):
 
     def test_03_dedicated_inspect_button_created(self):
         """Verify btn.InspectBtn is created as an interactive Button frame."""
-        self.assertIn('local inspectBtn = CreateFrame("Button", nil, btn)', self.lua)
+        self.assertIn('local inspectBtn = CreateFrame("Button", nil, btn, "BackdropTemplate")', self.lua)
         self.assertIn('btn.InspectBtn = inspectBtn', self.lua)
         self.assertIn('btn.Hint = hint', self.lua)
         self.assertIn('inspectBtn:SetScript("OnClick", function(self)', self.lua)
