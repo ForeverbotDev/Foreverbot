@@ -2785,6 +2785,17 @@ local KALIMDOR_ZONE_NAMES = {
   "The Barrens", "Thousand Needles", "Thunder Bluff", "Un'Goro Crater", "Winterspring"
 }
 
+local ARMOR_SLOT_DEFS = {
+  { slot = "Head", name = "Head", desc = "Helms, caps, hoods & visors", icon = "Interface\\Icons\\INV_Helmet_08" },
+  { slot = "Shoulder", name = "Shoulders", desc = "Pauldrons, mantles & spaulders", icon = "Interface\\Icons\\INV_Shoulder_02" },
+  { slot = "Chest", name = "Chest", desc = "Breastplates, robes, tunics & vests", icon = "Interface\\Icons\\INV_Chest_Plate08" },
+  { slot = "Wrist", name = "Wrist (Bracers)", desc = "Bracers, wristguards & vambraces", icon = "Interface\\Icons\\INV_Bracer_07" },
+  { slot = "Hands", name = "Hands (Gauntlets)", desc = "Gauntlets, gloves & mitts", icon = "Interface\\Icons\\INV_Gauntlets_10" },
+  { slot = "Waist", name = "Waist (Belts)", desc = "Belts, girdles & sashes", icon = "Interface\\Icons\\INV_Belt_03" },
+  { slot = "Legs", name = "Legs", desc = "Legplates, pants & leggings", icon = "Interface\\Icons\\INV_Pants_06" },
+  { slot = "Feet", name = "Feet (Boots)", desc = "Boots, sabatons & footwear", icon = "Interface\\Icons\\INV_Boots_Plate_01" },
+}
+
 FG.currentFolder = "root"
 
 FG.FolderTree = {
@@ -2959,11 +2970,72 @@ FG.FolderTree = {
     title = "Armor",
     parent = "items",
     folders = {
-      { path = "items/sub/Cloth Armor", name = "Cloth Armor", filter = { itemType = "Cloth" } },
-      { path = "items/sub/Leather Armor", name = "Leather Armor", filter = { itemType = "Leather" } },
-      { path = "items/sub/Mail Armor", name = "Mail Armor", filter = { itemType = "Mail" } },
-      { path = "items/sub/Plate Armor", name = "Plate Armor", filter = { itemType = "Plate" } },
-      { path = "items/sub/Shields", name = "Shields", filter = { slot = "Shield" } },
+      { path = "items/armor/cloth", name = "Cloth Armor", desc = "Head, Chest, Belt, Boots, etc." },
+      { path = "items/armor/leather", name = "Leather Armor", desc = "Head, Chest, Belt, Boots, etc." },
+      { path = "items/armor/mail", name = "Mail Armor", desc = "Head, Chest, Belt, Boots, etc." },
+      { path = "items/armor/plate", name = "Plate Armor", desc = "Head, Chest, Belt, Boots, etc." },
+      { path = "items/sub/Shields", name = "Shields", desc = "Off-Hand Shields (iLvl Low to High)" },
+      { path = "items/sub/Cloaks", name = "Cloaks & Capes", desc = "Back slot cloaks (iLvl Low to High)" },
+    },
+  },
+
+  ["items/armor/cloth"] = {
+    title = "Cloth Armor",
+    parent = "items/armor",
+    folders = {
+      { path = "items/armor/cloth/Head", name = "Head", desc = "Cloth helms, hoods & circlets" },
+      { path = "items/armor/cloth/Shoulder", name = "Shoulders", desc = "Cloth mantles & shoulderpads" },
+      { path = "items/armor/cloth/Chest", name = "Chest", desc = "Cloth robes, vests & tunics" },
+      { path = "items/armor/cloth/Wrist", name = "Wrist (Bracers)", desc = "Cloth bracers & cuffs" },
+      { path = "items/armor/cloth/Hands", name = "Hands (Gloves)", desc = "Cloth gloves & mitts" },
+      { path = "items/armor/cloth/Waist", name = "Waist (Belts)", desc = "Cloth belts & sashes" },
+      { path = "items/armor/cloth/Legs", name = "Legs (Pants)", desc = "Cloth pants & leggings" },
+      { path = "items/armor/cloth/Feet", name = "Feet (Boots)", desc = "Cloth boots & slippers" },
+    },
+  },
+
+  ["items/armor/leather"] = {
+    title = "Leather Armor",
+    parent = "items/armor",
+    folders = {
+      { path = "items/armor/leather/Head", name = "Head", desc = "Leather helms, caps & headbands" },
+      { path = "items/armor/leather/Shoulder", name = "Shoulders", desc = "Leather spaulders & shoulderpads" },
+      { path = "items/armor/leather/Chest", name = "Chest", desc = "Leather vests, jerkins & armor" },
+      { path = "items/armor/leather/Wrist", name = "Wrist (Bracers)", desc = "Leather bracers & wristguards" },
+      { path = "items/armor/leather/Hands", name = "Hands (Gloves)", desc = "Leather gloves & gauntlets" },
+      { path = "items/armor/leather/Waist", name = "Waist (Belts)", desc = "Leather belts & girdles" },
+      { path = "items/armor/leather/Legs", name = "Legs (Pants)", desc = "Leather pants & breeches" },
+      { path = "items/armor/leather/Feet", name = "Feet (Boots)", desc = "Leather boots & footwear" },
+    },
+  },
+
+  ["items/armor/mail"] = {
+    title = "Mail Armor",
+    parent = "items/armor",
+    folders = {
+      { path = "items/armor/mail/Head", name = "Head", desc = "Mail helms & coifs" },
+      { path = "items/armor/mail/Shoulder", name = "Shoulders", desc = "Mail pauldrons & epaulets" },
+      { path = "items/armor/mail/Chest", name = "Chest", desc = "Mail hauberks, mail & armor" },
+      { path = "items/armor/mail/Wrist", name = "Wrist (Bracers)", desc = "Mail bracers & armsplints" },
+      { path = "items/armor/mail/Hands", name = "Hands (Gauntlets)", desc = "Mail gauntlets & grips" },
+      { path = "items/armor/mail/Waist", name = "Waist (Belts)", desc = "Mail belts & girdles" },
+      { path = "items/armor/mail/Legs", name = "Legs (Legguards)", desc = "Mail legplates & greaves" },
+      { path = "items/armor/mail/Feet", name = "Feet (Boots)", desc = "Mail boots & sabatons" },
+    },
+  },
+
+  ["items/armor/plate"] = {
+    title = "Plate Armor",
+    parent = "items/armor",
+    folders = {
+      { path = "items/armor/plate/Head", name = "Head", desc = "Plate helms & visors" },
+      { path = "items/armor/plate/Shoulder", name = "Shoulders", desc = "Plate pauldrons & spaulders" },
+      { path = "items/armor/plate/Chest", name = "Chest", desc = "Plate breastplates & chestguards" },
+      { path = "items/armor/plate/Wrist", name = "Wrist (Bracers)", desc = "Plate bracers & vambraces" },
+      { path = "items/armor/plate/Hands", name = "Hands (Gauntlets)", desc = "Plate gauntlets & gloves" },
+      { path = "items/armor/plate/Waist", name = "Waist (Belts)", desc = "Plate belts & girdles" },
+      { path = "items/armor/plate/Legs", name = "Legs (Legplates)", desc = "Plate legplates & leggings" },
+      { path = "items/armor/plate/Feet", name = "Feet (Boots)", desc = "Plate boots & sabatons" },
     },
   },
 
@@ -3098,8 +3170,18 @@ function FG:NavigateUpFolder()
       parent = "quests/class"
     elseif cur:find("^quests/prof/") then
       parent = "quests/professions"
+    elseif cur:find("^items/armor/[^/]+/[^/]+$") then
+      local armorType = cur:match("^items/armor/([^/]+)/[^/]+$")
+      parent = "items/armor/" .. armorType
+    elseif cur:find("^items/armor/[^/]+$") then
+      parent = "items/armor"
     elseif cur:find("^items/sub/") then
-      parent = "items"
+      local sub = cur:sub(11)
+      if sub:find("Armor$") or sub == "Shields" or sub == "Cloaks" then
+        parent = "items/armor"
+      else
+        parent = "items"
+      end
     elseif cur:find("^nearby/") then
       parent = "nearby"
     elseif cur == "nearby" then
@@ -3202,6 +3284,22 @@ function FG:UpdateDolphinBreadcrumbs(query, matchCount)
     table.insert(trail, "|cff88aaccItems|r")
     if cur == "items/weapons" then table.insert(trail, "|cffffffffWeapons|r")
     elseif cur == "items/armor" then table.insert(trail, "|cffffffffArmor|r")
+    elseif cur:find("^items/armor/[^/]+/[^/]+$") then
+      local armorType, slot = cur:match("^items/armor/([^/]+)/([^/]+)$")
+      local slotDisplay = slot
+      if slot == "Waist" then slotDisplay = "Waist (Belts)"
+      elseif slot == "Wrist" then slotDisplay = "Wrist (Bracers)"
+      elseif slot == "Hands" then slotDisplay = "Hands (Gauntlets)"
+      elseif slot == "Feet" then slotDisplay = "Feet (Boots)"
+      elseif slot == "Shoulder" then slotDisplay = "Shoulders"
+      end
+      table.insert(trail, "|cffffffffArmor|r")
+      table.insert(trail, "|cff88aacc" .. armorType:gsub("^%l", string.upper) .. " Armor|r")
+      table.insert(trail, "|cffffd24d" .. slotDisplay .. "|r")
+    elseif cur:find("^items/armor/[^/]+$") then
+      local armorType = cur:match("^items/armor/([^/]+)$")
+      table.insert(trail, "|cffffffffArmor|r")
+      table.insert(trail, "|cffffd24d" .. armorType:gsub("^%l", string.upper) .. " Armor|r")
     elseif cur == "items/accessories" then table.insert(trail, "|cffffffffAccessories|r")
     elseif cur == "items/consumables" then table.insert(trail, "|cffffffffConsumables|r")
     elseif cur == "items/trade_goods" then table.insert(trail, "|cffffffffTrade Goods|r")
@@ -3596,8 +3694,74 @@ function FG:PopulateCodexResults(query)
           table.insert(matches, { type = "item", data = item })
         end
       end
+    elseif cur:find("^items/armor/([^/]+)/([^/]+)$") and FG.Data.Items then
+      local armorType, slotName = cur:match("^items/armor/([^/]+)/([^/]+)$")
+      for _, item in pairs(FG.Data.Items) do
+        local name = item.name or ""
+        local isInternal = name:find("^OLD") or name:find("^zzOLD") or name:find("^Monster %-") or name:find("^TEST") or name:find("%[PH%]")
+        local isRecipe = name:find("^Plans:") or name:find("^Pattern:") or name:find("^Schematic:") or name:find("^Formula:") or name:find("^Recipe:")
+        if not isInternal and not isRecipe and item.itemType and item.itemType:lower():find(armorType) then
+          if item.slot and item.slot == slotName then
+            table.insert(matches, { type = "item", data = item })
+          end
+        end
+      end
+    elseif cur:find("^items/armor/([^/]+)$") and FG.Data.Items then
+      local armorType = cur:match("^items/armor/([^/]+)$")
+      local armorCap = armorType:gsub("^%l", string.upper)
+      local slotCounts = {}
+      for _, item in pairs(FG.Data.Items) do
+        local name = item.name or ""
+        local isInternal = name:find("^OLD") or name:find("^zzOLD") or name:find("^Monster %-") or name:find("^TEST") or name:find("%[PH%]")
+        local isRecipe = name:find("^Plans:") or name:find("^Pattern:") or name:find("^Schematic:") or name:find("^Formula:") or name:find("^Recipe:")
+        if not isInternal and not isRecipe and item.itemType and item.itemType:lower():find(armorType) then
+          if item.slot then
+            slotCounts[item.slot] = (slotCounts[item.slot] or 0) + 1
+          end
+          table.insert(matches, { type = "item", data = item })
+        end
+      end
+      for _, sdef in ipairs(ARMOR_SLOT_DEFS) do
+        local count = slotCounts[sdef.slot] or 0
+        table.insert(matches, {
+          type = "folder",
+          data = {
+            name = sdef.name,
+            path = "items/armor/" .. armorType .. "/" .. sdef.slot,
+            desc = string.format("%d %s %s items (iLvl Low to High)", count, armorCap, sdef.name),
+            count = count,
+            icon = sdef.icon,
+          }
+        })
+      end
     elseif cur:find("^items/sub/") and FG.Data.Items then
       local subName = cur:sub(11)
+      local armorKey = subName:match("^(%w+) Armor")
+      if armorKey then
+        local aType = armorKey:lower()
+        local slotCounts = {}
+        for _, item in pairs(FG.Data.Items) do
+          local name = item.name or ""
+          local isInternal = name:find("^OLD") or name:find("^zzOLD") or name:find("^Monster %-") or name:find("^TEST") or name:find("%[PH%]")
+          local isRecipe = name:find("^Plans:") or name:find("^Pattern:") or name:find("^Schematic:") or name:find("^Formula:") or name:find("^Recipe:")
+          if not isInternal and not isRecipe and item.itemType and item.itemType:lower():find(aType) and item.slot then
+            slotCounts[item.slot] = (slotCounts[item.slot] or 0) + 1
+          end
+        end
+        for _, sdef in ipairs(ARMOR_SLOT_DEFS) do
+          local count = slotCounts[sdef.slot] or 0
+          table.insert(matches, {
+            type = "folder",
+            data = {
+              name = sdef.name,
+              path = "items/armor/" .. aType .. "/" .. sdef.slot,
+              desc = string.format("%d %s %s items (iLvl Low to High)", count, armorKey, sdef.name),
+              count = count,
+              icon = sdef.icon,
+            }
+          })
+        end
+      end
       for _, item in pairs(FG.Data.Items) do
         local name = item.name or ""
         local isInternal = name:find("^OLD") or name:find("^zzOLD") or name:find("^Monster %-") or name:find("^TEST") or name:find("%[PH%]")

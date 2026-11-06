@@ -150,6 +150,21 @@ class TestVirtualScrollAndNearby(unittest.TestCase):
         self.assertIn("return ilvlA < ilvlB", self.lua_code)
         self.assertIn("items in view (iLvl: Lowest to Highest)", self.lua_code)
 
+    def test_11_armor_slot_subsections(self):
+        """Verify armor slot subsections (Head, Shoulders, Chest, Wrist, Hands, Waist, Legs, Feet) exist for all armor types."""
+        self.assertIn("local ARMOR_SLOT_DEFS = {", self.lua_code)
+        for slot in ["Head", "Shoulder", "Chest", "Wrist", "Hands", "Waist", "Legs", "Feet"]:
+            self.assertIn(f'slot = "{slot}"', self.lua_code)
+
+        for armor in ["cloth", "leather", "mail", "plate"]:
+            self.assertIn(f'["items/armor/{armor}"] = {{', self.lua_code)
+            for slot in ["Head", "Shoulder", "Chest", "Wrist", "Hands", "Waist", "Legs", "Feet"]:
+                self.assertIn(f'path = "items/armor/{armor}/{slot}"', self.lua_code)
+
+        # Route matching
+        self.assertIn('cur:find("^items/armor/([^/]+)/([^/]+)$")', self.lua_code)
+        self.assertIn('cur:find("^items/armor/([^/]+)$")', self.lua_code)
+
 
 if __name__ == "__main__":
     unittest.main()
