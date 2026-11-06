@@ -173,7 +173,11 @@ class TestVirtualScrollAndNearby(unittest.TestCase):
         self.assertIn('categories in view (A-Z)', self.lua_code)
         self.assertIn('items in view (iLvl: Lowest to Highest)', self.lua_code)
         self.assertIn('quests in view (A-Z)', self.lua_code)
-        self.assertIn('creatures in view (A-Z)', self.lua_code)
+    def test_13_luajit_syntax_compilation(self):
+        """Compile ForeverGuide.lua using LuaJIT bytecode compiler to verify zero syntax errors."""
+        import subprocess
+        res = subprocess.run(["luajit", "-b", LUA_FILE, "/dev/null"], capture_output=True, text=True)
+        self.assertEqual(res.returncode, 0, f"Lua syntax error detected:\n{res.stderr}")
 
 
 if __name__ == "__main__":

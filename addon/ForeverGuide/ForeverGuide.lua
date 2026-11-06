@@ -3805,6 +3805,7 @@ function FG:PopulateCodexResults(query)
           end
         end
       end
+    end
     elseif cur == "creatures/by_zone_ek" and FG.Data.Creatures then
       local zoneCounts = {}
       for _, c in pairs(FG.Data.Creatures) do
