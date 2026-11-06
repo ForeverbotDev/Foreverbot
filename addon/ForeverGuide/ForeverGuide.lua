@@ -1669,6 +1669,112 @@ function FG:GetCreatureIcon(c)
   return "Interface\\Icons\\INV_Helmet_01"
 end
 
+--------------------------------------------------------------------------------
+-- Item Dropper Cross-Referencing & Entity Resolution Engine
+--------------------------------------------------------------------------------
+FG.ItemDroppersIndex = nil
+FG.CreaturesByNameIndex = nil
+FG.VendorsByNameIndex = nil
+
+function FG:BuildItemDroppersIndex()
+  if FG.ItemDroppersIndex then return end
+  FG.ItemDroppersIndex = {}
+  if not FG.Data or not FG.Data.Creatures then return end
+  for cid, c in pairs(FG.Data.Creatures) do
+    if c.loot and not FG:IsInternalCreature(c.name, c.family) then
+      for _, drop in ipairs(c.loot) do
+        if drop.id then
+          local list = FG.ItemDroppersIndex[drop.id]
+          if not list then
+            list = {}
+            FG.ItemDroppersIndex[drop.id] = list
+          end
+          local numPct = tonumber((drop.pct or ""):match("(%d+%.?%d*)") or 0) or 0
+          table.insert(list, {
+            creature = c,
+            pct = drop.pct or "0.01%",
+            numPct = numPct,
+          })
+        end
+      end
+    end
+  end
+  for itemId, list in pairs(FG.ItemDroppersIndex) do
+    table.sort(list, function(a, b)
+      if a.numPct ~= b.numPct then
+        return a.numPct > b.numPct
+      end
+      return (a.creature.name or "") < (b.creature.name or "")
+    end)
+  end
+end
+
+function FG:GetItemDroppers(itemId)
+  if not itemId then return nil end
+  if not FG.ItemDroppersIndex then
+    FG:BuildItemDroppersIndex()
+  end
+  return FG.ItemDroppersIndex and FG.ItemDroppersIndex[itemId]
+end
+
+function FG:FindCreatureByName(name)
+  if not name or not FG.Data or not FG.Data.Creatures then return nil end
+  if not FG.CreaturesByNameIndex then
+    FG.CreaturesByNameIndex = {}
+    for cid, c in pairs(FG.Data.Creatures) do
+      if c.name and not FG:IsInternalCreature(c.name, c.family) then
+        FG.CreaturesByNameIndex[c.name:lower()] = c
+      end
+    end
+  end
+  return FG.CreaturesByNameIndex[name:lower()]
+end
+
+function FG:FindVendorByName(name)
+  if not name or not FG.Data or not FG.Data.Vendors then return nil end
+  if not FG.VendorsByNameIndex then
+    FG.VendorsByNameIndex = {}
+    for vid, v in pairs(FG.Data.Vendors) do
+      if v.name then
+        FG.VendorsByNameIndex[v.name:lower()] = v
+      end
+    end
+  end
+  return FG.VendorsByNameIndex[name:lower()]
+end
+
+function FG:GetItemRowSourceText(item)
+  if not item then return "World Drop" end
+  local droppers = FG:GetItemDroppers(item.id)
+  if droppers and #droppers > 0 then
+    local top = droppers[1]
+    local c = top.creature
+    local coordStr = (c.coords and c.coords ~= "") and (" " .. c.coords) or ""
+    local zoneStr = (c.zone and c.zone ~= "") and (c.zone .. coordStr) or "Azeroth"
+    local pctStr = top.pct and (" (" .. top.pct .. ")") or ""
+    if #droppers > 1 then
+      return "Dropped by: " .. c.name .. " (" .. zoneStr .. ")" .. pctStr .. " +" .. (#droppers - 1) .. " more"
+    else
+      return "Dropped by: " .. c.name .. " (" .. zoneStr .. ")" .. pctStr
+    end
+  end
+  if item.source and item.source ~= "" then
+    local mobName = item.source:match("Dropped by:%s*([^(]+)")
+    if mobName then
+      local trimmed = mobName:gsub("%s+$", "")
+      local c = FG:FindCreatureByName(trimmed)
+      if c and c.coords and c.coords ~= "" then
+        local zoneStr = c.zone or "Azeroth"
+        local pct = item.source:match("%((%d+%.?%d*%%)%)") or ""
+        local pctStr = pct ~= "" and (" (" .. pct .. ")") or ""
+        return "Dropped by: " .. c.name .. " (" .. zoneStr .. " " .. c.coords .. ")" .. pctStr
+      end
+    end
+    return item.source:gsub("^Quest:%s*", "")
+  end
+  return "World Drop"
+end
+
 function FG:ConfigureRowButton(btn, match)
   if not match then return end
   btn.match = match
@@ -1760,9 +1866,9 @@ function FG:ConfigureRowButton(btn, match)
       table.insert(parts, "|cff8ba5cc" .. item.itemType .. "|r")
     end
 
-    if item.source and item.source ~= "" then
-      local cleanSource = item.source:gsub("^Quest:%s*", "")
-      table.insert(parts, "|cff94a3b8" .. cleanSource .. "|r")
+    local srcText = FG:GetItemRowSourceText(item)
+    if srcText and srcText ~= "" and srcText ~= "World Drop" then
+      table.insert(parts, "|cff94a3b8" .. srcText .. "|r")
     elseif item.bonding and item.bonding ~= "" then
       table.insert(parts, "|cff7e8c9e" .. item.bonding .. "|r")
     else
@@ -2303,8 +2409,8 @@ function FG:CreateHomeDashboard(parent)
   end
 
   db.HubForever = CreateHubCard(2, -124, "Interface\\Icons\\INV_Misc_Book_09",
-    "|cffffd700Warcraft Forever Custom|r",
-    "|cff94a3b8Server gear, custom quests & endgame|r",
+    "|cffffd700Warcraft Forever Exclusives|r",
+    "|cff94a3b8Server gear, exclusive quests & endgame additions|r",
     "forever")
 
   db.HubArmor = CreateHubCard(278, -124, "Interface\\Icons\\INV_Chest_Cloth_23",
@@ -2313,7 +2419,7 @@ function FG:CreateHomeDashboard(parent)
     "items/armor")
 
   db.HubQuests = CreateHubCard(2, -188, "Interface\\Icons\\INV_Misc_Map02",
-    "|cff4ade80Zone Questlines (A to Z)|r",
+    "|cff4ade80Zone Questlines & Stories|r",
     "|cff94a3b844 zones across EK & Kalimdor|r",
     "quests/eastern_kingdoms")
 
@@ -3122,6 +3228,117 @@ function FG:ShowDetailPanel(entityType, data)
     yOffset = yOffset - 28
   end
 
+  local function AddDropperButton(dropper)
+    lootBtnIndex = lootBtnIndex + 1
+    local btn = p.Body.LootButtons[lootBtnIndex]
+    if not btn then
+      btn = CreateFrame("Button", nil, p.Body, "BackdropTemplate")
+      btn:SetSize(286, 26)
+      MakePixelSharp(btn)
+      btn:SetBackdrop({
+        bgFile = "Interface\\Buttons\\WHITE8X8",
+        edgeFile = "Interface\\Tooltips\\UI-Tooltip-Border",
+        tile = false,
+        tileSize = 12,
+        edgeSize = 10,
+        insets = { left = 3, right = 3, top = 3, bottom = 3 },
+      })
+      btn:SetBackdropColor(0.10, 0.12, 0.17, 0.90)
+      btn:SetBackdropBorderColor(0.25, 0.28, 0.38, 0.80)
+
+      local titleText = btn:CreateFontString(nil, "OVERLAY", "GameFontHighlight")
+      titleText:SetPoint("LEFT", btn, "LEFT", 8, 0)
+      titleText:SetWidth(210)
+      titleText:SetJustifyH("LEFT")
+      titleText:SetWordWrap(false)
+      SharpenFontString(titleText, 11, "OUTLINE")
+      btn.Title = titleText
+
+      local rateText = btn:CreateFontString(nil, "OVERLAY", "GameFontNormalSmall")
+      rateText:SetPoint("RIGHT", btn, "RIGHT", -8, 0)
+      rateText:SetJustifyH("RIGHT")
+      SharpenFontString(rateText, 11, "OUTLINE")
+      btn.Rate = rateText
+
+      p.Body.LootButtons[lootBtnIndex] = btn
+    end
+
+    btn:ClearAllPoints()
+    btn:SetPoint("TOPLEFT", p.Body, "TOPLEFT", 6, yOffset)
+    btn.itemData = nil
+    btn.creatureData = dropper.creature
+    btn.vendorData = dropper.vendor
+
+    local c = dropper.creature
+    if c then
+      local classColor = (c.classification == "Boss" or c.classification == "Rare Elite" or c.classification == "World Boss") and "ffff4040" or (c.classification == "Elite" and "ffffd24d" or "ff52b8ff")
+      local coordStr = (c.coords and c.coords ~= "") and (" " .. c.coords) or ""
+      local zoneStr = (c.zone and c.zone ~= "") and (c.zone .. coordStr) or "Azeroth"
+      btn.Title:SetText("|c" .. classColor .. c.name .. "|r |cff7e8c9e(" .. zoneStr .. ")|r")
+      btn.Rate:SetText("|cff38bdf8" .. (dropper.pct or "") .. "|r")
+
+      btn:SetScript("OnEnter", function(self)
+        self:SetBackdropColor(0.20, 0.16, 0.32, 0.95)
+        self:SetBackdropBorderColor(0.65, 0.35, 1.0, 0.95)
+        GameTooltip:SetOwner(self, "ANCHOR_RIGHT")
+        GameTooltip:AddLine(c.name, 1, 0.85, 0.2)
+        local lvlStr = (c.minLevel and c.maxLevel and c.minLevel ~= c.maxLevel) and (c.minLevel .. "-" .. c.maxLevel) or (c.maxLevel or c.minLevel or "?")
+        GameTooltip:AddLine("Level: " .. lvlStr .. " (" .. (c.classification or "Normal") .. ")", 1, 1, 1)
+        if c.zone and c.zone ~= "" then GameTooltip:AddLine("Zone: " .. c.zone, 0.3, 0.8, 1.0) end
+        if c.location and c.location ~= "" then GameTooltip:AddLine("Location: " .. c.location, 0.2, 1, 0.2) end
+        if c.coords and c.coords ~= "" then GameTooltip:AddLine("Coordinates: " .. c.coords, 0.2, 1, 0.2) end
+        if dropper.pct then GameTooltip:AddLine("Drop Chance: |cff38bdf8" .. dropper.pct .. "|r") end
+        GameTooltip:AddLine(" ")
+        GameTooltip:AddLine("|cffdf80ff<Click>|r Open NPC intel & spawn location", 0.85, 0.85, 0.85)
+        GameTooltip:Show()
+      end)
+      btn:SetScript("OnLeave", function(self)
+        self:SetBackdropColor(0.10, 0.12, 0.17, 0.90)
+        self:SetBackdropBorderColor(0.25, 0.28, 0.38, 0.80)
+        GameTooltip:Hide()
+      end)
+      btn:SetScript("OnClick", function(self)
+        if self.creatureData then
+          FG:ShowDetailPanel("creature", self.creatureData)
+          FG:PlaySparkSound("shimmer")
+        end
+      end)
+    elseif dropper.vendor then
+      local v = dropper.vendor
+      local coordStr = (v.coords and v.coords ~= "") and (" " .. v.coords) or ""
+      local zoneStr = (v.zone and v.zone ~= "") and (v.zone .. coordStr) or "Azeroth"
+      btn.Title:SetText("|cffffd24d" .. v.name .. "|r |cff7e8c9e(" .. zoneStr .. ")|r")
+      btn.Rate:SetText("|cff20ff20Vendor|r")
+
+      btn:SetScript("OnEnter", function(self)
+        self:SetBackdropColor(0.20, 0.16, 0.32, 0.95)
+        self:SetBackdropBorderColor(0.65, 0.35, 1.0, 0.95)
+        GameTooltip:SetOwner(self, "ANCHOR_RIGHT")
+        GameTooltip:AddLine(v.name, 1, 0.85, 0.2)
+        GameTooltip:AddLine("Vendor", 0.2, 1.0, 0.4)
+        if v.zone and v.zone ~= "" then GameTooltip:AddLine("Zone: " .. v.zone, 0.3, 0.8, 1.0) end
+        if v.coords and v.coords ~= "" then GameTooltip:AddLine("Coordinates: " .. v.coords, 0.2, 1, 0.2) end
+        GameTooltip:AddLine(" ")
+        GameTooltip:AddLine("|cffdf80ff<Click>|r Open vendor intel & wares", 0.85, 0.85, 0.85)
+        GameTooltip:Show()
+      end)
+      btn:SetScript("OnLeave", function(self)
+        self:SetBackdropColor(0.10, 0.12, 0.17, 0.90)
+        self:SetBackdropBorderColor(0.25, 0.28, 0.38, 0.80)
+        GameTooltip:Hide()
+      end)
+      btn:SetScript("OnClick", function(self)
+        if self.vendorData then
+          FG:ShowDetailPanel("vendor", self.vendorData)
+          FG:PlaySparkSound("shimmer")
+        end
+      end)
+    end
+
+    btn:Show()
+    yOffset = yOffset - 28
+  end
+
   if entityType == "quest" then
     if p.HeaderIcon then
       p.HeaderIcon:SetTexture(FG:GetQuestIcon(data))
@@ -3136,7 +3353,7 @@ function FG:ShowDetailPanel(entityType, data)
       AddLine("Faction: |cff52b8ff" .. data.faction .. "|r", 11)
     end
     if data.isForever then
-      AddLine("|cffe6cc80[Forever] Warcraft Forever Custom Content|r", 11, nil, nil, nil, 4)
+      AddLine("|cffe6cc80[Forever] Warcraft Forever Exclusive Content|r", 11, nil, nil, nil, 4)
     end
 
     AddSection("LOCATION & QUESTGIVER")
@@ -3223,8 +3440,42 @@ function FG:ShowDetailPanel(entityType, data)
       AddLine("|cffffd24d\"" .. data.desc .. "\"|r", 11, 1.0, 0.85, 0.40, 6)
     end
 
-    AddSection("SOURCE & DROPS")
-    AddLine(data.source and data.source ~= "" and data.source or "World Drop / Various", 12, 0.85, 0.90, 0.95, 6)
+    local droppers = FG:GetItemDroppers(data.id)
+    if droppers and #droppers > 0 then
+      AddSection("CONFIRMED DROPPERS & SOURCES")
+      local maxDisplay = math.min(#droppers, 8)
+      for i = 1, maxDisplay do
+        AddDropperButton(droppers[i])
+      end
+      if #droppers > maxDisplay then
+        AddLine("|cff8899aa...and " .. (#droppers - maxDisplay) .. " other creatures across Azeroth (World Drop)|r", 11, 0.6, 0.7, 0.8, 4)
+      end
+    elseif data.source and data.source ~= "" then
+      AddSection("SOURCE & LOCATION")
+      local mobName = data.source:match("Dropped by:%s*([^(]+)")
+      local vName = data.source:match("Sold by:%s*([^(]+)")
+      local matchedEntity = nil
+      if mobName then
+        local c = FG:FindCreatureByName(mobName:gsub("%s+$", ""))
+        if c then
+          local pct = data.source:match("%((%d+%.?%d*%%)%)") or "Drop"
+          AddDropperButton({ creature = c, pct = pct })
+          matchedEntity = true
+        end
+      elseif vName then
+        local v = FG:FindVendorByName(vName:gsub("%s+$", ""))
+        if v then
+          AddDropperButton({ vendor = v })
+          matchedEntity = true
+        end
+      end
+      if not matchedEntity then
+        AddLine(data.source, 12, 0.85, 0.90, 0.95, 6)
+      end
+    else
+      AddSection("SOURCE & LOCATION")
+      AddLine("World Drop / Various", 12, 0.85, 0.90, 0.95, 6)
+    end
 
     if data.sellPrice and data.sellPrice ~= "" then
       AddLine("Vendor Price: |cffffffff" .. data.sellPrice .. "|r", 11, 0.9, 0.9, 0.9, 4)
@@ -3434,12 +3685,12 @@ FG.FolderTree = {
     title = "Home",
     folders = {
       { path = "nearby", name = "Nearby Area Intel (Zone Radar)", desc = "Live radar: local mobs, quests, vendors & loot in current zone" },
-      { path = "quests", name = "Quests", desc = "By Continent, Zone, Class, & Dungeon (A to Z)" },
-      { path = "items", name = "Items & Equipment", desc = "Weapons, Armor, Reagents, Recipes & Custom Gear" },
+      { path = "quests", name = "Quests", desc = "By Continent, Zone, Class, & Dungeon" },
+      { path = "items", name = "Items & Equipment", desc = "Weapons, Armor, Reagents, Recipes & Server Gear" },
       { path = "creatures", name = "Creatures & Bosses", desc = "Dungeon/Raid Bosses, Rares & NPC Families" },
       { path = "dungeons", name = "Dungeons & Raids", desc = "Starter, Mid, Endgame, Raids & Forever Instances" },
       { path = "vendors", name = "Vendors & Flight Paths", desc = "Flight Masters, PvP Quartermasters & Reagents" },
-      { path = "forever", name = "[Forever] Warcraft Forever Custom Content", desc = "Exclusive items, quests, NPCs & dungeons" },
+      { path = "forever", name = "[Forever] Warcraft Forever Exclusives", desc = "Exclusive items, quests, NPCs & dungeons" },
     },
   },
 
@@ -3464,8 +3715,8 @@ FG.FolderTree = {
     folders = {
       { path = "quests/available", name = "Available Quests", desc = "All quests unlocked for your level" },
       { path = "quests/recommended", name = "Recommended Quests", desc = "Quests matching your character's current level" },
-      { path = "quests/eastern_kingdoms", name = "Eastern Kingdoms", desc = "24 zones alphabetically (A to Z)" },
-      { path = "quests/kalimdor", name = "Kalimdor", desc = "20 zones alphabetically (A to Z)" },
+      { path = "quests/eastern_kingdoms", name = "Eastern Kingdoms", desc = "24 zones across Eastern Kingdoms" },
+      { path = "quests/kalimdor", name = "Kalimdor", desc = "20 zones across Kalimdor" },
       { path = "quests/dungeons", name = "Dungeons & Raids", desc = "Instance questlines across Azeroth" },
       { path = "quests/class", name = "Class Quests", desc = "Quests for each of the 9 classes" },
       { path = "quests/professions", name = "Profession Quests", desc = "Trade skill quests & masteries" },
@@ -3575,7 +3826,7 @@ FG.FolderTree = {
       { path = "items/consumables", name = "Consumables", desc = "Potions, Food, Bandages, Scrolls" },
       { path = "items/trade_goods", name = "Trade Goods", desc = "Herbs, Ore, Leather, Cloth, Reagents" },
       { path = "items/recipes", name = "Recipes & Plans", desc = "Crafting Recipes & Manuals" },
-      { path = "items/forever", name = "[Forever] Forever Custom Gear", desc = "Exclusive Warcraft Forever items" },
+      { path = "items/forever", name = "[Forever] Forever Exclusive Gear", desc = "Exclusive Warcraft Forever items" },
     },
   },
 
@@ -3718,18 +3969,18 @@ FG.FolderTree = {
     title = "Creatures & Bosses",
     parent = "root",
     folders = {
-      { path = "creatures/by_zone_ek", name = "Eastern Kingdoms (By Zone)", desc = "24 zones alphabetically (A to Z)" },
-      { path = "creatures/by_zone_kalimdor", name = "Kalimdor (By Zone)", desc = "20 zones alphabetically (A to Z)" },
+      { path = "creatures/by_zone_ek", name = "Eastern Kingdoms (By Zone)", desc = "24 zones across Eastern Kingdoms" },
+      { path = "creatures/by_zone_kalimdor", name = "Kalimdor (By Zone)", desc = "20 zones across Kalimdor" },
       { path = "creatures/bosses", name = "World & Dungeon Bosses", desc = "Major encounter bosses" },
       { path = "creatures/rares", name = "Rare & Rare Elite Encounters", desc = "Silver-dragon rare spawns" },
-      { path = "creatures/beasts", name = "Beasts", desc = "Bears, Wolves, Cats, Raptors (By Zone or A to Z)" },
-      { path = "creatures/humanoids", name = "Humanoids", desc = "Bandits, Pirates, Cultists (By Zone or A to Z)" },
-      { path = "creatures/undead", name = "Undead", desc = "Scourge & Skeletons (By Zone or A to Z)" },
-      { path = "creatures/demons", name = "Demons", desc = "Burning Legion demons (By Zone or A to Z)" },
-      { path = "creatures/dragonkin", name = "Dragonkin", desc = "Black, Red, Green flights (By Zone or A to Z)" },
-      { path = "creatures/elementals", name = "Elementals", desc = "Fire, Water, Earth, Air (By Zone or A to Z)" },
-      { path = "creatures/giants", name = "Giants", desc = "Giants & Colossi (By Zone or A to Z)" },
-      { path = "creatures/forever", name = "[Forever] Forever Custom NPCs", desc = "Exclusive server NPCs" },
+      { path = "creatures/beasts", name = "Beasts", desc = "Bears, Wolves, Cats, Raptors & more" },
+      { path = "creatures/humanoids", name = "Humanoids", desc = "Bandits, Pirates, Cultists & more" },
+      { path = "creatures/undead", name = "Undead", desc = "Scourge, Skeletons, Ghosts & Ghouls" },
+      { path = "creatures/demons", name = "Demons", desc = "Burning Legion demons & warlocks" },
+      { path = "creatures/dragonkin", name = "Dragonkin", desc = "Black, Red, Green & Blue dragonflights" },
+      { path = "creatures/elementals", name = "Elementals", desc = "Fire, Water, Earth & Air elementals" },
+      { path = "creatures/giants", name = "Giants", desc = "Giants, Ogres & Mountain Colossi" },
+      { path = "creatures/forever", name = "[Forever] Forever Exclusive NPCs", desc = "Exclusive server encounters & bosses" },
     },
   },
 
@@ -3744,7 +3995,7 @@ FG.FolderTree = {
       { path = "dungeons/mid", name = "Mid-Tier Dungeons (Lvl 30-50)", desc = "Gnomeregan, SM, RFK, RFD, Uldaman, ZF, Mara" },
       { path = "dungeons/endgame", name = "Endgame Dungeons (Lvl 50-60)", desc = "BRD, LBRS, UBRS, Strath, Scholo, DM, ST" },
       { path = "dungeons/raids", name = "Raid Dungeons (Lvl 60)", desc = "MC, Onyxia, BWL, ZG, AQ20, AQ40, Naxx" },
-      { path = "dungeons/forever", name = "[Forever] Forever Custom Dungeons", desc = "Crypts, Thanes, Roots, Hateforge, Rift..." },
+      { path = "dungeons/forever", name = "[Forever] Forever Exclusive Dungeons", desc = "Crypts, Thanes, Roots, Hateforge, Rift..." },
     },
   },
 
@@ -3759,15 +4010,15 @@ FG.FolderTree = {
     },
   },
 
-  -- FOREVER CUSTOM CONTENT
+  -- FOREVER EXCLUSIVE CONTENT
   ["forever"] = {
-    title = "[Forever] Warcraft Forever Custom Content",
+    title = "[Forever] Warcraft Forever Exclusives",
     parent = "root",
     folders = {
-      { path = "forever/items", name = "Forever Gear & Items", desc = "Custom itemization & set pieces" },
-      { path = "forever/quests", name = "Forever Quests & Storylines", desc = "Custom narrative and story quests" },
-      { path = "forever/creatures", name = "Forever NPCs & Bosses", desc = "Custom encounters and rare mobs" },
-      { path = "forever/dungeons", name = "Forever Dungeons & Raids", desc = "Custom instances & progressive raids" },
+      { path = "forever/items", name = "Forever Gear & Items", desc = "Exclusive itemization & set pieces" },
+      { path = "forever/quests", name = "Forever Quests & Storylines", desc = "Exclusive narrative and story quests" },
+      { path = "forever/creatures", name = "Forever NPCs & Bosses", desc = "Exclusive encounters and rare mobs" },
+      { path = "forever/dungeons", name = "Forever Dungeons & Raids", desc = "Exclusive instances & progressive raids" },
     },
   },
 }
@@ -3975,7 +4226,7 @@ function FG:UpdateDolphinBreadcrumbs(query, matchCount)
     elseif cur:find("^creatures/[^/]+/all$") then
       local fam = cur:match("^creatures/([^/]+)/all$")
       table.insert(trail, "|cff88aacc" .. fam:gsub("^%l", string.upper) .. "|r")
-      table.insert(trail, "|cffffd24dAll (A-Z)|r")
+      table.insert(trail, "|cffffd24dAll Entries|r")
     elseif cur == "creatures/bosses" then table.insert(trail, "|cffffffffBosses|r")
     elseif cur == "creatures/rares" then table.insert(trail, "|cffffffffRares|r")
     elseif cur == "creatures/forever" then table.insert(trail, "|cffe6cc80[Forever] NPCs|r")
@@ -4013,11 +4264,37 @@ function FG:IsInternalCreature(name, family)
   if not name then return true end
   if family and family == "Internal" then return true end
   local n = name:lower()
-  if n:find(" form%f[%A]") or n:find("%(druid") or n:find("%(shapeshift") or n:find("form %(") or
+  if n:find("not used") or n:find("unused") or n:find("deprecated") or
+     n:find("%[test%]") or n:find("%(test%)") or n:find("^test ") or n:find(" test$") or
+     n:find("placeholder") or n:find("%[ph%]") or n:find("%[ph%[") or n:find("%(ph%)") or
+     n:find("%(old%)") or n:find("%[old%]") or n:find("%(dnd%)") or n:find("%[dnd%]") or
+     n:find("^dnd") or n:find("^monster %-") or n:find("^visual %-") or
      n:find("dummy") or n:find("trigger") or n:find("credit marker") or n:find("controller") or
-     n:find("spawner") or n:find("%[ph%]") or n:find("%[ph%[") or n:find("^placeholder") or
-     n:find("invisible") or n:find("%(dnd%)") or n:find("%[dnd%]") or n:find("test mob") or
-     n:find("test dude") or n:find("^world [a-z]+ trainer") then
+     n:find("spawner") or n:find("qa %-") or n:find("invisible") or
+     n:find("test mob") or n:find("test dude") or n:find("^world [a-z]+ trainer") or
+     n:find(" form%f[%A]") or n:find("%(druid") or n:find("%(shapeshift") or n:find("form %(") then
+    return true
+  end
+  return false
+end
+
+function FG:IsInternalItem(name)
+  if not name then return true end
+  local n = name:lower()
+  if n:find("not used") or n:find("unused") or n:find("deprecated") or
+     n:find("%[test%]") or n:find("%(test%)") or n:find("^test ") or n:find(" test$") or
+     n:find("placeholder") or n:find("%[ph%]") or n:find("%(old%)") or n:find("%[old%]") or
+     n:find("^monster %-") or n:find("^visual %-") or n:find("^qa %-") or
+     n:find("^old") or n:find("^zzold") then
+    return true
+  end
+  return false
+end
+
+function FG:IsInternalQuest(title)
+  if not title then return true end
+  local n = title:lower()
+  if n:find("^dnd") or n:find("%(test%)") or n:find("%[test%]") or n:find("not used") or n:find("unused") then
     return true
   end
   return false
@@ -4248,11 +4525,13 @@ function FG:PopulateCodexResults(query)
       -- 3. Nearby Quests
       if showQuests and FG.Data.Quests then
         for _, quest in pairs(FG.Data.Quests) do
-          local inZone = quest.zone and quest.zone:lower() == pZoneLower
-          local inSub = pSubLower ~= "" and ((quest.zone and quest.zone:lower():find(pSubLower, 1, true)) or (quest.npc and quest.npc:lower():find(pSubLower, 1, true)))
-          if inZone or inSub then
-            if q == "" or (quest.title and quest.title:lower():find(q, 1, true)) then
-              table.insert(matches, { type = "quest", data = quest, isNearby = true })
+          if not FG:IsInternalQuest(quest.title) then
+            local inZone = quest.zone and quest.zone:lower() == pZoneLower
+            local inSub = pSubLower ~= "" and ((quest.zone and quest.zone:lower():find(pSubLower, 1, true)) or (quest.npc and quest.npc:lower():find(pSubLower, 1, true)))
+            if inZone or inSub then
+              if q == "" or (quest.title and quest.title:lower():find(q, 1, true)) then
+                table.insert(matches, { type = "quest", data = quest, isNearby = true })
+              end
             end
           end
         end
@@ -4298,10 +4577,12 @@ function FG:PopulateCodexResults(query)
       -- 6. Nearby Notable Loot
       if showLoot and FG.Data.Items and #matches < 300 then
         for _, item in pairs(FG.Data.Items) do
-          local inSource = item.source and item.source:lower():find(pZoneLower, 1, true)
-          if inSource then
-            if q == "" or (item.name and item.name:lower():find(q, 1, true)) then
-              table.insert(matches, { type = "item", data = item, isNearby = true })
+          if not FG:IsInternalItem(item.name) then
+            local inSource = item.source and item.source:lower():find(pZoneLower, 1, true)
+            if inSource then
+              if q == "" or (item.name and item.name:lower():find(q, 1, true)) then
+                table.insert(matches, { type = "item", data = item, isNearby = true })
+              end
             end
           end
         end
@@ -4321,44 +4602,48 @@ function FG:PopulateCodexResults(query)
     if cur == "quests/available" and FG.Data.Quests then
       local pLevel = (UnitLevel and UnitLevel("player")) or 0
       for _, quest in pairs(FG.Data.Quests) do
-        local req = quest.reqLevel or 1
-        if pLevel == 0 or pLevel >= req then
-          table.insert(matches, { type = "quest", data = quest })
+        if not FG:IsInternalQuest(quest.title) then
+          local req = quest.reqLevel or 1
+          if pLevel == 0 or pLevel >= req then
+            table.insert(matches, { type = "quest", data = quest })
+          end
         end
       end
     elseif cur == "quests/recommended" and FG.Data.Quests then
       local pLevel = (UnitLevel and UnitLevel("player")) or 0
       for _, quest in pairs(FG.Data.Quests) do
-        local qLvl = quest.questLevel or quest.reqLevel or 1
-        local req = quest.reqLevel or 1
-        if pLevel == 0 or (pLevel >= req and math.abs(pLevel - qLvl) <= 4) then
-          table.insert(matches, { type = "quest", data = quest })
+        if not FG:IsInternalQuest(quest.title) then
+          local qLvl = quest.questLevel or quest.reqLevel or 1
+          local req = quest.reqLevel or 1
+          if pLevel == 0 or (pLevel >= req and math.abs(pLevel - qLvl) <= 4) then
+            table.insert(matches, { type = "quest", data = quest })
+          end
         end
       end
     elseif cur:find("^quests/zone/") and FG.Data.Quests then
       local zoneName = cur:sub(13)
       for _, quest in pairs(FG.Data.Quests) do
-        if quest.zone == zoneName then
+        if not FG:IsInternalQuest(quest.title) and quest.zone == zoneName then
           table.insert(matches, { type = "quest", data = quest })
         end
       end
     elseif cur:find("^quests/class/") and FG.Data.Quests then
       local classZone = cur:sub(14)
       for _, quest in pairs(FG.Data.Quests) do
-        if quest.zone == classZone then
+        if not FG:IsInternalQuest(quest.title) and quest.zone == classZone then
           table.insert(matches, { type = "quest", data = quest })
         end
       end
     elseif cur:find("^quests/prof/") and FG.Data.Quests then
       local profZone = cur:sub(13)
       for _, quest in pairs(FG.Data.Quests) do
-        if quest.zone == profZone then
+        if not FG:IsInternalQuest(quest.title) and quest.zone == profZone then
           table.insert(matches, { type = "quest", data = quest })
         end
       end
     elseif cur == "quests/dungeons" and FG.Data.Quests then
       for _, quest in pairs(FG.Data.Quests) do
-        if quest.zone and (quest.zone:find("Deadmines") or quest.zone:find("Wailing") or quest.zone:find("Shadowfang") or
+        if not FG:IsInternalQuest(quest.title) and quest.zone and (quest.zone:find("Deadmines") or quest.zone:find("Wailing") or quest.zone:find("Shadowfang") or
                            quest.zone:find("Blackfathom") or quest.zone:find("Gnomeregan") or quest.zone:find("Scarlet") or
                            quest.zone:find("Razorfen") or quest.zone:find("Uldaman") or quest.zone:find("Zul'") or
                            quest.zone:find("Maraudon") or quest.zone:find("Blackrock") or quest.zone:find("Stratholme") or
@@ -4369,13 +4654,13 @@ function FG:PopulateCodexResults(query)
       end
     elseif cur == "quests/forever" and FG.Data.Quests then
       for _, quest in pairs(FG.Data.Quests) do
-        if quest.isForever then
+        if not FG:IsInternalQuest(quest.title) and quest.isForever then
           table.insert(matches, { type = "quest", data = quest })
         end
       end
     elseif cur == "items/forever" and FG.Data.Items then
       for _, item in pairs(FG.Data.Items) do
-        if item.isForever then
+        if not FG:IsInternalItem(item.name) and item.isForever then
           table.insert(matches, { type = "item", data = item })
         end
       end
@@ -4383,9 +4668,8 @@ function FG:PopulateCodexResults(query)
       local armorType, slotName = cur:match("^items/armor/([^/]+)/([^/]+)$")
       for _, item in pairs(FG.Data.Items) do
         local name = item.name or ""
-        local isInternal = name:find("^OLD") or name:find("^zzOLD") or name:find("^Monster %-") or name:find("^TEST") or name:find("%[PH%]")
         local isRecipe = name:find("^Plans:") or name:find("^Pattern:") or name:find("^Schematic:") or name:find("^Formula:") or name:find("^Recipe:")
-        if not isInternal and not isRecipe and item.itemType and item.itemType:lower():find(armorType) then
+        if not FG:IsInternalItem(name) and not isRecipe and item.itemType and item.itemType:lower():find(armorType) then
           if item.slot and item.slot == slotName then
             table.insert(matches, { type = "item", data = item })
           end
@@ -4397,9 +4681,8 @@ function FG:PopulateCodexResults(query)
       local slotCounts = {}
       for _, item in pairs(FG.Data.Items) do
         local name = item.name or ""
-        local isInternal = name:find("^OLD") or name:find("^zzOLD") or name:find("^Monster %-") or name:find("^TEST") or name:find("%[PH%]")
         local isRecipe = name:find("^Plans:") or name:find("^Pattern:") or name:find("^Schematic:") or name:find("^Formula:") or name:find("^Recipe:")
-        if not isInternal and not isRecipe and item.itemType and item.itemType:lower():find(armorType) then
+        if not FG:IsInternalItem(name) and not isRecipe and item.itemType and item.itemType:lower():find(armorType) then
           if item.slot then
             slotCounts[item.slot] = (slotCounts[item.slot] or 0) + 1
           end
@@ -4426,9 +4709,8 @@ function FG:PopulateCodexResults(query)
         local slotCounts = {}
         for _, item in pairs(FG.Data.Items) do
           local name = item.name or ""
-          local isInternal = name:find("^OLD") or name:find("^zzOLD") or name:find("^Monster %-") or name:find("^TEST") or name:find("%[PH%]")
           local isRecipe = name:find("^Plans:") or name:find("^Pattern:") or name:find("^Schematic:") or name:find("^Formula:") or name:find("^Recipe:")
-          if not isInternal and not isRecipe and item.itemType and item.itemType:lower():find(aType) and item.slot then
+          if not FG:IsInternalItem(name) and not isRecipe and item.itemType and item.itemType:lower():find(aType) and item.slot then
             slotCounts[item.slot] = (slotCounts[item.slot] or 0) + 1
           end
         end
@@ -4447,50 +4729,49 @@ function FG:PopulateCodexResults(query)
         end
       else
         for _, item in pairs(FG.Data.Items) do
-        local name = item.name or ""
-        local isInternal = name:find("^OLD") or name:find("^zzOLD") or name:find("^Monster %-") or name:find("^TEST") or name:find("%[PH%]")
-        if not isInternal then
-          local isRecipe = name:find("^Plans:") or name:find("^Pattern:") or name:find("^Schematic:") or name:find("^Formula:") or name:find("^Recipe:")
-          local matchesFilter = false
-          if subName == "One-Handed Axes" and not isRecipe and item.slot == "One-Hand" and item.itemType and item.itemType:find("Axe") then matchesFilter = true
-          elseif subName == "Two-Handed Axes" and not isRecipe and item.slot == "Two-Hand" and item.itemType and item.itemType:find("Axe") then matchesFilter = true
-          elseif subName == "One-Handed Swords" and not isRecipe and item.slot == "One-Hand" and item.itemType and item.itemType:find("Sword") then matchesFilter = true
-          elseif subName == "Two-Handed Swords" and not isRecipe and item.slot == "Two-Hand" and item.itemType and item.itemType:find("Sword") then matchesFilter = true
-          elseif subName == "One-Handed Maces" and not isRecipe and item.slot == "One-Hand" and item.itemType and item.itemType:find("Mace") then matchesFilter = true
-          elseif subName == "Two-Handed Maces" and not isRecipe and item.slot == "Two-Hand" and item.itemType and item.itemType:find("Mace") then matchesFilter = true
-          elseif subName == "Daggers" and not isRecipe and item.itemType and item.itemType:find("Dagger") then matchesFilter = true
-          elseif subName == "Polearms" and not isRecipe and item.itemType and item.itemType:find("Polearm") then matchesFilter = true
-          elseif subName == "Staves" and not isRecipe and item.itemType and item.itemType:find("Staff") then matchesFilter = true
-          elseif subName == "Bows" and not isRecipe and item.itemType and (item.itemType:find("Bow") or item.itemType:find("Crossbow")) then matchesFilter = true
-          elseif subName == "Guns" and not isRecipe and item.itemType and item.itemType:find("Gun") then matchesFilter = true
-          elseif subName == "Wands" and not isRecipe and item.itemType and item.itemType:find("Wand") then matchesFilter = true
-          elseif subName == "Fist Weapons" and not isRecipe and item.itemType and item.itemType:find("Fist") then matchesFilter = true
-          elseif subName == "Cloth Armor" and not isRecipe and item.itemType and item.itemType:find("Cloth") then matchesFilter = true
-          elseif subName == "Leather Armor" and not isRecipe and item.itemType and item.itemType:find("Leather") then matchesFilter = true
-          elseif subName == "Mail Armor" and not isRecipe and item.itemType and item.itemType:find("Mail") then matchesFilter = true
-          elseif subName == "Plate Armor" and not isRecipe and item.itemType and item.itemType:find("Plate") then matchesFilter = true
-          elseif subName == "Shields" and not isRecipe and item.slot and item.slot:find("Shield") then matchesFilter = true
-          elseif subName == "Amulets" and not isRecipe and item.slot and item.slot:find("Neck") then matchesFilter = true
-          elseif subName == "Rings" and not isRecipe and item.slot and item.slot:find("Finger") then matchesFilter = true
-          elseif subName == "Trinkets" and not isRecipe and item.slot and item.slot:find("Trinket") then matchesFilter = true
-          elseif subName == "Cloaks" and not isRecipe and item.slot and item.slot:find("Back") then matchesFilter = true
-          elseif subName == "Potions" and item.itemType and (item.itemType:find("Potion") or item.itemType:find("Elixir") or item.itemType:find("Flask")) then matchesFilter = true
-          elseif subName == "Food" and item.itemType and item.itemType:find("Food") then matchesFilter = true
-          elseif subName == "Bandages" and item.itemType and item.itemType:find("Bandage") then matchesFilter = true
-          elseif subName == "Scrolls" and item.itemType and item.itemType:find("Scroll") then matchesFilter = true
-          elseif subName == "Herbs" and item.itemType and item.itemType:find("Herb") then matchesFilter = true
-          elseif subName == "Ore" and item.itemType and (item.itemType:find("Metal") or item.itemType:find("Stone")) then matchesFilter = true
-          elseif subName == "Parts" and item.itemType and (item.itemType:find("Parts") or item.itemType:find("Device")) then matchesFilter = true
-          elseif subName == "Reagents" and item.itemType and item.itemType:find("Reagent") then matchesFilter = true
-          elseif subName == "All Recipes" and (isRecipe or (item.itemType and item.itemType:find("Recipe"))) then matchesFilter = true
-          end
+          local name = item.name or ""
+          if not FG:IsInternalItem(name) then
+            local isRecipe = name:find("^Plans:") or name:find("^Pattern:") or name:find("^Schematic:") or name:find("^Formula:") or name:find("^Recipe:")
+            local matchesFilter = false
+            if subName == "One-Handed Axes" and not isRecipe and item.slot == "One-Hand" and item.itemType and item.itemType:find("Axe") then matchesFilter = true
+            elseif subName == "Two-Handed Axes" and not isRecipe and item.slot == "Two-Hand" and item.itemType and item.itemType:find("Axe") then matchesFilter = true
+            elseif subName == "One-Handed Swords" and not isRecipe and item.slot == "One-Hand" and item.itemType and item.itemType:find("Sword") then matchesFilter = true
+            elseif subName == "Two-Handed Swords" and not isRecipe and item.slot == "Two-Hand" and item.itemType and item.itemType:find("Sword") then matchesFilter = true
+            elseif subName == "One-Handed Maces" and not isRecipe and item.slot == "One-Hand" and item.itemType and item.itemType:find("Mace") then matchesFilter = true
+            elseif subName == "Two-Handed Maces" and not isRecipe and item.slot == "Two-Hand" and item.itemType and item.itemType:find("Mace") then matchesFilter = true
+            elseif subName == "Daggers" and not isRecipe and item.itemType and item.itemType:find("Dagger") then matchesFilter = true
+            elseif subName == "Polearms" and not isRecipe and item.itemType and item.itemType:find("Polearm") then matchesFilter = true
+            elseif subName == "Staves" and not isRecipe and item.itemType and item.itemType:find("Staff") then matchesFilter = true
+            elseif subName == "Bows" and not isRecipe and item.itemType and (item.itemType:find("Bow") or item.itemType:find("Crossbow")) then matchesFilter = true
+            elseif subName == "Guns" and not isRecipe and item.itemType and item.itemType:find("Gun") then matchesFilter = true
+            elseif subName == "Wands" and not isRecipe and item.itemType and item.itemType:find("Wand") then matchesFilter = true
+            elseif subName == "Fist Weapons" and not isRecipe and item.itemType and item.itemType:find("Fist") then matchesFilter = true
+            elseif subName == "Cloth Armor" and not isRecipe and item.itemType and item.itemType:find("Cloth") then matchesFilter = true
+            elseif subName == "Leather Armor" and not isRecipe and item.itemType and item.itemType:find("Leather") then matchesFilter = true
+            elseif subName == "Mail Armor" and not isRecipe and item.itemType and item.itemType:find("Mail") then matchesFilter = true
+            elseif subName == "Plate Armor" and not isRecipe and item.itemType and item.itemType:find("Plate") then matchesFilter = true
+            elseif subName == "Shields" and not isRecipe and item.slot and item.slot:find("Shield") then matchesFilter = true
+            elseif subName == "Amulets" and not isRecipe and item.slot and item.slot:find("Neck") then matchesFilter = true
+            elseif subName == "Rings" and not isRecipe and item.slot and item.slot:find("Finger") then matchesFilter = true
+            elseif subName == "Trinkets" and not isRecipe and item.slot and item.slot:find("Trinket") then matchesFilter = true
+            elseif subName == "Cloaks" and not isRecipe and item.slot and item.slot:find("Back") then matchesFilter = true
+            elseif subName == "Potions" and item.itemType and (item.itemType:find("Potion") or item.itemType:find("Elixir") or item.itemType:find("Flask")) then matchesFilter = true
+            elseif subName == "Food" and item.itemType and item.itemType:find("Food") then matchesFilter = true
+            elseif subName == "Bandages" and item.itemType and item.itemType:find("Bandage") then matchesFilter = true
+            elseif subName == "Scrolls" and item.itemType and item.itemType:find("Scroll") then matchesFilter = true
+            elseif subName == "Herbs" and item.itemType and item.itemType:find("Herb") then matchesFilter = true
+            elseif subName == "Ore" and item.itemType and (item.itemType:find("Metal") or item.itemType:find("Stone")) then matchesFilter = true
+            elseif subName == "Parts" and item.itemType and (item.itemType:find("Parts") or item.itemType:find("Device")) then matchesFilter = true
+            elseif subName == "Reagents" and item.itemType and item.itemType:find("Reagent") then matchesFilter = true
+            elseif subName == "All Recipes" and (isRecipe or (item.itemType and item.itemType:find("Recipe"))) then matchesFilter = true
+            end
 
-          if matchesFilter then
-            table.insert(matches, { type = "item", data = item })
+            if matchesFilter then
+              table.insert(matches, { type = "item", data = item })
+            end
           end
         end
       end
-    end
     elseif cur == "creatures/by_zone_ek" and FG.Data.Creatures then
       local zoneCounts = {}
       for _, c in pairs(FG.Data.Creatures) do
@@ -4505,7 +4786,7 @@ function FG:PopulateCodexResults(query)
           data = {
             name = zn,
             path = "creatures/zone/" .. zn,
-            desc = string.format("%d creatures in %s (A to Z)", count, zn),
+            desc = string.format("%d creatures in %s", count, zn),
             count = count,
             icon = "Interface\\Icons\\INV_Misc_Map02",
           }
@@ -4525,7 +4806,7 @@ function FG:PopulateCodexResults(query)
           data = {
             name = zn,
             path = "creatures/zone/" .. zn,
-            desc = string.format("%d creatures in %s (A to Z)", count, zn),
+            desc = string.format("%d creatures in %s", count, zn),
             count = count,
             icon = "Interface\\Icons\\INV_Misc_Map02",
           }
@@ -4554,7 +4835,7 @@ function FG:PopulateCodexResults(query)
             data = {
               name = zn,
               path = "creatures/" .. fam .. "/zone/" .. zn,
-              desc = string.format("%d %s in %s (A to Z)", count, fam:gsub("^%l", string.upper), zn),
+              desc = string.format("%d %s in %s", count, fam:gsub("^%l", string.upper), zn),
               count = count,
               icon = "Interface\\Icons\\INV_Misc_Map02",
             }
@@ -4577,7 +4858,7 @@ function FG:PopulateCodexResults(query)
             data = {
               name = zn,
               path = "creatures/" .. fam .. "/zone/" .. zn,
-              desc = string.format("%d %s in %s (A to Z)", count, fam:gsub("^%l", string.upper), zn),
+              desc = string.format("%d %s in %s", count, fam:gsub("^%l", string.upper), zn),
               count = count,
               icon = "Interface\\Icons\\INV_Misc_Map02",
             }
@@ -4606,7 +4887,7 @@ function FG:PopulateCodexResults(query)
         data = {
           name = "Eastern Kingdoms (By Zone)",
           path = "creatures/" .. sub .. "/ek",
-          desc = string.format("%s in Eastern Kingdoms zones (A to Z)", famCap),
+          desc = string.format("%s in Eastern Kingdoms zones", famCap),
           icon = "Interface\\Icons\\INV_Misc_Map02",
         }
       })
@@ -4615,7 +4896,7 @@ function FG:PopulateCodexResults(query)
         data = {
           name = "Kalimdor (By Zone)",
           path = "creatures/" .. sub .. "/kalimdor",
-          desc = string.format("%s in Kalimdor zones (A to Z)", famCap),
+          desc = string.format("%s in Kalimdor zones", famCap),
           icon = "Interface\\Icons\\INV_Misc_Map02",
         }
       })
@@ -4657,15 +4938,15 @@ function FG:PopulateCodexResults(query)
       local sub = cur:sub(9)
       if sub == "items" and FG.Data.Items then
         for _, item in pairs(FG.Data.Items) do
-          if item.isForever then table.insert(matches, { type = "item", data = item }) end
+          if item.isForever and not FG:IsInternalItem(item.name) then table.insert(matches, { type = "item", data = item }) end
         end
       elseif sub == "quests" and FG.Data.Quests then
         for _, quest in pairs(FG.Data.Quests) do
-          if quest.isForever then table.insert(matches, { type = "quest", data = quest }) end
+          if quest.isForever and not FG:IsInternalQuest(quest.title) then table.insert(matches, { type = "quest", data = quest }) end
         end
       elseif sub == "creatures" and FG.Data.Creatures then
         for _, c in pairs(FG.Data.Creatures) do
-          if c.isForever then table.insert(matches, { type = "creature", data = c }) end
+          if c.isForever and not FG:IsInternalCreature(c.name, c.family) then table.insert(matches, { type = "creature", data = c }) end
         end
       elseif sub == "dungeons" and FG.Data.Dungeons then
         for _, d in pairs(FG.Data.Dungeons) do
@@ -4678,7 +4959,7 @@ function FG:PopulateCodexResults(query)
     -- Active search query filtered by category
     if (cat == "all" or cat == "items") and FG.Data.Items then
       for _, item in pairs(FG.Data.Items) do
-        if item.name and (item.name:lower():find(q, 1, true) or (item.source and item.source:lower():find(q, 1, true))) then
+        if not FG:IsInternalItem(item.name) and item.name and (item.name:lower():find(q, 1, true) or (item.source and item.source:lower():find(q, 1, true))) then
           table.insert(matches, { type = "item", data = item })
         end
       end
@@ -4686,13 +4967,15 @@ function FG:PopulateCodexResults(query)
 
     if (cat == "all" or cat == "quests") and FG.Data.Quests then
       for _, quest in pairs(FG.Data.Quests) do
-        local matchTitle = quest.title and quest.title:lower():find(q, 1, true)
-        local matchNpc = quest.npc and quest.npc:lower():find(q, 1, true)
-        local matchZone = quest.zone and quest.zone:lower():find(q, 1, true)
-        local matchObj = quest.objectives and quest.objectives:lower():find(q, 1, true)
-        local matchTip = quest.tip and quest.tip:lower():find(q, 1, true)
-        if matchTitle or matchNpc or matchZone or matchObj or matchTip then
-          table.insert(matches, { type = "quest", data = quest })
+        if not FG:IsInternalQuest(quest.title) then
+          local matchTitle = quest.title and quest.title:lower():find(q, 1, true)
+          local matchNpc = quest.npc and quest.npc:lower():find(q, 1, true)
+          local matchZone = quest.zone and quest.zone:lower():find(q, 1, true)
+          local matchObj = quest.objectives and quest.objectives:lower():find(q, 1, true)
+          local matchTip = quest.tip and quest.tip:lower():find(q, 1, true)
+          if matchTitle or matchNpc or matchZone or matchObj or matchTip then
+            table.insert(matches, { type = "quest", data = quest })
+          end
         end
       end
     end
@@ -4802,23 +5085,23 @@ function FG:PopulateCodexResults(query)
       if cur == "nearby" or cat == "nearby" then
         cw.StatusText:SetText("|cff20ff20" .. countStr .. " nearby points of interest (" .. (FG.lastKnownZone or "Local Area") .. ")|r")
       elseif folderCount == #matches then
-        cw.StatusText:SetText("|cffdf80ff" .. countStr .. " categories in view (A-Z)|r")
+        cw.StatusText:SetText("|cffdf80ff" .. countStr .. " categories in view|r")
       elseif itemCount == #matches then
         if isItemView or cat == "items" then
           cw.StatusText:SetText("|cffdf80ff" .. countStr .. " items in view (iLvl: Lowest to Highest)|r")
         else
-          cw.StatusText:SetText("|cffdf80ff" .. countStr .. " items in view (A-Z)|r")
+          cw.StatusText:SetText("|cffdf80ff" .. countStr .. " items in view|r")
         end
       elseif questCount == #matches then
-        cw.StatusText:SetText("|cffdf80ff" .. countStr .. " quests in view (A-Z)|r")
+        cw.StatusText:SetText("|cffdf80ff" .. countStr .. " quests in view|r")
       elseif creatureCount == #matches then
-        cw.StatusText:SetText("|cffdf80ff" .. countStr .. " creatures in view (A-Z)|r")
+        cw.StatusText:SetText("|cffdf80ff" .. countStr .. " creatures in view|r")
       elseif dungeonCount == #matches then
-        cw.StatusText:SetText("|cffdf80ff" .. countStr .. " dungeons & raids in view (A-Z)|r")
+        cw.StatusText:SetText("|cffdf80ff" .. countStr .. " dungeons & raids in view|r")
       elseif folderCount > 0 and itemCount > 0 and (folderCount + itemCount == #matches) then
         cw.StatusText:SetText("|cffdf80ff" .. folderCount .. " categories, " .. itemCount .. " items in view|r")
       else
-        cw.StatusText:SetText("|cffdf80ff" .. countStr .. " results in view (A-Z)|r")
+        cw.StatusText:SetText("|cffdf80ff" .. countStr .. " results in view|r")
       end
     end
   end

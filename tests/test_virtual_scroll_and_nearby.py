@@ -168,11 +168,13 @@ class TestVirtualScrollAndNearby(unittest.TestCase):
         self.assertIn('cur:find("^items/armor/([^/]+)$")', self.lua_code)
 
     def test_12_menu_folders_status_text_not_ilvl(self):
-        """Verify menus/folders display 'categories in view (A-Z)' and never 'items in view (iLvl: Lowest to Highest)'."""
+        """Verify menus/folders display clean status text without '(A-Z)' and never 'items in view (iLvl: Lowest to Highest)'."""
         self.assertIn('elseif folderCount == #matches then', self.lua_code)
-        self.assertIn('categories in view (A-Z)', self.lua_code)
+        self.assertIn('categories in view|r', self.lua_code)
         self.assertIn('items in view (iLvl: Lowest to Highest)', self.lua_code)
-        self.assertIn('quests in view (A-Z)', self.lua_code)
+        self.assertIn('quests in view|r', self.lua_code)
+        self.assertNotIn('(A-Z)', self.lua_code)
+        self.assertNotIn('(A to Z)', self.lua_code)
     def test_13_luajit_syntax_compilation(self):
         """Compile ForeverGuide.lua using LuaJIT bytecode compiler to verify zero syntax errors."""
         import subprocess
@@ -271,7 +273,44 @@ class TestVirtualScrollAndNearby(unittest.TestCase):
         # Verify folders use folder.icon
         self.assertIn('btn.Icon:SetTexture(folder.icon or', self.lua_code)
 
+    def test_18_dropper_coords_clickable_and_exclusives(self):
+        """Verify dropper coordinates, clickable dropper buttons, multiple sources, exclusives rename, and internal filtering."""
+        # 1. 'Custom' replaced with 'Exclusives'
+        self.assertIn('Warcraft Forever Exclusives', self.lua_code)
+        self.assertIn('Server gear, exclusive quests & endgame additions', self.lua_code)
+        self.assertIn('Forever Exclusive Gear', self.lua_code)
+        self.assertIn('Forever Exclusive NPCs', self.lua_code)
+        self.assertNotIn('Warcraft Forever Custom', self.lua_code)
+
+        # 2. Droppers inverted index and lookups
+        self.assertIn('function FG:BuildItemDroppersIndex()', self.lua_code)
+        self.assertIn('function FG:GetItemDroppers(itemId)', self.lua_code)
+        self.assertIn('function FG:FindCreatureByName(name)', self.lua_code)
+        self.assertIn('function FG:GetItemRowSourceText(item)', self.lua_code)
+
+        # 3. Clickable droppers in item detail panel with coordinates
+        self.assertIn('CONFIRMED DROPPERS & SOURCES', self.lua_code)
+        self.assertIn('AddDropperButton', self.lua_code)
+        self.assertIn('FG:ShowDetailPanel("creature", self.creatureData)', self.lua_code)
+        self.assertIn('Open NPC intel & spawn location', self.lua_code)
+
+        # 4. Multiple dropper indicator (+X more)
+        self.assertIn('" +" .. (#droppers - 1) .. " more"', self.lua_code)
+
+        # 5. Internal testing / non-applicable entity filtering
+        self.assertIn('function FG:IsInternalCreature(name, family)', self.lua_code)
+        self.assertIn('function FG:IsInternalItem(name)', self.lua_code)
+        self.assertIn('function FG:IsInternalQuest(title)', self.lua_code)
+
+        # Check filter patterns
+        self.assertIn('not used', self.lua_code)
+        self.assertIn('unused', self.lua_code)
+        self.assertIn('deprecated', self.lua_code)
+        self.assertIn('placeholder', self.lua_code)
+        self.assertIn('monster %-', self.lua_code)
+
 
 if __name__ == "__main__":
     unittest.main()
+
 
