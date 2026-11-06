@@ -758,7 +758,7 @@ end
 --------------------------------------------------------------------------------
 function FG:CreateSparkFrame()
   local f = CreateFrame("Button", "ForeverGuideSparkFrame", UIParent)
-  f:SetSize(38, 38)
+  f:SetSize(48, 48)
   f:SetFrameStrata("MEDIUM")
   f:SetFrameLevel(12)
   f:SetClampedToScreen(true)
@@ -794,7 +794,8 @@ function FG:CreateSparkFrame()
 
   -- Inner visual container
   local visual = CreateFrame("Frame", nil, f)
-  visual:SetAllPoints(f)
+  visual:SetSize(34, 34)
+  visual:SetPoint("CENTER", f, "CENTER", 0, 0)
   visual:EnableMouse(false)
   f.Visual = visual
 
@@ -809,7 +810,7 @@ function FG:CreateSparkFrame()
   aura:SetTexture(TEX_CLOUD_MAIN)
   aura:SetBlendMode("ADD")
   aura:SetPoint("CENTER", visual, "CENTER", 0, 0)
-  aura:SetSize(42, 42)
+  aura:SetSize(54, 54)
   aura:SetVertexColor(0.55, 0.12, 0.85, 0.40)
   f.Aura = aura
 
@@ -817,15 +818,15 @@ function FG:CreateSparkFrame()
   local cloudA = visual:CreateTexture(nil, "BORDER")
   cloudA:SetTexture(TEX_CLOUD_MAIN)
   cloudA:SetBlendMode("ADD")
-  cloudA:SetPoint("CENTER", visual, "CENTER", -1.5, 1.0)
-  cloudA:SetSize(34, 34)
+  cloudA:SetPoint("CENTER", visual, "CENTER", -1.8, 1.2)
+  cloudA:SetSize(44, 44)
   cloudA:SetVertexColor(0.72, 0.20, 0.98, 0.65)
   f.CloudA = cloudA
 
   local rotAgA = visual:CreateAnimationGroup()
   local rotAnimA = rotAgA:CreateAnimation("Rotation")
   rotAnimA:SetDegrees(360)
-  rotAnimA:SetDuration(22.0)
+  rotAnimA:SetDuration(14.0)
   rotAgA:SetLooping("REPEAT")
   rotAgA:Play()
   f.RotAnimGroupA = rotAgA
@@ -834,15 +835,15 @@ function FG:CreateSparkFrame()
   local cloudB = visual:CreateTexture(nil, "ARTWORK")
   cloudB:SetTexture(TEX_CLOUD_MAIN)
   cloudB:SetBlendMode("ADD")
-  cloudB:SetPoint("CENTER", visual, "CENTER", 1.8, -1.2)
-  cloudB:SetSize(30, 30)
+  cloudB:SetPoint("CENTER", visual, "CENTER", 2.0, -1.4)
+  cloudB:SetSize(38, 38)
   cloudB:SetVertexColor(0.82, 0.30, 1.00, 0.60)
   f.CloudB = cloudB
 
   local rotAgB = visual:CreateAnimationGroup()
   local rotAnimB = rotAgB:CreateAnimation("Rotation")
   rotAnimB:SetDegrees(-360)
-  rotAnimB:SetDuration(16.0)
+  rotAnimB:SetDuration(10.0)
   rotAgB:SetLooping("REPEAT")
   rotAgB:Play()
   f.RotAnimGroupB = rotAgB
@@ -852,14 +853,14 @@ function FG:CreateSparkFrame()
   wispTendril:SetTexture(TEX_CLOUD_WISP)
   wispTendril:SetBlendMode("ADD")
   wispTendril:SetPoint("CENTER", visual, "CENTER", 0, 0)
-  wispTendril:SetSize(32, 32)
+  wispTendril:SetSize(42, 42)
   wispTendril:SetVertexColor(0.90, 0.45, 1.00, 0.75)
   f.WispTendril = wispTendril
 
   local rotAgW = visual:CreateAnimationGroup()
   local rotAnimW = rotAgW:CreateAnimation("Rotation")
   rotAnimW:SetDegrees(360)
-  rotAnimW:SetDuration(11.0)
+  rotAnimW:SetDuration(7.0)
   rotAgW:SetLooping("REPEAT")
   rotAgW:Play()
   f.RotAnimGroupW = rotAgW
@@ -869,7 +870,7 @@ function FG:CreateSparkFrame()
   cloudCore:SetTexture(TEX_CLOUD_CORE)
   cloudCore:SetBlendMode("ADD")
   cloudCore:SetPoint("CENTER", visual, "CENTER", 0, 0)
-  cloudCore:SetSize(22, 22)
+  cloudCore:SetSize(28, 28)
   cloudCore:SetVertexColor(0.95, 0.65, 1.00, 0.85)
   f.CloudCore = cloudCore
 
@@ -877,45 +878,37 @@ function FG:CreateSparkFrame()
   local puff1 = visual:CreateTexture(nil, "OVERLAY", nil, 1)
   puff1:SetTexture(TEX_CLOUD_PUFF)
   puff1:SetBlendMode("ADD")
-  puff1:SetSize(10, 10)
+  puff1:SetSize(13, 13)
   puff1:SetVertexColor(0.85, 0.35, 1.0, 0.70)
   f.Puff1 = puff1
 
   local puff2 = visual:CreateTexture(nil, "OVERLAY", nil, 1)
   puff2:SetTexture(TEX_CLOUD_PUFF)
   puff2:SetBlendMode("ADD")
-  puff2:SetSize(8, 8)
+  puff2:SetSize(11, 11)
   puff2:SetVertexColor(0.75, 0.25, 0.95, 0.60)
   f.Puff2 = puff2
 
   local puff3 = visual:CreateTexture(nil, "OVERLAY", nil, 1)
   puff3:SetTexture(TEX_CLOUD_PUFF)
   puff3:SetBlendMode("ADD")
-  puff3:SetSize(6, 6)
+  puff3:SetSize(9, 9)
   puff3:SetVertexColor(0.95, 0.55, 1.0, 0.65)
   f.Puff3 = puff3
 
   -- Breathing Alpha Pulse
   local ag = visual:CreateAnimationGroup()
   local alphaAnim = ag:CreateAnimation("Alpha")
-  alphaAnim:SetFromAlpha(0.80)
+  alphaAnim:SetFromAlpha(0.82)
   alphaAnim:SetToAlpha(1.0)
-  alphaAnim:SetDuration(2.6)
+  alphaAnim:SetDuration(1.8)
   alphaAnim:SetSmoothing("IN_OUT")
   ag:SetLooping("BOUNCE")
   ag:Play()
   f.AnimGroup = ag
 
   -- =========================================================================
-  -- SPARKY AUTONOMOUS AI & HIGH-FPS FLUID MOTION ENGINE
-  -- =========================================================================
-  local flightState = ForeverGuideDB.hasInteracted and "RESTING" or "DORMANT"
-  f.flightState = flightState
-
-  local currentPosX = f.homeX or 240
-  local currentPosY = f.homeY or 120
-  -- =========================================================================
-  -- SPARKY COZY HOME-ANCHORED WANDERING & FLUID MOTION ENGINE
+  -- SPARKY AUTONOMOUS AI & 120FPS FLUID MOTION ENGINE
   -- =========================================================================
   local flightState = ForeverGuideDB.hasInteracted and "RESTING" or "DORMANT"
   f.flightState = flightState
@@ -929,13 +922,13 @@ function FG:CreateSparkFrame()
 
   -- State & Decision Timers
   local stateTimer = 0
-  local stateDuration = 2.4 + math.random() * 2.2 -- Snappy 2.4-4.6s rest before next gentle drift
+  local stateDuration = 1.4 + math.random() * 1.8 -- Active 1.4-3.2s rest before next graceful glide
 
   -- Float & Roam Parameters
   local travelStartX, travelStartY = currentPosX, currentPosY
   local travelTargetX, travelTargetY = currentPosX, currentPosY
   local travelCtrlX, travelCtrlY = currentPosX, currentPosY
-  local travelDuration = 1.6
+  local travelDuration = 1.4
   local travelElapsed = 0
 
   -- Cycle counter to venture out a bit occasionally
@@ -953,7 +946,7 @@ function FG:CreateSparkFrame()
   local function GetScreenBounds()
     local sw = UIParent:GetWidth() or 1920
     local sh = UIParent:GetHeight() or 1080
-    return 50, sw - 50, 50, sh - 50
+    return 55, sw - 55, 55, sh - 55
   end
 
   local function PickNeighborhoodPoint()
@@ -961,12 +954,12 @@ function FG:CreateSparkFrame()
     local minX, maxX, minY, maxY = GetScreenBounds()
 
     local radius
-    if wanderCycle % 5 == 0 then
-      -- Venturing out a bit! (70 to 110px away from home)
-      radius = 70 + math.random() * 40
+    if wanderCycle % 4 == 0 then
+      -- Venturing out a bit! (80 to 130px away from home)
+      radius = 80 + math.random() * 50
     else
-      -- Hang out in small area around its home (18 to 48px away)
-      radius = 16 + math.random() * 32
+      -- Active gentle wander around home anchor (20 to 55px away)
+      radius = 20 + math.random() * 35
     end
 
     local angle = math.random() * math.pi * 2
@@ -990,15 +983,15 @@ function FG:CreateSparkFrame()
     local dist = math.sqrt(dx * dx + dy * dy)
     if dist < 1 then dist = 1 end
 
-    -- Gentle, smooth wisp float (35 to 65 px/sec) - floaty and organic!
-    travelDuration = math.max(1.3, math.min(2.4, 0.9 + (dist / 45.0)))
+    -- Fluid, organic wisp glide (50 to 90 px/sec) - snappy and lively
+    travelDuration = math.max(1.1, math.min(2.1, 0.7 + (dist / 55.0)))
 
     -- Subtle organic curve
     local midX = (travelStartX + travelTargetX) * 0.5
     local midY = (travelStartY + travelTargetY) * 0.5
     local perpX = -dy / dist
     local perpY = dx / dist
-    local curveDist = (math.random() > 0.5 and 1 or -1) * (10 + math.random() * 25)
+    local curveDist = (math.random() > 0.5 and 1 or -1) * (12 + math.random() * 28)
     travelCtrlX = midX + perpX * curveDist
     travelCtrlY = midY + perpY * curveDist
   end
@@ -1009,8 +1002,8 @@ function FG:CreateSparkFrame()
     stateTimer = 0
 
     if newState == "RESTING" then
-      stateDuration = 2.2 + math.random() * 2.4 -- Rest 2.2 to 4.6 seconds
-      if visual then visual:SetSize(28, 28) end
+      stateDuration = 1.4 + math.random() * 1.8 -- Rest 1.4 to 3.2 seconds
+      if visual then visual:SetSize(34, 34) end
 
     elseif newState == "WANDER" then
       local tx, ty = PickNeighborhoodPoint()
@@ -1024,13 +1017,13 @@ function FG:CreateSparkFrame()
       FG:PlaySparkSound("shimmer")
 
     elseif newState == "CELEBRATE" then
-      stateDuration = 1.6
-      StartGentleFloat(anchorX, anchorY + 30)
+      stateDuration = 1.4
+      StartGentleFloat(anchorX, anchorY + 35)
     end
   end
 
   local function OnOrbUpdate(self, elapsed)
-    local dt = math.min(elapsed, 0.05) -- Clamp delta-time for silky smooth frame rendering
+    local dt = math.min(elapsed, 0.033) -- Supports high-refresh displays up to 120Hz/144Hz smoothly
     local t = GetTime()
 
     if self.isDragging then
@@ -1053,85 +1046,80 @@ function FG:CreateSparkFrame()
     end
 
     if flightState == "DORMANT" then
-      -- Peaceful stationary breathing at spawn point until opened once
-      local waveX = math.sin(t * 0.40) * 2.5
-      local waveY = math.cos(t * 0.32) * 2.5
+      -- Multi-harmonic stationary breathing at spawn point
+      local waveX = math.sin(t * 0.8) * 3.0 + math.cos(t * 1.6) * 1.0
+      local waveY = math.cos(t * 0.65) * 3.0 + math.sin(t * 1.4) * 1.0
       currentPosX = anchorX + waveX
       currentPosY = anchorY + waveY
 
     elseif flightState == "RESTING" then
-      -- Resting gently right near its current spot with soft organic hovering
+      -- Multi-frequency ethereal harmonic hover (120fps fluid feel)
       stateTimer = stateTimer + dt
-      local bobX = math.sin(t * 0.95) * 2.5 + math.sin(t * 0.40) * 1.0
-      local bobY = math.cos(t * 0.80) * 2.5 + math.sin(t * 0.25) * 1.0
+      local bobX = math.sin(t * 1.5) * 3.5 + math.sin(t * 0.7) * 1.8 + math.cos(t * 2.8) * 0.8
+      local bobY = math.cos(t * 1.3) * 3.2 + math.sin(t * 0.55) * 1.6 + math.sin(t * 3.1) * 0.9
       currentPosX = travelTargetX + bobX
       currentPosY = travelTargetY + bobY
 
-      -- After resting briefly, take a gentle float around home
+      -- Take another lively float around home
       if stateTimer >= stateDuration and ForeverGuideDB.hasInteracted then
         f:TransitionTo("WANDER")
       end
 
     elseif flightState == "WANDER" then
       travelElapsed = travelElapsed + dt
-      local progress = math.min(1.0, travelElapsed / travelDuration)
+      local p = math.min(1.0, travelElapsed / travelDuration)
 
-      -- Smooth cosine ease: gentle acceleration and soft deceleration into hover
-      local u = 0.5 - 0.5 * math.cos(progress * math.pi)
+      -- Quintic smootherstep easing (6p^5 - 15p^4 + 10p^3) for butter-smooth acceleration & deceleration
+      local u = p * p * p * (p * (p * 6 - 15) + 10)
       local invU = 1.0 - u
 
       local bX = invU * invU * travelStartX + 2 * invU * u * travelCtrlX + u * u * travelTargetX
       local bY = invU * invU * travelStartY + 2 * invU * u * travelCtrlY + u * u * travelTargetY
 
-      local ripple = math.sin(progress * math.pi * 2) * 2.0
+      local ripple = math.sin(p * math.pi * 2) * 2.8
       currentPosX = bX
       currentPosY = bY + ripple
 
-      if progress >= 1.0 then
+      if p >= 1.0 then
         f:TransitionTo("RESTING")
       end
 
     elseif flightState == "ZIG_ZAG" then
       travelElapsed = travelElapsed + dt
-      local progress = math.min(1.0, travelElapsed / travelDuration)
-      local u = 0.5 - 0.5 * math.cos(progress * math.pi)
-      currentPosX = travelStartX + (travelTargetX - travelStartX) * u + math.sin(progress * math.pi * 2) * 8
-      currentPosY = travelStartY + (travelTargetY - travelStartY) * u + math.cos(progress * math.pi * 2) * 5
-      if progress >= 1.0 then
+      local p = math.min(1.0, travelElapsed / travelDuration)
+      local u = p * p * p * (p * (p * 6 - 15) + 10)
+      currentPosX = travelStartX + (travelTargetX - travelStartX) * u + math.sin(p * math.pi * 2) * 10
+      currentPosY = travelStartY + (travelTargetY - travelStartY) * u + math.cos(p * math.pi * 2) * 7
+      if p >= 1.0 then
         f:TransitionTo("RESTING")
       end
 
     elseif flightState == "DEATH_BOUNCE" then
-      -- Player died! Sparky dashes to the screen side and bounces with elastic cartoon physics
       deathBounceTimer = deathBounceTimer + dt
       local minX, maxX, minY, maxY = GetScreenBounds()
-      local targetEdgeX = (deathBounceSide == "RIGHT") and (maxX - 15) or (minX + 15)
+      local targetEdgeX = (deathBounceSide == "RIGHT") and (maxX - 18) or (minX + 18)
 
-      -- Snap smoothly to screen side
-      currentPosX = currentPosX + (targetEdgeX - currentPosX) * math.min(1.0, dt * 6.0)
+      -- Smooth glide to screen side
+      currentPosX = currentPosX + (targetEdgeX - currentPosX) * math.min(1.0, dt * 7.5)
 
-      -- Rubber-ball bounce physics along the side of the screen!
-      local bouncePeriod = 0.50 -- Brisk, comedic bounce cadence
+      local bouncePeriod = 0.46
       local phase = (deathBounceTimer % bouncePeriod) / bouncePeriod
-      local bounceHeight = 165 + math.sin(deathBounceTimer * 2.2) * 30
-      local groundY = minY + 50
-      local arc = 4 * phase * (1 - phase) -- Parabola 0 -> 1 -> 0
+      local bounceHeight = 175 + math.sin(deathBounceTimer * 2.4) * 35
+      local groundY = minY + 55
+      local arc = 4 * phase * (1 - phase)
       currentPosY = groundY + arc * bounceHeight
 
-      -- Side-wall impact wobble
-      local wallKick = math.sin(phase * math.pi) * 16
+      local wallKick = math.sin(phase * math.pi) * 18
       currentPosX = targetEdgeX + ((deathBounceSide == "RIGHT") and -wallKick or wallKick)
 
-      -- Impact squash & stretch
       if phase < 0.12 or phase > 0.88 then
-        visual:SetSize(36, 20) -- Squashed on bounce floor!
+        visual:SetSize(42, 24) -- Squashed on impact
         if self.Aura then self.Aura:SetVertexColor(1.0, 0.30, 0.95, 0.90) end
       else
-        visual:SetSize(22, 32) -- Stretched tall soaring upward!
+        visual:SetSize(26, 42) -- Stretched tall
         if self.Aura then self.Aura:SetVertexColor(0.78, 0.22, 1.0, 0.70) end
       end
 
-      -- If player has revived, celebrate and return home!
       if not UnitIsDeadOrGhost("player") then
         f:TransitionTo("CELEBRATE")
       end
@@ -1139,51 +1127,51 @@ function FG:CreateSparkFrame()
     elseif flightState == "CELEBRATE" then
       stateTimer = stateTimer + dt
       travelElapsed = travelElapsed + dt
-      local progress = math.min(1.0, travelElapsed / travelDuration)
-      local u = 0.5 - 0.5 * math.cos(progress * math.pi)
+      local p = math.min(1.0, travelElapsed / travelDuration)
+      local u = p * p * p * (p * (p * 6 - 15) + 10)
       local invU = 1.0 - u
-      currentPosX = invU * travelStartX + u * anchorX + math.sin(progress * math.pi * 3) * 20
-      currentPosY = invU * travelStartY + u * anchorY + math.cos(progress * math.pi * 3) * 15
+      currentPosX = invU * travelStartX + u * anchorX + math.sin(p * math.pi * 3) * 22
+      currentPosY = invU * travelStartY + u * anchorY + math.cos(p * math.pi * 3) * 18
 
-      if progress >= 1.0 or stateTimer >= stateDuration then
+      if p >= 1.0 or stateTimer >= stateDuration then
         f:TransitionTo("RESTING")
       end
     end
 
-    -- Smooth velocity tracking & subtle wisp tilt
+    -- Smooth velocity tracking & subtle wisp tilt / stretch
     currentVelX = (currentPosX - lastPosX) / (dt > 0.0001 and dt or 0.01)
     currentVelY = (currentPosY - lastPosY) / (dt > 0.0001 and dt or 0.01)
     lastPosX, lastPosY = currentPosX, currentPosY
     local speedMag = math.sqrt(currentVelX * currentVelX + currentVelY * currentVelY)
 
     if flightState ~= "DEATH_BOUNCE" then
-      local stretch = math.min(0.20, (speedMag / 400) * 0.20)
-      visual:SetSize(28 * (1.0 + stretch), 28 / (1.0 + stretch * 0.5))
+      local stretch = math.min(0.24, (speedMag / 350) * 0.24)
+      visual:SetSize(34 * (1.0 + stretch), 34 / (1.0 + stretch * 0.45))
     end
 
-    -- Gentle particle trailing for satellite puffs
-    local lagFactor = math.min(1.0, dt * 14.0)
-    local targetLagX = -currentVelX * 0.025
-    local targetLagY = -currentVelY * 0.025
+    -- Fluid spring-damper trailing for satellite vapor puffs (120fps responsive)
+    local lagFactor = math.min(1.0, dt * 18.0)
+    local targetLagX = -currentVelX * 0.030
+    local targetLagY = -currentVelY * 0.030
     puff1LagX = puff1LagX + (targetLagX - puff1LagX) * lagFactor
     puff1LagY = puff1LagY + (targetLagY - puff1LagY) * lagFactor
 
     if self.Puff1 then
-      local p1R = 12 + math.sin(t * 1.0) * 3.0
-      local p1X = math.cos(t * 1.8) * p1R + puff1LagX * 0.6
-      local p1Y = math.sin(t * 1.8) * (p1R * 0.75) + puff1LagY * 0.6
+      local p1R = 15 + math.sin(t * 1.4) * 4.0
+      local p1X = math.cos(t * 2.4) * p1R + puff1LagX * 0.6
+      local p1Y = math.sin(t * 2.4) * (p1R * 0.75) + puff1LagY * 0.6
       self.Puff1:SetPoint("CENTER", visual, "CENTER", p1X, p1Y)
     end
     if self.Puff2 then
-      local p2R = 9 + math.cos(t * 1.2) * 2.5
-      local p2X = math.cos(-t * 1.5 + 2.1) * p2R + puff1LagX * 0.8
-      local p2Y = math.sin(-t * 1.5 + 2.1) * (p2R * 0.8) + puff1LagY * 0.8
+      local p2R = 12 + math.cos(t * 1.6) * 3.2
+      local p2X = math.cos(-t * 2.0 + 2.1) * p2R + puff1LagX * 0.8
+      local p2Y = math.sin(-t * 2.0 + 2.1) * (p2R * 0.8) + puff1LagY * 0.8
       self.Puff2:SetPoint("CENTER", visual, "CENTER", p2X, p2Y)
     end
     if self.Puff3 then
-      local p3R = 7 + math.sin(t * 1.4 + 1.2) * 2.0
-      local p3X = math.sin(t * 1.3 + 4.0) * p3R + puff1LagX * 1.0
-      local p3Y = math.cos(t * 1.3 + 4.0) * (p3R * 0.65) + puff1LagY * 1.0
+      local p3R = 9 + math.sin(t * 1.8 + 1.2) * 2.5
+      local p3X = math.sin(t * 1.7 + 4.0) * p3R + puff1LagX * 1.0
+      local p3Y = math.cos(t * 1.7 + 4.0) * (p3R * 0.65) + puff1LagY * 1.0
       self.Puff3:SetPoint("CENTER", visual, "CENTER", p3X, p3Y)
     end
 
@@ -3830,9 +3818,8 @@ function FG:ShowDetailPanel(entityType, data)
     AddLine("|cffdf80ff" .. heading .. "|r", 12, nil, nil, nil, 3)
   end
 
-  local function AddLootButton(drop)
-    lootBtnIndex = lootBtnIndex + 1
-    local btn = p.Body.LootButtons[lootBtnIndex]
+  local function CreateOrGetLootButton(index)
+    local btn = p.Body.LootButtons[index]
     if not btn then
       btn = CreateFrame("Button", nil, p.Body, "BackdropTemplate")
       btn:SetSize(286, 26)
@@ -3850,87 +3837,7 @@ function FG:ShowDetailPanel(entityType, data)
 
       local titleText = btn:CreateFontString(nil, "OVERLAY", "GameFontHighlight")
       titleText:SetPoint("LEFT", btn, "LEFT", 8, 0)
-      titleText:SetWidth(196)
-      titleText:SetJustifyH("LEFT")
-      SharpenFontString(titleText, 11, "OUTLINE")
-      btn.Title = titleText
-
-      local rateText = btn:CreateFontString(nil, "OVERLAY", "GameFontNormalSmall")
-      rateText:SetPoint("RIGHT", btn, "RIGHT", -8, 0)
-      rateText:SetJustifyH("RIGHT")
-      SharpenFontString(rateText, 11, "OUTLINE")
-      btn.Rate = rateText
-
-      btn:SetScript("OnEnter", function(self)
-        self:SetBackdropColor(0.20, 0.16, 0.32, 0.95)
-        self:SetBackdropBorderColor(0.65, 0.35, 1.0, 0.95)
-        if self.itemData then
-          GameTooltip:SetOwner(self, "ANCHOR_RIGHT")
-          if self.itemData.id and GameTooltip.SetItemByID then
-            pcall(GameTooltip.SetItemByID, GameTooltip, self.itemData.id)
-          else
-            GameTooltip:SetText(self.itemData.name)
-          end
-          if self.itemData.pct then
-            GameTooltip:AddLine("Drop Chance: |cff71d5ff" .. self.itemData.pct .. "|r")
-          end
-          GameTooltip:AddLine("|cffdf80ffClick to inspect in Codex|r", 0.8, 0.8, 0.8)
-          GameTooltip:Show()
-        end
-      end)
-
-      btn:SetScript("OnLeave", function(self)
-        self:SetBackdropColor(0.10, 0.12, 0.17, 0.90)
-        self:SetBackdropBorderColor(0.25, 0.28, 0.38, 0.80)
-        GameTooltip:Hide()
-      end)
-
-      btn:SetScript("OnClick", function(self)
-        if self.itemData then
-          local fullItem = self.itemData.id and FG.Data.Items and FG.Data.Items[self.itemData.id]
-          if fullItem then
-            FG:ShowDetailPanel("item", fullItem)
-          elseif ForeverGuideSearchBox then
-            ForeverGuideSearchBox:SetText(self.itemData.name)
-          end
-        end
-      end)
-
-      p.Body.LootButtons[lootBtnIndex] = btn
-    end
-
-    btn:ClearAllPoints()
-    btn:SetPoint("TOPLEFT", p.Body, "TOPLEFT", 6, yOffset)
-    btn.itemData = drop
-    local qColor = FG.QualityColors[drop.quality] or "ffffffff"
-    btn.Title:SetText("|c" .. qColor .. (drop.name or "Item") .. "|r")
-    btn.Rate:SetText("|cff71d5ff" .. (drop.pct or "") .. "|r")
-    btn:Show()
-
-    yOffset = yOffset - 28
-  end
-
-  local function AddDropperButton(dropper)
-    lootBtnIndex = lootBtnIndex + 1
-    local btn = p.Body.LootButtons[lootBtnIndex]
-    if not btn then
-      btn = CreateFrame("Button", nil, p.Body, "BackdropTemplate")
-      btn:SetSize(286, 26)
-      MakePixelSharp(btn)
-      btn:SetBackdrop({
-        bgFile = "Interface\\Buttons\\WHITE8X8",
-        edgeFile = "Interface\\Tooltips\\UI-Tooltip-Border",
-        tile = false,
-        tileSize = 12,
-        edgeSize = 10,
-        insets = { left = 3, right = 3, top = 3, bottom = 3 },
-      })
-      btn:SetBackdropColor(0.10, 0.12, 0.17, 0.90)
-      btn:SetBackdropBorderColor(0.25, 0.28, 0.38, 0.80)
-
-      local titleText = btn:CreateFontString(nil, "OVERLAY", "GameFontHighlight")
-      titleText:SetPoint("LEFT", btn, "LEFT", 8, 0)
-      titleText:SetWidth(210)
+      titleText:SetWidth(200)
       titleText:SetJustifyH("LEFT")
       titleText:SetWordWrap(false)
       SharpenFontString(titleText, 11, "OUTLINE")
@@ -3942,79 +3849,179 @@ function FG:ShowDetailPanel(entityType, data)
       SharpenFontString(rateText, 11, "OUTLINE")
       btn.Rate = rateText
 
-      p.Body.LootButtons[lootBtnIndex] = btn
+      btn:SetScript("OnEnter", function(self)
+        self:SetBackdropColor(0.20, 0.16, 0.32, 0.95)
+        self:SetBackdropBorderColor(0.65, 0.35, 1.0, 0.95)
+        GameTooltip:SetOwner(self, "ANCHOR_RIGHT")
+
+        if self.kind == "loot" and self.dropData then
+          local drop = self.dropData
+          local fullItem = (drop.id and FG.Data.Items and FG.Data.Items[drop.id])
+          if not fullItem and drop.name and FG.Data.ItemsByName then
+            fullItem = FG.Data.ItemsByName[drop.name:lower()]
+          end
+
+          local nativeWorked = false
+          if drop.id and GameTooltip.SetItemByID then
+            nativeWorked = pcall(GameTooltip.SetItemByID, GameTooltip, drop.id)
+          end
+          if (not nativeWorked) and drop.id and GameTooltip.SetHyperlink then
+            nativeWorked = pcall(GameTooltip.SetHyperlink, GameTooltip, "item:" .. drop.id .. ":0:0:0:0:0:0:0:0")
+          end
+
+          if not nativeWorked or GameTooltip:NumLines() == 0 then
+            GameTooltip:ClearLines()
+            local qColor = FG.QualityColors[drop.quality or (fullItem and fullItem.quality)] or "ffffffff"
+            GameTooltip:AddLine("|c" .. qColor .. (drop.name or (fullItem and fullItem.name) or "Item") .. "|r", 1, 1, 1)
+            if fullItem then
+              if fullItem.itemLevel and fullItem.itemLevel > 0 then
+                GameTooltip:AddLine("Item Level " .. fullItem.itemLevel, 1, 0.85, 0.2)
+              end
+              if fullItem.slot and fullItem.slot ~= "" and fullItem.slot ~= "Non-equippable" then
+                local typeStr = (fullItem.subType and fullItem.subType ~= "") and (fullItem.slot .. "   " .. fullItem.subType) or fullItem.slot
+                GameTooltip:AddLine(typeStr, 1, 1, 1)
+              elseif fullItem.type and fullItem.type ~= "" then
+                GameTooltip:AddLine(fullItem.type, 1, 1, 1)
+              end
+              if fullItem.armor and fullItem.armor > 0 then
+                GameTooltip:AddLine(fullItem.armor .. " Armor", 1, 1, 1)
+              end
+              if fullItem.stats and fullItem.stats ~= "" then
+                GameTooltip:AddLine(fullItem.stats, 0.1, 1.0, 0.1)
+              end
+              if fullItem.reqLevel and fullItem.reqLevel > 0 then
+                GameTooltip:AddLine("Requires Level " .. fullItem.reqLevel, 1, 1, 1)
+              end
+              if fullItem.description and fullItem.description ~= "" then
+                GameTooltip:AddLine("\"" .. fullItem.description .. "\"", 1, 0.85, 0.2)
+              end
+            else
+              if drop.slot and drop.slot ~= "" and drop.slot ~= "Non-equippable" then
+                GameTooltip:AddLine(drop.slot, 1, 1, 1)
+              end
+              if drop.reqLvl and drop.reqLvl > 0 then
+                GameTooltip:AddLine("Requires Level " .. drop.reqLvl, 1, 1, 1)
+              end
+            end
+          end
+
+          if drop.pct and drop.pct ~= "" then
+            GameTooltip:AddLine("Drop Chance: |cff38bdf8" .. drop.pct .. "|r")
+          end
+          GameTooltip:AddLine(" ")
+          GameTooltip:AddLine("|cffdf80ff<Click>|r Inspect item in Codex", 0.85, 0.85, 0.85)
+          GameTooltip:Show()
+
+        elseif self.kind == "dropper_creature" and self.creatureData then
+          local c = self.creatureData
+          GameTooltip:AddLine(c.name, 1, 0.85, 0.2)
+          local lvlStr = (c.minLevel and c.maxLevel and c.minLevel ~= c.maxLevel) and (c.minLevel .. "-" .. c.maxLevel) or (c.maxLevel or c.minLevel or "?")
+          GameTooltip:AddLine("Level: " .. lvlStr .. " (" .. (c.classification or "Normal") .. ")", 1, 1, 1)
+          if c.zone and c.zone ~= "" then GameTooltip:AddLine("Zone: " .. c.zone, 0.3, 0.8, 1.0) end
+          if c.location and c.location ~= "" then GameTooltip:AddLine("Location: " .. c.location, 0.2, 1, 0.2) end
+          if c.coords and c.coords ~= "" then GameTooltip:AddLine("Coordinates: " .. c.coords, 0.2, 1, 0.2) end
+          if self.pct then GameTooltip:AddLine("Drop Chance: |cff38bdf8" .. self.pct .. "|r") end
+          GameTooltip:AddLine(" ")
+          GameTooltip:AddLine("|cffdf80ff<Click>|r Open NPC intel & spawn location", 0.85, 0.85, 0.85)
+          GameTooltip:Show()
+
+        elseif self.kind == "dropper_vendor" and self.vendorData then
+          local v = self.vendorData
+          GameTooltip:AddLine(v.name, 1, 0.85, 0.2)
+          GameTooltip:AddLine("Vendor", 0.2, 1.0, 0.4)
+          if v.zone and v.zone ~= "" then GameTooltip:AddLine("Zone: " .. v.zone, 0.3, 0.8, 1.0) end
+          if v.coords and v.coords ~= "" then GameTooltip:AddLine("Coordinates: " .. v.coords, 0.2, 1, 0.2) end
+          GameTooltip:AddLine(" ")
+          GameTooltip:AddLine("|cffdf80ff<Click>|r Open vendor intel & wares", 0.85, 0.85, 0.85)
+          GameTooltip:Show()
+        end
+      end)
+
+      btn:SetScript("OnLeave", function(self)
+        self:SetBackdropColor(0.10, 0.12, 0.17, 0.90)
+        self:SetBackdropBorderColor(0.25, 0.28, 0.38, 0.80)
+        GameTooltip:Hide()
+      end)
+
+      btn:SetScript("OnClick", function(self)
+        if self.kind == "loot" and self.dropData then
+          local drop = self.dropData
+          local fullItem = (drop.id and FG.Data.Items and FG.Data.Items[drop.id])
+          if not fullItem and drop.name and FG.Data.ItemsByName then
+            fullItem = FG.Data.ItemsByName[drop.name:lower()]
+          end
+          if fullItem then
+            FG:ShowDetailPanel("item", fullItem)
+            FG:PlaySparkSound("shimmer")
+          elseif ForeverGuideSearchBox then
+            ForeverGuideSearchBox:SetText(drop.name or "")
+          end
+        elseif self.kind == "dropper_creature" and self.creatureData then
+          FG:ShowDetailPanel("creature", self.creatureData)
+          FG:PlaySparkSound("shimmer")
+        elseif self.kind == "dropper_vendor" and self.vendorData then
+          FG:ShowDetailPanel("vendor", self.vendorData)
+          FG:PlaySparkSound("shimmer")
+        end
+      end)
+
+      p.Body.LootButtons[index] = btn
     end
+    return btn
+  end
+
+  local function AddLootButton(drop)
+    lootBtnIndex = lootBtnIndex + 1
+    local btn = CreateOrGetLootButton(lootBtnIndex)
 
     btn:ClearAllPoints()
     btn:SetPoint("TOPLEFT", p.Body, "TOPLEFT", 6, yOffset)
-    btn.itemData = nil
-    btn.creatureData = dropper.creature
-    btn.vendorData = dropper.vendor
+    btn.kind = "loot"
+    btn.dropData = drop
+    btn.creatureData = nil
+    btn.vendorData = nil
+    btn.pct = drop.pct
 
-    local c = dropper.creature
-    if c then
+    local qColor = FG.QualityColors[drop.quality] or "ffffffff"
+    btn.Title:SetText("|c" .. qColor .. (drop.name or "Item") .. "|r")
+    btn.Rate:SetText("|cff71d5ff" .. (drop.pct or "") .. "|r")
+    btn:Show()
+
+    yOffset = yOffset - 28
+  end
+
+  local function AddDropperButton(dropper)
+    lootBtnIndex = lootBtnIndex + 1
+    local btn = CreateOrGetLootButton(lootBtnIndex)
+
+    btn:ClearAllPoints()
+    btn:SetPoint("TOPLEFT", p.Body, "TOPLEFT", 6, yOffset)
+    btn.dropData = nil
+
+    if dropper.creature then
+      local c = dropper.creature
+      btn.kind = "dropper_creature"
+      btn.creatureData = c
+      btn.vendorData = nil
+      btn.pct = dropper.pct
+
       local classColor = (c.classification == "Boss" or c.classification == "Rare Elite" or c.classification == "World Boss") and "ffff4040" or (c.classification == "Elite" and "ffffd24d" or "ff52b8ff")
       local coordStr = (c.coords and c.coords ~= "") and (" " .. c.coords) or ""
       local zoneStr = (c.zone and c.zone ~= "") and (c.zone .. coordStr) or "Azeroth"
       btn.Title:SetText("|c" .. classColor .. c.name .. "|r |cff7e8c9e(" .. zoneStr .. ")|r")
       btn.Rate:SetText("|cff38bdf8" .. (dropper.pct or "") .. "|r")
 
-      btn:SetScript("OnEnter", function(self)
-        self:SetBackdropColor(0.20, 0.16, 0.32, 0.95)
-        self:SetBackdropBorderColor(0.65, 0.35, 1.0, 0.95)
-        GameTooltip:SetOwner(self, "ANCHOR_RIGHT")
-        GameTooltip:AddLine(c.name, 1, 0.85, 0.2)
-        local lvlStr = (c.minLevel and c.maxLevel and c.minLevel ~= c.maxLevel) and (c.minLevel .. "-" .. c.maxLevel) or (c.maxLevel or c.minLevel or "?")
-        GameTooltip:AddLine("Level: " .. lvlStr .. " (" .. (c.classification or "Normal") .. ")", 1, 1, 1)
-        if c.zone and c.zone ~= "" then GameTooltip:AddLine("Zone: " .. c.zone, 0.3, 0.8, 1.0) end
-        if c.location and c.location ~= "" then GameTooltip:AddLine("Location: " .. c.location, 0.2, 1, 0.2) end
-        if c.coords and c.coords ~= "" then GameTooltip:AddLine("Coordinates: " .. c.coords, 0.2, 1, 0.2) end
-        if dropper.pct then GameTooltip:AddLine("Drop Chance: |cff38bdf8" .. dropper.pct .. "|r") end
-        GameTooltip:AddLine(" ")
-        GameTooltip:AddLine("|cffdf80ff<Click>|r Open NPC intel & spawn location", 0.85, 0.85, 0.85)
-        GameTooltip:Show()
-      end)
-      btn:SetScript("OnLeave", function(self)
-        self:SetBackdropColor(0.10, 0.12, 0.17, 0.90)
-        self:SetBackdropBorderColor(0.25, 0.28, 0.38, 0.80)
-        GameTooltip:Hide()
-      end)
-      btn:SetScript("OnClick", function(self)
-        if self.creatureData then
-          FG:ShowDetailPanel("creature", self.creatureData)
-          FG:PlaySparkSound("shimmer")
-        end
-      end)
     elseif dropper.vendor then
       local v = dropper.vendor
+      btn.kind = "dropper_vendor"
+      btn.creatureData = nil
+      btn.vendorData = v
+      btn.pct = dropper.pct
+
       local coordStr = (v.coords and v.coords ~= "") and (" " .. v.coords) or ""
       local zoneStr = (v.zone and v.zone ~= "") and (v.zone .. coordStr) or "Azeroth"
       btn.Title:SetText("|cffffd24d" .. v.name .. "|r |cff7e8c9e(" .. zoneStr .. ")|r")
       btn.Rate:SetText("|cff20ff20Vendor|r")
-
-      btn:SetScript("OnEnter", function(self)
-        self:SetBackdropColor(0.20, 0.16, 0.32, 0.95)
-        self:SetBackdropBorderColor(0.65, 0.35, 1.0, 0.95)
-        GameTooltip:SetOwner(self, "ANCHOR_RIGHT")
-        GameTooltip:AddLine(v.name, 1, 0.85, 0.2)
-        GameTooltip:AddLine("Vendor", 0.2, 1.0, 0.4)
-        if v.zone and v.zone ~= "" then GameTooltip:AddLine("Zone: " .. v.zone, 0.3, 0.8, 1.0) end
-        if v.coords and v.coords ~= "" then GameTooltip:AddLine("Coordinates: " .. v.coords, 0.2, 1, 0.2) end
-        GameTooltip:AddLine(" ")
-        GameTooltip:AddLine("|cffdf80ff<Click>|r Open vendor intel & wares", 0.85, 0.85, 0.85)
-        GameTooltip:Show()
-      end)
-      btn:SetScript("OnLeave", function(self)
-        self:SetBackdropColor(0.10, 0.12, 0.17, 0.90)
-        self:SetBackdropBorderColor(0.25, 0.28, 0.38, 0.80)
-        GameTooltip:Hide()
-      end)
-      btn:SetScript("OnClick", function(self)
-        if self.vendorData then
-          FG:ShowDetailPanel("vendor", self.vendorData)
-          FG:PlaySparkSound("shimmer")
-        end
-      end)
     end
 
     btn:Show()
@@ -5014,9 +5021,8 @@ function FG:PopulateCodexResults(query)
     content:SetHeight(340)
     if scrollFrame then scrollFrame:SetVerticalScroll(0) end
 
-    local pZone = FG:GetPlayerZoneInfo()
     if cw and cw.StatusText then
-      cw.StatusText:SetText("|cffdf80ffHome Mission Control · |r|cff22c55e" .. pZone .. " Radar Active|r")
+      cw.StatusText:SetText("")
     end
     FG:UpdateDolphinBreadcrumbs("", 0)
     return
