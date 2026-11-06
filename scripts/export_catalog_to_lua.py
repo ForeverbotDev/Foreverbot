@@ -130,8 +130,15 @@ def export_items(cursor) -> str:
     cursor.execute("""
         SELECT id, name, quality, item_level, req_level, slot, item_type, stats, description, source, pro_tip, is_forever_content, bonding, sell_price, icon, effects, item_set
         FROM items
-        WHERE forever_status = 'live'
-          AND quality != 'Poor'
+        WHERE name IS NOT NULL AND name != ''
+          AND name NOT LIKE '%(test)%'
+          AND name NOT LIKE '%(Test)%'
+          AND name NOT LIKE 'Test %'
+          AND name NOT LIKE '%Martin %'
+          AND name NOT LIKE '[PH]%'
+          AND name NOT LIKE '%(nyi)%'
+          AND name NOT LIKE '%(NYI)%'
+          AND name NOT LIKE 'Developer %'
         ORDER BY is_forever_content DESC, quality DESC, item_level DESC
     """)
     rows = cursor.fetchall()

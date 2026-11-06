@@ -59,6 +59,14 @@ def package():
     print(f"\nSuccessfully built CurseForge release archive:")
     print(f"  -> {zip_path} ({size_mb:.2f} MB)")
 
+    # Build AlphaOpen distribution packages requested by user
+    alpha_open_path = os.path.join(DIST_DIR, "AlphaOpen.zip")
+    fg_alpha_open_path = os.path.join(DIST_DIR, "ForeverGuide-AlphaOpen.zip")
+    shutil.copy2(zip_path, alpha_open_path)
+    shutil.copy2(zip_path, fg_alpha_open_path)
+    print(f"  -> {alpha_open_path} ({size_mb:.2f} MB)")
+    print(f"  -> {fg_alpha_open_path} ({size_mb:.2f} MB)")
+
 
 if __name__ == "__main__":
     package()

@@ -203,13 +203,13 @@ function initDiscordSimulator() {
               <span>World of Warcraft: Forever Companion</span>
             </div>
             <div class="embed-title">${escapeHtml(data.title)}</div>
-            <div class="embed-desc">${data.desc}</div>
+            <div class="embed-desc">${formatDiscordMarkdown(data.desc)}</div>
             
             <div class="embed-fields">
               ${data.fields.map(f => `
                 <div class="embed-field">
                   <div class="embed-field-title">${escapeHtml(f.name)}</div>
-                  <div class="embed-field-val">${f.val}</div>
+                  <div class="embed-field-val">${formatDiscordMarkdown(f.val)}</div>
                 </div>
               `).join('')}
             </div>
@@ -526,4 +526,13 @@ function escapeHtml(str) {
     .replace(/>/g, "&gt;")
     .replace(/"/g, "&quot;")
     .replace(/'/g, "&#039;");
+}
+
+function formatDiscordMarkdown(str) {
+  if (!str) return "";
+  const safe = escapeHtml(str);
+  return safe
+    .replace(/\*\*([^*]+)\*\*/g, "<strong>$1</strong>")
+    .replace(/\*([^*]+)\*/g, "<em>$1</em>")
+    .replace(/\n/g, "<br>");
 }
