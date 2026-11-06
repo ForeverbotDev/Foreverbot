@@ -1423,20 +1423,20 @@ function FG:CreateCodexRowButton(parent, i)
   btn.Icon = iconTex
 
   local titleText = btn:CreateFontString(nil, "OVERLAY", "GameFontHighlight")
-  titleText:SetPoint("TOPLEFT", btn, "TOPLEFT", 48, -7)
+  titleText:SetPoint("TOPLEFT", btn, "TOPLEFT", 48, -6)
   titleText:SetPoint("RIGHT", btn, "RIGHT", -68, 0)
   titleText:SetJustifyH("LEFT")
   titleText:SetWordWrap(false)
-  SharpenFontString(titleText, 13, "OUTLINE")
+  SharpenFontString(titleText, 12, "OUTLINE")
   btn.Title = titleText
 
   local subText = btn:CreateFontString(nil, "OVERLAY", "GameFontNormalSmall")
-  subText:SetPoint("TOPLEFT", titleText, "BOTTOMLEFT", 0, -3)
+  subText:SetPoint("TOPLEFT", titleText, "BOTTOMLEFT", 0, -2)
   subText:SetPoint("RIGHT", btn, "RIGHT", -68, 0)
   subText:SetHeight(15)
   subText:SetJustifyH("LEFT")
   subText:SetWordWrap(false)
-  SharpenFontString(subText, 11, "OUTLINE")
+  SharpenFontString(subText, 10.5, "OUTLINE")
   btn.Sub = subText
 
   local hint = btn:CreateFontString(nil, "OVERLAY", "GameFontHighlightSmall")
@@ -2159,12 +2159,12 @@ function FG:ConfigureRowButton(btn, match)
       btn.IconFrame:SetBackdropBorderColor(0.3, 0.6, 0.9, 0.8)
     end
     btn.Title:ClearAllPoints()
-    btn.Title:SetPoint("TOPLEFT", btn, "TOPLEFT", 48, -7)
+    btn.Title:SetPoint("TOPLEFT", btn, "TOPLEFT", 48, -6)
     btn.Title:SetPoint("RIGHT", btn, "RIGHT", -68, 0)
     btn.Title:SetJustifyH("LEFT")
     btn.Title:SetWordWrap(false)
     btn.Sub:ClearAllPoints()
-    btn.Sub:SetPoint("TOPLEFT", btn.Title, "BOTTOMLEFT", 0, -3)
+    btn.Sub:SetPoint("TOPLEFT", btn.Title, "BOTTOMLEFT", 0, -2)
     btn.Sub:SetPoint("RIGHT", btn, "RIGHT", -68, 0)
     btn.Sub:SetHeight(15)
     btn.Sub:SetJustifyH("LEFT")
@@ -2211,12 +2211,12 @@ function FG:ConfigureRowButton(btn, match)
       else btn.IconFrame:SetBackdropBorderColor(0.4, 0.4, 0.5, 0.8) end
     end
     btn.Title:ClearAllPoints()
-    btn.Title:SetPoint("TOPLEFT", btn, "TOPLEFT", 48, -7)
+    btn.Title:SetPoint("TOPLEFT", btn, "TOPLEFT", 48, -6)
     btn.Title:SetPoint("RIGHT", btn, "RIGHT", -68, 0)
     btn.Title:SetJustifyH("LEFT")
     btn.Title:SetWordWrap(false)
     btn.Sub:ClearAllPoints()
-    btn.Sub:SetPoint("TOPLEFT", btn.Title, "BOTTOMLEFT", 0, -3)
+    btn.Sub:SetPoint("TOPLEFT", btn.Title, "BOTTOMLEFT", 0, -2)
     btn.Sub:SetPoint("RIGHT", btn, "RIGHT", -68, 0)
     btn.Sub:SetHeight(15)
     btn.Sub:SetJustifyH("LEFT")
@@ -2295,12 +2295,12 @@ function FG:ConfigureRowButton(btn, match)
       end
     end
     btn.Title:ClearAllPoints()
-    btn.Title:SetPoint("TOPLEFT", btn, "TOPLEFT", 48, -7)
+    btn.Title:SetPoint("TOPLEFT", btn, "TOPLEFT", 48, -6)
     btn.Title:SetPoint("RIGHT", btn, "RIGHT", -68, 0)
     btn.Title:SetJustifyH("LEFT")
     btn.Title:SetWordWrap(false)
     btn.Sub:ClearAllPoints()
-    btn.Sub:SetPoint("TOPLEFT", btn.Title, "BOTTOMLEFT", 0, -3)
+    btn.Sub:SetPoint("TOPLEFT", btn.Title, "BOTTOMLEFT", 0, -2)
     btn.Sub:SetPoint("RIGHT", btn, "RIGHT", -68, 0)
     btn.Sub:SetHeight(15)
     btn.Sub:SetJustifyH("LEFT")
@@ -2406,12 +2406,12 @@ function FG:ConfigureRowButton(btn, match)
       end
     end
     btn.Title:ClearAllPoints()
-    btn.Title:SetPoint("TOPLEFT", btn, "TOPLEFT", 48, -7)
+    btn.Title:SetPoint("TOPLEFT", btn, "TOPLEFT", 48, -6)
     btn.Title:SetPoint("RIGHT", btn, "RIGHT", -68, 0)
     btn.Title:SetJustifyH("LEFT")
     btn.Title:SetWordWrap(false)
     btn.Sub:ClearAllPoints()
-    btn.Sub:SetPoint("TOPLEFT", btn.Title, "BOTTOMLEFT", 0, -3)
+    btn.Sub:SetPoint("TOPLEFT", btn.Title, "BOTTOMLEFT", 0, -2)
     btn.Sub:SetPoint("RIGHT", btn, "RIGHT", -68, 0)
     btn.Sub:SetHeight(15)
     btn.Sub:SetJustifyH("LEFT")
@@ -2475,12 +2475,12 @@ function FG:ConfigureRowButton(btn, match)
       btn.IconFrame:SetBackdropBorderColor(0.7, 0.4, 0.9, 0.9)
     end
     btn.Title:ClearAllPoints()
-    btn.Title:SetPoint("TOPLEFT", btn, "TOPLEFT", 48, -7)
+    btn.Title:SetPoint("TOPLEFT", btn, "TOPLEFT", 48, -6)
     btn.Title:SetPoint("RIGHT", btn, "RIGHT", -68, 0)
     btn.Title:SetJustifyH("LEFT")
     btn.Title:SetWordWrap(false)
     btn.Sub:ClearAllPoints()
-    btn.Sub:SetPoint("TOPLEFT", btn.Title, "BOTTOMLEFT", 0, -3)
+    btn.Sub:SetPoint("TOPLEFT", btn.Title, "BOTTOMLEFT", 0, -2)
     btn.Sub:SetPoint("RIGHT", btn, "RIGHT", -68, 0)
     btn.Sub:SetHeight(15)
     btn.Sub:SetJustifyH("LEFT")
@@ -2547,12 +2547,12 @@ function FG:ConfigureRowButton(btn, match)
       btn.IconFrame:SetBackdropBorderColor(0.4, 0.8, 0.5, 0.9)
     end
     btn.Title:ClearAllPoints()
-    btn.Title:SetPoint("TOPLEFT", btn, "TOPLEFT", 48, -7)
+    btn.Title:SetPoint("TOPLEFT", btn, "TOPLEFT", 48, -6)
     btn.Title:SetPoint("RIGHT", btn, "RIGHT", -68, 0)
     btn.Title:SetJustifyH("LEFT")
     btn.Title:SetWordWrap(false)
     btn.Sub:ClearAllPoints()
-    btn.Sub:SetPoint("TOPLEFT", btn.Title, "BOTTOMLEFT", 0, -3)
+    btn.Sub:SetPoint("TOPLEFT", btn.Title, "BOTTOMLEFT", 0, -2)
     btn.Sub:SetPoint("RIGHT", btn, "RIGHT", -68, 0)
     btn.Sub:SetHeight(15)
     btn.Sub:SetJustifyH("LEFT")
@@ -3372,8 +3372,8 @@ function FG:ApplyTextSharpening()
   end
   if cw.Content and cw.Content.Buttons then
     for _, btn in ipairs(cw.Content.Buttons) do
-      if btn.Title then SharpenFontString(btn.Title, 13, "OUTLINE") end
-      if btn.Sub then SharpenFontString(btn.Sub, 11, "OUTLINE") end
+      if btn.Title then SharpenFontString(btn.Title, 12, "OUTLINE") end
+      if btn.Sub then SharpenFontString(btn.Sub, 10.5, "OUTLINE") end
     end
   end
 end
@@ -4108,11 +4108,11 @@ FG.FolderTree = {
   ["root"] = {
     title = "Home",
     folders = {
-      { path = "nearby", name = "Nearby Area Intel (Zone Radar)", desc = "Live radar: local mobs, quests, vendors & loot in current zone", icon = "Interface\\Icons\\Ability_Tracking" },
-      { path = "quests", name = "Quests", desc = "By Continent, Zone, Class, & Dungeon", icon = "Interface\\Icons\\INV_Misc_Book_07" },
-      { path = "items", name = "Items & Equipment", desc = "Weapons, Armor, Reagents, Recipes & Server Gear", icon = "Interface\\Icons\\INV_Sword_04" },
       { path = "creatures", name = "Creatures & Bosses", desc = "Dungeon/Raid Bosses, Rares & NPC Families", icon = "Interface\\Icons\\INV_Misc_Head_Dragon_01" },
       { path = "dungeons", name = "Dungeons & Raids", desc = "Starter, Mid, Endgame, Raids & Forever Instances", icon = "Interface\\Icons\\Spell_Shadow_Teleport" },
+      { path = "items", name = "Items & Equipment", desc = "Weapons, Armor, Reagents, Recipes & Server Gear", icon = "Interface\\Icons\\INV_Sword_04" },
+      { path = "nearby", name = "Nearby Area Intel (Zone Radar)", desc = "Live radar: local mobs, quests, vendors & loot in current zone", icon = "Interface\\Icons\\Ability_Tracking" },
+      { path = "quests", name = "Quests", desc = "By Continent, Zone, Class, & Dungeon", icon = "Interface\\Icons\\INV_Misc_Book_07" },
       { path = "vendors", name = "Vendors & Flight Paths", desc = "Flight Masters, PvP Quartermasters & Reagents", icon = "Interface\\Icons\\Ability_Hunter_EagleEye" },
       { path = "forever", name = "[Forever] Warcraft Forever Exclusives", desc = "Exclusive items, quests, NPCs & dungeons", icon = "Interface\\Icons\\Spell_Holy_MagicalSentry" },
     },
@@ -4123,12 +4123,12 @@ FG.FolderTree = {
     title = "Nearby Area Intel (Zone Radar)",
     parent = "root",
     folders = {
-      { path = "nearby/quests", name = "Quests", desc = "Active quests and storyline objectives in this zone", icon = "Interface\\Icons\\INV_Misc_Book_07" },
-      { path = "nearby/rares", name = "Rares & Bosses", desc = "Silver-dragon rare spawns and world encounters", icon = "Interface\\Icons\\INV_Misc_Head_Dragon_Bronze" },
       { path = "nearby/creatures", name = "Creatures & Mobs", desc = "Local beasts, humanoids, and monsters in immediate area", icon = "Interface\\Icons\\Ability_Hunter_Pet_Wolf" },
-      { path = "nearby/vendors", name = "Vendors & Flight Masters", desc = "Flight paths, repairs, reagents, and local trade", icon = "Interface\\Icons\\Ability_Hunter_EagleEye" },
       { path = "nearby/dungeons", name = "Dungeons & Raids", desc = "Instance entrances, meeting stones, and portals", icon = "Interface\\Icons\\Spell_Shadow_Teleport" },
       { path = "nearby/loot", name = "Notable Loot & Drops", desc = "Valuable BoE items, world recipes, and prized drops", icon = "Interface\\Icons\\INV_Misc_Coin_02" },
+      { path = "nearby/quests", name = "Quests", desc = "Active quests and storyline objectives in this zone", icon = "Interface\\Icons\\INV_Misc_Book_07" },
+      { path = "nearby/rares", name = "Rares & Bosses", desc = "Silver-dragon rare spawns and world encounters", icon = "Interface\\Icons\\INV_Misc_Head_Dragon_Bronze" },
+      { path = "nearby/vendors", name = "Vendors & Flight Masters", desc = "Flight paths, repairs, reagents, and local trade", icon = "Interface\\Icons\\Ability_Hunter_EagleEye" },
     },
   },
 
@@ -4137,16 +4137,16 @@ FG.FolderTree = {
     title = "Quests",
     parent = "root",
     folders = {
-      { path = "quests/available", name = "Available Quests", desc = "All quests unlocked for your level", icon = "Interface\\Icons\\Spell_Holy_ElunesGrace" },
-      { path = "quests/recommended", name = "Recommended Quests", desc = "Quests matching your character's current level", icon = "Interface\\Icons\\Spell_Holy_MindVision" },
       { path = "quests/active", name = "Active in Log", desc = "Quests currently in your quest log", icon = "Interface\\Icons\\INV_Misc_Book_08" },
-      { path = "quests/uncompleted", name = "Uncompleted Quests", desc = "Quests you have not yet finished", icon = "Interface\\Icons\\INV_Misc_QuestionMark" },
-      { path = "quests/completed", name = "Completed Quests", desc = "Quests your character has finished", icon = "Interface\\Icons\\Spell_Holy_BlessingOfProtection" },
-      { path = "quests/eastern_kingdoms", name = "Eastern Kingdoms", desc = "24 zones across Eastern Kingdoms", icon = "Interface\\Icons\\Spell_Frost_WindWalkOn" },
-      { path = "quests/kalimdor", name = "Kalimdor", desc = "20 zones across Kalimdor", icon = "Interface\\Icons\\Spell_Nature_NatureTouchGrow" },
-      { path = "quests/dungeons", name = "Dungeons & Raids", desc = "Instance questlines across Azeroth", icon = "Interface\\Icons\\Spell_Shadow_Teleport" },
+      { path = "quests/available", name = "Available Quests", desc = "All quests unlocked for your level (grouped by zone)", icon = "Interface\\Icons\\Spell_Holy_ElunesGrace" },
       { path = "quests/class", name = "Class Quests", desc = "Quests for each of the 9 classes", icon = "Interface\\Icons\\INV_Helmet_08" },
+      { path = "quests/completed", name = "Completed Quests", desc = "Quests your character has finished", icon = "Interface\\Icons\\Spell_Holy_BlessingOfProtection" },
+      { path = "quests/dungeons", name = "Dungeons & Raids", desc = "Instance questlines across Azeroth", icon = "Interface\\Icons\\Spell_Shadow_Teleport" },
+      { path = "quests/eastern_kingdoms", name = "Eastern Kingdoms (By Zone)", desc = "24 zones across Eastern Kingdoms", icon = "Interface\\Icons\\Spell_Frost_WindWalkOn" },
+      { path = "quests/kalimdor", name = "Kalimdor (By Zone)", desc = "20 zones across Kalimdor", icon = "Interface\\Icons\\Spell_Nature_NatureTouchGrow" },
       { path = "quests/professions", name = "Profession Quests", desc = "Trade skill quests & masteries", icon = "Interface\\Icons\\Trade_Engineering" },
+      { path = "quests/recommended", name = "Recommended Quests", desc = "Quests matching your character's current level (grouped by zone)", icon = "Interface\\Icons\\Spell_Holy_MindVision" },
+      { path = "quests/uncompleted", name = "Uncompleted Quests", desc = "Quests you have not yet finished", icon = "Interface\\Icons\\INV_Misc_QuestionMark" },
       { path = "quests/forever", name = "[Forever] Forever Quests", desc = "Exclusive server questlines", icon = "Interface\\Icons\\Spell_Holy_MagicalSentry" },
     },
   },
@@ -4247,12 +4247,12 @@ FG.FolderTree = {
     title = "Items & Equipment",
     parent = "root",
     folders = {
-      { path = "items/weapons", name = "Weapons", desc = "Swords, Axes, Maces, Staves, Bows...", icon = "Interface\\Icons\\INV_Sword_04" },
       { path = "items/armor", name = "Armor", desc = "Cloth, Leather, Mail, Plate, Shields", icon = "Interface\\Icons\\INV_Chest_Plate03" },
-      { path = "items/accessories", name = "Jewelry & Accessories", desc = "Rings, Trinkets, Necklaces, Cloaks", icon = "Interface\\Icons\\INV_Jewelry_Necklace_07" },
       { path = "items/consumables", name = "Consumables", desc = "Potions, Food, Bandages, Scrolls", icon = "Interface\\Icons\\INV_Potion_51" },
-      { path = "items/trade_goods", name = "Trade Goods", desc = "Herbs, Ore, Leather, Cloth, Reagents", icon = "Interface\\Icons\\INV_Ore_Iron_01" },
+      { path = "items/accessories", name = "Jewelry & Accessories", desc = "Rings, Trinkets, Necklaces, Cloaks", icon = "Interface\\Icons\\INV_Jewelry_Necklace_07" },
       { path = "items/recipes", name = "Recipes & Plans", desc = "Crafting Recipes & Manuals", icon = "Interface\\Icons\\INV_Scroll_03" },
+      { path = "items/trade_goods", name = "Trade Goods", desc = "Herbs, Ore, Leather, Cloth, Reagents", icon = "Interface\\Icons\\INV_Ore_Iron_01" },
+      { path = "items/weapons", name = "Weapons", desc = "Swords, Axes, Maces, Staves, Bows...", icon = "Interface\\Icons\\INV_Sword_04" },
       { path = "items/forever", name = "[Forever] Forever Exclusive Gear", desc = "Exclusive Warcraft Forever items", icon = "Interface\\Icons\\Spell_Holy_MagicalSentry" },
     },
   },
@@ -4261,19 +4261,19 @@ FG.FolderTree = {
     title = "Weapons",
     parent = "items",
     folders = {
-      { path = "items/sub/One-Handed Axes", name = "One-Handed Axes", desc = "One-handed axes", icon = "Interface\\Icons\\INV_Axe_01", filter = { slot = "One-Hand", itemType = "Axe" } },
-      { path = "items/sub/Two-Handed Axes", name = "Two-Handed Axes", desc = "Two-handed axes", icon = "Interface\\Icons\\INV_Axe_09", filter = { slot = "Two-Hand", itemType = "Axe" } },
       { path = "items/sub/Bows", name = "Bows & Crossbows", desc = "Bows and crossbows", icon = "Interface\\Icons\\INV_Weapon_Bow_05", filter = { itemType = "Bow" } },
       { path = "items/sub/Daggers", name = "Daggers", desc = "Daggers & dirks", icon = "Interface\\Icons\\INV_Weapon_ShortBlade_01", filter = { itemType = "Dagger" } },
+      { path = "items/sub/Fist Weapons", name = "Fist Weapons", desc = "Fist weapons and claws", icon = "Interface\\Icons\\INV_Gauntlets_04", filter = { itemType = "Fist Weapon" } },
       { path = "items/sub/Guns", name = "Guns & Ranged", desc = "Guns and rifles", icon = "Interface\\Icons\\INV_Weapon_Rifle_01", filter = { itemType = "Gun" } },
+      { path = "items/sub/One-Handed Axes", name = "One-Handed Axes", desc = "One-handed axes", icon = "Interface\\Icons\\INV_Axe_01", filter = { slot = "One-Hand", itemType = "Axe" } },
       { path = "items/sub/One-Handed Maces", name = "One-Handed Maces", desc = "One-handed maces", icon = "Interface\\Icons\\INV_Mace_01", filter = { slot = "One-Hand", itemType = "Mace" } },
-      { path = "items/sub/Two-Handed Maces", name = "Two-Handed Maces", desc = "Two-handed maces & warhammers", icon = "Interface\\Icons\\INV_Hammer_04", filter = { slot = "Two-Hand", itemType = "Mace" } },
+      { path = "items/sub/One-Handed Swords", name = "One-Handed Swords", desc = "One-handed swords", icon = "Interface\\Icons\\INV_Sword_04", filter = { slot = "One-Hand", itemType = "Sword" } },
       { path = "items/sub/Polearms", name = "Polearms", desc = "Polearms and halberds", icon = "Interface\\Icons\\INV_Spear_05", filter = { itemType = "Polearm" } },
       { path = "items/sub/Staves", name = "Staves", desc = "Staves and walking sticks", icon = "Interface\\Icons\\INV_Staff_08", filter = { itemType = "Staff" } },
-      { path = "items/sub/One-Handed Swords", name = "One-Handed Swords", desc = "One-handed swords", icon = "Interface\\Icons\\INV_Sword_04", filter = { slot = "One-Hand", itemType = "Sword" } },
+      { path = "items/sub/Two-Handed Axes", name = "Two-Handed Axes", desc = "Two-handed axes", icon = "Interface\\Icons\\INV_Axe_09", filter = { slot = "Two-Hand", itemType = "Axe" } },
+      { path = "items/sub/Two-Handed Maces", name = "Two-Handed Maces", desc = "Two-handed maces & warhammers", icon = "Interface\\Icons\\INV_Hammer_04", filter = { slot = "Two-Hand", itemType = "Mace" } },
       { path = "items/sub/Two-Handed Swords", name = "Two-Handed Swords", desc = "Two-handed broadswords & claymores", icon = "Interface\\Icons\\INV_Sword_18", filter = { slot = "Two-Hand", itemType = "Sword" } },
       { path = "items/sub/Wands", name = "Wands", desc = "Wands & magical batons", icon = "Interface\\Icons\\INV_Wand_01", filter = { itemType = "Wand" } },
-      { path = "items/sub/Fist Weapons", name = "Fist Weapons", desc = "Fist weapons and claws", icon = "Interface\\Icons\\INV_Gauntlets_04", filter = { itemType = "Fist Weapon" } },
     },
   },
 
@@ -4281,12 +4281,12 @@ FG.FolderTree = {
     title = "Armor",
     parent = "items",
     folders = {
+      { path = "items/sub/Cloaks", name = "Cloaks & Capes", desc = "Back slot cloaks (iLvl Low to High)", icon = "Interface\\Icons\\INV_Misc_Cape_19" },
       { path = "items/armor/cloth", name = "Cloth Armor", desc = "Head, Chest, Belt, Boots, etc.", icon = "Interface\\Icons\\INV_Chest_Cloth_23" },
       { path = "items/armor/leather", name = "Leather Armor", desc = "Head, Chest, Belt, Boots, etc.", icon = "Interface\\Icons\\INV_Chest_Leather_08" },
       { path = "items/armor/mail", name = "Mail Armor", desc = "Head, Chest, Belt, Boots, etc.", icon = "Interface\\Icons\\INV_Chest_Chain_15" },
       { path = "items/armor/plate", name = "Plate Armor", desc = "Head, Chest, Belt, Boots, etc.", icon = "Interface\\Icons\\INV_Chest_Plate03" },
       { path = "items/sub/Shields", name = "Shields", desc = "Off-Hand Shields (iLvl Low to High)", icon = "Interface\\Icons\\INV_Shield_04" },
-      { path = "items/sub/Cloaks", name = "Cloaks & Capes", desc = "Back slot cloaks (iLvl Low to High)", icon = "Interface\\Icons\\INV_Misc_Cape_19" },
     },
   },
 
@@ -4294,14 +4294,14 @@ FG.FolderTree = {
     title = "Cloth Armor",
     parent = "items/armor",
     folders = {
-      { path = "items/armor/cloth/Head", name = "Head", desc = "Cloth helms, hoods & circlets", icon = "Interface\\Icons\\INV_Helmet_08" },
-      { path = "items/armor/cloth/Shoulder", name = "Shoulders", desc = "Cloth mantles & shoulderpads", icon = "Interface\\Icons\\INV_Shoulder_02" },
       { path = "items/armor/cloth/Chest", name = "Chest", desc = "Cloth robes, vests & tunics", icon = "Interface\\Icons\\INV_Chest_Cloth_23" },
-      { path = "items/armor/cloth/Wrist", name = "Wrist (Bracers)", desc = "Cloth bracers & cuffs", icon = "Interface\\Icons\\INV_Bracer_07" },
-      { path = "items/armor/cloth/Hands", name = "Hands (Gloves)", desc = "Cloth gloves & mitts", icon = "Interface\\Icons\\INV_Gauntlets_14" },
-      { path = "items/armor/cloth/Waist", name = "Waist (Belts)", desc = "Cloth belts & sashes", icon = "Interface\\Icons\\INV_Belt_03" },
-      { path = "items/armor/cloth/Legs", name = "Legs (Pants)", desc = "Cloth pants & leggings", icon = "Interface\\Icons\\INV_Pants_08" },
       { path = "items/armor/cloth/Feet", name = "Feet (Boots)", desc = "Cloth boots & slippers", icon = "Interface\\Icons\\INV_Boots_05" },
+      { path = "items/armor/cloth/Hands", name = "Hands (Gloves)", desc = "Cloth gloves & mitts", icon = "Interface\\Icons\\INV_Gauntlets_14" },
+      { path = "items/armor/cloth/Head", name = "Head", desc = "Cloth helms, hoods & circlets", icon = "Interface\\Icons\\INV_Helmet_08" },
+      { path = "items/armor/cloth/Legs", name = "Legs (Pants)", desc = "Cloth pants & leggings", icon = "Interface\\Icons\\INV_Pants_08" },
+      { path = "items/armor/cloth/Shoulder", name = "Shoulders", desc = "Cloth mantles & shoulderpads", icon = "Interface\\Icons\\INV_Shoulder_02" },
+      { path = "items/armor/cloth/Waist", name = "Waist (Belts)", desc = "Cloth belts & sashes", icon = "Interface\\Icons\\INV_Belt_03" },
+      { path = "items/armor/cloth/Wrist", name = "Wrist (Bracers)", desc = "Cloth bracers & cuffs", icon = "Interface\\Icons\\INV_Bracer_07" },
     },
   },
 
@@ -4309,14 +4309,14 @@ FG.FolderTree = {
     title = "Leather Armor",
     parent = "items/armor",
     folders = {
-      { path = "items/armor/leather/Head", name = "Head", desc = "Leather helms, caps & headbands", icon = "Interface\\Icons\\INV_Helmet_04" },
-      { path = "items/armor/leather/Shoulder", name = "Shoulders", desc = "Leather spaulders & shoulderpads", icon = "Interface\\Icons\\INV_Shoulder_01" },
       { path = "items/armor/leather/Chest", name = "Chest", desc = "Leather vests, jerkins & armor", icon = "Interface\\Icons\\INV_Chest_Leather_08" },
-      { path = "items/armor/leather/Wrist", name = "Wrist (Bracers)", desc = "Leather bracers & wristguards", icon = "Interface\\Icons\\INV_Bracer_06" },
-      { path = "items/armor/leather/Hands", name = "Hands (Gloves)", desc = "Leather gloves & gauntlets", icon = "Interface\\Icons\\INV_Gauntlets_04" },
-      { path = "items/armor/leather/Waist", name = "Waist (Belts)", desc = "Leather belts & girdles", icon = "Interface\\Icons\\INV_Belt_02" },
-      { path = "items/armor/leather/Legs", name = "Legs (Pants)", desc = "Leather pants & breeches", icon = "Interface\\Icons\\INV_Pants_06" },
       { path = "items/armor/leather/Feet", name = "Feet (Boots)", desc = "Leather boots & footwear", icon = "Interface\\Icons\\INV_Boots_08" },
+      { path = "items/armor/leather/Hands", name = "Hands (Gloves)", desc = "Leather gloves & gauntlets", icon = "Interface\\Icons\\INV_Gauntlets_04" },
+      { path = "items/armor/leather/Head", name = "Head", desc = "Leather helms, caps & headbands", icon = "Interface\\Icons\\INV_Helmet_04" },
+      { path = "items/armor/leather/Legs", name = "Legs (Pants)", desc = "Leather pants & breeches", icon = "Interface\\Icons\\INV_Pants_06" },
+      { path = "items/armor/leather/Shoulder", name = "Shoulders", desc = "Leather spaulders & shoulderpads", icon = "Interface\\Icons\\INV_Shoulder_01" },
+      { path = "items/armor/leather/Waist", name = "Waist (Belts)", desc = "Leather belts & girdles", icon = "Interface\\Icons\\INV_Belt_02" },
+      { path = "items/armor/leather/Wrist", name = "Wrist (Bracers)", desc = "Leather bracers & wristguards", icon = "Interface\\Icons\\INV_Bracer_06" },
     },
   },
 
@@ -4324,14 +4324,14 @@ FG.FolderTree = {
     title = "Mail Armor",
     parent = "items/armor",
     folders = {
-      { path = "items/armor/mail/Head", name = "Head", desc = "Mail helms & coifs", icon = "Interface\\Icons\\INV_Helmet_03" },
-      { path = "items/armor/mail/Shoulder", name = "Shoulders", desc = "Mail pauldrons & epaulets", icon = "Interface\\Icons\\INV_Shoulder_10" },
       { path = "items/armor/mail/Chest", name = "Chest", desc = "Mail hauberks, mail & armor", icon = "Interface\\Icons\\INV_Chest_Chain_15" },
-      { path = "items/armor/mail/Wrist", name = "Wrist (Bracers)", desc = "Mail bracers & armsplints", icon = "Interface\\Icons\\INV_Bracer_16" },
-      { path = "items/armor/mail/Hands", name = "Hands (Gauntlets)", desc = "Mail gauntlets & grips", icon = "Interface\\Icons\\INV_Gauntlets_17" },
-      { path = "items/armor/mail/Waist", name = "Waist (Belts)", desc = "Mail belts & girdles", icon = "Interface\\Icons\\INV_Belt_12" },
-      { path = "items/armor/mail/Legs", name = "Legs (Legguards)", desc = "Mail legplates & greaves", icon = "Interface\\Icons\\INV_Pants_03" },
       { path = "items/armor/mail/Feet", name = "Feet (Boots)", desc = "Mail boots & sabatons", icon = "Interface\\Icons\\INV_Boots_Plate_01" },
+      { path = "items/armor/mail/Hands", name = "Hands (Gauntlets)", desc = "Mail gauntlets & grips", icon = "Interface\\Icons\\INV_Gauntlets_17" },
+      { path = "items/armor/mail/Head", name = "Head", desc = "Mail helms & coifs", icon = "Interface\\Icons\\INV_Helmet_03" },
+      { path = "items/armor/mail/Legs", name = "Legs (Legguards)", desc = "Mail legplates & greaves", icon = "Interface\\Icons\\INV_Pants_03" },
+      { path = "items/armor/mail/Shoulder", name = "Shoulders", desc = "Mail pauldrons & epaulets", icon = "Interface\\Icons\\INV_Shoulder_10" },
+      { path = "items/armor/mail/Waist", name = "Waist (Belts)", desc = "Mail belts & girdles", icon = "Interface\\Icons\\INV_Belt_12" },
+      { path = "items/armor/mail/Wrist", name = "Wrist (Bracers)", desc = "Mail bracers & armsplints", icon = "Interface\\Icons\\INV_Bracer_16" },
     },
   },
 
@@ -4339,14 +4339,14 @@ FG.FolderTree = {
     title = "Plate Armor",
     parent = "items/armor",
     folders = {
-      { path = "items/armor/plate/Head", name = "Head", desc = "Plate helms & visors", icon = "Interface\\Icons\\INV_Helmet_01" },
-      { path = "items/armor/plate/Shoulder", name = "Shoulders", desc = "Plate pauldrons & spaulders", icon = "Interface\\Icons\\INV_Shoulder_19" },
       { path = "items/armor/plate/Chest", name = "Chest", desc = "Plate breastplates & chestguards", icon = "Interface\\Icons\\INV_Chest_Plate03" },
-      { path = "items/armor/plate/Wrist", name = "Wrist (Bracers)", desc = "Plate bracers & vambraces", icon = "Interface\\Icons\\INV_Bracer_19" },
-      { path = "items/armor/plate/Hands", name = "Hands (Gauntlets)", desc = "Plate gauntlets & gloves", icon = "Interface\\Icons\\INV_Gauntlets_10" },
-      { path = "items/armor/plate/Waist", name = "Waist (Belts)", desc = "Plate belts & girdles", icon = "Interface\\Icons\\INV_Belt_15" },
-      { path = "items/armor/plate/Legs", name = "Legs (Legplates)", desc = "Plate legplates & leggings", icon = "Interface\\Icons\\INV_Pants_04" },
       { path = "items/armor/plate/Feet", name = "Feet (Boots)", desc = "Plate boots & sabatons", icon = "Interface\\Icons\\INV_Boots_Plate_01" },
+      { path = "items/armor/plate/Hands", name = "Hands (Gauntlets)", desc = "Plate gauntlets & gloves", icon = "Interface\\Icons\\INV_Gauntlets_10" },
+      { path = "items/armor/plate/Head", name = "Head", desc = "Plate helms & visors", icon = "Interface\\Icons\\INV_Helmet_01" },
+      { path = "items/armor/plate/Legs", name = "Legs (Legplates)", desc = "Plate legplates & leggings", icon = "Interface\\Icons\\INV_Pants_04" },
+      { path = "items/armor/plate/Shoulder", name = "Shoulders", desc = "Plate pauldrons & spaulders", icon = "Interface\\Icons\\INV_Shoulder_19" },
+      { path = "items/armor/plate/Waist", name = "Waist (Belts)", desc = "Plate belts & girdles", icon = "Interface\\Icons\\INV_Belt_15" },
+      { path = "items/armor/plate/Wrist", name = "Wrist (Bracers)", desc = "Plate bracers & vambraces", icon = "Interface\\Icons\\INV_Bracer_19" },
     },
   },
 
@@ -4355,9 +4355,9 @@ FG.FolderTree = {
     parent = "items",
     folders = {
       { path = "items/sub/Amulets", name = "Amulets & Necklaces", desc = "Necklaces and pendants", icon = "Interface\\Icons\\INV_Jewelry_Necklace_07", filter = { slot = "Neck" } },
+      { path = "items/sub/Cloaks", name = "Cloaks & Capes", desc = "Back slot cloaks", icon = "Interface\\Icons\\INV_Misc_Cape_19", filter = { slot = "Back" } },
       { path = "items/sub/Rings", name = "Rings & Bands", desc = "Rings and bands", icon = "Interface\\Icons\\INV_Jewelry_Ring_03", filter = { slot = "Finger" } },
       { path = "items/sub/Trinkets", name = "Trinkets", desc = "Trinkets and charms", icon = "Interface\\Icons\\INV_Jewelry_Talisman_07", filter = { slot = "Trinket" } },
-      { path = "items/sub/Cloaks", name = "Cloaks & Capes", desc = "Back slot cloaks", icon = "Interface\\Icons\\INV_Misc_Cape_19", filter = { slot = "Back" } },
     },
   },
 
@@ -4365,9 +4365,9 @@ FG.FolderTree = {
     title = "Consumables",
     parent = "items",
     folders = {
-      { path = "items/sub/Potions", name = "Potions & Elixirs", desc = "Potions, elixirs & flasks", icon = "Interface\\Icons\\INV_Potion_51", filter = { itemType = "Potion" } },
-      { path = "items/sub/Food", name = "Food & Drink", desc = "Food, drinks & provisions", icon = "Interface\\Icons\\INV_Misc_Food_14", filter = { itemType = "Food & Drink" } },
       { path = "items/sub/Bandages", name = "Bandages", desc = "First aid bandages", icon = "Interface\\Icons\\INV_Misc_Bandage_08", filter = { itemType = "Bandage" } },
+      { path = "items/sub/Food", name = "Food & Drink", desc = "Food, drinks & provisions", icon = "Interface\\Icons\\INV_Misc_Food_14", filter = { itemType = "Food & Drink" } },
+      { path = "items/sub/Potions", name = "Potions & Elixirs", desc = "Potions, elixirs & flasks", icon = "Interface\\Icons\\INV_Potion_51", filter = { itemType = "Potion" } },
       { path = "items/sub/Scrolls", name = "Scrolls", desc = "Buff scrolls & enchant scrolls", icon = "Interface\\Icons\\INV_Scroll_02", filter = { itemType = "Scroll" } },
     },
   },
@@ -4396,17 +4396,17 @@ FG.FolderTree = {
     title = "Creatures & Bosses",
     parent = "root",
     folders = {
-      { path = "creatures/by_zone_ek", name = "Eastern Kingdoms (By Zone)", desc = "24 zones across Eastern Kingdoms", icon = "Interface\\Icons\\Spell_Frost_WindWalkOn" },
-      { path = "creatures/by_zone_kalimdor", name = "Kalimdor (By Zone)", desc = "20 zones across Kalimdor", icon = "Interface\\Icons\\Spell_Nature_NatureTouchGrow" },
-      { path = "creatures/bosses", name = "World & Dungeon Bosses", desc = "Major encounter bosses", icon = "Interface\\Icons\\Spell_Shadow_SummonDoomGuard" },
-      { path = "creatures/rares", name = "Rare & Rare Elite Encounters", desc = "Silver-dragon rare spawns", icon = "Interface\\Icons\\INV_Misc_Head_Dragon_Bronze" },
       { path = "creatures/beasts", name = "Beasts", desc = "Bears, Wolves, Cats, Raptors & more", icon = "Interface\\Icons\\Ability_Hunter_Pet_Wolf" },
-      { path = "creatures/humanoids", name = "Humanoids", desc = "Bandits, Pirates, Cultists & more", icon = "Interface\\Icons\\Ability_Racial_ShadowMeld" },
-      { path = "creatures/undead", name = "Undead", desc = "Scourge, Skeletons, Ghosts & Ghouls", icon = "Interface\\Icons\\Spell_DeathKnight_ArmyOfTheDead" },
       { path = "creatures/demons", name = "Demons", desc = "Burning Legion demons & warlocks", icon = "Interface\\Icons\\Spell_Shadow_SummonFelHunter" },
       { path = "creatures/dragonkin", name = "Dragonkin", desc = "Black, Red, Green & Blue dragonflights", icon = "Interface\\Icons\\INV_Misc_Head_Dragon_Red" },
+      { path = "creatures/by_zone_ek", name = "Eastern Kingdoms (By Zone)", desc = "24 zones across Eastern Kingdoms", icon = "Interface\\Icons\\Spell_Frost_WindWalkOn" },
       { path = "creatures/elementals", name = "Elementals", desc = "Fire, Water, Earth & Air elementals", icon = "Interface\\Icons\\Spell_Fire_Fire" },
       { path = "creatures/giants", name = "Giants", desc = "Giants, Ogres & Mountain Colossi", icon = "Interface\\Icons\\Ability_Racial_Avatar" },
+      { path = "creatures/humanoids", name = "Humanoids", desc = "Bandits, Pirates, Cultists & more", icon = "Interface\\Icons\\Ability_Racial_ShadowMeld" },
+      { path = "creatures/by_zone_kalimdor", name = "Kalimdor (By Zone)", desc = "20 zones across Kalimdor", icon = "Interface\\Icons\\Spell_Nature_NatureTouchGrow" },
+      { path = "creatures/rares", name = "Rare & Rare Elite Encounters", desc = "Silver-dragon rare spawns", icon = "Interface\\Icons\\INV_Misc_Head_Dragon_Bronze" },
+      { path = "creatures/undead", name = "Undead", desc = "Scourge, Skeletons, Ghosts & Ghouls", icon = "Interface\\Icons\\Spell_DeathKnight_ArmyOfTheDead" },
+      { path = "creatures/bosses", name = "World & Dungeon Bosses", desc = "Major encounter bosses", icon = "Interface\\Icons\\Spell_Shadow_SummonDoomGuard" },
       { path = "creatures/forever", name = "[Forever] Forever Exclusive NPCs", desc = "Exclusive server encounters & bosses", icon = "Interface\\Icons\\Spell_Holy_MagicalSentry" },
     },
   },
@@ -4417,11 +4417,11 @@ FG.FolderTree = {
     parent = "root",
     folders = {
       { path = "dungeons/available", name = "Available Dungeons", desc = "Dungeons unlocked for your character's level", icon = "Interface\\Icons\\Spell_Holy_ElunesGrace" },
+      { path = "dungeons/endgame", name = "Endgame Dungeons (Lvl 50-60)", desc = "BRD, LBRS, UBRS, Strath, Scholo, DM, ST", icon = "Interface\\Icons\\Spell_Shadow_ShadowBolt" },
+      { path = "dungeons/mid", name = "Mid-Tier Dungeons (Lvl 30-50)", desc = "Gnomeregan, SM, RFK, RFD, Uldaman, ZF, Mara", icon = "Interface\\Icons\\Spell_Fire_Fireball02" },
+      { path = "dungeons/raids", name = "Raid Dungeons (Lvl 60)", desc = "MC, Onyxia, BWL, ZG, AQ20, AQ40, Naxx", icon = "Interface\\Icons\\Spell_Fire_Fire" },
       { path = "dungeons/recommended", name = "Recommended Dungeons", desc = "Level-appropriate dungeons recommended for you", icon = "Interface\\Icons\\Spell_Holy_MindVision" },
       { path = "dungeons/starter", name = "Starter Dungeons (Lvl 15-30)", desc = "Deadmines, WC, SFK, BFD, Stockade", icon = "Interface\\Icons\\Spell_Nature_Strength" },
-      { path = "dungeons/mid", name = "Mid-Tier Dungeons (Lvl 30-50)", desc = "Gnomeregan, SM, RFK, RFD, Uldaman, ZF, Mara", icon = "Interface\\Icons\\Spell_Fire_Fireball02" },
-      { path = "dungeons/endgame", name = "Endgame Dungeons (Lvl 50-60)", desc = "BRD, LBRS, UBRS, Strath, Scholo, DM, ST", icon = "Interface\\Icons\\Spell_Shadow_ShadowBolt" },
-      { path = "dungeons/raids", name = "Raid Dungeons (Lvl 60)", desc = "MC, Onyxia, BWL, ZG, AQ20, AQ40, Naxx", icon = "Interface\\Icons\\Spell_Fire_Fire" },
       { path = "dungeons/forever", name = "[Forever] Forever Exclusive Dungeons", desc = "Crypts, Thanes, Roots, Hateforge, Rift...", icon = "Interface\\Icons\\Spell_Holy_MagicalSentry" },
     },
   },
@@ -4431,6 +4431,7 @@ FG.FolderTree = {
     title = "Vendors & Flight Paths",
     parent = "root",
     folders = {
+      { path = "vendors/all", name = "All World Vendors", desc = "Complete alphabetical catalog of all merchants", icon = "Interface\\Icons\\INV_Misc_Coin_01" },
       { path = "vendors/flightpaths", name = "Flight Masters", desc = "Alliance & Horde Flight Masters", icon = "Interface\\Icons\\Ability_Hunter_EagleEye" },
       { path = "vendors/pvp", name = "PvP Quartermasters", desc = "Battlegrounds & Honor Vendors", icon = "Interface\\Icons\\INV_BannerPVP_02" },
       { path = "vendors/specialty", name = "Specialty & Rare Goods", desc = "Limited Recipes, Pets & Unique items", icon = "Interface\\Icons\\INV_Misc_Bag_07" },
@@ -4570,9 +4571,23 @@ function FG:UpdateDolphinBreadcrumbs(query, matchCount)
   elseif cur:find("^quests") then
     table.insert(trail, "|cff88aaccQuests|r")
     if cur == "quests/available" then
+      table.insert(trail, "|cff38bdf8Available (By Zone)|r")
+    elseif cur == "quests/available/all" then
       table.insert(trail, "|cff38bdf8Available|r")
+      table.insert(trail, "|cffffd24dAll Quests|r")
+    elseif cur:find("^quests/available/(.+)$") then
+      local zn = cur:match("^quests/available/(.+)$")
+      table.insert(trail, "|cff38bdf8Available|r")
+      table.insert(trail, "|cffffd24d" .. zn .. "|r")
     elseif cur == "quests/recommended" then
+      table.insert(trail, "|cff20ff20Recommended (By Zone)|r")
+    elseif cur == "quests/recommended/all" then
       table.insert(trail, "|cff20ff20Recommended|r")
+      table.insert(trail, "|cffffd24dAll Quests|r")
+    elseif cur:find("^quests/recommended/(.+)$") then
+      local zn = cur:match("^quests/recommended/(.+)$")
+      table.insert(trail, "|cff20ff20Recommended|r")
+      table.insert(trail, "|cffffd24d" .. zn .. "|r")
     elseif cur == "quests/eastern_kingdoms" then
       table.insert(trail, "|cffffffffEastern Kingdoms|r")
     elseif cur == "quests/kalimdor" then
@@ -4671,7 +4686,8 @@ function FG:UpdateDolphinBreadcrumbs(query, matchCount)
     end
   elseif cur:find("^vendors") then
     table.insert(trail, "|cff88aaccVendors|r")
-    if cur == "vendors/flightpaths" then table.insert(trail, "|cffffffffFlight Masters|r")
+    if cur == "vendors/all" then table.insert(trail, "|cffffffffAll Vendors|r")
+    elseif cur == "vendors/flightpaths" then table.insert(trail, "|cffffffffFlight Masters|r")
     elseif cur == "vendors/pvp" then table.insert(trail, "|cffffffffPvP Vendors|r")
     elseif cur == "vendors/specialty" then table.insert(trail, "|cffffffffSpecialty Goods|r")
     end
@@ -5075,30 +5091,196 @@ function FG:PopulateCodexResults(query)
     -- Browsing current Dolphin folder
     local folderDef = FG.FolderTree[cur]
     if folderDef and folderDef.folders then
+      local slotCounts = nil
+      local armorType = cur:match("^items/armor/([^/]+)$")
+      if armorType and FG.Data.Items then
+        slotCounts = {}
+        for _, item in pairs(FG.Data.Items) do
+          local name = item.name or ""
+          local isRecipe = name:find("^Plans:") or name:find("^Pattern:") or name:find("^Schematic:") or name:find("^Formula:") or name:find("^Recipe:")
+          if not FG:IsInternalItem(name) and not isRecipe and item.itemType and item.itemType:lower():find(armorType) then
+            if item.slot then
+              slotCounts[item.slot] = (slotCounts[item.slot] or 0) + 1
+            end
+          end
+        end
+      end
+
       for _, f in ipairs(folderDef.folders) do
-        table.insert(matches, { type = "folder", data = f })
+        local fCopy = f
+        if slotCounts and f.path then
+          local slot = f.path:match("^items/armor/[^/]+/([^/]+)$")
+          if slot and slotCounts[slot] then
+            local count = slotCounts[slot]
+            local armorCap = armorType:gsub("^%l", string.upper)
+            fCopy = {
+              name = f.name,
+              path = f.path,
+              desc = string.format("%d %s %s items (iLvl Low to High)", count, armorCap, f.name or slot),
+              count = count,
+              icon = f.icon,
+            }
+          end
+        end
+        table.insert(matches, { type = "folder", data = fCopy })
       end
     end
 
     -- Leaf folders: populate matching data items
     if cur == "quests/available" and FG.Data.Quests then
       local pLevel = (UnitLevel and UnitLevel("player")) or 0
+      local zoneCounts = {}
+      local totalCount = 0
       for _, quest in pairs(FG.Data.Quests) do
         if not FG:IsInternalQuest(quest.title) then
           local req = quest.reqLevel or 1
           if pLevel == 0 or pLevel >= req then
-            table.insert(matches, { type = "quest", data = quest })
+            totalCount = totalCount + 1
+            local z = quest.zone or "Other"
+            zoneCounts[z] = (zoneCounts[z] or 0) + 1
+          end
+        end
+      end
+
+      table.insert(matches, {
+        type = "folder",
+        data = {
+          name = "[All Available Quests (Full List)]",
+          path = "quests/available/all",
+          desc = string.format("%d total available quests across Azeroth", totalCount),
+          count = totalCount,
+          isAll = true,
+          icon = "Interface\\Icons\\Spell_Holy_ElunesGrace",
+        }
+      })
+
+      local sortedZones = {}
+      for z in pairs(zoneCounts) do
+        table.insert(sortedZones, z)
+      end
+      table.sort(sortedZones, function(a, b) return a:lower() < b:lower() end)
+
+      for _, zn in ipairs(sortedZones) do
+        local count = zoneCounts[zn] or 0
+        table.insert(matches, {
+          type = "folder",
+          data = {
+            name = zn,
+            path = "quests/available/" .. zn,
+            desc = string.format("%d available quests in %s", count, zn),
+            count = count,
+            icon = "Interface\\Icons\\INV_Misc_Map02",
+          }
+        })
+      end
+    elseif cur == "quests/available/all" and FG.Data.Quests then
+      local pLevel = (UnitLevel and UnitLevel("player")) or 0
+      local seen = {}
+      for _, quest in pairs(FG.Data.Quests) do
+        if not FG:IsInternalQuest(quest.title) then
+          local req = quest.reqLevel or 1
+          if pLevel == 0 or pLevel >= req then
+            local qKey = quest.id or quest.title
+            if not seen[qKey] then
+              seen[qKey] = true
+              table.insert(matches, { type = "quest", data = quest })
+            end
+          end
+        end
+      end
+    elseif cur:find("^quests/available/(.+)$") and FG.Data.Quests then
+      local targetZone = cur:match("^quests/available/(.+)$")
+      local pLevel = (UnitLevel and UnitLevel("player")) or 0
+      local seen = {}
+      for _, quest in pairs(FG.Data.Quests) do
+        if not FG:IsInternalQuest(quest.title) and quest.zone == targetZone then
+          local req = quest.reqLevel or 1
+          if pLevel == 0 or pLevel >= req then
+            local qKey = quest.id or quest.title
+            if not seen[qKey] then
+              seen[qKey] = true
+              table.insert(matches, { type = "quest", data = quest })
+            end
           end
         end
       end
     elseif cur == "quests/recommended" and FG.Data.Quests then
       local pLevel = (UnitLevel and UnitLevel("player")) or 0
+      local zoneCounts = {}
+      local totalCount = 0
       for _, quest in pairs(FG.Data.Quests) do
         if not FG:IsInternalQuest(quest.title) then
           local qLvl = quest.questLevel or quest.reqLevel or 1
           local req = quest.reqLevel or 1
           if pLevel == 0 or (pLevel >= req and math.abs(pLevel - qLvl) <= 4) then
-            table.insert(matches, { type = "quest", data = quest })
+            totalCount = totalCount + 1
+            local z = quest.zone or "Other"
+            zoneCounts[z] = (zoneCounts[z] or 0) + 1
+          end
+        end
+      end
+
+      table.insert(matches, {
+        type = "folder",
+        data = {
+          name = "[All Recommended Quests (Full List)]",
+          path = "quests/recommended/all",
+          desc = string.format("%d recommended quests matching your level", totalCount),
+          count = totalCount,
+          isAll = true,
+          icon = "Interface\\Icons\\Spell_Holy_MindVision",
+        }
+      })
+
+      local sortedZones = {}
+      for z in pairs(zoneCounts) do
+        table.insert(sortedZones, z)
+      end
+      table.sort(sortedZones, function(a, b) return a:lower() < b:lower() end)
+
+      for _, zn in ipairs(sortedZones) do
+        local count = zoneCounts[zn] or 0
+        table.insert(matches, {
+          type = "folder",
+          data = {
+            name = zn,
+            path = "quests/recommended/" .. zn,
+            desc = string.format("%d recommended quests in %s", count, zn),
+            count = count,
+            icon = "Interface\\Icons\\INV_Misc_Map02",
+          }
+        })
+      end
+    elseif cur == "quests/recommended/all" and FG.Data.Quests then
+      local pLevel = (UnitLevel and UnitLevel("player")) or 0
+      local seen = {}
+      for _, quest in pairs(FG.Data.Quests) do
+        if not FG:IsInternalQuest(quest.title) then
+          local qLvl = quest.questLevel or quest.reqLevel or 1
+          local req = quest.reqLevel or 1
+          if pLevel == 0 or (pLevel >= req and math.abs(pLevel - qLvl) <= 4) then
+            local qKey = quest.id or quest.title
+            if not seen[qKey] then
+              seen[qKey] = true
+              table.insert(matches, { type = "quest", data = quest })
+            end
+          end
+        end
+      end
+    elseif cur:find("^quests/recommended/(.+)$") and FG.Data.Quests then
+      local targetZone = cur:match("^quests/recommended/(.+)$")
+      local pLevel = (UnitLevel and UnitLevel("player")) or 0
+      local seen = {}
+      for _, quest in pairs(FG.Data.Quests) do
+        if not FG:IsInternalQuest(quest.title) and quest.zone == targetZone then
+          local qLvl = quest.questLevel or quest.reqLevel or 1
+          local req = quest.reqLevel or 1
+          if pLevel == 0 or (pLevel >= req and math.abs(pLevel - qLvl) <= 4) then
+            local qKey = quest.id or quest.title
+            if not seen[qKey] then
+              seen[qKey] = true
+              table.insert(matches, { type = "quest", data = quest })
+            end
           end
         end
       end
@@ -5168,23 +5350,33 @@ function FG:PopulateCodexResults(query)
         end
       end
     elseif cur == "items/forever" and FG.Data.Items then
+      local seen = {}
       for _, item in pairs(FG.Data.Items) do
         if not FG:IsInternalItem(item.name) and item.isForever then
-          table.insert(matches, { type = "item", data = item })
+          local key = item.id or item.name
+          if not seen[key] then
+            seen[key] = true
+            table.insert(matches, { type = "item", data = item })
+          end
         end
       end
     elseif cur:find("^items/armor/([^/]+)/([^/]+)$") and FG.Data.Items then
       local armorType, slotName = cur:match("^items/armor/([^/]+)/([^/]+)$")
+      local seen = {}
       for _, item in pairs(FG.Data.Items) do
         local name = item.name or ""
         local isRecipe = name:find("^Plans:") or name:find("^Pattern:") or name:find("^Schematic:") or name:find("^Formula:") or name:find("^Recipe:")
         if not FG:IsInternalItem(name) and not isRecipe and item.itemType and item.itemType:lower():find(armorType) then
           if item.slot and item.slot == slotName then
-            table.insert(matches, { type = "item", data = item })
+            local key = item.id or (name .. ":" .. (item.ilvl or 0))
+            if not seen[key] then
+              seen[key] = true
+              table.insert(matches, { type = "item", data = item })
+            end
           end
         end
       end
-    elseif cur:find("^items/armor/([^/]+)$") and FG.Data.Items then
+    elseif (not (folderDef and folderDef.folders)) and cur:find("^items/armor/([^/]+)$") and FG.Data.Items then
       local armorType = cur:match("^items/armor/([^/]+)$")
       local armorCap = armorType:gsub("^%l", string.upper)
       local slotCounts = {}
@@ -5237,6 +5429,7 @@ function FG:PopulateCodexResults(query)
           })
         end
       else
+        local seen = {}
         for _, item in pairs(FG.Data.Items) do
           local name = item.name or ""
           if not FG:IsInternalItem(name) then
@@ -5276,7 +5469,11 @@ function FG:PopulateCodexResults(query)
             end
 
             if matchesFilter then
-              table.insert(matches, { type = "item", data = item })
+              local key = item.id or (name .. ":" .. (item.ilvl or 0))
+              if not seen[key] then
+                seen[key] = true
+                table.insert(matches, { type = "item", data = item })
+              end
             end
           end
         end
@@ -5584,6 +5781,8 @@ function FG:PopulateCodexResults(query)
     if a.type == "folder" and b.type ~= "folder" then return true end
     if a.type ~= "folder" and b.type == "folder" then return false end
     if a.type == "folder" and b.type == "folder" then
+      if a.data and a.data.isAll and not (b.data and b.data.isAll) then return true end
+      if b.data and b.data.isAll and not (a.data and a.data.isAll) then return false end
       local nameA = (a.data and (a.data.title or a.data.name or "")) or ""
       local nameB = (b.data and (b.data.title or b.data.name or "")) or ""
       return nameA:lower() < nameB:lower()
