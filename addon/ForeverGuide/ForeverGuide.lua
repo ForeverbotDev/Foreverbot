@@ -1567,6 +1567,48 @@ function FG:GetQuestIcon(qData)
   return "Interface\\Icons\\inv_misc_book_07"
 end
 
+function FG:GetQuestStatus(questID, questTitle)
+  local id = tonumber(questID)
+  local isCompleted = false
+  if id and id > 0 then
+    if C_QuestLog and C_QuestLog.IsQuestFlaggedCompleted then
+      isCompleted = C_QuestLog.IsQuestFlaggedCompleted(id)
+    elseif IsQuestFlaggedCompleted then
+      isCompleted = IsQuestFlaggedCompleted(id)
+    end
+  end
+
+  if isCompleted then
+    return "completed"
+  end
+
+  -- Check active quest log in client
+  if id and id > 0 and C_QuestLog and C_QuestLog.IsOnQuest and C_QuestLog.IsOnQuest(id) then
+    if C_QuestLog.IsComplete and C_QuestLog.IsComplete(id) then
+      return "ready_to_turn_in"
+    end
+    return "active"
+  end
+
+  if GetNumQuestLogEntries then
+    local numEntries = GetNumQuestLogEntries()
+    for i = 1, numEntries do
+      local title, _, _, isHeader, _, isComplete, _, qID = GetQuestLogTitle(i)
+      if not isHeader then
+        if (id and qID and qID == id) or (questTitle and title and title:lower() == questTitle:lower()) then
+          if isComplete and isComplete > 0 then
+            return "ready_to_turn_in"
+          else
+            return "active"
+          end
+        end
+      end
+    end
+  end
+
+  return "uncompleted"
+end
+
 function FG:GetCreatureIcon(c)
   if not c then return "Interface\\Icons\\INV_Misc_Head_Human_01" end
 
@@ -2238,10 +2280,19 @@ function FG:ConfigureRowButton(btn, match)
     btn:SetBackdropBorderColor(0.18, 0.24, 0.33, 0.70)
     btn.Hint:SetText("|cff9d8ec2Inspect >|r")
 
+    local st = FG:GetQuestStatus(qData.id, qData.title)
     if btn.IconFrame then
       btn.IconFrame:Show()
       btn.Icon:SetTexture(FG:GetQuestIcon(qData))
-      btn.IconFrame:SetBackdropBorderColor(0.9, 0.7, 0.2, 0.9)
+      if st == "completed" then
+        btn.IconFrame:SetBackdropBorderColor(0.20, 0.90, 0.35, 0.95)
+      elseif st == "ready_to_turn_in" then
+        btn.IconFrame:SetBackdropBorderColor(0.25, 0.80, 1.0, 0.95)
+      elseif st == "active" then
+        btn.IconFrame:SetBackdropBorderColor(1.0, 0.85, 0.15, 0.95)
+      else
+        btn.IconFrame:SetBackdropBorderColor(0.9, 0.7, 0.2, 0.9)
+      end
     end
     btn.Title:ClearAllPoints()
     btn.Title:SetPoint("TOPLEFT", btn, "TOPLEFT", 48, -7)
@@ -2255,10 +2306,35 @@ function FG:ConfigureRowButton(btn, match)
     btn.Sub:SetJustifyH("LEFT")
     btn.Sub:SetWordWrap(false)
 
+    local statusBadge = ""
+    local titleColor = "|cffffd24d"
+    if st == "completed" then
+      statusBadge = " |cff22c55e[✓ Completed]|r"
+      titleColor = "|cff86efac"
+    elseif st == "ready_to_turn_in" then
+      statusBadge = " |cff38bdf8[★ Ready to Turn In]|r"
+      titleColor = "|cff7dd3fc"
+    elseif st == "active" then
+      statusBadge = " |cffffd100[● Active in Log]|r"
+      titleColor = "|cfffef08a"
+    else
+      statusBadge = " |cff94a3b8[○ Available]|r"
+    end
+
     local foreverTag = qData.isForever and " |cffe6cc80[Forever]|r" or ""
-    btn.Title:SetText("|cffffd24d" .. qData.title .. "|r" .. foreverTag)
+    btn.Title:SetText(titleColor .. qData.title .. "|r" .. foreverTag .. statusBadge)
 
     local parts = {}
+    if st == "completed" then
+      table.insert(parts, "|cff22c55e✓ Completed|r")
+    elseif st == "ready_to_turn_in" then
+      table.insert(parts, "|cff38bdf8★ Ready to Turn In|r")
+    elseif st == "active" then
+      table.insert(parts, "|cffffd100● Active in Log|r")
+    else
+      table.insert(parts, "|cff94a3b8○ Uncompleted|r")
+    end
+
     local reqLvl = tonumber(qData.reqLevel) or 1
     local qLvl = tonumber(qData.questLevel) or 0
     if reqLvl > 1 then
@@ -2276,6 +2352,15 @@ function FG:ConfigureRowButton(btn, match)
       self:SetBackdropBorderColor(0.45, 0.25, 0.85, 0.90)
       GameTooltip:SetOwner(self, "ANCHOR_TOPLEFT")
       GameTooltip:AddLine(qData.title, 1, 0.85, 0.2)
+      if st == "completed" then
+        GameTooltip:AddLine("Status: Completed & Turned In", 0.13, 0.77, 0.37)
+      elseif st == "ready_to_turn_in" then
+        GameTooltip:AddLine("Status: Ready to Turn In (Objectives Done)", 0.22, 0.74, 0.97)
+      elseif st == "active" then
+        GameTooltip:AddLine("Status: In Progress (Active in Quest Log)", 1.0, 0.82, 0.0)
+      else
+        GameTooltip:AddLine("Status: Available (Not Completed)", 0.60, 0.65, 0.75)
+      end
       GameTooltip:AddLine("Available: Level " .. (qData.reqLevel or "1") .. "+", 0.4, 0.8, 1.0)
       GameTooltip:AddLine("Recommended: Level " .. (qData.questLevel or "?"), 0.2, 1.0, 0.4)
       if qData.objectives and qData.objectives ~= "" then
@@ -3673,6 +3758,18 @@ function FG:ShowDetailPanel(entityType, data)
     end
     p.Title:SetText("|cffcf52ffQuest Intel|r")
     AddLine("|cffffd24d" .. (data.title or "Quest") .. "|r", 15, nil, nil, nil, 6)
+
+    local qStatus = FG:GetQuestStatus(data.id, data.title)
+    if qStatus == "completed" then
+      AddLine("Status: |cff22c55e✓ Completed (Turned In)|r", 12)
+    elseif qStatus == "ready_to_turn_in" then
+      AddLine("Status: |cff38bdf8★ Ready to Turn In (Objectives Done)|r", 12)
+    elseif qStatus == "active" then
+      AddLine("Status: |cffffd100● Active in Quest Log (In Progress)|r", 12)
+    else
+      AddLine("Status: |cff94a3b8○ Not Completed (Available)|r", 12)
+    end
+
     local reqLvl = data.reqLevel or "1"
     local qLvl = data.questLevel or "?"
     AddLine("Available: |cff38bdf8Level " .. reqLvl .. "+|r  ·  Recommended: |cff20ff20Level " .. qLvl .. "|r", 12)
@@ -4042,6 +4139,9 @@ FG.FolderTree = {
     folders = {
       { path = "quests/available", name = "Available Quests", desc = "All quests unlocked for your level", icon = "Interface\\Icons\\Spell_Holy_ElunesGrace" },
       { path = "quests/recommended", name = "Recommended Quests", desc = "Quests matching your character's current level", icon = "Interface\\Icons\\Spell_Holy_MindVision" },
+      { path = "quests/active", name = "Active in Log", desc = "Quests currently in your quest log", icon = "Interface\\Icons\\INV_Misc_Book_08" },
+      { path = "quests/uncompleted", name = "Uncompleted Quests", desc = "Quests you have not yet finished", icon = "Interface\\Icons\\INV_Misc_QuestionMark" },
+      { path = "quests/completed", name = "Completed Quests", desc = "Quests your character has finished", icon = "Interface\\Icons\\Spell_Holy_BlessingOfProtection" },
       { path = "quests/eastern_kingdoms", name = "Eastern Kingdoms", desc = "24 zones across Eastern Kingdoms", icon = "Interface\\Icons\\Spell_Frost_WindWalkOn" },
       { path = "quests/kalimdor", name = "Kalimdor", desc = "20 zones across Kalimdor", icon = "Interface\\Icons\\Spell_Nature_NatureTouchGrow" },
       { path = "quests/dungeons", name = "Dungeons & Raids", desc = "Instance questlines across Azeroth", icon = "Interface\\Icons\\Spell_Shadow_Teleport" },
@@ -5002,6 +5102,33 @@ function FG:PopulateCodexResults(query)
           end
         end
       end
+    elseif cur == "quests/active" and FG.Data.Quests then
+      for _, quest in pairs(FG.Data.Quests) do
+        if not FG:IsInternalQuest(quest.title) then
+          local st = FG:GetQuestStatus(quest.id, quest.title)
+          if st == "active" or st == "ready_to_turn_in" then
+            table.insert(matches, { type = "quest", data = quest })
+          end
+        end
+      end
+    elseif cur == "quests/uncompleted" and FG.Data.Quests then
+      for _, quest in pairs(FG.Data.Quests) do
+        if not FG:IsInternalQuest(quest.title) then
+          local st = FG:GetQuestStatus(quest.id, quest.title)
+          if st == "uncompleted" then
+            table.insert(matches, { type = "quest", data = quest })
+          end
+        end
+      end
+    elseif cur == "quests/completed" and FG.Data.Quests then
+      for _, quest in pairs(FG.Data.Quests) do
+        if not FG:IsInternalQuest(quest.title) then
+          local st = FG:GetQuestStatus(quest.id, quest.title)
+          if st == "completed" then
+            table.insert(matches, { type = "quest", data = quest })
+          end
+        end
+      end
     elseif cur:find("^quests/zone/") and FG.Data.Quests then
       local zoneName = cur:sub(13)
       for _, quest in pairs(FG.Data.Quests) do
@@ -5355,7 +5482,16 @@ function FG:PopulateCodexResults(query)
           local matchZone = quest.zone and quest.zone:lower():find(q, 1, true)
           local matchObj = quest.objectives and quest.objectives:lower():find(q, 1, true)
           local matchTip = quest.tip and quest.tip:lower():find(q, 1, true)
-          if matchTitle or matchNpc or matchZone or matchObj or matchTip then
+          local matchStatus = false
+          if q == "completed" or q == "done" then
+            matchStatus = (FG:GetQuestStatus(quest.id, quest.title) == "completed")
+          elseif q == "uncompleted" or q == "incomplete" then
+            matchStatus = (FG:GetQuestStatus(quest.id, quest.title) == "uncompleted")
+          elseif q == "active" or q == "in progress" then
+            local st = FG:GetQuestStatus(quest.id, quest.title)
+            matchStatus = (st == "active" or st == "ready_to_turn_in")
+          end
+          if matchTitle or matchNpc or matchZone or matchObj or matchTip or matchStatus then
             table.insert(matches, { type = "quest", data = quest })
           end
         end
@@ -5688,6 +5824,12 @@ EventFrame:RegisterEvent("PLAYER_ALIVE")
 EventFrame:RegisterEvent("PLAYER_UNGHOST")
 EventFrame:RegisterEvent("PLAYER_LEVEL_UP")
 
+-- Quest Progress & Turn-In Events: live sync of quest completion status
+EventFrame:RegisterEvent("QUEST_LOG_UPDATE")
+EventFrame:RegisterEvent("QUEST_TURNED_IN")
+EventFrame:RegisterEvent("QUEST_FINISHED")
+EventFrame:RegisterEvent("QUEST_WATCH_UPDATE")
+
 EventFrame:SetScript("OnEvent", function(self, event, arg1, ...)
   if event == "ADDON_LOADED" and arg1 == ADDON_NAME then
     ForeverGuideDB = ForeverGuideDB or {}
@@ -5702,7 +5844,7 @@ EventFrame:SetScript("OnEvent", function(self, event, arg1, ...)
     FG:CreateSparkFrame()
     FG:CreateMinimapButton()
 
-    print("|cffcf52ffForever Guide|r |cffdf80ff(Sparky)|r |cffff8080[Pre-Alpha v0.1.0]|r loaded! Type |cffdf80ff/sparky|r to open Codex or |cffdf80ff/sparky help|r for commands.")
+    print("|cffcf52ffForever Guide|r |cffdf80ff(Sparky)|r |cff00ff00[Alpha v0.1.0]|r loaded! Type |cffdf80ff/sparky|r to open Codex or |cffdf80ff/sparky help|r for commands.")
 
   elseif event == "PLAYER_ENTERING_WORLD" then
     -- Guarantee any stray cursor dragging state is stopped on world load
@@ -5767,6 +5909,15 @@ EventFrame:SetScript("OnEvent", function(self, event, arg1, ...)
   elseif event == "PLAYER_LEVEL_UP" then
     if FG.SparkFrame and FG.SparkFrame.TransitionTo then
       FG.SparkFrame:TransitionTo("CELEBRATE")
+    end
+
+  elseif event == "QUEST_LOG_UPDATE" or event == "QUEST_TURNED_IN" or event == "QUEST_FINISHED" or event == "QUEST_WATCH_UPDATE" then
+    if FG.CodexWindow and FG.CodexWindow:IsShown() then
+      local cat = FG.activeCategory
+      local cur = FG.currentFolder
+      if cat == "quests" or cat == "nearby" or (cur and (cur:find("^quests") or cur:find("^nearby"))) then
+        FG:PopulateCodexResults(ForeverGuideSearchBox and ForeverGuideSearchBox:GetText():trim() or "")
+      end
     end
   end
 end)

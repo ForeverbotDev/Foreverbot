@@ -329,8 +329,36 @@ class TestVirtualScrollAndNearby(unittest.TestCase):
         self.assertIn('placeholder', self.lua_code)
         self.assertIn('monster %-', self.lua_code)
 
+    def test_19_quest_completion_tracking_and_qol(self):
+        """Verify quest completion tracking, live status badges, folders, and search filtering."""
+        # 1. Helper function
+        self.assertIn('function FG:GetQuestStatus(questID, questTitle)', self.lua_code)
+        self.assertIn('C_QuestLog.IsQuestFlaggedCompleted', self.lua_code)
+        self.assertIn('C_QuestLog.IsOnQuest', self.lua_code)
+        self.assertIn('GetNumQuestLogEntries', self.lua_code)
+
+        # 2. Badges and status rendering
+        self.assertIn('[✓ Completed]', self.lua_code)
+        self.assertIn('[★ Ready to Turn In]', self.lua_code)
+        self.assertIn('[● Active in Log]', self.lua_code)
+        self.assertIn('[○ Available]', self.lua_code)
+
+        # 3. Dedicated Folders
+        self.assertIn('{ path = "quests/active", name = "Active in Log"', self.lua_code)
+        self.assertIn('{ path = "quests/uncompleted", name = "Uncompleted Quests"', self.lua_code)
+        self.assertIn('{ path = "quests/completed", name = "Completed Quests"', self.lua_code)
+
+        # 4. Search status filtering
+        self.assertIn('q == "completed"', self.lua_code)
+        self.assertIn('q == "uncompleted"', self.lua_code)
+
+        # 5. Live event listeners
+        self.assertIn('EventFrame:RegisterEvent("QUEST_LOG_UPDATE")', self.lua_code)
+        self.assertIn('EventFrame:RegisterEvent("QUEST_TURNED_IN")', self.lua_code)
+
 
 if __name__ == "__main__":
     unittest.main()
+
 
 
