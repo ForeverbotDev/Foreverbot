@@ -2467,7 +2467,7 @@ ForeverGuide_Data.Flightpaths = {
 ForeverGuide_Data.Vendors = {
   [18] = {
     name = "Corina Steele",
-    zone = "Eastern Kingdoms",
+    zone = "Elwynn Forest",
     coords = "41.4, 65.8",
     item = "Gladius, Two-handed Sword, Tomahawk, Large Axe, Cudgel, Wooden Mallet (+2 more)",
     cost = 0,
@@ -2477,7 +2477,7 @@ ForeverGuide_Data.Vendors = {
   },
   [19] = {
     name = "Tharynn Bouden",
-    zone = "Eastern Kingdoms",
+    zone = "Elwynn Forest",
     coords = "41.8, 67.0",
     item = "Coarse Thread, Bleach, Red Dye, Mild Spices, Weak Flux, Mining Pick (+11 more)",
     cost = 0,
@@ -2487,7 +2487,7 @@ ForeverGuide_Data.Vendors = {
   },
   [20] = {
     name = "Kurran Steele",
-    zone = "Eastern Kingdoms",
+    zone = "Elwynn Forest",
     coords = "41.4, 65.4",
     item = "Knitted Sandals, Knitted Gloves, Knitted Pants, Knitted Tunic, Rough Leather Boots, Rough Leather Gloves (+6 more)",
     cost = 0,
@@ -2497,7 +2497,7 @@ ForeverGuide_Data.Vendors = {
   },
   [21] = {
     name = "Janos Hammerknuckle",
-    zone = "Eastern Kingdoms",
+    zone = "Elwynn Forest",
     coords = "47.2, 41.8",
     item = "Bastard Sword, Club, Shortsword, Short Staff, Hand Axe, Dirk (+2 more)",
     cost = 0,
@@ -2507,7 +2507,7 @@ ForeverGuide_Data.Vendors = {
   },
   [22] = {
     name = "Brog Hamfist",
-    zone = "Eastern Kingdoms",
+    zone = "Elwynn Forest",
     coords = "43.8, 66.0",
     item = "Refreshing Spring Water, Rough Arrow, Light Shot, Simple Wood, Flint and Tinder, Small Brown Pouch (+6 more)",
     cost = 0,
@@ -2517,7 +2517,7 @@ ForeverGuide_Data.Vendors = {
   },
   [23] = {
     name = "Brother Danil",
-    zone = "Eastern Kingdoms",
+    zone = "Elwynn Forest",
     coords = "47.4, 41.4",
     item = "Refreshing Spring Water, Rough Arrow, Light Shot, Tough Hunk of Bread, Small Throwing Knife, Crude Throwing Axe",
     cost = 0,
@@ -2527,7 +2527,7 @@ ForeverGuide_Data.Vendors = {
   },
   [24] = {
     name = "Morhan Coppertongue",
-    zone = "Eastern Kingdoms",
+    zone = "Loch Modan",
     coords = "34.0, 46.6",
     item = "Chainmail Armor, Chainmail Pants, Chainmail Boots, Chainmail Gloves, Chainmail Belt, Chainmail Bracers (+2 more)",
     cost = 0,
@@ -2537,7 +2537,7 @@ ForeverGuide_Data.Vendors = {
   },
   [25] = {
     name = "Dermot Johns",
-    zone = "Eastern Kingdoms",
+    zone = "Elwynn Forest",
     coords = "47.4, 41.4",
     item = "Thin Cloth Shoes, Thin Cloth Gloves, Thin Cloth Pants, Thin Cloth Armor, Cracked Leather Belt, Cracked Leather Boots (+6 more)",
     cost = 0,
@@ -2547,7 +2547,7 @@ ForeverGuide_Data.Vendors = {
   },
   [26] = {
     name = "Nillen Andemar",
-    zone = "Eastern Kingdoms",
+    zone = "Loch Modan",
     coords = "42.8, 10.0",
     item = "Mace, Giant Mace, Cudgel, Wooden Mallet, Ironwood Maul, Heavy Spiked Mace",
     cost = 0,
@@ -2557,7 +2557,7 @@ ForeverGuide_Data.Vendors = {
   },
   [27] = {
     name = "Gavin Gnarltree",
-    zone = "Eastern Kingdoms",
+    zone = "Duskwood",
     coords = "73.4, 49.8",
     item = "Dacian Falx, Longsword, Maul, Flail, Battle Axe, Double Axe (+12 more)",
     cost = 0,
@@ -2567,7 +2567,7 @@ ForeverGuide_Data.Vendors = {
   },
   [28] = {
     name = "Morg Gnarltree",
-    zone = "Eastern Kingdoms",
+    zone = "Duskwood",
     coords = "73.8, 48.4",
     item = "Polished Scale Belt, Polished Scale Boots, Polished Scale Bracers, Polished Scale Gloves, Polished Scale Leggings, Polished Scale Vest (+7 more)",
     cost = 0,
@@ -2577,7 +2577,7 @@ ForeverGuide_Data.Vendors = {
   },
   [29] = {
     name = "Mabel Solaj",
-    zone = "Eastern Kingdoms",
+    zone = "Duskwood",
     coords = "73.8, 45.6",
     item = "Refreshing Spring Water, Ice Cold Milk, Melon Juice, Sharp Arrow, Heavy Shot, Razor Arrow (+9 more)",
     cost = 0,
@@ -2587,7 +2587,7 @@ ForeverGuide_Data.Vendors = {
   },
   [30] = {
     name = "Avette Fellwood",
-    zone = "Eastern Kingdoms",
+    zone = "Duskwood",
     coords = "73.0, 44.4",
     item = "Rough Arrow, Sharp Arrow, Reinforced Bow, Heavy Recurve Bow, Razor Arrow, Small Quiver (+3 more)",
     cost = 0,
@@ -2597,7 +2597,7 @@ ForeverGuide_Data.Vendors = {
   },
   [31] = {
     name = "Farmer Saldean",
-    zone = "Eastern Kingdoms",
+    zone = "Westfall",
     coords = "56.0, 31.2",
     item = "Tough Hunk of Bread, Freshly Baked Bread, Moist Cornbread, Mulgore Spice Bread, Soft Banana Bread, Homemade Cherry Pie (+1 more)",
     cost = 0,
@@ -2607,7 +2607,7 @@ ForeverGuide_Data.Vendors = {
   },
   [32] = {
     name = "Joshua Maclure",
-    zone = "Eastern Kingdoms",
+    zone = "Elwynn Forest",
     coords = "42.4, 89.2",
     item = "Refreshing Spring Water, Ice Cold Milk, Melon Juice, Moonberry Juice, Sweet Nectar, Flask of Stormwind Tawny (+5 more)",
     cost = 0,
@@ -2617,7 +2617,7 @@ ForeverGuide_Data.Vendors = {
   },
   [33] = {
     name = "Barkeep Hann",
-    zone = "Eastern Kingdoms",
+    zone = "Duskwood",
     coords = "73.8, 44.2",
     item = "Refreshing Spring Water, Ice Cold Milk, Melon Juice, Moonberry Juice, Sweet Nectar, Bottle of Moonshine (+1 more)",
     cost = 0,
@@ -2627,7 +2627,7 @@ ForeverGuide_Data.Vendors = {
   },
   [34] = {
     name = "Roberto Pupellyverbos",
-    zone = "Eastern Kingdoms",
+    zone = "Stormwind City",
     coords = "51.4, 68.2",
     item = "Cask of Merlot, Flask of Stormwind Tawny, Flagon of Dwarven Honeymead, Jug of Badlands Bourbon, Skin of Dwarven Stout, Bottle of Dalaran Noir",
     cost = 0,
@@ -2637,7 +2637,7 @@ ForeverGuide_Data.Vendors = {
   },
   [35] = {
     name = "Innkeeper Farley",
-    zone = "Eastern Kingdoms",
+    zone = "Elwynn Forest",
     coords = "43.8, 65.8",
     item = "Refreshing Spring Water, Dalaran Sharp, Dwarven Mild, Ice Cold Milk, Melon Juice, Moonberry Juice (+6 more)",
     cost = 0,
@@ -2647,7 +2647,7 @@ ForeverGuide_Data.Vendors = {
   },
   [36] = {
     name = "Kendor Kabonka",
-    zone = "Eastern Kingdoms",
+    zone = "Stormwind City",
     coords = "74.4, 36.4",
     item = "Recipe: Westfall Stew, Recipe: Goretusk Liver Pie, Recipe: Cooked Crab Claw, Recipe: Redridge Goulash, Recipe: Succulent Pork Ribs, Recipe: Seasoned Wolf Kabob (+7 more)",
     cost = 0,
@@ -2657,7 +2657,7 @@ ForeverGuide_Data.Vendors = {
   },
   [37] = {
     name = "Karm Ironquill",
-    zone = "Eastern Kingdoms",
+    zone = "Loch Modan",
     coords = "37.0, 47.2",
     item = "Weak Flux, Mining Pick, Strong Flux, Coal",
     cost = 0,
@@ -2667,7 +2667,7 @@ ForeverGuide_Data.Vendors = {
   },
   [38] = {
     name = "Katie Hunter",
-    zone = "Eastern Kingdoms",
+    zone = "Elwynn Forest",
     coords = "84.0, 65.4",
     item = "Pinto Bridle, Chestnut Mare Bridle, Brown Horse Bridle, Swift Palomino, Swift Brown Steed, Swift White Steed (+2 more)",
     cost = 0,
@@ -2677,7 +2677,7 @@ ForeverGuide_Data.Vendors = {
   },
   [39] = {
     name = "Barkeep Dobbins",
-    zone = "Eastern Kingdoms",
+    zone = "Elwynn Forest",
     coords = "43.8, 65.8",
     item = "Refreshing Spring Water, Dalaran Sharp, Dwarven Mild, Ice Cold Milk, Melon Juice, Moonberry Juice (+12 more)",
     cost = 0,
@@ -2687,7 +2687,7 @@ ForeverGuide_Data.Vendors = {
   },
   [40] = {
     name = "Elaine Trias",
-    zone = "Eastern Kingdoms",
+    zone = "Stormwind City",
     coords = "60.4, 63.4",
     item = "Dalaran Sharp, Dwarven Mild, Stormwind Brie, Darnassian Bleu, Fine Aged Cheddar, Alterac Swiss",
     cost = 0,
@@ -2697,7 +2697,7 @@ ForeverGuide_Data.Vendors = {
   },
   [41] = {
     name = "Quartermaster Lewis",
-    zone = "Eastern Kingdoms",
+    zone = "Westfall",
     coords = "56.8, 47.2",
     item = "Refreshing Spring Water, Ice Cold Milk, Rough Arrow, Sharp Arrow, Light Shot, Heavy Shot (+9 more)",
     cost = 0,
@@ -2707,7 +2707,7 @@ ForeverGuide_Data.Vendors = {
   },
   [42] = {
     name = "Corporal Bluth",
-    zone = "Eastern Kingdoms",
+    zone = "Stranglethorn Vale",
     coords = "38.0, 3.0",
     item = "Refreshing Spring Water, Ice Cold Milk, Melon Juice, Moonberry Juice, Sweet Nectar, Sharp Arrow (+24 more)",
     cost = 0,
@@ -2717,7 +2717,7 @@ ForeverGuide_Data.Vendors = {
   },
   [43] = {
     name = "Amy Davenport",
-    zone = "Eastern Kingdoms",
+    zone = "Redridge Mountains",
     coords = "23.8, 47.6",
     item = "Coarse Thread, Fine Thread, Bleach, Mild Spices, Hot Spices, Weak Flux (+13 more)",
     cost = 0,
@@ -2727,7 +2727,7 @@ ForeverGuide_Data.Vendors = {
   },
   [44] = {
     name = "Kimberly Hiett",
-    zone = "Eastern Kingdoms",
+    zone = "Redridge Mountains",
     coords = "21.8, 45.4",
     item = "Rough Arrow, Sharp Arrow, Razor Arrow, Small Quiver, Medium Quiver",
     cost = 0,
@@ -2737,7 +2737,7 @@ ForeverGuide_Data.Vendors = {
   },
   [45] = {
     name = "Karen Taylor",
-    zone = "Eastern Kingdoms",
+    zone = "Redridge Mountains",
     coords = "24.8, 47.4",
     item = "Weak Flux, Mining Pick, Strong Flux, Coal, Blacksmith Hammer, Elemental Flux",
     cost = 0,
@@ -2747,7 +2747,7 @@ ForeverGuide_Data.Vendors = {
   },
   [46] = {
     name = "Lindsay Ashlock",
-    zone = "Eastern Kingdoms",
+    zone = "Redridge Mountains",
     coords = "23.4, 47.4",
     item = "Refreshing Spring Water, Ice Cold Milk, Melon Juice, Rough Arrow, Sharp Arrow, Light Shot (+10 more)",
     cost = 0,
@@ -2757,7 +2757,7 @@ ForeverGuide_Data.Vendors = {
   },
   [47] = {
     name = "Kara Adams",
-    zone = "Eastern Kingdoms",
+    zone = "Redridge Mountains",
     coords = "25.4, 46.6",
     item = "Large Metal Shield, Guardian Buckler, Bear Buckler, Owl's Disk, Ringed Buckler",
     cost = 0,
@@ -2767,7 +2767,7 @@ ForeverGuide_Data.Vendors = {
   },
   [48] = {
     name = "Adlin Pridedrift",
-    zone = "Eastern Kingdoms",
+    zone = "Dun Morogh",
     coords = "30.0, 71.4",
     item = "Refreshing Spring Water, Rough Arrow, Light Shot, Tough Hunk of Bread, Small Throwing Knife, Crude Throwing Axe",
     cost = 0,
@@ -2777,7 +2777,7 @@ ForeverGuide_Data.Vendors = {
   },
   [49] = {
     name = "Durnan Furcutter",
-    zone = "Eastern Kingdoms",
+    zone = "Dun Morogh",
     coords = "28.8, 66.4",
     item = "Thin Cloth Shoes, Thin Cloth Gloves, Thin Cloth Pants, Thin Cloth Armor, Cracked Leather Belt, Cracked Leather Boots (+6 more)",
     cost = 0,
@@ -2787,7 +2787,7 @@ ForeverGuide_Data.Vendors = {
   },
   [50] = {
     name = "Gina MacGregor",
-    zone = "Eastern Kingdoms",
+    zone = "Westfall",
     coords = "57.4, 54.0",
     item = "Coarse Thread, Fine Thread, Bleach, Red Dye, Green Dye, Mild Spices (+16 more)",
     cost = 0,
@@ -2797,7 +2797,7 @@ ForeverGuide_Data.Vendors = {
   },
   [51] = {
     name = "Antonio Perelli",
-    zone = "Eastern Kingdoms",
+    zone = "Westfall",
     coords = "56.8, 53.6",
     item = "Mageroyal, Lesser Healing Potion, Earthroot, Bruiseweed, Wild Steelbloom, Kingsblood (+12 more)",
     cost = 0,
@@ -2807,7 +2807,7 @@ ForeverGuide_Data.Vendors = {
   },
   [52] = {
     name = "Homer Stonefield",
-    zone = "Eastern Kingdoms",
+    zone = "Elwynn Forest",
     coords = "33.6, 83.0",
     item = "Shiny Red Apple, Tel'Abim Banana, Snapvine Watermelon, Goldenbark Apple, Moon Harvest Pumpkin, Deep Fried Plantains",
     cost = 0,
@@ -2817,7 +2817,7 @@ ForeverGuide_Data.Vendors = {
   },
   [53] = {
     name = "Veldan Lightfoot",
-    zone = "Eastern Kingdoms",
+    zone = "Elwynn Forest",
     coords = "25.2, 73.8",
     item = "Rough Leather Boots, Rough Leather Gloves, Rough Leather Pants, Rough Leather Vest, Tanned Leather Boots, Tanned Leather Gloves (+6 more)",
     cost = 0,
@@ -2827,7 +2827,7 @@ ForeverGuide_Data.Vendors = {
   },
   [54] = {
     name = "Rybrad Coldbank",
-    zone = "Eastern Kingdoms",
+    zone = "Dun Morogh",
     coords = "28.6, 67.8",
     item = "Bastard Sword, Club, Shortsword, Short Staff, Hand Axe, Dirk (+2 more)",
     cost = 0,
@@ -2837,7 +2837,7 @@ ForeverGuide_Data.Vendors = {
   },
   [55] = {
     name = "Kat Sampson",
-    zone = "Eastern Kingdoms",
+    zone = "Loch Modan",
     coords = "82.4, 64.0",
     item = "Tanned Leather Boots, Tanned Leather Gloves, Tanned Leather Pants, Tanned Leather Jerkin, Tanned Leather Belt, Tanned Leather Bracers (+2 more)",
     cost = 0,
@@ -2847,7 +2847,7 @@ ForeverGuide_Data.Vendors = {
   },
   [56] = {
     name = "Sergeant De Vries",
-    zone = "Eastern Kingdoms",
+    zone = "Elwynn Forest",
     coords = "24.0, 73.0",
     item = "Refreshing Spring Water, Ice Cold Milk, Melon Juice, Moonberry Juice, Sweet Nectar, Flask of Stormwind Tawny (+5 more)",
     cost = 0,
@@ -2857,7 +2857,7 @@ ForeverGuide_Data.Vendors = {
   },
   [57] = {
     name = "Dorin Songblade",
-    zone = "Eastern Kingdoms",
+    zone = "Redridge Mountains",
     coords = "25.6, 46.4",
     item = "Scalemail Vest, Scalemail Pants, Scalemail Boots, Scalemail Gloves, Scalemail Bracers, Scalemail Belt",
     cost = 0,
@@ -2867,7 +2867,7 @@ ForeverGuide_Data.Vendors = {
   },
   [58] = {
     name = "Dawn Brightstar",
-    zone = "Eastern Kingdoms",
+    zone = "Elwynn Forest",
     coords = "64.8, 69.2",
     item = "Lesser Healing Potion, Scroll of Strength, Scroll of Intellect, Scroll of Stamina, Scroll of Spirit, Minor Mana Potion (+24 more)",
     cost = 0,
@@ -2877,7 +2877,7 @@ ForeverGuide_Data.Vendors = {
   },
   [59] = {
     name = "Morley Eberlein",
-    zone = "Eastern Kingdoms",
+    zone = "Elwynn Forest",
     coords = "64.6, 69.6",
     item = "Knitted Sandals, Knitted Gloves, Knitted Pants, Knitted Tunic, Knitted Belt, Knitted Bracers",
     cost = 0,
@@ -2887,7 +2887,7 @@ ForeverGuide_Data.Vendors = {
   },
   [60] = {
     name = "Gunder Thornbush",
-    zone = "Eastern Kingdoms",
+    zone = "Duskwood",
     coords = "73.8, 45.0",
     item = "Coarse Thread, Fine Thread, Bleach, Mild Spices, Hot Spices, Weak Flux (+14 more)",
     cost = 0,
@@ -2897,7 +2897,7 @@ ForeverGuide_Data.Vendors = {
   },
   [61] = {
     name = "Grimnal",
-    zone = "Eastern Kingdoms",
+    zone = "Swamp of Sorrows",
     coords = "45.0, 50.2",
     item = "Brigandine Vest, Brigandine Belt, Brigandine Leggings, Brigandine Boots, Brigandine Bracers, Brigandine Gloves (+10 more)",
     cost = 0,
@@ -2907,7 +2907,7 @@ ForeverGuide_Data.Vendors = {
   },
   [62] = {
     name = "Hartash",
-    zone = "Eastern Kingdoms",
+    zone = "Swamp of Sorrows",
     coords = "45.4, 51.2",
     item = "Falchion, Zweihander, Francisca, Great Axe, Morning Star, War Maul (+2 more)",
     cost = 0,
@@ -2917,7 +2917,7 @@ ForeverGuide_Data.Vendors = {
   },
   [63] = {
     name = "Thultash",
-    zone = "Eastern Kingdoms",
+    zone = "Swamp of Sorrows",
     coords = "46.4, 54.2",
     item = "Tough Jerky, Refreshing Spring Water, Ice Cold Milk, Melon Juice, Moonberry Juice, Sweet Nectar (+6 more)",
     cost = 0,
@@ -2927,7 +2927,7 @@ ForeverGuide_Data.Vendors = {
   },
   [64] = {
     name = "Thultazor",
-    zone = "Eastern Kingdoms",
+    zone = "Swamp of Sorrows",
     coords = "45.8, 53.0",
     item = "Empty Vial, Leaded Vial, Superior Healing Potion, Infernal Stone, Greater Mana Potion, Crystal Vial (+18 more)",
     cost = 0,
@@ -2937,7 +2937,7 @@ ForeverGuide_Data.Vendors = {
   },
   [65] = {
     name = "Thralosh",
-    zone = "Eastern Kingdoms",
+    zone = "Swamp of Sorrows",
     coords = "44.8, 51.4",
     item = "Embroidered Armor, Embroidered Pants, Embroidered Boots, Embroidered Gloves, Reinforced Leather Vest, Reinforced Leather Belt (+10 more)",
     cost = 0,
@@ -2947,7 +2947,7 @@ ForeverGuide_Data.Vendors = {
   },
   [66] = {
     name = "Banalash",
-    zone = "Eastern Kingdoms",
+    zone = "Swamp of Sorrows",
     coords = "44.4, 57.0",
     item = "Coarse Thread, Fine Thread, Bleach, Black Dye, Red Dye, Mild Spices (+28 more)",
     cost = 0,
@@ -2957,7 +2957,7 @@ ForeverGuide_Data.Vendors = {
   },
   [67] = {
     name = "Grundel Harkin",
-    zone = "Eastern Kingdoms",
+    zone = "Dun Morogh",
     coords = "28.8, 67.8",
     item = "Large Round Shield, Tarnished Chain Vest, Tarnished Chain Belt, Tarnished Chain Leggings, Tarnished Chain Boots, Tarnished Chain Bracers (+2 more)",
     cost = 0,
@@ -2967,7 +2967,7 @@ ForeverGuide_Data.Vendors = {
   },
   [68] = {
     name = "Vharr",
-    zone = "Eastern Kingdoms",
+    zone = "Stranglethorn Vale",
     coords = "32.2, 28.0",
     item = "Plans: Massive Iron Axe, Battle Staff, Main Gauche, War Hammer, Truncheon, Bullova (+5 more)",
     cost = 0,
@@ -2977,7 +2977,7 @@ ForeverGuide_Data.Vendors = {
   },
   [69] = {
     name = "Hragran",
-    zone = "Eastern Kingdoms",
+    zone = "Stranglethorn Vale",
     coords = "31.4, 29.2",
     item = "Studded Hat, Studded Gloves, Studded Bracers, Studded Boots, Studded Pants, Studded Belt (+8 more)",
     cost = 0,
@@ -2987,7 +2987,7 @@ ForeverGuide_Data.Vendors = {
   },
   [70] = {
     name = "Nerrist",
-    zone = "Eastern Kingdoms",
+    zone = "Stranglethorn Vale",
     coords = "32.6, 29.2",
     item = "Bright Baubles, Nightcrawlers, Heavy Stock, Wooden Stock, Salt, Crystal Vial (+26 more)",
     cost = 0,
@@ -2997,7 +2997,7 @@ ForeverGuide_Data.Vendors = {
   },
   [71] = {
     name = "Uthok",
-    zone = "Eastern Kingdoms",
+    zone = "Stranglethorn Vale",
     coords = "31.4, 28.0",
     item = "Refreshing Spring Water, Melon Juice, Moonberry Juice, Sweet Nectar, Sharp Arrow, Heavy Shot (+15 more)",
     cost = 0,
@@ -3007,7 +3007,7 @@ ForeverGuide_Data.Vendors = {
   },
   [72] = {
     name = "Rallic Finn",
-    zone = "Eastern Kingdoms",
+    zone = "Elwynn Forest",
     coords = "83.2, 66.0",
     item = "Hornwood Recurve Bow, Laminated Recurve Bow, Rough Arrow, Sharp Arrow, Small Quiver, Fine Shortbow (+1 more)",
     cost = 0,
@@ -3017,7 +3017,7 @@ ForeverGuide_Data.Vendors = {
   },
   [73] = {
     name = "Godric Rothgar",
-    zone = "Eastern Kingdoms",
+    zone = "Elwynn Forest",
     coords = "47.6, 41.4",
     item = "Large Round Shield, Tarnished Chain Vest, Tarnished Chain Belt, Tarnished Chain Leggings, Tarnished Chain Boots, Tarnished Chain Bracers (+2 more)",
     cost = 0,
@@ -3027,7 +3027,7 @@ ForeverGuide_Data.Vendors = {
   },
   [74] = {
     name = "Aldren Cordon",
-    zone = "Eastern Kingdoms",
+    zone = "Loch Modan",
     coords = "64.8, 66.0",
     item = "Heavy Weave Armor, Heavy Weave Pants, Heavy Weave Gloves, Heavy Weave Shoes, Common Gray Shirt, Heavy Weave Belt (+6 more)",
     cost = 0,
@@ -3037,7 +3037,7 @@ ForeverGuide_Data.Vendors = {
   },
   [75] = {
     name = "Kazan Mogosh",
-    zone = "Eastern Kingdoms",
+    zone = "Dun Morogh",
     coords = "68.4, 54.4",
     item = "Refreshing Spring Water, Dalaran Sharp, Dwarven Mild, Ice Cold Milk, Melon Juice, Moonberry Juice (+12 more)",
     cost = 0,
@@ -3047,7 +3047,7 @@ ForeverGuide_Data.Vendors = {
   },
   [76] = {
     name = "Gamili Frosthide",
-    zone = "Eastern Kingdoms",
+    zone = "Dun Morogh",
     coords = "45.2, 51.8",
     item = "Knitted Sandals, Knitted Gloves, Knitted Pants, Knitted Tunic, Rough Leather Boots, Rough Leather Gloves (+18 more)",
     cost = 0,
@@ -3057,7 +3057,7 @@ ForeverGuide_Data.Vendors = {
   },
   [77] = {
     name = "Boran Ironclink",
-    zone = "Eastern Kingdoms",
+    zone = "Dun Morogh",
     coords = "45.2, 51.8",
     item = "Light Mail Armor, Light Mail Belt, Light Mail Leggings, Light Mail Boots, Light Mail Bracers, Light Mail Gloves",
     cost = 0,
@@ -3067,7 +3067,7 @@ ForeverGuide_Data.Vendors = {
   },
   [78] = {
     name = "Hegnar Rumbleshot",
-    zone = "Eastern Kingdoms",
+    zone = "Dun Morogh",
     coords = "40.6, 65.0",
     item = "Ornate Blunderbuss, Solid Blunderbuss, Light Shot, Heavy Shot, Small Shot Pouch",
     cost = 0,
@@ -3077,7 +3077,7 @@ ForeverGuide_Data.Vendors = {
   },
   [79] = {
     name = "Innkeeper Belm",
-    zone = "Eastern Kingdoms",
+    zone = "Dun Morogh",
     coords = "47.4, 52.4",
     item = "Refreshing Spring Water, Ice Cold Milk, Melon Juice, Moonberry Juice, Sweet Nectar, Thunder Ale (+8 more)",
     cost = 0,
@@ -3087,7 +3087,7 @@ ForeverGuide_Data.Vendors = {
   },
   [80] = {
     name = "Quartermaster Hudson",
-    zone = "Eastern Kingdoms",
+    zone = "Elwynn Forest",
     coords = "25.2, 74.0",
     item = "Dull Heater Shield, Light Mail Armor, Light Mail Belt, Light Mail Leggings, Light Mail Boots, Light Mail Bracers (+2 more)",
     cost = 0,
@@ -3097,7 +3097,7 @@ ForeverGuide_Data.Vendors = {
   },
   [81] = {
     name = "Drake Lindgren",
-    zone = "Eastern Kingdoms",
+    zone = "Elwynn Forest",
     coords = "83.0, 66.4",
     item = "Refreshing Spring Water, Coarse Thread, Bleach, Rough Arrow, Light Shot, Red Dye (+21 more)",
     cost = 0,
@@ -3107,7 +3107,7 @@ ForeverGuide_Data.Vendors = {
   },
   [82] = {
     name = "Edna Mullby",
-    zone = "Eastern Kingdoms",
+    zone = "Stormwind City",
     coords = "58.0, 60.6",
     item = "Green Dye, Coarse Thread, Fine Thread, Black Dye, Red Dye, Mild Spices (+28 more)",
     cost = 0,
@@ -3117,7 +3117,7 @@ ForeverGuide_Data.Vendors = {
   },
   [83] = {
     name = "Keldric Boucher",
-    zone = "Eastern Kingdoms",
+    zone = "Stormwind City",
     coords = "55.0, 65.2",
     item = "Empty Vial, Leaded Vial, Infernal Stone, Crystal Vial, Demonic Figurine, Arcane Powder (+17 more)",
     cost = 0,
@@ -3127,7 +3127,7 @@ ForeverGuide_Data.Vendors = {
   },
   [84] = {
     name = "Veron Amberstill",
-    zone = "Eastern Kingdoms",
+    zone = "Dun Morogh",
     coords = "63.4, 50.4",
     item = "Gray Ram, Brown Ram, White Ram, Swift White Ram, Swift Brown Ram, Swift Gray Ram (+2 more)",
     cost = 0,
@@ -3137,7 +3137,7 @@ ForeverGuide_Data.Vendors = {
   },
   [85] = {
     name = "Yarlyn Amberstill",
-    zone = "Eastern Kingdoms",
+    zone = "Dun Morogh",
     coords = "63.2, 50.2",
     item = "Rabbit Crate (Snowshoe)",
     cost = 0,
@@ -3147,7 +3147,7 @@ ForeverGuide_Data.Vendors = {
   },
   [86] = {
     name = "Grawn Thromwyn",
-    zone = "Eastern Kingdoms",
+    zone = "Dun Morogh",
     coords = "45.2, 52.0",
     item = "Gladius, Two-handed Sword, Tomahawk, Large Axe, Cudgel, Wooden Mallet (+2 more)",
     cost = 0,
@@ -3157,7 +3157,7 @@ ForeverGuide_Data.Vendors = {
   },
   [87] = {
     name = "Kyra Boucher",
-    zone = "Eastern Kingdoms",
+    zone = "Stormwind City",
     coords = "56.2, 65.0",
     item = "Infernal Stone, Demonic Figurine, Arcane Powder, Wild Berries, Wild Thornroot, Holy Candle (+12 more)",
     cost = 0,
@@ -3167,7 +3167,7 @@ ForeverGuide_Data.Vendors = {
   },
   [88] = {
     name = "Thurman Mullby",
-    zone = "Eastern Kingdoms",
+    zone = "Stormwind City",
     coords = "58.0, 61.6",
     item = "Refreshing Spring Water, Ice Cold Milk, Melon Juice, Moonberry Juice, Sweet Nectar, Rough Arrow (+25 more)",
     cost = 0,
@@ -3177,7 +3177,7 @@ ForeverGuide_Data.Vendors = {
   },
   [89] = {
     name = "Marda Weller",
-    zone = "Eastern Kingdoms",
+    zone = "Stormwind City",
     coords = "57.2, 57.0",
     item = "Cutlass, Mace, Hatchet, Quarter Staff, Dacian Falx, Longsword (+27 more)",
     cost = 0,
@@ -3187,7 +3187,7 @@ ForeverGuide_Data.Vendors = {
   },
   [90] = {
     name = "Gunther Weller",
-    zone = "Eastern Kingdoms",
+    zone = "Stormwind City",
     coords = "57.2, 57.2",
     item = "Cutlass, Mace, Hatchet, Quarter Staff, Dacian Falx, Longsword (+20 more)",
     cost = 0,
@@ -3197,7 +3197,7 @@ ForeverGuide_Data.Vendors = {
   },
   [91] = {
     name = "Carla Granger",
-    zone = "Eastern Kingdoms",
+    zone = "Stormwind City",
     coords = "55.0, 56.0",
     item = "Thick Cloth Vest, Thick Cloth Pants, Thick Cloth Shoes, Thick Cloth Gloves, Knitted Sandals, Knitted Gloves (+15 more)",
     cost = 0,
@@ -3207,7 +3207,7 @@ ForeverGuide_Data.Vendors = {
   },
   [92] = {
     name = "Aldric Moore",
-    zone = "Eastern Kingdoms",
+    zone = "Stormwind City",
     coords = "54.8, 55.2",
     item = "Scalemail Vest, Scalemail Pants, Scalemail Boots, Scalemail Gloves, Chainmail Armor, Chainmail Pants (+12 more)",
     cost = 0,
@@ -3217,7 +3217,7 @@ ForeverGuide_Data.Vendors = {
   },
   [93] = {
     name = "Lara Moore",
-    zone = "Eastern Kingdoms",
+    zone = "Stormwind City",
     coords = "54.8, 55.4",
     item = "Cured Leather Armor, Cured Leather Pants, Cured Leather Boots, Cured Leather Gloves, Rough Leather Boots, Rough Leather Gloves (+12 more)",
     cost = 0,
@@ -3227,7 +3227,7 @@ ForeverGuide_Data.Vendors = {
   },
   [94] = {
     name = "Felder Stover",
-    zone = "Eastern Kingdoms",
+    zone = "Burning Steppes",
     coords = "85.0, 68.4",
     item = "Falchion, Zweihander, Francisca, Great Axe, Morning Star, War Maul (+2 more)",
     cost = 0,
@@ -3237,7 +3237,7 @@ ForeverGuide_Data.Vendors = {
   },
   [95] = {
     name = "Lina Stover",
-    zone = "Eastern Kingdoms",
+    zone = "Stormwind City",
     coords = "50.4, 57.4",
     item = "Worn Shortbow, Polished Shortbow, Hornwood Recurve Bow, Laminated Recurve Bow, Ornate Blunderbuss, Hunter's Boomstick (+14 more)",
     cost = 0,
@@ -3247,7 +3247,7 @@ ForeverGuide_Data.Vendors = {
   },
   [96] = {
     name = "Frederick Stover",
-    zone = "Eastern Kingdoms",
+    zone = "Stormwind City",
     coords = "50.2, 57.4",
     item = "Rough Arrow, Sharp Arrow, Reinforced Bow, Heavy Recurve Bow, Razor Arrow, Small Quiver (+2 more)",
     cost = 0,
@@ -3257,7 +3257,7 @@ ForeverGuide_Data.Vendors = {
   },
   [97] = {
     name = "Lisbeth Schneider",
-    zone = "Eastern Kingdoms",
+    zone = "Stormwind City",
     coords = "49.4, 54.4",
     item = "Bold Yellow Shirt, Stylish Black Shirt, Common Gray Shirt, Dark Green Wedding Hanbok, White Traditional Hanbok, Royal Dangui",
     cost = 0,
@@ -3267,7 +3267,7 @@ ForeverGuide_Data.Vendors = {
   },
   [98] = {
     name = "Julia Gallina",
-    zone = "Eastern Kingdoms",
+    zone = "Stormwind City",
     coords = "51.8, 68.4",
     item = "Flask of Stormwind Tawny, Flagon of Dwarven Honeymead, Jug of Badlands Bourbon, Skin of Dwarven Stout, Bottle of Dalaran Noir",
     cost = 0,
@@ -3277,7 +3277,7 @@ ForeverGuide_Data.Vendors = {
   },
   [99] = {
     name = "Bernard Gump",
-    zone = "Eastern Kingdoms",
+    zone = "Stormwind City",
     coords = "64.2, 61.0",
     item = "Red Rose, Black Rose, Simple Wildflowers, Beautiful Wildflowers, Bouquet of White Roses, Bouquet of Black Roses",
     cost = 0,
@@ -3287,7 +3287,7 @@ ForeverGuide_Data.Vendors = {
   },
   [100] = {
     name = "Felicia Gump",
-    zone = "Eastern Kingdoms",
+    zone = "Stormwind City",
     coords = "64.2, 60.4",
     item = "Stormwind Seasoning Herbs, Red Rose, Black Rose, Simple Wildflowers, Beautiful Wildflowers, Bouquet of White Roses (+1 more)",
     cost = 0,
@@ -3297,7 +3297,7 @@ ForeverGuide_Data.Vendors = {
   },
   [101] = {
     name = "Darian Singh",
-    zone = "Eastern Kingdoms",
+    zone = "Stormwind City",
     coords = "29.4, 67.8",
     item = "Red Fireworks Rocket, Schematic: Blue Firework",
     cost = 0,
@@ -3307,7 +3307,7 @@ ForeverGuide_Data.Vendors = {
   },
   [102] = {
     name = "Jarel Moor",
-    zone = "Eastern Kingdoms",
+    zone = "Stormwind City",
     coords = "28.2, 75.6",
     item = "Flask of Stormwind Tawny, Flagon of Dwarven Honeymead, Jug of Badlands Bourbon, Skin of Dwarven Stout, Bottle of Dalaran Noir",
     cost = 0,
@@ -3317,7 +3317,7 @@ ForeverGuide_Data.Vendors = {
   },
   [103] = {
     name = "Charys Yserian",
-    zone = "Eastern Kingdoms",
+    zone = "Stormwind City",
     coords = "32.4, 80.0",
     item = "Healing Potion, Lesser Mana Potion, Blurred Axe, Callous Axe, Marauder Axe, Wizard's Belt (+20 more)",
     cost = 0,
@@ -3327,7 +3327,7 @@ ForeverGuide_Data.Vendors = {
   },
   [104] = {
     name = "Owen Vaughn",
-    zone = "Eastern Kingdoms",
+    zone = "Stormwind City",
     coords = "36.0, 74.4",
     item = "Infernal Stone, Demonic Figurine, Arcane Powder, Wild Berries, Wild Thornroot, Holy Candle (+12 more)",
     cost = 0,
@@ -3337,7 +3337,7 @@ ForeverGuide_Data.Vendors = {
   },
   [105] = {
     name = "Wynne Larson",
-    zone = "Eastern Kingdoms",
+    zone = "Stormwind City",
     coords = "41.6, 76.6",
     item = "Plain Robe, Double-Stitched Robes, Robe of Apprenticeship, Chromatic Robe, Shimmering Silk Robes, Burning Robes (+1 more)",
     cost = 0,
@@ -3347,7 +3347,7 @@ ForeverGuide_Data.Vendors = {
   },
   [106] = {
     name = "Evan Larson",
-    zone = "Eastern Kingdoms",
+    zone = "Stormwind City",
     coords = "42.4, 76.4",
     item = "Russet Hat, Studded Hat, Augmented Chain Helm, Embroidered Hat, Reinforced Leather Cap, Brigandine Helm",
     cost = 0,
@@ -3357,7 +3357,7 @@ ForeverGuide_Data.Vendors = {
   },
   [107] = {
     name = "Joachim Brenlow",
-    zone = "Eastern Kingdoms",
+    zone = "Stormwind City",
     coords = "40.4, 90.2",
     item = "Flask of Stormwind Tawny, Flagon of Dwarven Honeymead, Jug of Badlands Bourbon, Skin of Dwarven Stout, Bottle of Dalaran Noir",
     cost = 0,
@@ -3367,7 +3367,7 @@ ForeverGuide_Data.Vendors = {
   },
   [108] = {
     name = "Ardwyn Cailen",
-    zone = "Eastern Kingdoms",
+    zone = "Stormwind City",
     coords = "42.8, 65.4",
     item = "Smoldering Wand, Gloom Wand, Burning Wand, Dusk Wand, Combustible Wand, Pitchwood Wand (+2 more)",
     cost = 0,
@@ -3377,7 +3377,7 @@ ForeverGuide_Data.Vendors = {
   },
   [109] = {
     name = "Maria Lumere",
-    zone = "Eastern Kingdoms",
+    zone = "Stormwind City",
     coords = "46.4, 78.8",
     item = "Silverleaf, Mageroyal, Peacebloom, Earthroot, Bruiseweed, Wild Steelbloom (+7 more)",
     cost = 0,
@@ -3387,7 +3387,7 @@ ForeverGuide_Data.Vendors = {
   },
   [110] = {
     name = "Duncan Cullen",
-    zone = "Eastern Kingdoms",
+    zone = "Stormwind City",
     coords = "43.4, 74.2",
     item = "Cuirboulli Vest, Cuirboulli Belt, Cuirboulli Boots, Cuirboulli Bracers, Cuirboulli Gloves, Cuirboulli Pants (+34 more)",
     cost = 0,
@@ -3397,7 +3397,7 @@ ForeverGuide_Data.Vendors = {
   },
   [111] = {
     name = "Allan Hafgan",
-    zone = "Eastern Kingdoms",
+    zone = "Stormwind City",
     coords = "43.0, 65.4",
     item = "Battle Staff, War Staff",
     cost = 0,
@@ -3407,7 +3407,7 @@ ForeverGuide_Data.Vendors = {
   },
   [112] = {
     name = "Adair Gilroy",
-    zone = "Eastern Kingdoms",
+    zone = "Stormwind City",
     coords = "41.4, 64.4",
     item = "Scroll of Strength, Scroll of Intellect, Scroll of Stamina, Scroll of Spirit, Scroll of Protection II, Scroll of Stamina II (+6 more)",
     cost = 0,
@@ -3417,7 +3417,7 @@ ForeverGuide_Data.Vendors = {
   },
   [113] = {
     name = "Jessara Cordell",
-    zone = "Eastern Kingdoms",
+    zone = "Stormwind City",
     coords = "43.0, 64.2",
     item = "Simple Wood, Copper Rod, Formula: Enchant Chest - Minor Intellect, Lesser Magic Essence, Strange Dust, Star Wood (+4 more)",
     cost = 0,
@@ -3427,7 +3427,7 @@ ForeverGuide_Data.Vendors = {
   },
   [114] = {
     name = "Bryan Cross",
-    zone = "Eastern Kingdoms",
+    zone = "Stormwind City",
     coords = "64.2, 42.8",
     item = "Large Metal Shield, Kite Shield, Heavy Pavise, Crested Heater Shield, Ringed Buckler, Metal Buckler (+2 more)",
     cost = 0,
@@ -3437,7 +3437,7 @@ ForeverGuide_Data.Vendors = {
   },
   [115] = {
     name = "Seoman Griffith",
-    zone = "Eastern Kingdoms",
+    zone = "Stormwind City",
     coords = "67.4, 48.8",
     item = "Studded Doublet, Studded Belt, Studded Pants, Studded Boots, Studded Bracers, Studded Gloves (+8 more)",
     cost = 0,
@@ -3447,7 +3447,7 @@ ForeverGuide_Data.Vendors = {
   },
   [116] = {
     name = "Alyssa Griffith",
-    zone = "Eastern Kingdoms",
+    zone = "Stormwind City",
     coords = "67.4, 49.0",
     item = "Small Brown Pouch, Heavy Brown Bag, Brown Leather Satchel, Huge Brown Sack",
     cost = 0,
@@ -3457,7 +3457,7 @@ ForeverGuide_Data.Vendors = {
   },
   [117] = {
     name = "Maxton Strang",
-    zone = "Kalimdor",
+    zone = "Desolace",
     coords = "67.8, 8.4",
     item = "Augmented Chain Vest, Augmented Chain Leggings, Augmented Chain Belt, Augmented Chain Boots, Augmented Chain Bracers, Augmented Chain Gloves (+3 more)",
     cost = 0,
@@ -3467,7 +3467,7 @@ ForeverGuide_Data.Vendors = {
   },
   [118] = {
     name = "Osric Strang",
-    zone = "Eastern Kingdoms",
+    zone = "Stormwind City",
     coords = "74.2, 47.4",
     item = "Polished Scale Belt, Polished Scale Boots, Polished Scale Bracers, Polished Scale Gloves, Polished Scale Leggings, Polished Scale Vest (+27 more)",
     cost = 0,
@@ -3477,7 +3477,7 @@ ForeverGuide_Data.Vendors = {
   },
   [119] = {
     name = "Heinrich Stone",
-    zone = "Eastern Kingdoms",
+    zone = "Stormwind City",
     coords = "74.2, 42.8",
     item = "Broadsword, Main Gauche, Falchion, Rondel",
     cost = 0,
@@ -3487,7 +3487,7 @@ ForeverGuide_Data.Vendors = {
   },
   [120] = {
     name = "Jasper Fel",
-    zone = "Eastern Kingdoms",
+    zone = "Stormwind City",
     coords = "77.8, 59.6",
     item = "Dust of Decay, Essence of Pain, Empty Vial, Leaded Vial, Lethargy Root, Thieves' Tools (+5 more)",
     cost = 0,
@@ -3497,7 +3497,7 @@ ForeverGuide_Data.Vendors = {
   },
   [121] = {
     name = "Sloan McCoy",
-    zone = "Eastern Kingdoms",
+    zone = "Stormwind City",
     coords = "76.4, 60.0",
     item = "Dust of Decay, Essence of Pain, Empty Vial, Leaded Vial, Lethargy Root, Thieves' Tools (+5 more)",
     cost = 0,
@@ -3507,7 +3507,7 @@ ForeverGuide_Data.Vendors = {
   },
   [122] = {
     name = "Elly Langston",
-    zone = "Eastern Kingdoms",
+    zone = "Stormwind City",
     coords = "73.2, 37.4",
     item = "Refreshing Spring Water, Ice Cold Milk, Melon Juice, Moonberry Juice, Sweet Nectar, Flask of Stormwind Tawny (+5 more)",
     cost = 0,
@@ -3517,7 +3517,7 @@ ForeverGuide_Data.Vendors = {
   },
   [123] = {
     name = "Gerik Koen",
-    zone = "Eastern Kingdoms",
+    zone = "Stormwind City",
     coords = "69.0, 42.4",
     item = "Flamberge, Bullova, War Hammer, Zweihander, Great Axe, War Maul",
     cost = 0,
@@ -3527,7 +3527,7 @@ ForeverGuide_Data.Vendors = {
   },
   [124] = {
     name = "Mayda Thane",
-    zone = "Eastern Kingdoms",
+    zone = "Stormwind City",
     coords = "67.0, 43.2",
     item = "Augmented Chain Boots, Brigandine Boots, Russet Boots, Embroidered Boots, Studded Boots, Reinforced Leather Boots",
     cost = 0,
@@ -3537,7 +3537,7 @@ ForeverGuide_Data.Vendors = {
   },
   [125] = {
     name = "Wilhelm Strang",
-    zone = "Eastern Kingdoms",
+    zone = "Stormwind City",
     coords = "74.4, 47.8",
     item = "Scalemail Vest, Scalemail Pants, Scalemail Boots, Scalemail Gloves, Scalemail Bracers, Scalemail Belt (+6 more)",
     cost = 0,
@@ -3547,7 +3547,7 @@ ForeverGuide_Data.Vendors = {
   },
   [126] = {
     name = "Alexandra Bolero",
-    zone = "Eastern Kingdoms",
+    zone = "Stormwind City",
     coords = "43.4, 74.0",
     item = "Coarse Thread, Fine Thread, Bleach, Black Dye, Red Dye, Green Dye (+11 more)",
     cost = 0,
@@ -3557,7 +3557,7 @@ ForeverGuide_Data.Vendors = {
   },
   [127] = {
     name = "Gregory Ardus",
-    zone = "Eastern Kingdoms",
+    zone = "Stormwind City",
     coords = "37.0, 39.4",
     item = "Mace, Quarter Staff, Maul, Flail, Long Staff, Giant Mace (+5 more)",
     cost = 0,
@@ -3567,7 +3567,7 @@ ForeverGuide_Data.Vendors = {
   },
   [128] = {
     name = "Agustus Moulaine",
-    zone = "Eastern Kingdoms",
+    zone = "Stormwind City",
     coords = "43.8, 43.2",
     item = "Polished Scale Belt, Polished Scale Boots, Polished Scale Bracers, Polished Scale Gloves, Polished Scale Leggings, Polished Scale Vest (+27 more)",
     cost = 0,
@@ -3577,7 +3577,7 @@ ForeverGuide_Data.Vendors = {
   },
   [129] = {
     name = "Theresa Moulaine",
-    zone = "Eastern Kingdoms",
+    zone = "Stormwind City",
     coords = "43.4, 43.4",
     item = "Plain Robe, Double-Stitched Robes, Robe of Apprenticeship, Chromatic Robe, Shimmering Silk Robes, Burning Robes (+1 more)",
     cost = 0,
@@ -3587,7 +3587,7 @@ ForeverGuide_Data.Vendors = {
   },
   [130] = {
     name = "Brother Cassius",
-    zone = "Eastern Kingdoms",
+    zone = "Stormwind City",
     coords = "43.0, 26.4",
     item = "Infernal Stone, Demonic Figurine, Arcane Powder, Wild Berries, Wild Thornroot, Holy Candle (+12 more)",
     cost = 0,
@@ -3597,7 +3597,7 @@ ForeverGuide_Data.Vendors = {
   },
   [131] = {
     name = "Gothor Brumn",
-    zone = "Eastern Kingdoms",
+    zone = "Loch Modan",
     coords = "24.0, 18.0",
     item = "Chainmail Armor, Chainmail Pants, Chainmail Boots, Chainmail Gloves, Chainmail Belt, Chainmail Bracers",
     cost = 0,
@@ -3607,7 +3607,7 @@ ForeverGuide_Data.Vendors = {
   },
   [132] = {
     name = "Krakk",
-    zone = "Eastern Kingdoms",
+    zone = "Stranglethorn Vale",
     coords = "32.4, 28.0",
     item = "Heavy Pavise, Metal Buckler, Augmented Chain Helm, Augmented Chain Gloves, Augmented Chain Bracers, Augmented Chain Boots (+3 more)",
     cost = 0,
@@ -3617,7 +3617,7 @@ ForeverGuide_Data.Vendors = {
   },
   [133] = {
     name = "Sranda",
-    zone = "Eastern Kingdoms",
+    zone = "Badlands",
     coords = "3.0, 47.4",
     item = "Russet Vest, Russet Pants, Russet Boots, Russet Gloves, Studded Doublet, Studded Belt (+16 more)",
     cost = 0,
@@ -3627,7 +3627,7 @@ ForeverGuide_Data.Vendors = {
   },
   [134] = {
     name = "Brak Durnad",
-    zone = "Eastern Kingdoms",
+    zone = "Wetlands",
     coords = "11.4, 59.4",
     item = "Dacian Falx, Longsword, Maul, Flail, Battle Axe, Double Axe (+4 more)",
     cost = 0,
@@ -3637,7 +3637,7 @@ ForeverGuide_Data.Vendors = {
   },
   [135] = {
     name = "Neal Allen",
-    zone = "Eastern Kingdoms",
+    zone = "Wetlands",
     coords = "10.6, 56.8",
     item = "Refreshing Spring Water, Ice Cold Milk, Melon Juice, Sharp Arrow, Heavy Shot, Weak Flux (+25 more)",
     cost = 0,
@@ -3647,7 +3647,7 @@ ForeverGuide_Data.Vendors = {
   },
   [136] = {
     name = "Brahnmar",
-    zone = "Eastern Kingdoms",
+    zone = "Wetlands",
     coords = "11.4, 59.4",
     item = "Polished Scale Belt, Polished Scale Boots, Polished Scale Bracers, Polished Scale Gloves, Polished Scale Leggings, Polished Scale Vest (+2 more)",
     cost = 0,
@@ -3657,7 +3657,7 @@ ForeverGuide_Data.Vendors = {
   },
   [137] = {
     name = "Gruham Rumdnul",
-    zone = "Eastern Kingdoms",
+    zone = "Wetlands",
     coords = "12.0, 57.8",
     item = "Refreshing Spring Water, Ice Cold Milk, Melon Juice, Sharp Arrow, Heavy Shot, Razor Arrow (+9 more)",
     cost = 0,
@@ -3667,7 +3667,7 @@ ForeverGuide_Data.Vendors = {
   },
   [138] = {
     name = "Dewin Shimmerdawn",
-    zone = "Eastern Kingdoms",
+    zone = "Wetlands",
     coords = "8.0, 56.2",
     item = "Healing Potion, Empty Vial, Leaded Vial, Crystal Vial, Imbued Vial",
     cost = 0,
@@ -3677,7 +3677,7 @@ ForeverGuide_Data.Vendors = {
   },
   [139] = {
     name = "Jennabink Powerseam",
-    zone = "Eastern Kingdoms",
+    zone = "Wetlands",
     coords = "8.0, 55.8",
     item = "Coarse Thread, Fine Thread, Bleach, Black Dye, Red Dye, Green Dye (+17 more)",
     cost = 0,
@@ -3687,7 +3687,7 @@ ForeverGuide_Data.Vendors = {
   },
   [140] = {
     name = "Kersok Prond",
-    zone = "Eastern Kingdoms",
+    zone = "Wetlands",
     coords = "10.4, 60.4",
     item = "Coarse Thread, Fine Thread, Bleach, Mild Spices, Hot Spices, Weak Flux (+14 more)",
     cost = 0,
@@ -3697,7 +3697,7 @@ ForeverGuide_Data.Vendors = {
   },
   [141] = {
     name = "Samor Festivus",
-    zone = "Eastern Kingdoms",
+    zone = "Wetlands",
     coords = "10.4, 60.2",
     item = "Healing Potion, Dust of Decay, Essence of Pain, Empty Vial, Leaded Vial, Lethargy Root (+6 more)",
     cost = 0,
@@ -3707,7 +3707,7 @@ ForeverGuide_Data.Vendors = {
   },
   [142] = {
     name = "Naela Trance",
-    zone = "Eastern Kingdoms",
+    zone = "Wetlands",
     coords = "11.2, 58.4",
     item = "Light Quiver, Worn Shortbow, Polished Shortbow, Hornwood Recurve Bow, Laminated Recurve Bow, Rough Arrow (+7 more)",
     cost = 0,
@@ -3717,7 +3717,7 @@ ForeverGuide_Data.Vendors = {
   },
   [143] = {
     name = "Unger Statforth",
-    zone = "Eastern Kingdoms",
+    zone = "Wetlands",
     coords = "8.4, 54.4",
     item = "Black Stallion Bridle, Pinto Bridle, Chestnut Mare Bridle, Brown Horse Bridle, Swift Palomino, Swift Brown Steed (+3 more)",
     cost = 0,
@@ -3727,7 +3727,7 @@ ForeverGuide_Data.Vendors = {
   },
   [144] = {
     name = "Murndan Derth",
-    zone = "Eastern Kingdoms",
+    zone = "Wetlands",
     coords = "11.4, 59.4",
     item = "Light Shot, Heavy Shot, Large Bore Blunderbuss, BKP 2700 \"Enforcer\", Solid Shot, Accurate Slugs",
     cost = 0,
@@ -3737,7 +3737,7 @@ ForeverGuide_Data.Vendors = {
   },
   [145] = {
     name = "Edwina Monzor",
-    zone = "Eastern Kingdoms",
+    zone = "Wetlands",
     coords = "11.0, 58.4",
     item = "Rough Arrow, Sharp Arrow, Razor Arrow, Small Quiver, Jagged Arrow, Medium Quiver",
     cost = 0,
@@ -3747,7 +3747,7 @@ ForeverGuide_Data.Vendors = {
   },
   [146] = {
     name = "Falkan Armonis",
-    zone = "Eastern Kingdoms",
+    zone = "Wetlands",
     coords = "8.4, 56.4",
     item = "Infernal Stone, Demonic Figurine, Arcane Powder, Wild Berries, Wild Thornroot, Holy Candle (+12 more)",
     cost = 0,
@@ -3757,7 +3757,7 @@ ForeverGuide_Data.Vendors = {
   },
   [147] = {
     name = "Innkeeper Helbrek",
-    zone = "Eastern Kingdoms",
+    zone = "Wetlands",
     coords = "10.6, 60.8",
     item = "Tough Jerky, Refreshing Spring Water, Ice Cold Milk, Melon Juice, Moonberry Juice, Sweet Nectar (+7 more)",
     cost = 0,
@@ -3767,7 +3767,7 @@ ForeverGuide_Data.Vendors = {
   },
   [148] = {
     name = "Drac Roughcut",
-    zone = "Eastern Kingdoms",
+    zone = "Loch Modan",
     coords = "35.4, 48.8",
     item = "Coarse Thread, Fine Thread, Bleach, Red Dye, Green Dye, Mild Spices (+13 more)",
     cost = 0,
@@ -3777,7 +3777,7 @@ ForeverGuide_Data.Vendors = {
   },
   [149] = {
     name = "Vrok Blunderblast",
-    zone = "Eastern Kingdoms",
+    zone = "Loch Modan",
     coords = "35.2, 42.6",
     item = "Ornate Blunderbuss, Hunter's Boomstick, Light Shot, Heavy Shot, Small Shot Pouch",
     cost = 0,
@@ -3787,7 +3787,7 @@ ForeverGuide_Data.Vendors = {
   },
   [150] = {
     name = "Jannos Ironwill",
-    zone = "Eastern Kingdoms",
+    zone = "Arathi Highlands",
     coords = "46.0, 47.4",
     item = "Truncheon, War Hammer, Battle Staff, Morning Star, War Maul, War Staff (+1 more)",
     cost = 0,
@@ -3797,7 +3797,7 @@ ForeverGuide_Data.Vendors = {
   },
   [151] = {
     name = "Rann Flamespinner",
-    zone = "Eastern Kingdoms",
+    zone = "Loch Modan",
     coords = "36.0, 46.0",
     item = "Coarse Thread, Fine Thread, Bleach, Black Dye, Red Dye, Green Dye (+11 more)",
     cost = 0,
@@ -3807,7 +3807,7 @@ ForeverGuide_Data.Vendors = {
   },
   [152] = {
     name = "Quartermaster Hicks",
-    zone = "Eastern Kingdoms",
+    zone = "Elwynn Forest",
     coords = "25.2, 73.8",
     item = "Broadsword, Flamberge, Crescent Axe, Bullova, Truncheon, War Hammer (+2 more)",
     cost = 0,
@@ -3817,7 +3817,7 @@ ForeverGuide_Data.Vendors = {
   },
   [153] = {
     name = "Terry Palin",
-    zone = "Eastern Kingdoms",
+    zone = "Elwynn Forest",
     coords = "82.8, 63.4",
     item = "Simple Wood",
     cost = 0,
@@ -3827,7 +3827,7 @@ ForeverGuide_Data.Vendors = {
   },
   [154] = {
     name = "William MacGregor",
-    zone = "Eastern Kingdoms",
+    zone = "Westfall",
     coords = "57.4, 53.8",
     item = "Laminated Recurve Bow, Rough Arrow, Sharp Arrow, Reinforced Bow, Small Quiver, Fine Longbow (+1 more)",
     cost = 0,
@@ -3837,7 +3837,7 @@ ForeverGuide_Data.Vendors = {
   },
   [155] = {
     name = "Defias Profiteer",
-    zone = "Eastern Kingdoms",
+    zone = "Westfall",
     coords = "43.4, 66.8",
     item = "Tanned Leather Boots, Tanned Leather Gloves, Tanned Leather Pants, Tanned Leather Jerkin, Tanned Leather Belt, Tanned Leather Bracers (+3 more)",
     cost = 0,
@@ -3847,7 +3847,7 @@ ForeverGuide_Data.Vendors = {
   },
   [156] = {
     name = "Mike Miller",
-    zone = "Eastern Kingdoms",
+    zone = "Westfall",
     coords = "57.4, 53.6",
     item = "Tough Hunk of Bread, Freshly Baked Bread, Moist Cornbread, Mulgore Spice Bread, Soft Banana Bread, Homemade Cherry Pie",
     cost = 0,
@@ -3857,7 +3857,7 @@ ForeverGuide_Data.Vendors = {
   },
   [157] = {
     name = "Lamar Veisilli",
-    zone = "Eastern Kingdoms",
+    zone = "Redridge Mountains",
     coords = "16.0, 46.4",
     item = "Shiny Red Apple, Tel'Abim Banana, Snapvine Watermelon, Goldenbark Apple, Moon Harvest Pumpkin, Deep Fried Plantains",
     cost = 0,
@@ -3867,7 +3867,7 @@ ForeverGuide_Data.Vendors = {
   },
   [158] = {
     name = "Lohgan Eva",
-    zone = "Eastern Kingdoms",
+    zone = "Duskwood",
     coords = "75.6, 44.6",
     item = "Coarse Thread, Fine Thread, Bleach, Black Dye, Red Dye, Green Dye (+9 more)",
     cost = 0,
@@ -3877,7 +3877,7 @@ ForeverGuide_Data.Vendors = {
   },
   [159] = {
     name = "Alyssa Eva",
-    zone = "Eastern Kingdoms",
+    zone = "Duskwood",
     coords = "76.0, 45.2",
     item = "Infernal Stone, Demonic Figurine, Arcane Powder, Wild Berries, Wild Thornroot, Holy Candle (+12 more)",
     cost = 0,
@@ -3887,7 +3887,7 @@ ForeverGuide_Data.Vendors = {
   },
   [160] = {
     name = "Vernon Hale",
-    zone = "Eastern Kingdoms",
+    zone = "Redridge Mountains",
     coords = "22.2, 47.6",
     item = "Slitherskin Mackerel, Longjaw Mud Snapper, Bristle Whisker Catfish, Rockscale Cod, Fishing Pole, Strong Fishing Pole (+6 more)",
     cost = 0,
@@ -3897,7 +3897,7 @@ ForeverGuide_Data.Vendors = {
   },
   [161] = {
     name = "Yanni Stoutheart",
-    zone = "Eastern Kingdoms",
+    zone = "Loch Modan",
     coords = "34.8, 48.4",
     item = "Refreshing Spring Water, Ice Cold Milk, Rough Arrow, Sharp Arrow, Light Shot, Heavy Shot (+11 more)",
     cost = 0,
@@ -3907,7 +3907,7 @@ ForeverGuide_Data.Vendors = {
   },
   [162] = {
     name = "Khara Deepwater",
-    zone = "Eastern Kingdoms",
+    zone = "Loch Modan",
     coords = "39.4, 39.2",
     item = "Slitherskin Mackerel, Longjaw Mud Snapper, Bristle Whisker Catfish, Rockscale Cod, Fishing Pole, Recipe: Brilliant Smallfish (+9 more)",
     cost = 0,
@@ -3917,7 +3917,7 @@ ForeverGuide_Data.Vendors = {
   },
   [163] = {
     name = "Xandar Goodbeard",
-    zone = "Eastern Kingdoms",
+    zone = "Loch Modan",
     coords = "82.4, 63.4",
     item = "Refreshing Spring Water, Ice Cold Milk, Rough Arrow, Sharp Arrow, Light Shot, Heavy Shot (+11 more)",
     cost = 0,
@@ -3927,7 +3927,7 @@ ForeverGuide_Data.Vendors = {
   },
   [164] = {
     name = "Irene Sureshot",
-    zone = "Eastern Kingdoms",
+    zone = "Loch Modan",
     coords = "83.0, 63.4",
     item = "Hunter's Boomstick, Light Shot, Heavy Shot, Large Bore Blunderbuss, Solid Shot, Small Shot Pouch",
     cost = 0,
@@ -3937,7 +3937,7 @@ ForeverGuide_Data.Vendors = {
   },
   [165] = {
     name = "Cliff Hadin",
-    zone = "Eastern Kingdoms",
+    zone = "Loch Modan",
     coords = "83.0, 63.0",
     item = "Laminated Recurve Bow, Rough Arrow, Sharp Arrow, Reinforced Bow, Small Quiver, Fine Longbow (+1 more)",
     cost = 0,
@@ -3947,7 +3947,7 @@ ForeverGuide_Data.Vendors = {
   },
   [166] = {
     name = "Thrawn Boltar",
-    zone = "Eastern Kingdoms",
+    zone = "Dun Morogh",
     coords = "45.2, 51.4",
     item = "Weak Flux, Mining Pick, Strong Flux, Coal, Blacksmith Hammer, Elemental Flux",
     cost = 0,
@@ -3957,7 +3957,7 @@ ForeverGuide_Data.Vendors = {
   },
   [167] = {
     name = "Kreg Bilmn",
-    zone = "Eastern Kingdoms",
+    zone = "Dun Morogh",
     coords = "47.2, 52.4",
     item = "Refreshing Spring Water, Rough Arrow, Light Shot, Simple Wood, Flint and Tinder, Small Brown Pouch (+6 more)",
     cost = 0,
@@ -3967,7 +3967,7 @@ ForeverGuide_Data.Vendors = {
   },
   [168] = {
     name = "Golorn Frostbeard",
-    zone = "Eastern Kingdoms",
+    zone = "Dun Morogh",
     coords = "46.6, 53.4",
     item = "Coarse Thread, Bleach, Red Dye, Mild Spices, Weak Flux, Mining Pick (+8 more)",
     cost = 0,
@@ -3977,7 +3977,7 @@ ForeverGuide_Data.Vendors = {
   },
   [169] = {
     name = "Loslor Rudge",
-    zone = "Eastern Kingdoms",
+    zone = "Dun Morogh",
     coords = "50.0, 49.4",
     item = "Weak Flux, Mining Pick, Strong Flux, Rough Blasting Powder, Copper Tube, Copper Modulator (+10 more)",
     cost = 0,
@@ -3987,7 +3987,7 @@ ForeverGuide_Data.Vendors = {
   },
   [170] = {
     name = "Rendow",
-    zone = "Kalimdor",
+    zone = "Feralas",
     coords = "89.4, 45.8",
     item = "Cured Leather Armor, Cured Leather Pants, Cured Leather Boots, Cured Leather Gloves, Cured Leather Belt, Cured Leather Bracers (+6 more)",
     cost = 0,
@@ -3997,7 +3997,7 @@ ForeverGuide_Data.Vendors = {
   },
   [171] = {
     name = "Keeg Gibn",
-    zone = "Eastern Kingdoms",
+    zone = "Dun Morogh",
     coords = "30.4, 45.8",
     item = "Refreshing Spring Water, Ice Cold Milk, Melon Juice, Moonberry Juice, Sweet Nectar, Flask of Stormwind Tawny (+5 more)",
     cost = 0,
@@ -4007,7 +4007,7 @@ ForeverGuide_Data.Vendors = {
   },
   [172] = {
     name = "Frast Dokner",
-    zone = "Eastern Kingdoms",
+    zone = "Dun Morogh",
     coords = "68.8, 55.8",
     item = "Gladius, Two-handed Sword, Tomahawk, Large Axe, Cudgel, Wooden Mallet (+2 more)",
     cost = 0,
@@ -4017,7 +4017,7 @@ ForeverGuide_Data.Vendors = {
   },
   [173] = {
     name = "Andrew Krighton",
-    zone = "Eastern Kingdoms",
+    zone = "Elwynn Forest",
     coords = "41.6, 65.6",
     item = "Dull Heater Shield, Light Mail Armor, Light Mail Belt, Light Mail Leggings, Light Mail Boots, Light Mail Bracers (+2 more)",
     cost = 0,
@@ -4027,7 +4027,7 @@ ForeverGuide_Data.Vendors = {
   },
   [174] = {
     name = "Natheril Raincaller",
-    zone = "Kalimdor",
+    zone = "Winterspring",
     coords = "51.4, 30.8",
     item = "Refreshing Spring Water, Melon Juice, Moonberry Juice, Sweet Nectar, Sharp Arrow, Heavy Shot (+14 more)",
     cost = 0,
@@ -4037,7 +4037,7 @@ ForeverGuide_Data.Vendors = {
   },
   [175] = {
     name = "Archibald Kava",
-    zone = "Eastern Kingdoms",
+    zone = "Tirisfal Glades",
     coords = "32.4, 65.6",
     item = "Dirty Leather Vest, Tattered Cloth Vest, Tattered Cloth Pants, Tattered Cloth Boots, Dirty Leather Pants, Dirty Leather Boots (+6 more)",
     cost = 0,
@@ -4047,7 +4047,7 @@ ForeverGuide_Data.Vendors = {
   },
   [176] = {
     name = "Joshua Kien",
-    zone = "Eastern Kingdoms",
+    zone = "Tirisfal Glades",
     coords = "32.2, 65.4",
     item = "Refreshing Spring Water, Rough Arrow, Light Shot, Tough Hunk of Bread, Small Throwing Knife, Crude Throwing Axe",
     cost = 0,
@@ -4057,7 +4057,7 @@ ForeverGuide_Data.Vendors = {
   },
   [177] = {
     name = "Blacksmith Rand",
-    zone = "Eastern Kingdoms",
+    zone = "Tirisfal Glades",
     coords = "32.4, 66.2",
     item = "Large Wooden Shield, Rusted Chain Vest, Rusted Chain Belt, Rusted Chain Leggings, Rusted Chain Boots, Rusted Chain Bracers (+2 more)",
     cost = 0,
@@ -4067,7 +4067,7 @@ ForeverGuide_Data.Vendors = {
   },
   [178] = {
     name = "Harold Raims",
-    zone = "Eastern Kingdoms",
+    zone = "Tirisfal Glades",
     coords = "32.4, 66.4",
     item = "Bastard Sword, Club, Shortsword, Short Staff, Hand Axe, Dirk (+2 more)",
     cost = 0,
@@ -4077,7 +4077,7 @@ ForeverGuide_Data.Vendors = {
   },
   [179] = {
     name = "Abigail Shiel",
-    zone = "Eastern Kingdoms",
+    zone = "Tirisfal Glades",
     coords = "61.0, 52.4",
     item = "Coarse Thread, Bleach, Red Dye, Mild Spices, Weak Flux, Mining Pick (+9 more)",
     cost = 0,
@@ -4087,7 +4087,7 @@ ForeverGuide_Data.Vendors = {
   },
   [180] = {
     name = "Mrs. Winters",
-    zone = "Eastern Kingdoms",
+    zone = "Tirisfal Glades",
     coords = "61.0, 52.4",
     item = "Refreshing Spring Water, Rough Arrow, Light Shot, Simple Wood, Flint and Tinder, Small Brown Pouch (+6 more)",
     cost = 0,
@@ -4097,7 +4097,7 @@ ForeverGuide_Data.Vendors = {
   },
   [181] = {
     name = "Abe Winters",
-    zone = "Eastern Kingdoms",
+    zone = "Tirisfal Glades",
     coords = "60.2, 53.0",
     item = "Worn Heater Shield, Light Chain Armor, Light Chain Belt, Light Chain Leggings, Light Chain Boots, Light Chain Bracers (+2 more)",
     cost = 0,
@@ -4107,7 +4107,7 @@ ForeverGuide_Data.Vendors = {
   },
   [182] = {
     name = "Oliver Dwor",
-    zone = "Eastern Kingdoms",
+    zone = "Tirisfal Glades",
     coords = "60.0, 53.6",
     item = "Gladius, Two-handed Sword, Tomahawk, Large Axe, Cudgel, Wooden Mallet (+2 more)",
     cost = 0,
@@ -4117,7 +4117,7 @@ ForeverGuide_Data.Vendors = {
   },
   [183] = {
     name = "Eliza Callen",
-    zone = "Eastern Kingdoms",
+    zone = "Tirisfal Glades",
     coords = "60.4, 52.8",
     item = "Battered Leather Harness, Battered Leather Belt, Battered Leather Pants, Battered Leather Boots, Battered Leather Bracers, Battered Leather Gloves",
     cost = 0,
@@ -4127,7 +4127,7 @@ ForeverGuide_Data.Vendors = {
   },
   [184] = {
     name = "Edwin Harly",
-    zone = "Eastern Kingdoms",
+    zone = "Silverpine Forest",
     coords = "44.0, 40.0",
     item = "Refreshing Spring Water, Lesser Healing Potion, Ice Cold Milk, Rough Arrow, Sharp Arrow, Light Shot (+10 more)",
     cost = 0,
@@ -4137,7 +4137,7 @@ ForeverGuide_Data.Vendors = {
   },
   [185] = {
     name = "Hillsbrad Apprentice Blacksmith",
-    zone = "Eastern Kingdoms",
+    zone = "Hillsbrad Foothills",
     coords = "31.4, 47.0",
     item = "Gladius, Two-handed Sword, Tomahawk, Large Axe, Cudgel, Wooden Mallet (+2 more)",
     cost = 0,
@@ -4147,7 +4147,7 @@ ForeverGuide_Data.Vendors = {
   },
   [186] = {
     name = "Lyranne Feathersong",
-    zone = "Kalimdor",
+    zone = "Winterspring",
     coords = "52.0, 29.2",
     item = "Refreshing Spring Water, Ice Cold Milk, Melon Juice, Moonberry Juice, Sweet Nectar, Morning Glory Dew (+8 more)",
     cost = 0,
@@ -4157,7 +4157,7 @@ ForeverGuide_Data.Vendors = {
   },
   [187] = {
     name = "Malgin Barleybrew",
-    zone = "Kalimdor",
+    zone = "The Barrens",
     coords = "49.2, 84.6",
     item = "Skin of Dwarven Stout, Bottle of Dalaran Noir, Jug of Badlands Bourbon, Flask of Stormwind Tawny, Flagon of Dwarven Honeymead",
     cost = 0,
@@ -4167,7 +4167,7 @@ ForeverGuide_Data.Vendors = {
   },
   [188] = {
     name = "Innkeeper Anderson",
-    zone = "Eastern Kingdoms",
+    zone = "Hillsbrad Foothills",
     coords = "51.0, 58.8",
     item = "Refreshing Spring Water, Dalaran Sharp, Dwarven Mild, Ice Cold Milk, Melon Juice, Moonberry Juice (+12 more)",
     cost = 0,
@@ -4177,7 +4177,7 @@ ForeverGuide_Data.Vendors = {
   },
   [189] = {
     name = "Merideth Carlson",
-    zone = "Eastern Kingdoms",
+    zone = "Hillsbrad Foothills",
     coords = "52.0, 55.6",
     item = "Pinto Bridle, Chestnut Mare Bridle, Brown Horse Bridle, Swift Palomino, Swift Brown Steed, Swift White Steed (+2 more)",
     cost = 0,
@@ -4187,7 +4187,7 @@ ForeverGuide_Data.Vendors = {
   },
   [190] = {
     name = "Neema",
-    zone = "Eastern Kingdoms",
+    zone = "Hillsbrad Foothills",
     coords = "51.0, 59.0",
     item = "Refreshing Spring Water, Dalaran Sharp, Dwarven Mild, Ice Cold Milk, Melon Juice, Moonberry Juice (+12 more)",
     cost = 0,
@@ -4197,7 +4197,7 @@ ForeverGuide_Data.Vendors = {
   },
   [191] = {
     name = "Bront Coldcleave",
-    zone = "Eastern Kingdoms",
+    zone = "Hillsbrad Foothills",
     coords = "48.8, 57.2",
     item = "Tough Jerky, Haunch of Meat, Mutton Chop, Wild Hog Shank, Cured Ham Steak, Roasted Quail",
     cost = 0,
@@ -4207,7 +4207,7 @@ ForeverGuide_Data.Vendors = {
   },
   [192] = {
     name = "Barkeep Kelly",
-    zone = "Eastern Kingdoms",
+    zone = "Hillsbrad Foothills",
     coords = "51.4, 58.4",
     item = "Refreshing Spring Water, Ice Cold Milk, Melon Juice, Moonberry Juice, Sweet Nectar, Morning Glory Dew",
     cost = 0,
@@ -4217,7 +4217,7 @@ ForeverGuide_Data.Vendors = {
   },
   [193] = {
     name = "Knaz Blunderflame",
-    zone = "Eastern Kingdoms",
+    zone = "Stranglethorn Vale",
     coords = "51.0, 35.2",
     item = "Gyrochronatom, Bronze Tube, Copper Modulator, Schematic: Deadly Scope, Coarse Blasting Powder, Rough Blasting Powder (+11 more)",
     cost = 0,
@@ -4227,7 +4227,7 @@ ForeverGuide_Data.Vendors = {
   },
   [194] = {
     name = "Gnaz Blunderflame",
-    zone = "Eastern Kingdoms",
+    zone = "Stranglethorn Vale",
     coords = "51.0, 35.2",
     item = "Copper Tube, Copper Modulator, Silver Contact, Bronze Framework, Gyrochronatom, Coarse Blasting Powder (+11 more)",
     cost = 0,
@@ -4237,7 +4237,7 @@ ForeverGuide_Data.Vendors = {
   },
   [195] = {
     name = "Qia",
-    zone = "Kalimdor",
+    zone = "Winterspring",
     coords = "61.2, 37.2",
     item = "Pattern: Runecloth Gloves, Coarse Thread, Fine Thread, Black Dye, Red Dye, Mild Spices (+28 more)",
     cost = 0,
@@ -4247,7 +4247,7 @@ ForeverGuide_Data.Vendors = {
   },
   [196] = {
     name = "Nandar Branson",
-    zone = "Eastern Kingdoms",
+    zone = "Hillsbrad Foothills",
     coords = "50.8, 57.0",
     item = "Greater Healing Potion, Empty Vial, Leaded Vial, Mana Potion, Recipe: Fire Protection Potion, Crystal Vial (+1 more)",
     cost = 0,
@@ -4257,7 +4257,7 @@ ForeverGuide_Data.Vendors = {
   },
   [197] = {
     name = "Micha Yance",
-    zone = "Eastern Kingdoms",
+    zone = "Hillsbrad Foothills",
     coords = "49.0, 55.0",
     item = "Refreshing Spring Water, Coarse Thread, Fine Thread, Bleach, Mild Spices, Hot Spices (+20 more)",
     cost = 0,
@@ -4267,7 +4267,7 @@ ForeverGuide_Data.Vendors = {
   },
   [198] = {
     name = "Lindea Rabonne",
-    zone = "Eastern Kingdoms",
+    zone = "Hillsbrad Foothills",
     coords = "50.0, 62.6",
     item = "Fishing Pole, Recipe: Bristle Whisker Catfish, Strong Fishing Pole, Recipe: Rockscale Cod, Shiny Bauble, Nightcrawlers (+3 more)",
     cost = 0,
@@ -4277,7 +4277,7 @@ ForeverGuide_Data.Vendors = {
   },
   [199] = {
     name = "Innkeeper Shay",
-    zone = "Eastern Kingdoms",
+    zone = "Hillsbrad Foothills",
     coords = "62.6, 19.0",
     item = "Tough Jerky, Refreshing Spring Water, Ice Cold Milk, Melon Juice, Moonberry Juice, Sweet Nectar (+7 more)",
     cost = 0,
@@ -4287,7 +4287,7 @@ ForeverGuide_Data.Vendors = {
   },
   [200] = {
     name = "Christoph Jeffcoat",
-    zone = "Eastern Kingdoms",
+    zone = "Hillsbrad Foothills",
     coords = "62.2, 19.0",
     item = "Coarse Thread, Fine Thread, Bleach, Mild Spices, Hot Spices, Weak Flux (+16 more)",
     cost = 0,
@@ -4297,7 +4297,7 @@ ForeverGuide_Data.Vendors = {
   },
   [201] = {
     name = "Mallen Swain",
-    zone = "Eastern Kingdoms",
+    zone = "Hillsbrad Foothills",
     coords = "62.0, 21.0",
     item = "Coarse Thread, Fine Thread, Bleach, Black Dye, Red Dye, Green Dye (+11 more)",
     cost = 0,
@@ -4307,7 +4307,7 @@ ForeverGuide_Data.Vendors = {
   },
   [202] = {
     name = "Derak Nightfall",
-    zone = "Eastern Kingdoms",
+    zone = "Hillsbrad Foothills",
     coords = "63.0, 19.4",
     item = "Refreshing Spring Water, Mild Spices, Hot Spices, Soothing Spices, Recipe: Bristle Whisker Catfish, Recipe: Smoked Sagefish (+1 more)",
     cost = 0,
@@ -4317,7 +4317,7 @@ ForeverGuide_Data.Vendors = {
   },
   [203] = {
     name = "Kayren Soothallow",
-    zone = "Eastern Kingdoms",
+    zone = "Hillsbrad Foothills",
     coords = "62.4, 19.8",
     item = "Refreshing Spring Water, Ice Cold Milk, Melon Juice, Moonberry Juice, Sweet Nectar, Sharp Arrow (+15 more)",
     cost = 0,
@@ -4327,7 +4327,7 @@ ForeverGuide_Data.Vendors = {
   },
   [204] = {
     name = "Blacksmith Verringtan",
-    zone = "Eastern Kingdoms",
+    zone = "Hillsbrad Foothills",
     coords = "31.3, 42.6",
     item = "Gladius, Two-handed Sword, Tomahawk, Large Axe, Cudgel, Wooden Mallet (+2 more)",
     cost = 0,
@@ -4337,7 +4337,7 @@ ForeverGuide_Data.Vendors = {
   },
   [205] = {
     name = "Kris Legace",
-    zone = "Eastern Kingdoms",
+    zone = "Hillsbrad Foothills",
     coords = "80.0, 39.0",
     item = "Mystic Sarong, Saber Leggings, Cured Leather Armor, Cured Leather Pants, Cured Leather Boots, Cured Leather Gloves (+6 more)",
     cost = 0,
@@ -4347,7 +4347,7 @@ ForeverGuide_Data.Vendors = {
   },
   [206] = {
     name = "Bro'kin",
-    zone = "Eastern Kingdoms",
+    zone = "Alterac Mountains",
     coords = "38.4, 38.8",
     item = "Greater Healing Potion, Empty Vial, Leaded Vial, Mana Potion, Crystal Vial, Recipe: Frost Oil (+1 more)",
     cost = 0,
@@ -4357,7 +4357,7 @@ ForeverGuide_Data.Vendors = {
   },
   [207] = {
     name = "Bliztik",
-    zone = "Eastern Kingdoms",
+    zone = "Duskwood",
     coords = "18.0, 54.4",
     item = "Healing Potion, Empty Vial, Leaded Vial, Lesser Mana Potion, Recipe: Shadow Oil, Crystal Vial (+1 more)",
     cost = 0,
@@ -4367,7 +4367,7 @@ ForeverGuide_Data.Vendors = {
   },
   [208] = {
     name = "Zarena Cromwind",
-    zone = "Eastern Kingdoms",
+    zone = "Stranglethorn Vale",
     coords = "28.4, 75.4",
     item = "Big Stick, Battle Staff, Main Gauche, War Hammer, Truncheon, Bullova (+7 more)",
     cost = 0,
@@ -4377,7 +4377,7 @@ ForeverGuide_Data.Vendors = {
   },
   [209] = {
     name = "Jaquilina Dramet",
-    zone = "Eastern Kingdoms",
+    zone = "Stranglethorn Vale",
     coords = "35.6, 10.6",
     item = "Great Axe, Bullova, Francisca, Crescent Axe, Plans: Massive Iron Axe, Midnight Axe",
     cost = 0,
@@ -4387,7 +4387,7 @@ ForeverGuide_Data.Vendors = {
   },
   [210] = {
     name = "Sly Garrett",
-    zone = "Eastern Kingdoms",
+    zone = "Stranglethorn Vale",
     coords = "28.4, 76.8",
     item = "Dust of Decay, Essence of Pain, Empty Vial, Leaded Vial, Lethargy Root, Thieves' Tools (+5 more)",
     cost = 0,
@@ -4397,7 +4397,7 @@ ForeverGuide_Data.Vendors = {
   },
   [211] = {
     name = "Old Man Heming",
-    zone = "Eastern Kingdoms",
+    zone = "Stranglethorn Vale",
     coords = "27.4, 77.0",
     item = "Expert Fishing - The Bass and You, Bright Baubles, Nightcrawlers, Shiny Bauble, Fishing Pole, Aquadynamic Fish Attractor (+1 more)",
     cost = 0,
@@ -4407,7 +4407,7 @@ ForeverGuide_Data.Vendors = {
   },
   [212] = {
     name = "Narkk",
-    zone = "Eastern Kingdoms",
+    zone = "Stranglethorn Vale",
     coords = "28.2, 74.4",
     item = "Pattern: Black Swashbuckler's Shirt, Parrot Cage (Cockatiel), Parrot Cage (Senegal)",
     cost = 0,
@@ -4417,7 +4417,7 @@ ForeverGuide_Data.Vendors = {
   },
   [213] = {
     name = "Kelsey Yance",
-    zone = "Eastern Kingdoms",
+    zone = "Stranglethorn Vale",
     coords = "28.2, 74.4",
     item = "Recipe: Hot Smoked Bass, Recipe: Filet of Redgill, Recipe: Cooked Glossy Mightfish, Recipe: Mithril Head Trout, Recipe: Rockscale Cod, Recipe: Giant Clam Scorcho (+6 more)",
     cost = 0,
@@ -4427,7 +4427,7 @@ ForeverGuide_Data.Vendors = {
   },
   [214] = {
     name = "Danielle Zipstitch",
-    zone = "Eastern Kingdoms",
+    zone = "Duskwood",
     coords = "75.8, 45.4",
     item = "Coarse Thread, Fine Thread, Bleach, Black Dye, Red Dye, Green Dye (+10 more)",
     cost = 0,
@@ -4437,7 +4437,7 @@ ForeverGuide_Data.Vendors = {
   },
   [215] = {
     name = "Sheri Zipstitch",
-    zone = "Eastern Kingdoms",
+    zone = "Duskwood",
     coords = "75.6, 45.4",
     item = "Coarse Thread, Fine Thread, Bleach, Black Dye, Red Dye, Green Dye (+11 more)",
     cost = 0,
@@ -4447,7 +4447,7 @@ ForeverGuide_Data.Vendors = {
   },
   [216] = {
     name = "Xizk Goodstitch",
-    zone = "Eastern Kingdoms",
+    zone = "Stranglethorn Vale",
     coords = "28.6, 76.8",
     item = "Coarse Thread, Fine Thread, Bleach, Black Dye, Red Dye, Green Dye (+11 more)",
     cost = 0,
@@ -4457,7 +4457,7 @@ ForeverGuide_Data.Vendors = {
   },
   [217] = {
     name = "Cowardly Crosby",
-    zone = "Eastern Kingdoms",
+    zone = "Stranglethorn Vale",
     coords = "27.0, 82.4",
     item = "Coarse Thread, Fine Thread, Bleach, Black Dye, Red Dye, Green Dye (+10 more)",
     cost = 0,
@@ -4467,7 +4467,7 @@ ForeverGuide_Data.Vendors = {
   },
   [218] = {
     name = "Wenna Silkbeard",
-    zone = "Eastern Kingdoms",
+    zone = "Wetlands",
     coords = "25.6, 25.8",
     item = "Wizard's Belt, Nightwind Belt, Dreamer's Belt, Saber Leggings, Stalking Pants, Mystic Sarong (+5 more)",
     cost = 0,
@@ -4477,7 +4477,7 @@ ForeverGuide_Data.Vendors = {
   },
   [219] = {
     name = "Fradd Swiftgear",
-    zone = "Eastern Kingdoms",
+    zone = "Wetlands",
     coords = "26.4, 25.8",
     item = "Weak Flux, Mining Pick, Strong Flux, Rough Blasting Powder, Copper Tube, Copper Modulator (+12 more)",
     cost = 0,
@@ -4487,7 +4487,7 @@ ForeverGuide_Data.Vendors = {
   },
   [220] = {
     name = "Rizz Loosebolt",
-    zone = "Eastern Kingdoms",
+    zone = "Alterac Mountains",
     coords = "47.2, 35.2",
     item = "Weak Flux, Mining Pick, Strong Flux, Rough Blasting Powder, Copper Tube, Copper Modulator (+11 more)",
     cost = 0,
@@ -4497,7 +4497,7 @@ ForeverGuide_Data.Vendors = {
   },
   [221] = {
     name = "Mazk Snipeshot",
-    zone = "Eastern Kingdoms",
+    zone = "Stranglethorn Vale",
     coords = "28.4, 75.0",
     item = "Coarse Blasting Powder, Rough Blasting Powder, Bronze Tube, Copper Tube, Engineer's Ink, Blank Parchment (+12 more)",
     cost = 0,
@@ -4507,7 +4507,7 @@ ForeverGuide_Data.Vendors = {
   },
   [222] = {
     name = "Ruppo Zipcoil",
-    zone = "Eastern Kingdoms",
+    zone = "The Hinterlands",
     coords = "34.2, 37.8",
     item = "Weak Flux, Mining Pick, Strong Flux, Rough Blasting Powder, Coarse Blasting Powder, Gyrochronatom (+11 more)",
     cost = 0,
@@ -4517,7 +4517,7 @@ ForeverGuide_Data.Vendors = {
   },
   [223] = {
     name = "Clyde Ranthal",
-    zone = "Eastern Kingdoms",
+    zone = "Redridge Mountains",
     coords = "83.8, 70.8",
     item = "Coarse Thread, Fine Thread, Black Dye, Red Dye, Green Dye, Salt (+11 more)",
     cost = 0,
@@ -4527,7 +4527,7 @@ ForeverGuide_Data.Vendors = {
   },
   [224] = {
     name = "George Candarte",
-    zone = "Eastern Kingdoms",
+    zone = "Hillsbrad Foothills",
     coords = "92.0, 38.2",
     item = "Coarse Thread, Fine Thread, Black Dye, Red Dye, Green Dye, Salt (+11 more)",
     cost = 0,
@@ -4537,7 +4537,7 @@ ForeverGuide_Data.Vendors = {
   },
   [225] = {
     name = "Rikqiz",
-    zone = "Eastern Kingdoms",
+    zone = "Stranglethorn Vale",
     coords = "28.4, 76.0",
     item = "Pink Dye, Purple Dye, Orange Dye, Yellow Dye, Gray Dye, Green Dye (+12 more)",
     cost = 0,
@@ -4547,7 +4547,7 @@ ForeverGuide_Data.Vendors = {
   },
   [226] = {
     name = "Malygen",
-    zone = "Kalimdor",
+    zone = "Felwood",
     coords = "62.2, 25.4",
     item = "Refreshing Spring Water, Ice Cold Milk, Melon Juice, Moonberry Juice, Sweet Nectar, Sharp Arrow (+16 more)",
     cost = 0,
@@ -4557,7 +4557,7 @@ ForeverGuide_Data.Vendors = {
   },
   [227] = {
     name = "Deneb Walker",
-    zone = "Eastern Kingdoms",
+    zone = "Arathi Highlands",
     coords = "27.0, 58.8",
     item = "Healing Potion, Scroll of Strength, Scroll of Protection II, Scroll of Stamina II, Scroll of Spirit II, Scroll of Intellect II (+23 more)",
     cost = 0,
@@ -4567,7 +4567,7 @@ ForeverGuide_Data.Vendors = {
   },
   [228] = {
     name = "Bale",
-    zone = "Kalimdor",
+    zone = "Felwood",
     coords = "34.8, 53.2",
     item = "Refreshing Spring Water, Ice Cold Milk, Melon Juice, Moonberry Juice, Sweet Nectar, Sharp Arrow (+16 more)",
     cost = 0,
@@ -4577,7 +4577,7 @@ ForeverGuide_Data.Vendors = {
   },
   [229] = {
     name = "Vikki Lonsav",
-    zone = "Eastern Kingdoms",
+    zone = "Arathi Highlands",
     coords = "46.4, 47.4",
     item = "Refreshing Spring Water, Melon Juice, Moonberry Juice, Sweet Nectar, Sharp Arrow, Heavy Shot (+14 more)",
     cost = 0,
@@ -4587,7 +4587,7 @@ ForeverGuide_Data.Vendors = {
   },
   [230] = {
     name = "Hammon Karwn",
-    zone = "Eastern Kingdoms",
+    zone = "Arathi Highlands",
     coords = "46.4, 47.4",
     item = "Coarse Thread, Fine Thread, Black Dye, Red Dye, Mild Spices, Hot Spices (+25 more)",
     cost = 0,
@@ -4597,7 +4597,7 @@ ForeverGuide_Data.Vendors = {
   },
   [231] = {
     name = "Drovnar Strongbrew",
-    zone = "Eastern Kingdoms",
+    zone = "Arathi Highlands",
     coords = "46.4, 47.0",
     item = "Greater Healing Potion, Empty Vial, Leaded Vial, Mana Potion, Recipe: Frost Protection Potion, Crystal Vial (+1 more)",
     cost = 0,
@@ -4607,7 +4607,7 @@ ForeverGuide_Data.Vendors = {
   },
   [232] = {
     name = "Narj Deepslice",
-    zone = "Eastern Kingdoms",
+    zone = "Arathi Highlands",
     coords = "45.4, 47.4",
     item = "Tough Jerky, Haunch of Meat, Mutton Chop, Wild Hog Shank, Cured Ham Steak, Recipe: Barbecued Buzzard Wing (+1 more)",
     cost = 0,
@@ -4617,7 +4617,7 @@ ForeverGuide_Data.Vendors = {
   },
   [233] = {
     name = "Androd Fadran",
-    zone = "Eastern Kingdoms",
+    zone = "Arathi Highlands",
     coords = "45.0, 46.8",
     item = "Coarse Thread, Fine Thread, Black Dye, Red Dye, Green Dye, Salt (+11 more)",
     cost = 0,
@@ -4627,7 +4627,7 @@ ForeverGuide_Data.Vendors = {
   },
   [234] = {
     name = "Zulrg",
-    zone = "Kalimdor",
+    zone = "Dustwallow Marsh",
     coords = "36.2, 31.6",
     item = "Midnight Axe, Big Stick, Broadsword, Flamberge, Crescent Axe, Bullova (+4 more)",
     cost = 0,
@@ -4637,7 +4637,7 @@ ForeverGuide_Data.Vendors = {
   },
   [235] = {
     name = "Tunkk",
-    zone = "Eastern Kingdoms",
+    zone = "Arathi Highlands",
     coords = "74.8, 34.4",
     item = "Coarse Thread, Fine Thread, Black Dye, Red Dye, Green Dye, Salt (+11 more)",
     cost = 0,
@@ -4647,7 +4647,7 @@ ForeverGuide_Data.Vendors = {
   },
   [236] = {
     name = "Graud",
-    zone = "Eastern Kingdoms",
+    zone = "Arathi Highlands",
     coords = "74.0, 32.4",
     item = "Refreshing Spring Water, Melon Juice, Moonberry Juice, Sweet Nectar, Sharp Arrow, Heavy Shot (+14 more)",
     cost = 0,
@@ -4657,7 +4657,7 @@ ForeverGuide_Data.Vendors = {
   },
   [237] = {
     name = "Keena",
-    zone = "Eastern Kingdoms",
+    zone = "Arathi Highlands",
     coords = "74.0, 32.4",
     item = "Coarse Thread, Fine Thread, Black Dye, Red Dye, Mild Spices, Hot Spices (+27 more)",
     cost = 0,
@@ -4667,7 +4667,7 @@ ForeverGuide_Data.Vendors = {
   },
   [238] = {
     name = "Nixxrax Fillamug",
-    zone = "Eastern Kingdoms",
+    zone = "Stranglethorn Vale",
     coords = "27.0, 77.2",
     item = "Homemade Cherry Pie, Soft Banana Bread, Mulgore Spice Bread, Moist Cornbread, Freshly Baked Bread, Tough Hunk of Bread (+13 more)",
     cost = 0,
@@ -4677,7 +4677,7 @@ ForeverGuide_Data.Vendors = {
   },
   [239] = {
     name = "Kizz Bluntstrike",
-    zone = "Eastern Kingdoms",
+    zone = "Stranglethorn Vale",
     coords = "28.2, 75.2",
     item = "Ironwood Maul, Heavy Spiked Mace, Giant Mace, Mace",
     cost = 0,
@@ -4687,7 +4687,7 @@ ForeverGuide_Data.Vendors = {
   },
   [240] = {
     name = "Burkrum",
-    zone = "Kalimdor",
+    zone = "Ashenvale",
     coords = "73.4, 60.4",
     item = "Augmented Chain Leggings, Reinforced Targe, Kite Shield, Polished Scale Vest, Polished Scale Leggings, Polished Scale Gloves (+11 more)",
     cost = 0,
@@ -4697,7 +4697,7 @@ ForeverGuide_Data.Vendors = {
   },
   [241] = {
     name = "Crazk Sparks",
-    zone = "Eastern Kingdoms",
+    zone = "Stranglethorn Vale",
     coords = "28.2, 76.6",
     item = "Red Fireworks Rocket, Schematic: Green Firework",
     cost = 0,
@@ -4707,7 +4707,7 @@ ForeverGuide_Data.Vendors = {
   },
   [242] = {
     name = "Haren Kanmae",
-    zone = "Eastern Kingdoms",
+    zone = "Stranglethorn Vale",
     coords = "28.2, 74.4",
     item = "Heavy Recurve Bow, Reinforced Bow, Jagged Arrow, Razor Arrow, Sharp Arrow, Rough Arrow (+3 more)",
     cost = 0,
@@ -4717,7 +4717,7 @@ ForeverGuide_Data.Vendors = {
   },
   [243] = {
     name = "Wigcik",
-    zone = "Eastern Kingdoms",
+    zone = "Stranglethorn Vale",
     coords = "28.0, 76.8",
     item = "Spinefin Halibut, Striped Yellowtail, Rockscale Cod, Bristle Whisker Catfish, Longjaw Mud Snapper, Slitherskin Mackerel",
     cost = 0,
@@ -4727,7 +4727,7 @@ ForeverGuide_Data.Vendors = {
   },
   [244] = {
     name = "Jutak",
-    zone = "Eastern Kingdoms",
+    zone = "Stranglethorn Vale",
     coords = "27.4, 77.4",
     item = "Zweihander, Flamberge, Falchion, Broadsword, Rondel, Main Gauche (+2 more)",
     cost = 0,
@@ -4737,7 +4737,7 @@ ForeverGuide_Data.Vendors = {
   },
   [245] = {
     name = "Hurklor",
-    zone = "Eastern Kingdoms",
+    zone = "Stranglethorn Vale",
     coords = "29.0, 75.0",
     item = "Elemental Flux, Coal, Strong Flux, Weak Flux, Blacksmith Hammer, Mining Pick",
     cost = 0,
@@ -4747,7 +4747,7 @@ ForeverGuide_Data.Vendors = {
   },
   [246] = {
     name = "Fargon Mortalak",
-    zone = "Eastern Kingdoms",
+    zone = "Stranglethorn Vale",
     coords = "29.0, 75.0",
     item = "Heavy Pavise, Metal Buckler, Augmented Chain Helm, Augmented Chain Gloves, Augmented Chain Bracers, Augmented Chain Boots (+4 more)",
     cost = 0,
@@ -4757,7 +4757,7 @@ ForeverGuide_Data.Vendors = {
   },
   [247] = {
     name = "Blixrez Goodstitch",
-    zone = "Eastern Kingdoms",
+    zone = "Stranglethorn Vale",
     coords = "28.2, 77.4",
     item = "Pattern: Thick Murloc Armor, Pink Dye, Purple Dye, Orange Dye, Yellow Dye, Gray Dye (+12 more)",
     cost = 0,
@@ -4767,7 +4767,7 @@ ForeverGuide_Data.Vendors = {
   },
   [248] = {
     name = "Jansen Underwood",
-    zone = "Eastern Kingdoms",
+    zone = "Stranglethorn Vale",
     coords = "29.0, 75.4",
     item = "Elemental Flux, Coal, Strong Flux, Weak Flux, Blacksmith Hammer, Mining Pick",
     cost = 0,
@@ -4777,7 +4777,7 @@ ForeverGuide_Data.Vendors = {
   },
   [249] = {
     name = "Glyx Brewright",
-    zone = "Eastern Kingdoms",
+    zone = "Stranglethorn Vale",
     coords = "28.0, 78.0",
     item = "Recipe: Nature Protection Potion, Greater Healing Potion, Mana Potion, Imbued Vial, Crystal Vial, Leaded Vial (+2 more)",
     cost = 0,
@@ -4787,7 +4787,7 @@ ForeverGuide_Data.Vendors = {
   },
   [250] = {
     name = "Qixdi Goodstitch",
-    zone = "Eastern Kingdoms",
+    zone = "Stranglethorn Vale",
     coords = "28.2, 77.4",
     item = "The Rock, Flawless Diamond Solitaire, Miniscule Diamond Ring, Silver Piffeny Band, Cubic Zirconia Ring, Mood Ring (+26 more)",
     cost = 0,
@@ -4797,7 +4797,7 @@ ForeverGuide_Data.Vendors = {
   },
   [251] = {
     name = "Grawl",
-    zone = "Eastern Kingdoms",
+    zone = "Badlands",
     coords = "3.0, 46.0",
     item = "Refreshing Spring Water, Melon Juice, Moonberry Juice, Sweet Nectar, Sharp Arrow, Heavy Shot (+14 more)",
     cost = 0,
@@ -4807,7 +4807,7 @@ ForeverGuide_Data.Vendors = {
   },
   [252] = {
     name = "Whulwert Copperpinch",
-    zone = "Azeroth",
+    zone = "Thunder Bluff",
     coords = "43.4, 57.6",
     item = "Greatfather's Winter Ale, Spicy Beefstick, Graccu's Homemade Meat Pie, Holiday Cheesewheel, Green Garden Tea, Blended Bean Brew (+1 more)",
     cost = 0,
@@ -4817,7 +4817,7 @@ ForeverGuide_Data.Vendors = {
   },
   [253] = {
     name = "Jyn Stonehoof",
-    zone = "Kalimdor",
+    zone = "Thunder Bluff",
     coords = "41.2, 62.0",
     item = "Cutlass, Mace, Hatchet, Quarter Staff, Bastard Sword, Tabar (+31 more)",
     cost = 0,
@@ -4827,7 +4827,7 @@ ForeverGuide_Data.Vendors = {
   },
   [254] = {
     name = "Taur Stonehoof",
-    zone = "Kalimdor",
+    zone = "Thunder Bluff",
     coords = "39.4, 55.4",
     item = "Weak Flux, Mining Pick, Strong Flux, Coal, Blacksmith Hammer, Elemental Flux",
     cost = 0,
@@ -4837,7 +4837,7 @@ ForeverGuide_Data.Vendors = {
   },
   [255] = {
     name = "Gibbert",
-    zone = "Kalimdor",
+    zone = "Un'Goro Crater",
     coords = "44.0, 7.2",
     item = "Broadsword, Flamberge, Crescent Axe, Bullova, Truncheon, War Hammer (+10 more)",
     cost = 0,
@@ -4847,7 +4847,7 @@ ForeverGuide_Data.Vendors = {
   },
   [256] = {
     name = "Kurm Stonehoof",
-    zone = "Kalimdor",
+    zone = "Thunder Bluff",
     coords = "34.4, 57.0",
     item = "Weak Flux, Mining Pick, Strong Flux, Coal",
     cost = 0,
@@ -4857,7 +4857,7 @@ ForeverGuide_Data.Vendors = {
   },
   [257] = {
     name = "Fyr Mistrunner",
-    zone = "Kalimdor",
+    zone = "Thunder Bluff",
     coords = "41.2, 53.4",
     item = "Tough Hunk of Bread, Freshly Baked Bread, Moist Cornbread, Mulgore Spice Bread, Soft Banana Bread, Homemade Cherry Pie",
     cost = 0,
@@ -4867,7 +4867,7 @@ ForeverGuide_Data.Vendors = {
   },
   [258] = {
     name = "Mahu",
-    zone = "Kalimdor",
+    zone = "Thunder Bluff",
     coords = "43.4, 43.8",
     item = "Coarse Thread, Fine Thread, Bleach, Black Dye, Red Dye, Green Dye (+15 more)",
     cost = 0,
@@ -4877,7 +4877,7 @@ ForeverGuide_Data.Vendors = {
   },
   [259] = {
     name = "Mani Winterhoof",
-    zone = "Kalimdor",
+    zone = "Thunder Bluff",
     coords = "47.0, 33.4",
     item = "Empty Vial, Leaded Vial, Crystal Vial, Imbued Vial",
     cost = 0,
@@ -4887,7 +4887,7 @@ ForeverGuide_Data.Vendors = {
   },
   [260] = {
     name = "Nata Dawnstrider",
-    zone = "Kalimdor",
+    zone = "Thunder Bluff",
     coords = "45.0, 38.4",
     item = "Simple Wood, Copper Rod, Formula: Enchant Chest - Minor Intellect, Formula: Enchant 2H Weapon - Lesser Intellect, Formula: Enchant Boots - Minor Agility, Lesser Magic Essence (+6 more)",
     cost = 0,
@@ -4897,7 +4897,7 @@ ForeverGuide_Data.Vendors = {
   },
   [261] = {
     name = "Nardstrum Copperpinch",
-    zone = "Eastern Kingdoms",
+    zone = "Undercity",
     coords = "67.2, 38.4",
     item = "UNUSED ITEM, Recipe: Egg Nog, Recipe: Gingerbread Cookie, Candy Cane, Holiday Spirits, Holiday Spices (+4 more)",
     cost = 0,
@@ -4907,7 +4907,7 @@ ForeverGuide_Data.Vendors = {
   },
   [262] = {
     name = "Kuna Thunderhorn",
-    zone = "Kalimdor",
+    zone = "Thunder Bluff",
     coords = "46.4, 44.6",
     item = "Rough Arrow, Sharp Arrow, Reinforced Bow, Heavy Recurve Bow, Razor Arrow, Small Quiver (+5 more)",
     cost = 0,
@@ -4917,7 +4917,7 @@ ForeverGuide_Data.Vendors = {
   },
   [263] = {
     name = "Tand",
-    zone = "Kalimdor",
+    zone = "Thunder Bluff",
     coords = "49.0, 34.4",
     item = "Small Brown Pouch, Heavy Brown Bag, Brown Leather Satchel",
     cost = 0,
@@ -4927,7 +4927,7 @@ ForeverGuide_Data.Vendors = {
   },
   [264] = {
     name = "Nan Mistrunner",
-    zone = "Kalimdor",
+    zone = "Thunder Bluff",
     coords = "46.4, 42.0",
     item = "Shiny Red Apple, Tel'Abim Banana, Snapvine Watermelon, Goldenbark Apple, Moon Harvest Pumpkin, Deep Fried Plantains",
     cost = 0,
@@ -4937,7 +4937,7 @@ ForeverGuide_Data.Vendors = {
   },
   [265] = {
     name = "Hogor Thunderhoof",
-    zone = "Kalimdor",
+    zone = "Thunder Bluff",
     coords = "55.4, 56.4",
     item = "Ornate Blunderbuss, Solid Blunderbuss, Hunter's Boomstick, Light Shot, Heavy Shot, Large Bore Blunderbuss (+4 more)",
     cost = 0,
@@ -4947,7 +4947,7 @@ ForeverGuide_Data.Vendors = {
   },
   [266] = {
     name = "Delgo Ragetotem",
-    zone = "Kalimdor",
+    zone = "Thunder Bluff",
     coords = "53.4, 57.2",
     item = "Hatchet, Battle Axe, Double Axe, Tabar, Bearded Axe, Cleaver (+5 more)",
     cost = 0,
@@ -4957,7 +4957,7 @@ ForeverGuide_Data.Vendors = {
   },
   [267] = {
     name = "Etu Ragetotem",
-    zone = "Kalimdor",
+    zone = "Thunder Bluff",
     coords = "53.2, 57.4",
     item = "Mace, Quarter Staff, Maul, Flail, Long Staff, Giant Mace (+3 more)",
     cost = 0,
@@ -4967,7 +4967,7 @@ ForeverGuide_Data.Vendors = {
   },
   [268] = {
     name = "Kard Ragetotem",
-    zone = "Kalimdor",
+    zone = "Thunder Bluff",
     coords = "53.2, 57.0",
     item = "Cutlass, Dacian Falx, Longsword, Claymore, Espadon, Scimitar (+7 more)",
     cost = 0,
@@ -4977,7 +4977,7 @@ ForeverGuide_Data.Vendors = {
   },
   [269] = {
     name = "Sunn Ragetotem",
-    zone = "Kalimdor",
+    zone = "Thunder Bluff",
     coords = "49.0, 49.6",
     item = "Battle Staff, War Staff",
     cost = 0,
@@ -4987,7 +4987,7 @@ ForeverGuide_Data.Vendors = {
   },
   [270] = {
     name = "Sura Wildmane",
-    zone = "Kalimdor",
+    zone = "Thunder Bluff",
     coords = "51.4, 53.8",
     item = "Buckled Harness, Studded Leather Harness, Grunt's Harness, Battle Harness",
     cost = 0,
@@ -4997,7 +4997,7 @@ ForeverGuide_Data.Vendors = {
   },
   [271] = {
     name = "Kaga Mistrunner",
-    zone = "Kalimdor",
+    zone = "Thunder Bluff",
     coords = "52.2, 47.4",
     item = "Tough Jerky, Haunch of Meat, Mutton Chop, Wild Hog Shank, Cured Ham Steak, Roasted Quail",
     cost = 0,
@@ -5007,7 +5007,7 @@ ForeverGuide_Data.Vendors = {
   },
   [272] = {
     name = "Naal Mistrunner",
-    zone = "Kalimdor",
+    zone = "Thunder Bluff",
     coords = "50.2, 51.6",
     item = "Refreshing Spring Water, Mild Spices, Hot Spices, Soothing Spices, Recipe: Longjaw Mud Snapper, Recipe: Bristle Whisker Catfish (+2 more)",
     cost = 0,
@@ -5017,7 +5017,7 @@ ForeverGuide_Data.Vendors = {
   },
   [273] = {
     name = "Sewa Mistrunner",
-    zone = "Kalimdor",
+    zone = "Thunder Bluff",
     coords = "55.2, 48.0",
     item = "Fishing Pole, Recipe: Brilliant Smallfish, Recipe: Bristle Whisker Catfish, Strong Fishing Pole, Shiny Bauble, Nightcrawlers (+2 more)",
     cost = 0,
@@ -5027,7 +5027,7 @@ ForeverGuide_Data.Vendors = {
   },
   [274] = {
     name = "Synge",
-    zone = "Kalimdor",
+    zone = "Thousand Needles",
     coords = "80.4, 76.8",
     item = "Light Shot, Heavy Shot, Large Bore Blunderbuss, BKP 2700 \"Enforcer\", Solid Shot, Accurate Slugs",
     cost = 0,
@@ -5037,7 +5037,7 @@ ForeverGuide_Data.Vendors = {
   },
   [275] = {
     name = "Kawnie Softbreeze",
-    zone = "Kalimdor",
+    zone = "Mulgore",
     coords = "44.8, 77.0",
     item = "Refreshing Spring Water, Rough Arrow, Light Shot, Tough Hunk of Bread, Small Throwing Knife, Crude Throwing Axe",
     cost = 0,
@@ -5047,7 +5047,7 @@ ForeverGuide_Data.Vendors = {
   },
   [276] = {
     name = "Marjak Keenblade",
-    zone = "Kalimdor",
+    zone = "Mulgore",
     coords = "43.8, 77.8",
     item = "Bastard Sword, Club, Shortsword, Short Staff, Hand Axe, Dirk (+2 more)",
     cost = 0,
@@ -5057,7 +5057,7 @@ ForeverGuide_Data.Vendors = {
   },
   [277] = {
     name = "Varia Hardhide",
-    zone = "Kalimdor",
+    zone = "Mulgore",
     coords = "43.8, 77.6",
     item = "Dirty Leather Vest, Dirty Leather Pants, Dirty Leather Boots, Dirty Leather Gloves, Dirty Leather Belt, Dirty Leather Bracers",
     cost = 0,
@@ -5067,7 +5067,7 @@ ForeverGuide_Data.Vendors = {
   },
   [278] = {
     name = "Bronk Steelrage",
-    zone = "Kalimdor",
+    zone = "Mulgore",
     coords = "43.8, 77.8",
     item = "Large Wooden Shield, Rusted Chain Vest, Rusted Chain Belt, Rusted Chain Leggings, Rusted Chain Boots, Rusted Chain Bracers (+2 more)",
     cost = 0,
@@ -5077,7 +5077,7 @@ ForeverGuide_Data.Vendors = {
   },
   [279] = {
     name = "Moorat Longstride",
-    zone = "Kalimdor",
+    zone = "Mulgore",
     coords = "45.2, 61.4",
     item = "Refreshing Spring Water, Rough Arrow, Light Shot, Simple Wood, Flint and Tinder, Small Brown Pouch (+6 more)",
     cost = 0,
@@ -5087,7 +5087,7 @@ ForeverGuide_Data.Vendors = {
   },
   [280] = {
     name = "Mahnott Roughwound",
-    zone = "Kalimdor",
+    zone = "Mulgore",
     coords = "45.2, 62.0",
     item = "Gladius, Two-handed Sword, Tomahawk, Large Axe, Cudgel, Wooden Mallet (+2 more)",
     cost = 0,
@@ -5097,7 +5097,7 @@ ForeverGuide_Data.Vendors = {
   },
   [281] = {
     name = "Kennah Hawkseye",
-    zone = "Kalimdor",
+    zone = "Mulgore",
     coords = "45.0, 61.8",
     item = "Ornate Blunderbuss, Solid Blunderbuss, Light Shot, Heavy Shot, Small Shot Pouch",
     cost = 0,
@@ -5107,7 +5107,7 @@ ForeverGuide_Data.Vendors = {
   },
   [282] = {
     name = "Varg Windwhisper",
-    zone = "Kalimdor",
+    zone = "Mulgore",
     coords = "45.2, 62.0",
     item = "Battered Leather Harness, Battered Leather Belt, Battered Leather Pants, Battered Leather Boots, Battered Leather Bracers, Battered Leather Gloves",
     cost = 0,
@@ -5117,7 +5117,7 @@ ForeverGuide_Data.Vendors = {
   },
   [283] = {
     name = "Harant Ironbrace",
-    zone = "Kalimdor",
+    zone = "Mulgore",
     coords = "45.4, 62.0",
     item = "Worn Heater Shield, Light Chain Armor, Light Chain Belt, Light Chain Leggings, Light Chain Boots, Light Chain Bracers (+2 more)",
     cost = 0,
@@ -5127,7 +5127,7 @@ ForeverGuide_Data.Vendors = {
   },
   [284] = {
     name = "Wunna Darkmane",
-    zone = "Kalimdor",
+    zone = "Mulgore",
     coords = "45.4, 61.8",
     item = "Coarse Thread, Bleach, Red Dye, Mild Spices, Weak Flux, Mining Pick (+9 more)",
     cost = 0,
@@ -5137,7 +5137,7 @@ ForeverGuide_Data.Vendors = {
   },
   [285] = {
     name = "Gloria Femmel",
-    zone = "Eastern Kingdoms",
+    zone = "Redridge Mountains",
     coords = "21.6, 43.4",
     item = "Refreshing Spring Water, Mild Spices, Hot Spices, Soothing Spices, Recipe: Smoked Sagefish, Recipe: Sagefish Delight",
     cost = 0,
@@ -5147,7 +5147,7 @@ ForeverGuide_Data.Vendors = {
   },
   [286] = {
     name = "Gretchen Vogel",
-    zone = "Eastern Kingdoms",
+    zone = "Redridge Mountains",
     coords = "17.6, 44.2",
     item = "Refreshing Spring Water, Slitherskin Mackerel, Ice Cold Milk, Melon Juice, Moonberry Juice, Sweet Nectar (+12 more)",
     cost = 0,
@@ -5157,7 +5157,7 @@ ForeverGuide_Data.Vendors = {
   },
   [287] = {
     name = "Henry Chapal",
-    zone = "Eastern Kingdoms",
+    zone = "Redridge Mountains",
     coords = "18.6, 41.4",
     item = "Hunter's Boomstick, Light Shot, Heavy Shot, Large Bore Blunderbuss, Solid Shot, Small Shot Pouch",
     cost = 0,
@@ -5167,7 +5167,7 @@ ForeverGuide_Data.Vendors = {
   },
   [288] = {
     name = "Sherman Femmel",
-    zone = "Eastern Kingdoms",
+    zone = "Redridge Mountains",
     coords = "21.6, 43.4",
     item = "Tough Jerky, Haunch of Meat, Mutton Chop, Wild Hog Shank, Cured Ham Steak, Roasted Quail",
     cost = 0,
@@ -5177,7 +5177,7 @@ ForeverGuide_Data.Vendors = {
   },
   [289] = {
     name = "Gerald Crawley",
-    zone = "Eastern Kingdoms",
+    zone = "Redridge Mountains",
     coords = "19.8, 41.2",
     item = "Dust of Decay, Essence of Pain, Empty Vial, Leaded Vial, Lethargy Root, Thieves' Tools (+5 more)",
     cost = 0,
@@ -5187,7 +5187,7 @@ ForeverGuide_Data.Vendors = {
   },
   [290] = {
     name = "Franklin Hamar",
-    zone = "Eastern Kingdoms",
+    zone = "Redridge Mountains",
     coords = "22.0, 45.4",
     item = "Coarse Thread, Fine Thread, Bleach, Black Dye, Red Dye, Green Dye (+12 more)",
     cost = 0,
@@ -5197,7 +5197,7 @@ ForeverGuide_Data.Vendors = {
   },
   [291] = {
     name = "Tagain",
-    zone = "Kalimdor",
+    zone = "Thunder Bluff",
     coords = "43.4, 43.4",
     item = "Thick Cloth Vest, Thick Cloth Pants, Thick Cloth Shoes, Thick Cloth Gloves, Knitted Sandals, Knitted Gloves (+39 more)",
     cost = 0,
@@ -5207,7 +5207,7 @@ ForeverGuide_Data.Vendors = {
   },
   [292] = {
     name = "Grod",
-    zone = "Kalimdor",
+    zone = "Thunder Bluff",
     coords = "42.4, 43.2",
     item = "Cured Leather Armor, Cured Leather Pants, Cured Leather Boots, Cured Leather Gloves, Tanned Leather Boots, Tanned Leather Gloves (+12 more)",
     cost = 0,
@@ -5217,7 +5217,7 @@ ForeverGuide_Data.Vendors = {
   },
   [293] = {
     name = "Fela",
-    zone = "Kalimdor",
+    zone = "Thunder Bluff",
     coords = "42.8, 43.4",
     item = "Polished Scale Belt, Polished Scale Boots, Polished Scale Bracers, Polished Scale Gloves, Polished Scale Leggings, Polished Scale Vest (+27 more)",
     cost = 0,
@@ -5227,7 +5227,7 @@ ForeverGuide_Data.Vendors = {
   },
   [294] = {
     name = "Captured Servant of Azora",
-    zone = "Eastern Kingdoms",
+    zone = "Redridge Mountains",
     coords = "69.2, 79.4",
     item = "Inferno Cloak, Sylvan Cloak, Spirit Cloak, Pink Dye, Purple Dye, Black Dye (+12 more)",
     cost = 0,
@@ -5237,7 +5237,7 @@ ForeverGuide_Data.Vendors = {
   },
   [295] = {
     name = "Bernard Brubaker",
-    zone = "Eastern Kingdoms",
+    zone = "Redridge Mountains",
     coords = "83.0, 71.6",
     item = "Cured Leather Armor, Cured Leather Pants, Cured Leather Boots, Cured Leather Gloves, Cured Leather Belt, Cured Leather Bracers (+3 more)",
     cost = 0,
@@ -5247,7 +5247,7 @@ ForeverGuide_Data.Vendors = {
   },
   [296] = {
     name = "Herble Baubbletump",
-    zone = "Eastern Kingdoms",
+    zone = "Duskwood",
     coords = "77.8, 48.2",
     item = "Weak Flux, Mining Pick, Strong Flux, Coal, Rough Blasting Powder, Copper Tube (+11 more)",
     cost = 0,
@@ -5257,7 +5257,7 @@ ForeverGuide_Data.Vendors = {
   },
   [297] = {
     name = "Kzixx",
-    zone = "Eastern Kingdoms",
+    zone = "Duskwood",
     coords = "81.4, 19.8",
     item = "Healing Potion, Lesser Mana Potion, Wizard's Belt, Nightwind Belt, Dreamer's Belt, Fireproof Orb (+4 more)",
     cost = 0,
@@ -5267,7 +5267,7 @@ ForeverGuide_Data.Vendors = {
   },
   [298] = {
     name = "Malissa",
-    zone = "Eastern Kingdoms",
+    zone = "Duskwood",
     coords = "79.4, 44.4",
     item = "Dust of Decay, Essence of Pain, Empty Vial, Leaded Vial, Lethargy Root, Thieves' Tools (+5 more)",
     cost = 0,
@@ -5277,7 +5277,7 @@ ForeverGuide_Data.Vendors = {
   },
   [299] = {
     name = "Scott Carevin",
-    zone = "Eastern Kingdoms",
+    zone = "Duskwood",
     coords = "75.4, 48.6",
     item = "Forest Mushroom Cap, Red-speckled Mushroom, Spongy Morel, Delicious Cave Mold, Raw Black Truffle, Dried King Bolete",
     cost = 0,
@@ -5287,7 +5287,7 @@ ForeverGuide_Data.Vendors = {
   },
   [300] = {
     name = "Duokna",
-    zone = "Kalimdor",
+    zone = "Durotar",
     coords = "42.6, 67.4",
     item = "Refreshing Spring Water, Rough Arrow, Light Shot, Tough Hunk of Bread, Small Throwing Knife, Crude Throwing Axe",
     cost = 0,
@@ -5297,7 +5297,7 @@ ForeverGuide_Data.Vendors = {
   },
   [301] = {
     name = "Kzan Thornslash",
-    zone = "Kalimdor",
+    zone = "Durotar",
     coords = "40.4, 68.0",
     item = "Bastard Sword, Club, Shortsword, Short Staff, Hand Axe, Dirk (+2 more)",
     cost = 0,
@@ -5307,7 +5307,7 @@ ForeverGuide_Data.Vendors = {
   },
   [302] = {
     name = "Huklah",
-    zone = "Kalimdor",
+    zone = "Durotar",
     coords = "40.6, 67.8",
     item = "Dirty Leather Vest, Tattered Cloth Vest, Tattered Cloth Pants, Tattered Cloth Boots, Dirty Leather Pants, Dirty Leather Boots (+6 more)",
     cost = 0,
@@ -5317,7 +5317,7 @@ ForeverGuide_Data.Vendors = {
   },
   [303] = {
     name = "Rarc",
-    zone = "Kalimdor",
+    zone = "Durotar",
     coords = "40.4, 67.8",
     item = "Large Wooden Shield, Rusted Chain Vest, Rusted Chain Belt, Rusted Chain Leggings, Rusted Chain Boots, Rusted Chain Bracers (+2 more)",
     cost = 0,
@@ -5327,7 +5327,7 @@ ForeverGuide_Data.Vendors = {
   },
   [304] = {
     name = "Burdrak Harglhelm",
-    zone = "Eastern Kingdoms",
+    zone = "Dun Morogh",
     coords = "30.2, 45.2",
     item = "Rough Leather Boots, Rough Leather Gloves, Rough Leather Pants, Rough Leather Vest, Rough Leather Belt, Rough Leather Bracers",
     cost = 0,
@@ -5337,7 +5337,7 @@ ForeverGuide_Data.Vendors = {
   },
   [305] = {
     name = "Uhgar",
-    zone = "Kalimdor",
+    zone = "Durotar",
     coords = "52.0, 40.4",
     item = "Gladius, Two-handed Sword, Tomahawk, Large Axe, Cudgel, Wooden Mallet (+2 more)",
     cost = 0,
@@ -5347,7 +5347,7 @@ ForeverGuide_Data.Vendors = {
   },
   [306] = {
     name = "Jark",
-    zone = "Kalimdor",
+    zone = "Durotar",
     coords = "54.2, 42.2",
     item = "Refreshing Spring Water, Rough Arrow, Light Shot, Simple Wood, Flint and Tinder, Small Brown Pouch (+6 more)",
     cost = 0,
@@ -5357,7 +5357,7 @@ ForeverGuide_Data.Vendors = {
   },
   [307] = {
     name = "Ghrawt",
-    zone = "Kalimdor",
+    zone = "Durotar",
     coords = "53.0, 41.0",
     item = "Hornwood Recurve Bow, Laminated Recurve Bow, Rough Arrow, Sharp Arrow, Small Quiver, Medium Quiver",
     cost = 0,
@@ -5367,7 +5367,7 @@ ForeverGuide_Data.Vendors = {
   },
   [308] = {
     name = "Cutac",
-    zone = "Kalimdor",
+    zone = "Durotar",
     coords = "53.0, 40.8",
     item = "Woven Vest, Woven Pants, Woven Boots, Woven Gloves, Battered Leather Harness, Battered Leather Belt (+6 more)",
     cost = 0,
@@ -5377,7 +5377,7 @@ ForeverGuide_Data.Vendors = {
   },
   [309] = {
     name = "Wuark",
-    zone = "Kalimdor",
+    zone = "Durotar",
     coords = "52.0, 41.2",
     item = "Worn Heater Shield, Light Chain Armor, Light Chain Belt, Light Chain Leggings, Light Chain Boots, Light Chain Bracers (+6 more)",
     cost = 0,
@@ -5387,7 +5387,7 @@ ForeverGuide_Data.Vendors = {
   },
   [310] = {
     name = "Flakk",
-    zone = "Kalimdor",
+    zone = "Durotar",
     coords = "52.8, 42.0",
     item = "Coarse Thread, Bleach, Red Dye, Mild Spices, Weak Flux, Mining Pick (+8 more)",
     cost = 0,
@@ -5397,7 +5397,7 @@ ForeverGuide_Data.Vendors = {
   },
   [311] = {
     name = "Turuk Amberstill",
-    zone = "Eastern Kingdoms",
+    zone = "Dun Morogh",
     coords = "63.0, 49.8",
     item = "Tomahawk, Large Axe, Cudgel, Wooden Mallet",
     cost = 0,
@@ -5407,7 +5407,7 @@ ForeverGuide_Data.Vendors = {
   },
   [312] = {
     name = "Stuart Fleming",
-    zone = "Eastern Kingdoms",
+    zone = "Wetlands",
     coords = "8.0, 58.2",
     item = "Slitherskin Mackerel, Longjaw Mud Snapper, Bristle Whisker Catfish, Rockscale Cod, Fishing Pole, Strong Fishing Pole (+9 more)",
     cost = 0,
@@ -5417,7 +5417,7 @@ ForeverGuide_Data.Vendors = {
   },
   [313] = {
     name = "Dark Iron Entrepreneur",
-    zone = "Eastern Kingdoms",
+    zone = "Wetlands",
     coords = "46.4, 18.2",
     item = "Heavy Dynamite, Blurred Axe, Callous Axe, Marauder Axe, Saber Leggings, Stalking Pants (+4 more)",
     cost = 0,
@@ -5427,7 +5427,7 @@ ForeverGuide_Data.Vendors = {
   },
   [314] = {
     name = "K'waii",
-    zone = "Kalimdor",
+    zone = "Durotar",
     coords = "56.2, 73.4",
     item = "Refreshing Spring Water, Rough Arrow, Light Shot, Simple Wood, Flint and Tinder, Small Brown Pouch (+6 more)",
     cost = 0,
@@ -5437,7 +5437,7 @@ ForeverGuide_Data.Vendors = {
   },
   [315] = {
     name = "Tai'tasi",
-    zone = "Kalimdor",
+    zone = "Durotar",
     coords = "56.4, 73.8",
     item = "Coarse Thread, Bleach, Red Dye, Mild Spices, Weak Flux, Mining Pick (+8 more)",
     cost = 0,
@@ -5447,7 +5447,7 @@ ForeverGuide_Data.Vendors = {
   },
   [316] = {
     name = "Greishan Ironstove",
-    zone = "Eastern Kingdoms",
+    zone = "Loch Modan",
     coords = "22.8, 70.8",
     item = "Tough Hunk of Bread, Freshly Baked Bread, Moist Cornbread, Mulgore Spice Bread, Soft Banana Bread, Homemade Cherry Pie",
     cost = 0,
@@ -5457,7 +5457,7 @@ ForeverGuide_Data.Vendors = {
   },
   [317] = {
     name = "Gabrielle Chase",
-    zone = "Eastern Kingdoms",
+    zone = "Burning Steppes",
     coords = "84.2, 67.8",
     item = "Refreshing Spring Water, Dalaran Sharp, Dwarven Mild, Ice Cold Milk, Melon Juice, Moonberry Juice (+6 more)",
     cost = 0,
@@ -5467,7 +5467,7 @@ ForeverGuide_Data.Vendors = {
   },
   [318] = {
     name = "Olvia",
-    zone = "Kalimdor",
+    zone = "Orgrimmar",
     coords = "44.8, 69.4",
     item = "Tough Jerky, Haunch of Meat, Mutton Chop, Wild Hog Shank, Cured Ham Steak, Roasted Quail",
     cost = 0,
@@ -5477,7 +5477,7 @@ ForeverGuide_Data.Vendors = {
   },
   [319] = {
     name = "Trak'gen",
-    zone = "Kalimdor",
+    zone = "Orgrimmar",
     coords = "48.0, 80.2",
     item = "Refreshing Spring Water, Ice Cold Milk, Melon Juice, Moonberry Juice, Sweet Nectar, Rough Arrow (+25 more)",
     cost = 0,
@@ -5487,7 +5487,7 @@ ForeverGuide_Data.Vendors = {
   },
   [320] = {
     name = "Urtharo",
-    zone = "Kalimdor",
+    zone = "Orgrimmar",
     coords = "47.4, 68.4",
     item = "Cutlass, Mace, Hatchet, Quarter Staff, Bastard Sword, Tabar (+18 more)",
     cost = 0,
@@ -5497,7 +5497,7 @@ ForeverGuide_Data.Vendors = {
   },
   [321] = {
     name = "Tor'phan",
-    zone = "Kalimdor",
+    zone = "Orgrimmar",
     coords = "62.4, 50.4",
     item = "Cuirboulli Vest, Cuirboulli Belt, Cuirboulli Boots, Cuirboulli Bracers, Cuirboulli Gloves, Cuirboulli Pants (+42 more)",
     cost = 0,
@@ -5507,7 +5507,7 @@ ForeverGuide_Data.Vendors = {
   },
   [322] = {
     name = "Handor",
-    zone = "Kalimdor",
+    zone = "Orgrimmar",
     coords = "62.4, 45.4",
     item = "Cuirboulli Vest, Cuirboulli Belt, Cuirboulli Boots, Cuirboulli Bracers, Cuirboulli Gloves, Cuirboulli Pants (+35 more)",
     cost = 0,
@@ -5517,7 +5517,7 @@ ForeverGuide_Data.Vendors = {
   },
   [323] = {
     name = "Ollanus",
-    zone = "Kalimdor",
+    zone = "Orgrimmar",
     coords = "56.2, 73.4",
     item = "Thick Cloth Vest, Thick Cloth Pants, Thick Cloth Shoes, Thick Cloth Gloves, Heavy Weave Armor, Heavy Weave Pants (+15 more)",
     cost = 0,
@@ -5527,7 +5527,7 @@ ForeverGuide_Data.Vendors = {
   },
   [324] = {
     name = "Sana",
-    zone = "Kalimdor",
+    zone = "Orgrimmar",
     coords = "55.6, 73.6",
     item = "Scalemail Vest, Scalemail Pants, Scalemail Boots, Scalemail Gloves, Chainmail Armor, Chainmail Pants (+18 more)",
     cost = 0,
@@ -5537,7 +5537,7 @@ ForeverGuide_Data.Vendors = {
   },
   [325] = {
     name = "Morgum",
-    zone = "Kalimdor",
+    zone = "Orgrimmar",
     coords = "55.6, 73.6",
     item = "Cured Leather Armor, Cured Leather Pants, Cured Leather Boots, Cured Leather Gloves, Tanned Leather Boots, Tanned Leather Gloves (+12 more)",
     cost = 0,
@@ -5547,7 +5547,7 @@ ForeverGuide_Data.Vendors = {
   },
   [326] = {
     name = "Kaja",
-    zone = "Kalimdor",
+    zone = "Orgrimmar",
     coords = "52.2, 62.4",
     item = "Ornate Blunderbuss, Hunter's Boomstick, Light Shot, Heavy Shot, Large Bore Blunderbuss, BKP 2700 \"Enforcer\" (+4 more)",
     cost = 0,
@@ -5557,7 +5557,7 @@ ForeverGuide_Data.Vendors = {
   },
   [327] = {
     name = "Horthus",
-    zone = "Kalimdor",
+    zone = "Orgrimmar",
     coords = "45.4, 56.4",
     item = "Infernal Stone, Demonic Figurine, Arcane Powder, Wild Berries, Wild Thornroot, Holy Candle (+12 more)",
     cost = 0,
@@ -5567,7 +5567,7 @@ ForeverGuide_Data.Vendors = {
   },
   [328] = {
     name = "Kor'jus",
-    zone = "Kalimdor",
+    zone = "Orgrimmar",
     coords = "49.0, 54.0",
     item = "Forest Mushroom Cap, Red-speckled Mushroom, Spongy Morel, Delicious Cave Mold, Raw Black Truffle, Dried King Bolete",
     cost = 0,
@@ -5577,7 +5577,7 @@ ForeverGuide_Data.Vendors = {
   },
   [329] = {
     name = "Muragus",
-    zone = "Kalimdor",
+    zone = "Orgrimmar",
     coords = "44.4, 48.4",
     item = "Battle Staff, War Staff",
     cost = 0,
@@ -5587,7 +5587,7 @@ ForeverGuide_Data.Vendors = {
   },
   [330] = {
     name = "Kareth",
-    zone = "Kalimdor",
+    zone = "Orgrimmar",
     coords = "45.2, 55.2",
     item = "Cutlass, Dacian Falx, Longsword, Claymore, Espadon, Scimitar (+7 more)",
     cost = 0,
@@ -5597,7 +5597,7 @@ ForeverGuide_Data.Vendors = {
   },
   [331] = {
     name = "Shankys",
-    zone = "Kalimdor",
+    zone = "Orgrimmar",
     coords = "69.4, 29.0",
     item = "Fishing Pole, Recipe: Rainbow Fin Albacore, Recipe: Rockscale Cod, Shiny Bauble, Nightcrawlers, Bright Baubles (+3 more)",
     cost = 0,
@@ -5607,7 +5607,7 @@ ForeverGuide_Data.Vendors = {
   },
   [332] = {
     name = "Rekkul",
-    zone = "Kalimdor",
+    zone = "Orgrimmar",
     coords = "42.2, 49.4",
     item = "Dust of Decay, Essence of Pain, Empty Vial, Leaded Vial, Lethargy Root, Thieves' Tools (+5 more)",
     cost = 0,
@@ -5617,7 +5617,7 @@ ForeverGuide_Data.Vendors = {
   },
   [333] = {
     name = "Hagrus",
-    zone = "Kalimdor",
+    zone = "Orgrimmar",
     coords = "46.0, 46.0",
     item = "Infernal Stone, Recipe: Rage Potion, Recipe: Great Rage Potion, Demonic Figurine, Arcane Powder, Wild Berries (+14 more)",
     cost = 0,
@@ -5627,7 +5627,7 @@ ForeverGuide_Data.Vendors = {
   },
   [334] = {
     name = "Shan'ti",
-    zone = "Kalimdor",
+    zone = "Orgrimmar",
     coords = "37.4, 52.4",
     item = "Shiny Red Apple, Tel'Abim Banana, Snapvine Watermelon, Goldenbark Apple, Moon Harvest Pumpkin, Deep Fried Plantains",
     cost = 0,
@@ -5637,7 +5637,7 @@ ForeverGuide_Data.Vendors = {
   },
   [335] = {
     name = "Kithas",
-    zone = "Kalimdor",
+    zone = "Orgrimmar",
     coords = "53.4, 37.2",
     item = "Simple Wood, Copper Rod, Formula: Enchant Chest - Minor Intellect, Formula: Enchant Chest - Lesser Intellect, Formula: Enchant 2H Weapon - Lesser Intellect, Lesser Magic Essence (+6 more)",
     cost = 0,
@@ -5647,7 +5647,7 @@ ForeverGuide_Data.Vendors = {
   },
   [336] = {
     name = "Kor'geld",
-    zone = "Kalimdor",
+    zone = "Orgrimmar",
     coords = "56.2, 34.2",
     item = "Empty Vial, Leaded Vial, Crystal Vial, Recipe: Elixir of Superior Defense, Imbued Vial, Recipe: Free Action Potion",
     cost = 0,
@@ -5657,7 +5657,7 @@ ForeverGuide_Data.Vendors = {
   },
   [337] = {
     name = "Ukra'nor",
-    zone = "Kalimdor",
+    zone = "Orgrimmar",
     coords = "29.8, 74.0",
     item = "Battle Staff, War Staff",
     cost = 0,
@@ -5667,7 +5667,7 @@ ForeverGuide_Data.Vendors = {
   },
   [338] = {
     name = "Asoran",
-    zone = "Kalimdor",
+    zone = "Orgrimmar",
     coords = "46.0, 40.4",
     item = "Refreshing Spring Water, Melon Juice, Moonberry Juice, Sweet Nectar, Sharp Arrow, Heavy Shot (+14 more)",
     cost = 0,
@@ -5677,7 +5677,7 @@ ForeverGuide_Data.Vendors = {
   },
   [339] = {
     name = "Magenius",
-    zone = "Kalimdor",
+    zone = "Orgrimmar",
     coords = "45.8, 40.4",
     item = "Infernal Stone, Demonic Figurine, Arcane Powder, Wild Berries, Wild Thornroot, Holy Candle (+12 more)",
     cost = 0,
@@ -5687,7 +5687,7 @@ ForeverGuide_Data.Vendors = {
   },
   [340] = {
     name = "Sumi",
-    zone = "Kalimdor",
+    zone = "Orgrimmar",
     coords = "82.4, 23.4",
     item = "Weak Flux, Mining Pick, Strong Flux, Coal, Blacksmith Hammer, Plans: Hardened Iron Shortsword (+1 more)",
     cost = 0,
@@ -5697,7 +5697,7 @@ ForeverGuide_Data.Vendors = {
   },
   [341] = {
     name = "Gorina",
-    zone = "Kalimdor",
+    zone = "Orgrimmar",
     coords = "73.2, 26.4",
     item = "Weak Flux, Mining Pick, Strong Flux, Coal",
     cost = 0,
@@ -5707,7 +5707,7 @@ ForeverGuide_Data.Vendors = {
   },
   [342] = {
     name = "Kiro",
-    zone = "Kalimdor",
+    zone = "Orgrimmar",
     coords = "73.0, 42.0",
     item = "Buckled Harness, Studded Leather Harness, Grunt's Harness, Battle Harness",
     cost = 0,
@@ -5717,7 +5717,7 @@ ForeverGuide_Data.Vendors = {
   },
   [343] = {
     name = "Koru",
-    zone = "Kalimdor",
+    zone = "Orgrimmar",
     coords = "81.4, 18.8",
     item = "Mace, Quarter Staff, Maul, Flail, Long Staff, Giant Mace (+3 more)",
     cost = 0,
@@ -5727,7 +5727,7 @@ ForeverGuide_Data.Vendors = {
   },
   [344] = {
     name = "Shoma",
-    zone = "Kalimdor",
+    zone = "Orgrimmar",
     coords = "81.2, 19.6",
     item = "Cutlass, Dacian Falx, Longsword, Claymore, Espadon, Scimitar (+13 more)",
     cost = 0,
@@ -5737,7 +5737,7 @@ ForeverGuide_Data.Vendors = {
   },
   [345] = {
     name = "Ogunaro Wolfrunner",
-    zone = "Kalimdor",
+    zone = "Orgrimmar",
     coords = "69.2, 12.6",
     item = "Horn of the Timber Wolf, Horn of the Dire Wolf, Horn of the Brown Wolf, Horn of the Swift Brown Wolf, Horn of the Swift Timber Wolf, Horn of the Swift Gray Wolf (+2 more)",
     cost = 0,
@@ -5757,7 +5757,7 @@ ForeverGuide_Data.Vendors = {
   },
   [347] = {
     name = "Borya",
-    zone = "Kalimdor",
+    zone = "Orgrimmar",
     coords = "63.0, 51.2",
     item = "Coarse Thread, Fine Thread, Bleach, Black Dye, Red Dye, Green Dye (+14 more)",
     cost = 0,
@@ -5767,7 +5767,7 @@ ForeverGuide_Data.Vendors = {
   },
   [348] = {
     name = "Tamar",
-    zone = "Kalimdor",
+    zone = "Orgrimmar",
     coords = "62.4, 45.4",
     item = "Coarse Thread, Fine Thread, Black Dye, Red Dye, Green Dye, Salt (+11 more)",
     cost = 0,
@@ -5777,7 +5777,7 @@ ForeverGuide_Data.Vendors = {
   },
   [349] = {
     name = "Felika",
-    zone = "Kalimdor",
+    zone = "Orgrimmar",
     coords = "51.2, 36.2",
     item = "Coarse Thread, Fine Thread, Black Dye, Red Dye, Mild Spices, Hot Spices (+28 more)",
     cost = 0,
@@ -5787,7 +5787,7 @@ ForeverGuide_Data.Vendors = {
   },
   [350] = {
     name = "Borstan",
-    zone = "Kalimdor",
+    zone = "Orgrimmar",
     coords = "57.4, 53.4",
     item = "Tough Jerky, Haunch of Meat, Mutton Chop, Wild Hog Shank, Cured Ham Steak, Roasted Quail",
     cost = 0,
@@ -5797,7 +5797,7 @@ ForeverGuide_Data.Vendors = {
   },
   [351] = {
     name = "Gotri",
-    zone = "Kalimdor",
+    zone = "Orgrimmar",
     coords = "58.8, 53.0",
     item = "Small Brown Pouch, Heavy Brown Bag, Brown Leather Satchel, Huge Brown Sack",
     cost = 0,
@@ -5807,7 +5807,7 @@ ForeverGuide_Data.Vendors = {
   },
   [352] = {
     name = "Xen'to",
-    zone = "Kalimdor",
+    zone = "Orgrimmar",
     coords = "57.4, 53.2",
     item = "Refreshing Spring Water, Mild Spices, Hot Spices, Soothing Spices, Recipe: Smoked Sagefish, Recipe: Sagefish Delight",
     cost = 0,
@@ -5817,7 +5817,7 @@ ForeverGuide_Data.Vendors = {
   },
   [353] = {
     name = "Zeal'aya",
-    zone = "Kalimdor",
+    zone = "Orgrimmar",
     coords = "55.0, 39.4",
     item = "Empty Vial, Leaded Vial, Crystal Vial, Herb Pouch",
     cost = 0,
@@ -5827,7 +5827,7 @@ ForeverGuide_Data.Vendors = {
   },
   [354] = {
     name = "Zendo'jian",
-    zone = "Kalimdor",
+    zone = "Orgrimmar",
     coords = "81.0, 19.6",
     item = "Hatchet, Quarter Staff, Battle Axe, Double Axe, Long Staff, Tabar (+20 more)",
     cost = 0,
@@ -5837,7 +5837,7 @@ ForeverGuide_Data.Vendors = {
   },
   [355] = {
     name = "Jin'sora",
-    zone = "Kalimdor",
+    zone = "Orgrimmar",
     coords = "77.4, 38.6",
     item = "Rough Arrow, Sharp Arrow, Reinforced Bow, Heavy Recurve Bow, Razor Arrow, Small Quiver (+2 more)",
     cost = 0,
@@ -5847,7 +5847,7 @@ ForeverGuide_Data.Vendors = {
   },
   [356] = {
     name = "Denni'ka",
-    zone = "Kalimdor",
+    zone = "Stonetalon Mountains",
     coords = "73.4, 95.4",
     item = "Tough Jerky, Refreshing Spring Water, Ice Cold Milk, Melon Juice, Moonberry Juice, Sweet Nectar (+6 more)",
     cost = 0,
@@ -5857,7 +5857,7 @@ ForeverGuide_Data.Vendors = {
   },
   [357] = {
     name = "Sovik",
-    zone = "Kalimdor",
+    zone = "Orgrimmar",
     coords = "75.0, 24.4",
     item = "Weak Flux, Mining Pick, Strong Flux, Rough Blasting Powder, Coarse Blasting Powder, Wooden Stock (+13 more)",
     cost = 0,
@@ -5867,7 +5867,7 @@ ForeverGuide_Data.Vendors = {
   },
   [358] = {
     name = "Hraq",
-    zone = "Kalimdor",
+    zone = "The Barrens",
     coords = "51.2, 29.0",
     item = "Weak Flux, Mining Pick, Strong Flux, Coal, Blacksmith Hammer, Elemental Flux",
     cost = 0,
@@ -5877,7 +5877,7 @@ ForeverGuide_Data.Vendors = {
   },
   [359] = {
     name = "Nargal Deatheye",
-    zone = "Kalimdor",
+    zone = "The Barrens",
     coords = "51.2, 29.2",
     item = "Cutlass, Mace, Hatchet, Quarter Staff, Tabar, Giant Mace (+4 more)",
     cost = 0,
@@ -5887,7 +5887,7 @@ ForeverGuide_Data.Vendors = {
   },
   [360] = {
     name = "Moorane Hearthgrain",
-    zone = "Kalimdor",
+    zone = "The Barrens",
     coords = "52.2, 30.4",
     item = "Tough Hunk of Bread, Freshly Baked Bread, Moist Cornbread, Mulgore Spice Bread, Soft Banana Bread, Homemade Cherry Pie",
     cost = 0,
@@ -5897,7 +5897,7 @@ ForeverGuide_Data.Vendors = {
   },
   [361] = {
     name = "Barg",
-    zone = "Kalimdor",
+    zone = "The Barrens",
     coords = "51.6, 30.0",
     item = "Refreshing Spring Water, Ice Cold Milk, Rough Arrow, Sharp Arrow, Light Shot, Heavy Shot (+9 more)",
     cost = 0,
@@ -5907,7 +5907,7 @@ ForeverGuide_Data.Vendors = {
   },
   [362] = {
     name = "Tari'qa",
-    zone = "Kalimdor",
+    zone = "The Barrens",
     coords = "51.6, 30.0",
     item = "Coarse Thread, Fine Thread, Bleach, Red Dye, Green Dye, Mild Spices (+14 more)",
     cost = 0,
@@ -5917,7 +5917,7 @@ ForeverGuide_Data.Vendors = {
   },
   [363] = {
     name = "Jahan Hawkwing",
-    zone = "Kalimdor",
+    zone = "The Barrens",
     coords = "51.2, 29.0",
     item = "Tanned Leather Boots, Tanned Leather Gloves, Tanned Leather Pants, Tanned Leather Jerkin, Chainmail Armor, Chainmail Pants (+6 more)",
     cost = 0,
@@ -5927,7 +5927,7 @@ ForeverGuide_Data.Vendors = {
   },
   [364] = {
     name = "Wrahk",
-    zone = "Kalimdor",
+    zone = "The Barrens",
     coords = "52.2, 31.6",
     item = "Coarse Thread, Fine Thread, Bleach, Black Dye, Red Dye, Green Dye (+12 more)",
     cost = 0,
@@ -5937,7 +5937,7 @@ ForeverGuide_Data.Vendors = {
   },
   [365] = {
     name = "Halija Whitestrider",
-    zone = "Kalimdor",
+    zone = "The Barrens",
     coords = "52.2, 31.8",
     item = "Heavy Weave Armor, Heavy Weave Pants, Heavy Weave Gloves, Heavy Weave Shoes, Common Gray Shirt, Heavy Weave Belt (+9 more)",
     cost = 0,
@@ -5947,7 +5947,7 @@ ForeverGuide_Data.Vendors = {
   },
   [366] = {
     name = "Kalyimah Stormcloud",
-    zone = "Kalimdor",
+    zone = "The Barrens",
     coords = "52.2, 32.0",
     item = "Small Brown Pouch, Heavy Brown Bag, Brown Leather Satchel",
     cost = 0,
@@ -5957,7 +5957,7 @@ ForeverGuide_Data.Vendors = {
   },
   [367] = {
     name = "Uthrok",
-    zone = "Kalimdor",
+    zone = "The Barrens",
     coords = "51.0, 29.0",
     item = "Laminated Recurve Bow, Ornate Blunderbuss, Hunter's Boomstick, Rough Arrow, Sharp Arrow, Light Shot (+6 more)",
     cost = 0,
@@ -5967,7 +5967,7 @@ ForeverGuide_Data.Vendors = {
   },
   [368] = {
     name = "Zargh",
-    zone = "Kalimdor",
+    zone = "The Barrens",
     coords = "52.4, 29.8",
     item = "Tough Jerky, Haunch of Meat, Recipe: Hot Lion Chops, Mutton Chop, Wild Hog Shank, Cured Ham Steak (+1 more)",
     cost = 0,
@@ -5977,7 +5977,7 @@ ForeverGuide_Data.Vendors = {
   },
   [369] = {
     name = "Hula'mahi",
-    zone = "Kalimdor",
+    zone = "The Barrens",
     coords = "51.4, 30.2",
     item = "Silverleaf, Mageroyal, Peacebloom, Earthroot, Bruiseweed, Dust of Decay (+29 more)",
     cost = 0,
@@ -5987,7 +5987,7 @@ ForeverGuide_Data.Vendors = {
   },
   [370] = {
     name = "Ironzar",
-    zone = "Kalimdor",
+    zone = "The Barrens",
     coords = "62.2, 37.4",
     item = "Espadon, Bearded Axe, Rock Hammer, Scimitar, Hammer, Cleaver (+2 more)",
     cost = 0,
@@ -5997,7 +5997,7 @@ ForeverGuide_Data.Vendors = {
   },
   [371] = {
     name = "Vexspindle",
-    zone = "Kalimdor",
+    zone = "The Barrens",
     coords = "62.2, 38.4",
     item = "Thick Cloth Vest, Thick Cloth Pants, Thick Cloth Shoes, Thick Cloth Gloves, Cured Leather Armor, Cured Leather Pants (+9 more)",
     cost = 0,
@@ -6007,7 +6007,7 @@ ForeverGuide_Data.Vendors = {
   },
   [372] = {
     name = "Grazlix",
-    zone = "Kalimdor",
+    zone = "The Barrens",
     coords = "62.2, 38.4",
     item = "Scalemail Vest, Scalemail Pants, Scalemail Boots, Scalemail Gloves, Scalemail Bracers, Scalemail Belt (+10 more)",
     cost = 0,
@@ -6017,7 +6017,7 @@ ForeverGuide_Data.Vendors = {
   },
   [373] = {
     name = "Gagsprocket",
-    zone = "Kalimdor",
+    zone = "The Barrens",
     coords = "62.6, 36.2",
     item = "Weak Flux, Mining Pick, Strong Flux, Rough Blasting Powder, Coarse Blasting Powder, Bronze Tube (+11 more)",
     cost = 0,
@@ -6027,7 +6027,7 @@ ForeverGuide_Data.Vendors = {
   },
   [374] = {
     name = "Kilxx",
-    zone = "Kalimdor",
+    zone = "The Barrens",
     coords = "62.8, 38.2",
     item = "Slitherskin Mackerel, Longjaw Mud Snapper, Bristle Whisker Catfish, Rockscale Cod, Fishing Pole, Recipe: Bristle Whisker Catfish (+8 more)",
     cost = 0,
@@ -6037,7 +6037,7 @@ ForeverGuide_Data.Vendors = {
   },
   [375] = {
     name = "Jazzik",
-    zone = "Kalimdor",
+    zone = "The Barrens",
     coords = "61.8, 38.8",
     item = "Refreshing Spring Water, Ice Cold Milk, Melon Juice, Rough Arrow, Sharp Arrow, Light Shot (+10 more)",
     cost = 0,
@@ -6047,7 +6047,7 @@ ForeverGuide_Data.Vendors = {
   },
   [376] = {
     name = "Ranik",
-    zone = "Kalimdor",
+    zone = "The Barrens",
     coords = "61.8, 38.6",
     item = "Coarse Thread, Fine Thread, Bleach, Mild Spices, Hot Spices, Weak Flux (+14 more)",
     cost = 0,
@@ -6057,7 +6057,7 @@ ForeverGuide_Data.Vendors = {
   },
   [377] = {
     name = "Tarhus",
-    zone = "Kalimdor",
+    zone = "Feralas",
     coords = "74.6, 44.8",
     item = "Infernal Stone, Demonic Figurine, Arcane Powder, Wild Berries, Wild Thornroot, Holy Candle (+11 more)",
     cost = 0,
@@ -6067,7 +6067,7 @@ ForeverGuide_Data.Vendors = {
   },
   [378] = {
     name = "Thomas Miller",
-    zone = "Eastern Kingdoms",
+    zone = "Stormwind City",
     coords = "52.8, 62.2",
     item = "Tough Hunk of Bread, Freshly Baked Bread, Moist Cornbread, Mulgore Spice Bread, Soft Banana Bread, Homemade Cherry Pie",
     cost = 0,
@@ -6077,7 +6077,7 @@ ForeverGuide_Data.Vendors = {
   },
   [379] = {
     name = "Constance Brisboise",
-    zone = "Eastern Kingdoms",
+    zone = "Tirisfal Glades",
     coords = "52.4, 55.6",
     item = "Woven Vest, Woven Pants, Woven Boots, Woven Gloves, Woven Belt, Woven Bracers (+1 more)",
     cost = 0,
@@ -6087,7 +6087,7 @@ ForeverGuide_Data.Vendors = {
   },
   [380] = {
     name = "Wallace the Blind",
-    zone = "Eastern Kingdoms",
+    zone = "Silverpine Forest",
     coords = "43.8, 84.4",
     item = "Cutlass, Mace, Hatchet, Quarter Staff, Healing Potion, Tabar (+8 more)",
     cost = 0,
@@ -6097,7 +6097,7 @@ ForeverGuide_Data.Vendors = {
   },
   [381] = {
     name = "Zixil",
-    zone = "Eastern Kingdoms",
+    zone = "Hillsbrad Foothills",
     coords = "50.4, 50.8",
     item = "Wizard's Belt, Nightwind Belt, Dreamer's Belt, Fireproof Orb, Strength of Will, Orb of Power (+4 more)",
     cost = 0,
@@ -6107,7 +6107,7 @@ ForeverGuide_Data.Vendors = {
   },
   [382] = {
     name = "Ott",
-    zone = "Eastern Kingdoms",
+    zone = "Hillsbrad Foothills",
     coords = "60.4, 26.0",
     item = "Dacian Falx, Longsword, Maul, Flail, Battle Axe, Double Axe (+9 more)",
     cost = 0,
@@ -6117,7 +6117,7 @@ ForeverGuide_Data.Vendors = {
   },
   [383] = {
     name = "Hal McAllister",
-    zone = "Eastern Kingdoms",
+    zone = "Hillsbrad Foothills",
     coords = "49.8, 62.2",
     item = "Slitherskin Mackerel, Longjaw Mud Snapper, Bristle Whisker Catfish, Rockscale Cod, Spinefin Halibut, Striped Yellowtail",
     cost = 0,
@@ -6127,7 +6127,7 @@ ForeverGuide_Data.Vendors = {
   },
   [384] = {
     name = "Sarah Raycroft",
-    zone = "Eastern Kingdoms",
+    zone = "Hillsbrad Foothills",
     coords = "49.0, 55.2",
     item = "Refreshing Spring Water, Ice Cold Milk, Melon Juice, Moonberry Juice, Sweet Nectar, Sharp Arrow (+15 more)",
     cost = 0,
@@ -6137,7 +6137,7 @@ ForeverGuide_Data.Vendors = {
   },
   [385] = {
     name = "Jaysin Lanyda",
-    zone = "Eastern Kingdoms",
+    zone = "Hillsbrad Foothills",
     coords = "50.8, 59.0",
     item = "Dust of Decay, Essence of Pain, Empty Vial, Leaded Vial, Lethargy Root, Thieves' Tools (+23 more)",
     cost = 0,
@@ -6147,7 +6147,7 @@ ForeverGuide_Data.Vendors = {
   },
   [386] = {
     name = "Robert Aebischer",
-    zone = "Eastern Kingdoms",
+    zone = "Hillsbrad Foothills",
     coords = "51.2, 57.0",
     item = "Scalemail Vest, Scalemail Pants, Scalemail Boots, Scalemail Gloves, Scalemail Bracers, Scalemail Belt (+7 more)",
     cost = 0,
@@ -6157,7 +6157,7 @@ ForeverGuide_Data.Vendors = {
   },
   [387] = {
     name = "Jason Lemieux",
-    zone = "Eastern Kingdoms",
+    zone = "Hillsbrad Foothills",
     coords = "59.0, 20.2",
     item = "Forest Mushroom Cap, Red-speckled Mushroom, Spongy Morel, Delicious Cave Mold, Raw Black Truffle, Dried King Bolete",
     cost = 0,
@@ -6167,7 +6167,7 @@ ForeverGuide_Data.Vendors = {
   },
   [388] = {
     name = "Bernie Heisten",
-    zone = "Eastern Kingdoms",
+    zone = "Blasted Lands",
     coords = "63.4, 16.8",
     item = "Refreshing Spring Water, Dalaran Sharp, Dwarven Mild, Ice Cold Milk, Melon Juice, Moonberry Juice (+12 more)",
     cost = 0,
@@ -6177,7 +6177,7 @@ ForeverGuide_Data.Vendors = {
   },
   [389] = {
     name = "Hamlin Atkins",
-    zone = "Eastern Kingdoms",
+    zone = "Tirisfal Glades",
     coords = "57.0, 52.0",
     item = "Forest Mushroom Cap, Red-speckled Mushroom, Spongy Morel, Delicious Cave Mold, Raw Black Truffle, Dried King Bolete",
     cost = 0,
@@ -6187,7 +6187,7 @@ ForeverGuide_Data.Vendors = {
   },
   [390] = {
     name = "Selina Weston",
-    zone = "Eastern Kingdoms",
+    zone = "Tirisfal Glades",
     coords = "61.8, 50.0",
     item = "Silverleaf, Mageroyal, Lesser Healing Potion, Peacebloom, Empty Vial, Leaded Vial (+5 more)",
     cost = 0,
@@ -6197,7 +6197,7 @@ ForeverGuide_Data.Vendors = {
   },
   [391] = {
     name = "Martine Tramblay",
-    zone = "Eastern Kingdoms",
+    zone = "Tirisfal Glades",
     coords = "65.8, 59.4",
     item = "Fishing Pole, Recipe: Brilliant Smallfish, Recipe: Slitherskin Mackerel, Shiny Bauble, Nightcrawlers, Bright Baubles (+2 more)",
     cost = 0,
@@ -6207,7 +6207,7 @@ ForeverGuide_Data.Vendors = {
   },
   [392] = {
     name = "Patrice Dwyer",
-    zone = "Eastern Kingdoms",
+    zone = "Silverpine Forest",
     coords = "43.0, 41.8",
     item = "Dust of Decay, Essence of Pain, Empty Vial, Leaded Vial, Lethargy Root, Thieves' Tools (+5 more)",
     cost = 0,
@@ -6217,7 +6217,7 @@ ForeverGuide_Data.Vendors = {
   },
   [393] = {
     name = "Alexandre Lefevre",
-    zone = "Eastern Kingdoms",
+    zone = "Silverpine Forest",
     coords = "44.6, 39.2",
     item = "Tanned Leather Boots, Tanned Leather Gloves, Tanned Leather Pants, Tanned Leather Jerkin, Tanned Leather Belt, Tanned Leather Bracers (+2 more)",
     cost = 0,
@@ -6227,7 +6227,7 @@ ForeverGuide_Data.Vendors = {
   },
   [394] = {
     name = "Sebastian Meloche",
-    zone = "Eastern Kingdoms",
+    zone = "Silverpine Forest",
     coords = "43.2, 41.2",
     item = "Chainmail Armor, Chainmail Pants, Chainmail Boots, Chainmail Gloves, Chainmail Belt, Chainmail Bracers",
     cost = 0,
@@ -6237,7 +6237,7 @@ ForeverGuide_Data.Vendors = {
   },
   [395] = {
     name = "Andrea Boynton",
-    zone = "Eastern Kingdoms",
+    zone = "Silverpine Forest",
     coords = "44.6, 39.2",
     item = "Heavy Weave Armor, Heavy Weave Pants, Heavy Weave Gloves, Heavy Weave Shoes, Common Gray Shirt, Heavy Weave Belt (+6 more)",
     cost = 0,
@@ -6247,7 +6247,7 @@ ForeverGuide_Data.Vendors = {
   },
   [396] = {
     name = "Andrew Hilbert",
-    zone = "Eastern Kingdoms",
+    zone = "Silverpine Forest",
     coords = "43.2, 40.6",
     item = "Coarse Thread, Fine Thread, Bleach, Mild Spices, Hot Spices, Weak Flux (+16 more)",
     cost = 0,
@@ -6257,7 +6257,7 @@ ForeverGuide_Data.Vendors = {
   },
   [397] = {
     name = "Kyrai",
-    zone = "Kalimdor",
+    zone = "Darnassus",
     coords = "32.4, 20.0",
     item = "Dust of Decay, Essence of Pain, Empty Vial, Leaded Vial, Lethargy Root, Thieves' Tools (+5 more)",
     cost = 0,
@@ -6267,7 +6267,7 @@ ForeverGuide_Data.Vendors = {
   },
   [398] = {
     name = "Alaindia",
-    zone = "Kalimdor",
+    zone = "Darnassus",
     coords = "29.4, 70.0",
     item = "Infernal Stone, Demonic Figurine, Arcane Powder, Wild Berries, Wild Thornroot, Holy Candle (+12 more)",
     cost = 0,
@@ -6277,7 +6277,7 @@ ForeverGuide_Data.Vendors = {
   },
   [399] = {
     name = "Zizzek",
-    zone = "Kalimdor",
+    zone = "The Barrens",
     coords = "62.0, 39.0",
     item = "Fishing Pole, Shiny Bauble, Nightcrawlers, Bright Baubles, Aquadynamic Fish Attractor, Strong Fishing Pole",
     cost = 0,
@@ -6287,7 +6287,7 @@ ForeverGuide_Data.Vendors = {
   },
   [400] = {
     name = "Dalaran Brewmaster",
-    zone = "Eastern Kingdoms",
+    zone = "Silverpine Forest",
     coords = "61.4, 64.2",
     item = "Ice Cold Milk, Melon Juice, Moonberry Juice, Sweet Nectar, Morning Glory Dew, Refreshing Spring Water",
     cost = 0,
@@ -6297,7 +6297,7 @@ ForeverGuide_Data.Vendors = {
   },
   [401] = {
     name = "Dalaran Miner",
-    zone = "Eastern Kingdoms",
+    zone = "Silverpine Forest",
     coords = "62.4, 62.6",
     item = "Weak Flux, Mining Pick, Strong Flux, Coal",
     cost = 0,
@@ -6307,7 +6307,7 @@ ForeverGuide_Data.Vendors = {
   },
   [402] = {
     name = "Lyrai",
-    zone = "Kalimdor",
+    zone = "Teldrassil",
     coords = "59.4, 41.0",
     item = "Refreshing Spring Water, Rough Arrow, Light Shot, Tough Hunk of Bread, Small Throwing Knife, Crude Throwing Axe",
     cost = 0,
@@ -6317,7 +6317,7 @@ ForeverGuide_Data.Vendors = {
   },
   [403] = {
     name = "Khardan Proudblade",
-    zone = "Kalimdor",
+    zone = "Teldrassil",
     coords = "58.8, 39.6",
     item = "Bastard Sword, Club, Shortsword, Short Staff, Hand Axe, Dirk (+2 more)",
     cost = 0,
@@ -6327,7 +6327,7 @@ ForeverGuide_Data.Vendors = {
   },
   [404] = {
     name = "Keina",
-    zone = "Kalimdor",
+    zone = "Teldrassil",
     coords = "59.4, 41.2",
     item = "Hornwood Recurve Bow, Laminated Recurve Bow, Rough Arrow, Sharp Arrow, Small Quiver, Medium Quiver",
     cost = 0,
@@ -6337,7 +6337,7 @@ ForeverGuide_Data.Vendors = {
   },
   [405] = {
     name = "Janna Brightmoon",
-    zone = "Kalimdor",
+    zone = "Teldrassil",
     coords = "59.4, 41.0",
     item = "Thin Cloth Shoes, Thin Cloth Gloves, Thin Cloth Pants, Thin Cloth Armor, Thin Cloth Belt, Thin Cloth Bracers",
     cost = 0,
@@ -6347,7 +6347,7 @@ ForeverGuide_Data.Vendors = {
   },
   [406] = {
     name = "Freja Nightwing",
-    zone = "Kalimdor",
+    zone = "Teldrassil",
     coords = "59.0, 39.6",
     item = "Cracked Leather Belt, Cracked Leather Boots, Cracked Leather Bracers, Cracked Leather Gloves, Cracked Leather Pants, Cracked Leather Vest",
     cost = 0,
@@ -6357,7 +6357,7 @@ ForeverGuide_Data.Vendors = {
   },
   [407] = {
     name = "Andiss",
-    zone = "Kalimdor",
+    zone = "Teldrassil",
     coords = "58.6, 39.8",
     item = "Large Round Shield, Tarnished Chain Vest, Tarnished Chain Belt, Tarnished Chain Leggings, Tarnished Chain Boots, Tarnished Chain Bracers (+2 more)",
     cost = 0,
@@ -6367,7 +6367,7 @@ ForeverGuide_Data.Vendors = {
   },
   [408] = {
     name = "Aldia",
-    zone = "Kalimdor",
+    zone = "Teldrassil",
     coords = "55.4, 57.2",
     item = "Refreshing Spring Water, Rough Arrow, Light Shot, Simple Wood, Flint and Tinder, Small Brown Pouch (+6 more)",
     cost = 0,
@@ -6377,7 +6377,7 @@ ForeverGuide_Data.Vendors = {
   },
   [409] = {
     name = "Shalomon",
-    zone = "Kalimdor",
+    zone = "Teldrassil",
     coords = "56.2, 59.4",
     item = "Gladius, Two-handed Sword, Tomahawk, Large Axe, Cudgel, Wooden Mallet (+2 more)",
     cost = 0,
@@ -6387,7 +6387,7 @@ ForeverGuide_Data.Vendors = {
   },
   [410] = {
     name = "Jeena Featherbow",
-    zone = "Kalimdor",
+    zone = "Teldrassil",
     coords = "55.8, 59.2",
     item = "Hornwood Recurve Bow, Laminated Recurve Bow, Rough Arrow, Sharp Arrow, Small Quiver, Medium Quiver",
     cost = 0,
@@ -6397,7 +6397,7 @@ ForeverGuide_Data.Vendors = {
   },
   [411] = {
     name = "Brannol Eaglemoon",
-    zone = "Kalimdor",
+    zone = "Teldrassil",
     coords = "56.2, 60.2",
     item = "Knitted Sandals, Knitted Gloves, Knitted Pants, Knitted Tunic, Knitted Belt, Knitted Bracers",
     cost = 0,
@@ -6407,7 +6407,7 @@ ForeverGuide_Data.Vendors = {
   },
   [412] = {
     name = "Sinda",
-    zone = "Kalimdor",
+    zone = "Teldrassil",
     coords = "56.2, 59.4",
     item = "Rough Leather Boots, Rough Leather Gloves, Rough Leather Pants, Rough Leather Vest, Rough Leather Belt, Rough Leather Bracers",
     cost = 0,
@@ -6417,7 +6417,7 @@ ForeverGuide_Data.Vendors = {
   },
   [413] = {
     name = "Meri Ironweave",
-    zone = "Kalimdor",
+    zone = "Teldrassil",
     coords = "56.2, 59.4",
     item = "Dull Heater Shield, Light Mail Armor, Light Mail Belt, Light Mail Leggings, Light Mail Boots, Light Mail Bracers (+2 more)",
     cost = 0,
@@ -6427,7 +6427,7 @@ ForeverGuide_Data.Vendors = {
   },
   [414] = {
     name = "Narret Shadowgrove",
-    zone = "Kalimdor",
+    zone = "Teldrassil",
     coords = "55.2, 57.0",
     item = "Coarse Thread, Bleach, Red Dye, Mild Spices, Weak Flux, Mining Pick (+8 more)",
     cost = 0,
@@ -6437,7 +6437,7 @@ ForeverGuide_Data.Vendors = {
   },
   [415] = {
     name = "Kurll",
-    zone = "Kalimdor",
+    zone = "Azshara",
     coords = "21.8, 52.0",
     item = "Tough Jerky, Refreshing Spring Water, Ice Cold Milk, Melon Juice, Moonberry Juice, Sweet Nectar (+6 more)",
     cost = 0,
@@ -6447,7 +6447,7 @@ ForeverGuide_Data.Vendors = {
   },
   [416] = {
     name = "Lizzarik",
-    zone = "Kalimdor",
+    zone = "The Barrens",
     coords = "52.4, 30.6",
     item = "Cutlass, Mace, Hatchet, Quarter Staff, Tabar, Giant Mace (+8 more)",
     cost = 0,
@@ -6457,7 +6457,7 @@ ForeverGuide_Data.Vendors = {
   },
   [417] = {
     name = "Vrang Wildgore",
-    zone = "Kalimdor",
+    zone = "The Barrens",
     coords = "43.8, 12.2",
     item = "Scalemail Vest, Scalemail Pants, Scalemail Boots, Scalemail Gloves, Scalemail Bracers, Scalemail Belt (+9 more)",
     cost = 0,
@@ -6467,7 +6467,7 @@ ForeverGuide_Data.Vendors = {
   },
   [418] = {
     name = "Kiknikle",
-    zone = "Kalimdor",
+    zone = "The Barrens",
     coords = "41.8, 38.6",
     item = "Heavy Weave Armor, Heavy Weave Pants, Heavy Weave Gloves, Heavy Weave Shoes, Common Gray Shirt, Heavy Weave Belt (+7 more)",
     cost = 0,
@@ -6477,7 +6477,7 @@ ForeverGuide_Data.Vendors = {
   },
   [419] = {
     name = "Pizznukle",
-    zone = "Kalimdor",
+    zone = "The Barrens",
     coords = "41.8, 38.4",
     item = "Tanned Leather Boots, Tanned Leather Gloves, Tanned Leather Pants, Tanned Leather Jerkin, Tanned Leather Belt, Tanned Leather Bracers (+2 more)",
     cost = 0,
@@ -6487,7 +6487,7 @@ ForeverGuide_Data.Vendors = {
   },
   [420] = {
     name = "Harb Clawhoof",
-    zone = "Kalimdor",
+    zone = "Mulgore",
     coords = "46.6, 62.0",
     item = "Gray Kodo, Brown Kodo, Great White Kodo, Great Brown Kodo, Great Gray Kodo, Teal Kodo (+1 more)",
     cost = 0,
@@ -6497,7 +6497,7 @@ ForeverGuide_Data.Vendors = {
   },
   [421] = {
     name = "Aendel Windspear",
-    zone = "Kalimdor",
+    zone = "Silithus",
     coords = "62.6, 49.8",
     item = "Pattern: Bramblewood Helm, Pattern: Bramblewood Boots, Pattern: Bramblewood Belt, Pattern: Dreamscale Breastplate, Pattern: Sandstalker Bracers, Pattern: Sandstalker Breastplate (+4 more)",
     cost = 0,
@@ -6507,7 +6507,7 @@ ForeverGuide_Data.Vendors = {
   },
   [422] = {
     name = "Laer Stepperunner",
-    zone = "Kalimdor",
+    zone = "Thousand Needles",
     coords = "21.0, 31.8",
     item = "Refreshing Spring Water, Ice Cold Milk, Melon Juice, Moonberry Juice, Sweet Nectar, Tough Hunk of Bread (+6 more)",
     cost = 0,
@@ -6517,7 +6517,7 @@ ForeverGuide_Data.Vendors = {
   },
   [423] = {
     name = "Jadenvis Seawatcher",
-    zone = "Kalimdor",
+    zone = "Feralas",
     coords = "30.8, 42.0",
     item = "Infernal Stone, Demonic Figurine, Arcane Powder, Wild Berries, Wild Thornroot, Holy Candle (+11 more)",
     cost = 0,
@@ -6527,7 +6527,7 @@ ForeverGuide_Data.Vendors = {
   },
   [424] = {
     name = "Gahroot",
-    zone = "Kalimdor",
+    zone = "The Barrens",
     coords = "44.8, 59.4",
     item = "Tough Jerky, Haunch of Meat, Mutton Chop, Wild Hog Shank, Cured Ham Steak, Roasted Quail",
     cost = 0,
@@ -6537,7 +6537,7 @@ ForeverGuide_Data.Vendors = {
   },
   [425] = {
     name = "Gruna",
-    zone = "Eastern Kingdoms",
+    zone = "Burning Steppes",
     coords = "65.4, 24.0",
     item = "Refreshing Spring Water, Ice Cold Milk, Melon Juice, Moonberry Juice, Sweet Nectar, Tough Hunk of Bread (+6 more)",
     cost = 0,
@@ -6547,7 +6547,7 @@ ForeverGuide_Data.Vendors = {
   },
   [426] = {
     name = "Syurana",
-    zone = "Kalimdor",
+    zone = "Winterspring",
     coords = "51.4, 29.8",
     item = "Coarse Thread, Fine Thread, Black Dye, Red Dye, Mild Spices, Hot Spices (+23 more)",
     cost = 0,
@@ -6557,7 +6557,7 @@ ForeverGuide_Data.Vendors = {
   },
   [427] = {
     name = "Grimtak",
-    zone = "Kalimdor",
+    zone = "Durotar",
     coords = "51.2, 42.4",
     item = "Tough Jerky, Refreshing Spring Water, Ice Cold Milk, Melon Juice, Moonberry Juice, Sweet Nectar (+7 more)",
     cost = 0,
@@ -6567,7 +6567,7 @@ ForeverGuide_Data.Vendors = {
   },
   [428] = {
     name = "Zlagk",
-    zone = "Kalimdor",
+    zone = "Durotar",
     coords = "42.6, 67.2",
     item = "Tough Jerky, Refreshing Spring Water, Ice Cold Milk, Melon Juice, Moonberry Juice, Sweet Nectar (+6 more)",
     cost = 0,
@@ -6577,7 +6577,7 @@ ForeverGuide_Data.Vendors = {
   },
   [429] = {
     name = "Moodan Sungrain",
-    zone = "Kalimdor",
+    zone = "Mulgore",
     coords = "44.2, 78.0",
     item = "Refreshing Spring Water, Ice Cold Milk, Melon Juice, Moonberry Juice, Sweet Nectar, Tough Hunk of Bread (+6 more)",
     cost = 0,
@@ -6587,7 +6587,7 @@ ForeverGuide_Data.Vendors = {
   },
   [430] = {
     name = "Jhawna Oatwind",
-    zone = "Kalimdor",
+    zone = "Mulgore",
     coords = "46.6, 64.4",
     item = "Refreshing Spring Water, Ice Cold Milk, Melon Juice, Moonberry Juice, Sweet Nectar, Tough Hunk of Bread (+6 more)",
     cost = 0,
@@ -6597,7 +6597,7 @@ ForeverGuide_Data.Vendors = {
   },
   [431] = {
     name = "Hai'zan",
-    zone = "Kalimdor",
+    zone = "Durotar",
     coords = "55.4, 73.6",
     item = "Tough Jerky, Haunch of Meat, Mutton Chop, Wild Hog Shank, Cured Ham Steak, Roasted Quail",
     cost = 0,
@@ -6607,7 +6607,7 @@ ForeverGuide_Data.Vendors = {
   },
   [432] = {
     name = "Innkeeper Boorand Plainswind",
-    zone = "Kalimdor",
+    zone = "The Barrens",
     coords = "52.0, 29.8",
     item = "Refreshing Spring Water, Ice Cold Milk, Melon Juice, Moonberry Juice, Sweet Nectar, Shiny Red Apple (+6 more)",
     cost = 0,
@@ -6617,7 +6617,7 @@ ForeverGuide_Data.Vendors = {
   },
   [433] = {
     name = "Toddrick",
-    zone = "Eastern Kingdoms",
+    zone = "Elwynn Forest",
     coords = "44.2, 66.0",
     item = "Tough Jerky, Haunch of Meat, Mutton Chop, Wild Hog Shank, Cured Ham Steak, Roasted Quail",
     cost = 0,
@@ -6627,7 +6627,7 @@ ForeverGuide_Data.Vendors = {
   },
   [434] = {
     name = "Kira Songshine",
-    zone = "Eastern Kingdoms",
+    zone = "Elwynn Forest",
     coords = "33.0, 51.2",
     item = "Refreshing Spring Water, Ice Cold Milk, Melon Juice, Moonberry Juice, Sweet Nectar, Tough Hunk of Bread (+6 more)",
     cost = 0,
@@ -6637,7 +6637,7 @@ ForeverGuide_Data.Vendors = {
   },
   [435] = {
     name = "Honni Goldenoat",
-    zone = "Eastern Kingdoms",
+    zone = "Loch Modan",
     coords = "35.2, 49.4",
     item = "Tough Hunk of Bread, Freshly Baked Bread, Moist Cornbread, Mulgore Spice Bread, Soft Banana Bread, Homemade Cherry Pie",
     cost = 0,
@@ -6647,7 +6647,7 @@ ForeverGuide_Data.Vendors = {
   },
   [436] = {
     name = "Bhaldaran Ravenshade",
-    zone = "Kalimdor",
+    zone = "Ashenvale",
     coords = "50.2, 67.2",
     item = "Laminated Recurve Bow, Rough Arrow, Sharp Arrow, Reinforced Bow, Small Quiver, Dense Shortbow (+1 more)",
     cost = 0,
@@ -6657,7 +6657,7 @@ ForeverGuide_Data.Vendors = {
   },
   [437] = {
     name = "Aeolynn",
-    zone = "Kalimdor",
+    zone = "Ashenvale",
     coords = "34.4, 49.4",
     item = "Thick Cloth Vest, Thick Cloth Pants, Thick Cloth Shoes, Thick Cloth Gloves, Knitted Sandals, Knitted Gloves (+18 more)",
     cost = 0,
@@ -6667,7 +6667,7 @@ ForeverGuide_Data.Vendors = {
   },
   [438] = {
     name = "Tandaan Lightmane",
-    zone = "Kalimdor",
+    zone = "Ashenvale",
     coords = "34.4, 49.8",
     item = "Cured Leather Armor, Cured Leather Pants, Cured Leather Boots, Cured Leather Gloves, Rough Leather Boots, Rough Leather Gloves (+18 more)",
     cost = 0,
@@ -6677,7 +6677,7 @@ ForeverGuide_Data.Vendors = {
   },
   [439] = {
     name = "Dalria",
-    zone = "Kalimdor",
+    zone = "Ashenvale",
     coords = "35.0, 52.0",
     item = "Coarse Thread, Fine Thread, Black Dye, Red Dye, Mild Spices, Hot Spices (+25 more)",
     cost = 0,
@@ -6687,7 +6687,7 @@ ForeverGuide_Data.Vendors = {
   },
   [440] = {
     name = "Shandrina",
-    zone = "Kalimdor",
+    zone = "Ashenvale",
     coords = "49.4, 67.0",
     item = "Coarse Thread, Fine Thread, Black Dye, Red Dye, Mild Spices, Hot Spices (+24 more)",
     cost = 0,
@@ -6697,7 +6697,7 @@ ForeverGuide_Data.Vendors = {
   },
   [441] = {
     name = "Harklan Moongrove",
-    zone = "Kalimdor",
+    zone = "Ashenvale",
     coords = "50.8, 67.0",
     item = "Healing Potion, Empty Vial, Leaded Vial, Lesser Mana Potion, Recipe: Shadow Protection Potion, Crystal Vial (+1 more)",
     cost = 0,
@@ -6707,7 +6707,7 @@ ForeverGuide_Data.Vendors = {
   },
   [442] = {
     name = "Lardan",
-    zone = "Kalimdor",
+    zone = "Ashenvale",
     coords = "34.8, 49.8",
     item = "Coarse Thread, Fine Thread, Black Dye, Red Dye, Green Dye, Salt (+11 more)",
     cost = 0,
@@ -6717,7 +6717,7 @@ ForeverGuide_Data.Vendors = {
   },
   [443] = {
     name = "Nantar",
-    zone = "Kalimdor",
+    zone = "Ashenvale",
     coords = "37.0, 49.8",
     item = "Refreshing Spring Water, Ice Cold Milk, Melon Juice, Moonberry Juice, Sweet Nectar, Tough Hunk of Bread (+6 more)",
     cost = 0,
@@ -6727,7 +6727,7 @@ ForeverGuide_Data.Vendors = {
   },
   [444] = {
     name = "Ulthaan",
-    zone = "Kalimdor",
+    zone = "Ashenvale",
     coords = "50.0, 66.4",
     item = "Tough Jerky, Haunch of Meat, Recipe: Big Bear Steak, Mutton Chop, Wild Hog Shank, Cured Ham Steak (+2 more)",
     cost = 0,
@@ -6737,7 +6737,7 @@ ForeverGuide_Data.Vendors = {
   },
   [445] = {
     name = "Maliynn",
-    zone = "Kalimdor",
+    zone = "Ashenvale",
     coords = "36.6, 49.8",
     item = "Refreshing Spring Water, Ice Cold Milk, Melon Juice, Moonberry Juice, Sweet Nectar, Shiny Red Apple (+15 more)",
     cost = 0,
@@ -6747,7 +6747,7 @@ ForeverGuide_Data.Vendors = {
   },
   [446] = {
     name = "Haljan Oakheart",
-    zone = "Kalimdor",
+    zone = "Ashenvale",
     coords = "34.8, 50.8",
     item = "Refreshing Spring Water, Ice Cold Milk, Melon Juice, Sharp Arrow, Heavy Shot, Razor Arrow (+9 more)",
     cost = 0,
@@ -6757,7 +6757,7 @@ ForeverGuide_Data.Vendors = {
   },
   [447] = {
     name = "Fahran Silentblade",
-    zone = "Kalimdor",
+    zone = "Ashenvale",
     coords = "36.4, 49.4",
     item = "Dust of Decay, Essence of Pain, Empty Vial, Leaded Vial, Lethargy Root, Thieves' Tools (+5 more)",
     cost = 0,
@@ -6767,7 +6767,7 @@ ForeverGuide_Data.Vendors = {
   },
   [448] = {
     name = "Llana",
-    zone = "Kalimdor",
+    zone = "Ashenvale",
     coords = "35.0, 48.4",
     item = "Infernal Stone, Demonic Figurine, Arcane Powder, Wild Berries, Wild Thornroot, Holy Candle (+12 more)",
     cost = 0,
@@ -6777,7 +6777,7 @@ ForeverGuide_Data.Vendors = {
   },
   [449] = {
     name = "Galthuk",
-    zone = "Kalimdor",
+    zone = "Orgrimmar",
     coords = "82.0, 18.4",
     item = "Flamberge, Bullova, War Hammer, Zweihander, Great Axe, War Maul",
     cost = 0,
@@ -6787,7 +6787,7 @@ ForeverGuide_Data.Vendors = {
   },
   [450] = {
     name = "Grawnal",
-    zone = "Kalimdor",
+    zone = "Stonetalon Mountains",
     coords = "45.8, 58.6",
     item = "Refreshing Spring Water, Ice Cold Milk, Melon Juice, Rough Arrow, Sharp Arrow, Light Shot (+10 more)",
     cost = 0,
@@ -6797,7 +6797,7 @@ ForeverGuide_Data.Vendors = {
   },
   [451] = {
     name = "Jeeda",
-    zone = "Kalimdor",
+    zone = "Stonetalon Mountains",
     coords = "47.4, 61.8",
     item = "Earthroot, Bruiseweed, Kingsblood, Lesser Mana Potion, Infernal Stone, Recipe: Fire Protection Potion (+21 more)",
     cost = 0,
@@ -6807,7 +6807,7 @@ ForeverGuide_Data.Vendors = {
   },
   [452] = {
     name = "Chylina",
-    zone = "Kalimdor",
+    zone = "Stonetalon Mountains",
     coords = "35.4, 6.2",
     item = "Tough Jerky, Refreshing Spring Water, Ice Cold Milk, Melon Juice, Haunch of Meat, Rough Arrow (+16 more)",
     cost = 0,
@@ -6817,7 +6817,7 @@ ForeverGuide_Data.Vendors = {
   },
   [453] = {
     name = "Shadi Mistrunner",
-    zone = "Kalimdor",
+    zone = "Thunder Bluff",
     coords = "40.4, 63.4",
     item = "Bleach, Coarse Thread, Fine Thread, Black Dye, Red Dye, Mild Spices (+28 more)",
     cost = 0,
@@ -6827,7 +6827,7 @@ ForeverGuide_Data.Vendors = {
   },
   [454] = {
     name = "Nizzik",
-    zone = "Kalimdor",
+    zone = "Stonetalon Mountains",
     coords = "62.6, 40.2",
     item = "Polished Scale Belt, Polished Scale Boots, Polished Scale Bracers, Polished Scale Gloves, Polished Scale Leggings, Polished Scale Vest (+8 more)",
     cost = 0,
@@ -6837,7 +6837,7 @@ ForeverGuide_Data.Vendors = {
   },
   [455] = {
     name = "Veenix",
-    zone = "Kalimdor",
+    zone = "Stonetalon Mountains",
     coords = "58.2, 51.6",
     item = "Dacian Falx, Longsword, Maul, Flail, Battle Axe, Double Axe (+8 more)",
     cost = 0,
@@ -6847,7 +6847,7 @@ ForeverGuide_Data.Vendors = {
   },
   [456] = {
     name = "Cylania",
-    zone = "Kalimdor",
+    zone = "Darnassus",
     coords = "58.4, 45.8",
     item = "Knitted Sandals, Knitted Gloves, Knitted Pants, Knitted Tunic, Rough Leather Boots, Rough Leather Gloves (+30 more)",
     cost = 0,
@@ -6857,7 +6857,7 @@ ForeverGuide_Data.Vendors = {
   },
   [457] = {
     name = "Dendrythis",
-    zone = "Kalimdor",
+    zone = "Darnassus",
     coords = "33.8, 15.6",
     item = "Refreshing Spring Water, Ice Cold Milk, Melon Juice, Moonberry Juice, Sweet Nectar, Morning Glory Dew (+8 more)",
     cost = 0,
@@ -6867,7 +6867,7 @@ ForeverGuide_Data.Vendors = {
   },
   [458] = {
     name = "Elynna",
-    zone = "Kalimdor",
+    zone = "Darnassus",
     coords = "64.2, 21.4",
     item = "Coarse Thread, Fine Thread, Bleach, Black Dye, Red Dye, Green Dye (+12 more)",
     cost = 0,
@@ -6877,7 +6877,7 @@ ForeverGuide_Data.Vendors = {
   },
   [459] = {
     name = "Jaeana",
-    zone = "Kalimdor",
+    zone = "Darnassus",
     coords = "60.2, 66.4",
     item = "Tough Jerky, Refreshing Spring Water, Ice Cold Milk, Melon Juice, Moonberry Juice, Sweet Nectar (+6 more)",
     cost = 0,
@@ -6887,7 +6887,7 @@ ForeverGuide_Data.Vendors = {
   },
   [460] = {
     name = "Ellandrieth",
-    zone = "Kalimdor",
+    zone = "Darnassus",
     coords = "64.4, 53.0",
     item = "Refreshing Spring Water, Melon Juice, Rough Arrow, Sharp Arrow, Light Shot, Heavy Shot (+18 more)",
     cost = 0,
@@ -6897,7 +6897,7 @@ ForeverGuide_Data.Vendors = {
   },
   [461] = {
     name = "Merelyssa",
-    zone = "Kalimdor",
+    zone = "Darnassus",
     coords = "64.4, 59.8",
     item = "Cutlass, Dacian Falx, Longsword, Claymore, Espadon, Scimitar (+7 more)",
     cost = 0,
@@ -6907,7 +6907,7 @@ ForeverGuide_Data.Vendors = {
   },
   [462] = {
     name = "Anadyia",
-    zone = "Kalimdor",
+    zone = "Darnassus",
     coords = "55.6, 89.4",
     item = "Plain Robe, Double-Stitched Robes, Robe of Apprenticeship, Chromatic Robe, Shimmering Silk Robes, Burning Robes (+1 more)",
     cost = 0,
@@ -6917,7 +6917,7 @@ ForeverGuide_Data.Vendors = {
   },
   [463] = {
     name = "Landria",
-    zone = "Kalimdor",
+    zone = "Darnassus",
     coords = "63.0, 67.6",
     item = "Rough Arrow, Sharp Arrow, Reinforced Bow, Heavy Recurve Bow, Razor Arrow, Small Quiver (+5 more)",
     cost = 0,
@@ -6927,7 +6927,7 @@ ForeverGuide_Data.Vendors = {
   },
   [464] = {
     name = "Vinasia",
-    zone = "Kalimdor",
+    zone = "Darnassus",
     coords = "60.4, 72.2",
     item = "Thick Cloth Vest, Thick Cloth Pants, Thick Cloth Shoes, Thick Cloth Gloves, Knitted Sandals, Knitted Gloves (+39 more)",
     cost = 0,
@@ -6937,7 +6937,7 @@ ForeverGuide_Data.Vendors = {
   },
   [465] = {
     name = "Melea",
-    zone = "Kalimdor",
+    zone = "Darnassus",
     coords = "56.4, 77.8",
     item = "Scalemail Vest, Scalemail Pants, Scalemail Boots, Scalemail Gloves, Chainmail Armor, Chainmail Pants (+49 more)",
     cost = 0,
@@ -6947,7 +6947,7 @@ ForeverGuide_Data.Vendors = {
   },
   [466] = {
     name = "Ealyshia Dewwhisper",
-    zone = "Kalimdor",
+    zone = "Darnassus",
     coords = "60.8, 72.0",
     item = "Flamberge, Bullova, War Hammer, Zweihander, Great Axe, War Maul",
     cost = 0,
@@ -6957,7 +6957,7 @@ ForeverGuide_Data.Vendors = {
   },
   [467] = {
     name = "Fyrenna",
-    zone = "Kalimdor",
+    zone = "Darnassus",
     coords = "69.4, 44.4",
     item = "Refreshing Spring Water, Ice Cold Milk, Melon Juice, Moonberry Juice, Sweet Nectar, Morning Glory Dew (+8 more)",
     cost = 0,
@@ -6967,7 +6967,7 @@ ForeverGuide_Data.Vendors = {
   },
   [468] = {
     name = "Dalmond",
-    zone = "Kalimdor",
+    zone = "Darkshore",
     coords = "37.4, 40.4",
     item = "Refreshing Spring Water, Ice Cold Milk, Rough Arrow, Sharp Arrow, Light Shot, Heavy Shot (+9 more)",
     cost = 0,
@@ -6977,7 +6977,7 @@ ForeverGuide_Data.Vendors = {
   },
   [469] = {
     name = "Naram Longclaw",
-    zone = "Kalimdor",
+    zone = "Darkshore",
     coords = "37.4, 40.4",
     item = "Cutlass, Mace, Hatchet, Quarter Staff, Tabar, Giant Mace (+2 more)",
     cost = 0,
@@ -6987,7 +6987,7 @@ ForeverGuide_Data.Vendors = {
   },
   [470] = {
     name = "Geenia Sunshadow",
-    zone = "Kalimdor",
+    zone = "Moonglade",
     coords = "51.8, 33.0",
     item = "Dark Green Wedding Hanbok, White Traditional Hanbok, Royal Dangui, Formal Dangui, Red Traditional Hanbok, Green Wedding Hanbok",
     cost = 0,
@@ -6997,7 +6997,7 @@ ForeverGuide_Data.Vendors = {
   },
   [471] = {
     name = "Shaldyn",
-    zone = "Kalimdor",
+    zone = "Darkshore",
     coords = "38.0, 40.6",
     item = "Heavy Weave Armor, Heavy Weave Pants, Heavy Weave Gloves, Heavy Weave Shoes, Common Gray Shirt, Heavy Weave Belt (+3 more)",
     cost = 0,
@@ -7007,7 +7007,7 @@ ForeverGuide_Data.Vendors = {
   },
   [472] = {
     name = "Mavralyn",
-    zone = "Kalimdor",
+    zone = "Darkshore",
     coords = "37.0, 41.2",
     item = "Tanned Leather Boots, Tanned Leather Gloves, Tanned Leather Pants, Tanned Leather Jerkin, Tanned Leather Belt, Tanned Leather Bracers (+2 more)",
     cost = 0,
@@ -7017,7 +7017,7 @@ ForeverGuide_Data.Vendors = {
   },
   [473] = {
     name = "Harlon Thornguard",
-    zone = "Kalimdor",
+    zone = "Darkshore",
     coords = "37.0, 41.2",
     item = "Chainmail Armor, Chainmail Pants, Chainmail Boots, Chainmail Gloves, Wall Shield, Chainmail Belt (+2 more)",
     cost = 0,
@@ -7027,7 +7027,7 @@ ForeverGuide_Data.Vendors = {
   },
   [474] = {
     name = "Illyanie",
-    zone = "Kalimdor",
+    zone = "Stonetalon Mountains",
     coords = "35.4, 7.0",
     item = "Thick Cloth Vest, Thick Cloth Pants, Thick Cloth Shoes, Thick Cloth Gloves, Padded Boots, Padded Gloves (+6 more)",
     cost = 0,
@@ -7037,7 +7037,7 @@ ForeverGuide_Data.Vendors = {
   },
   [475] = {
     name = "Valdaron",
-    zone = "Kalimdor",
+    zone = "Darkshore",
     coords = "38.0, 40.6",
     item = "Coarse Thread, Fine Thread, Bleach, Black Dye, Red Dye, Green Dye (+12 more)",
     cost = 0,
@@ -7047,7 +7047,7 @@ ForeverGuide_Data.Vendors = {
   },
   [476] = {
     name = "Kyndri",
-    zone = "Kalimdor",
+    zone = "Darkshore",
     coords = "36.8, 44.4",
     item = "Refreshing Spring Water, Ice Cold Milk, Melon Juice, Moonberry Juice, Sweet Nectar, Tough Hunk of Bread (+6 more)",
     cost = 0,
@@ -7057,7 +7057,7 @@ ForeverGuide_Data.Vendors = {
   },
   [477] = {
     name = "Allyndia",
-    zone = "Kalimdor",
+    zone = "Darkshore",
     coords = "37.0, 43.4",
     item = "Refreshing Spring Water, Ice Cold Milk, Melon Juice, Moonberry Juice, Sweet Nectar, Morning Glory Dew (+8 more)",
     cost = 0,
@@ -7067,7 +7067,7 @@ ForeverGuide_Data.Vendors = {
   },
   [478] = {
     name = "Taldan",
-    zone = "Kalimdor",
+    zone = "Darkshore",
     coords = "36.8, 43.8",
     item = "Refreshing Spring Water, Ice Cold Milk, Melon Juice, Moonberry Juice, Sweet Nectar, Morning Glory Dew",
     cost = 0,
@@ -7077,7 +7077,7 @@ ForeverGuide_Data.Vendors = {
   },
   [479] = {
     name = "Ullanna",
-    zone = "Kalimdor",
+    zone = "Darkshore",
     coords = "43.8, 76.4",
     item = "Coarse Thread, Fine Thread, Bleach, Red Dye, Green Dye, Mild Spices (+12 more)",
     cost = 0,
@@ -7087,7 +7087,7 @@ ForeverGuide_Data.Vendors = {
   },
   [480] = {
     name = "Tiyani",
-    zone = "Kalimdor",
+    zone = "Darkshore",
     coords = "43.6, 76.4",
     item = "Refreshing Spring Water, Ice Cold Milk, Melon Juice, Moonberry Juice, Sweet Nectar, Morning Glory Dew (+8 more)",
     cost = 0,
@@ -7097,7 +7097,7 @@ ForeverGuide_Data.Vendors = {
   },
   [481] = {
     name = "Laird",
-    zone = "Kalimdor",
+    zone = "Darkshore",
     coords = "36.8, 44.2",
     item = "Slitherskin Mackerel, Longjaw Mud Snapper, Bristle Whisker Catfish, Rockscale Cod, Recipe: Fillet of Frenzy, Spinefin Halibut (+1 more)",
     cost = 0,
@@ -7107,7 +7107,7 @@ ForeverGuide_Data.Vendors = {
   },
   [482] = {
     name = "Ariyell Skyshadow",
-    zone = "Kalimdor",
+    zone = "Darnassus",
     coords = "58.4, 44.4",
     item = "Cutlass, Mace, Hatchet, Quarter Staff, Dacian Falx, Longsword (+40 more)",
     cost = 0,
@@ -7117,7 +7117,7 @@ ForeverGuide_Data.Vendors = {
   },
   [483] = {
     name = "Chardryn",
-    zone = "Kalimdor",
+    zone = "Darnassus",
     coords = "47.8, 69.8",
     item = "Empty Vial, Leaded Vial, Crystal Vial, Herb Pouch",
     cost = 0,
@@ -7127,7 +7127,7 @@ ForeverGuide_Data.Vendors = {
   },
   [484] = {
     name = "Mathrengyl Bearwalker",
-    zone = "Kalimdor",
+    zone = "Darnassus",
     coords = "34.8, 7.4",
     item = "Evergreen Pouch, Packet of Tharlendris Seeds",
     cost = 0,
@@ -7137,7 +7137,7 @@ ForeverGuide_Data.Vendors = {
   },
   [485] = {
     name = "Cyroen",
-    zone = "Kalimdor",
+    zone = "Darnassus",
     coords = "34.0, 9.4",
     item = "Infernal Stone, Demonic Figurine, Arcane Powder, Wild Berries, Wild Thornroot, Holy Candle (+12 more)",
     cost = 0,
@@ -7147,7 +7147,7 @@ ForeverGuide_Data.Vendors = {
   },
   [486] = {
     name = "Talaelar",
-    zone = "Kalimdor",
+    zone = "Darnassus",
     coords = "47.0, 56.2",
     item = "Slitherskin Mackerel, Longjaw Mud Snapper, Bristle Whisker Catfish, Rockscale Cod, Spinefin Halibut, Striped Yellowtail",
     cost = 0,
@@ -7157,7 +7157,7 @@ ForeverGuide_Data.Vendors = {
   },
   [487] = {
     name = "Voloren",
-    zone = "Kalimdor",
+    zone = "Darnassus",
     coords = "46.4, 56.0",
     item = "Fishing Pole, Strong Fishing Pole, Shiny Bauble, Nightcrawlers, Bright Baubles, Aquadynamic Fish Attractor",
     cost = 0,
@@ -7167,7 +7167,7 @@ ForeverGuide_Data.Vendors = {
   },
   [488] = {
     name = "Fyldan",
-    zone = "Kalimdor",
+    zone = "Darnassus",
     coords = "48.4, 21.4",
     item = "Refreshing Spring Water, Mild Spices, Hot Spices, Soothing Spices, Recipe: Smoked Sagefish, Recipe: Sagefish Delight",
     cost = 0,
@@ -7177,7 +7177,7 @@ ForeverGuide_Data.Vendors = {
   },
   [489] = {
     name = "Saenorion",
-    zone = "Kalimdor",
+    zone = "Darnassus",
     coords = "63.2, 22.6",
     item = "Coarse Thread, Fine Thread, Black Dye, Red Dye, Green Dye, Salt (+12 more)",
     cost = 0,
@@ -7187,7 +7187,7 @@ ForeverGuide_Data.Vendors = {
   },
   [490] = {
     name = "Mythrin'dir",
-    zone = "Kalimdor",
+    zone = "Darnassus",
     coords = "61.0, 17.4",
     item = "Shiny Bauble, Bleach, Coarse Thread, Fine Thread, Black Dye, Red Dye (+30 more)",
     cost = 0,
@@ -7197,7 +7197,7 @@ ForeverGuide_Data.Vendors = {
   },
   [491] = {
     name = "Ulthir",
-    zone = "Kalimdor",
+    zone = "Darnassus",
     coords = "55.4, 23.2",
     item = "Empty Vial, Leaded Vial, Recipe: Free Action Potion, Recipe: Great Rage Potion, Crystal Vial, Imbued Vial (+1 more)",
     cost = 0,
@@ -7207,7 +7207,7 @@ ForeverGuide_Data.Vendors = {
   },
   [492] = {
     name = "Lillian Singh",
-    zone = "Azeroth",
+    zone = "Stormwind City",
     coords = "54.4, 59.4",
     item = "Blue Firework, Blue Sparkler, Red Sparkler, White Sparkler, Red Fireworks Rocket, Green Firework (+4 more)",
     cost = 0,
@@ -7217,7 +7217,7 @@ ForeverGuide_Data.Vendors = {
   },
   [493] = {
     name = "Vaean",
-    zone = "Kalimdor",
+    zone = "Darnassus",
     coords = "58.4, 14.4",
     item = "Simple Wood, Copper Rod, Formula: Enchant Chest - Minor Intellect, Lesser Magic Essence, Strange Dust, Star Wood (+4 more)",
     cost = 0,
@@ -7227,7 +7227,7 @@ ForeverGuide_Data.Vendors = {
   },
   [494] = {
     name = "Yldan",
-    zone = "Kalimdor",
+    zone = "Darnassus",
     coords = "65.4, 52.8",
     item = "Small Brown Pouch, Heavy Brown Bag, Brown Leather Satchel, Huge Brown Sack",
     cost = 0,
@@ -7237,7 +7237,7 @@ ForeverGuide_Data.Vendors = {
   },
   [495] = {
     name = "Kieran",
-    zone = "Kalimdor",
+    zone = "Darnassus",
     coords = "65.2, 60.0",
     item = "Cutlass, Mace, Hatchet, Quarter Staff, Bastard Sword, Tabar (+26 more)",
     cost = 0,
@@ -7247,7 +7247,7 @@ ForeverGuide_Data.Vendors = {
   },
   [496] = {
     name = "Glorandiir",
-    zone = "Kalimdor",
+    zone = "Darnassus",
     coords = "63.4, 58.4",
     item = "Hatchet, Battle Axe, Double Axe, Tabar, Bearded Axe, Cleaver (+5 more)",
     cost = 0,
@@ -7257,7 +7257,7 @@ ForeverGuide_Data.Vendors = {
   },
   [497] = {
     name = "Mythidan",
-    zone = "Kalimdor",
+    zone = "Darnassus",
     coords = "64.4, 59.8",
     item = "Mace, Quarter Staff, Maul, Flail, Long Staff, Giant Mace (+3 more)",
     cost = 0,
@@ -7267,7 +7267,7 @@ ForeverGuide_Data.Vendors = {
   },
   [498] = {
     name = "Andrus",
-    zone = "Kalimdor",
+    zone = "Darnassus",
     coords = "55.4, 88.2",
     item = "Battle Staff, War Staff",
     cost = 0,
@@ -7277,7 +7277,7 @@ ForeverGuide_Data.Vendors = {
   },
   [499] = {
     name = "Turian",
-    zone = "Kalimdor",
+    zone = "Darnassus",
     coords = "62.2, 66.6",
     item = "Broad Bladed Knife, Small Throwing Knife, Wicked Throwing Dagger, Gleaming Throwing Axe, Heavy Throwing Dagger, Deadly Throwing Axe (+5 more)",
     cost = 0,
@@ -7287,7 +7287,7 @@ ForeverGuide_Data.Vendors = {
   },
   [500] = {
     name = "Cyridan",
-    zone = "Kalimdor",
+    zone = "Darnassus",
     coords = "52.8, 80.6",
     item = "Cured Leather Armor, Cured Leather Pants, Cured Leather Boots, Cured Leather Gloves, Rough Leather Boots, Rough Leather Gloves (+38 more)",
     cost = 0,
@@ -7297,7 +7297,7 @@ ForeverGuide_Data.Vendors = {
   },
   [501] = {
     name = "Caynrus",
-    zone = "Kalimdor",
+    zone = "Darnassus",
     coords = "56.4, 76.0",
     item = "Dull Heater Shield, Large Round Shield, Large Metal Shield, Kite Shield, Heavy Pavise, Crested Heater Shield (+6 more)",
     cost = 0,
@@ -7307,7 +7307,7 @@ ForeverGuide_Data.Vendors = {
   },
   [502] = {
     name = "Mydrannul",
-    zone = "Kalimdor",
+    zone = "Darnassus",
     coords = "70.0, 44.4",
     item = "Simple Wood, Light Shot, Rough Arrow, Weighted Throwing Axe, Balanced Throwing Dagger, Refreshing Spring Water (+9 more)",
     cost = 0,
@@ -7317,7 +7317,7 @@ ForeverGuide_Data.Vendors = {
   },
   [503] = {
     name = "Golnir Bouldertoe",
-    zone = "Eastern Kingdoms",
+    zone = "Ironforge",
     coords = "51.0, 26.0",
     item = "Weak Flux, Mining Pick, Strong Flux, Coal",
     cost = 0,
@@ -7327,7 +7327,7 @@ ForeverGuide_Data.Vendors = {
   },
   [504] = {
     name = "Thurgrum Deepforge",
-    zone = "Eastern Kingdoms",
+    zone = "Ironforge",
     coords = "50.6, 43.8",
     item = "Weak Flux, Mining Pick, Strong Flux, Coal, Blacksmith Hammer, Elemental Flux",
     cost = 0,
@@ -7337,7 +7337,7 @@ ForeverGuide_Data.Vendors = {
   },
   [505] = {
     name = "Nyoma",
-    zone = "Kalimdor",
+    zone = "Teldrassil",
     coords = "57.2, 61.2",
     item = "Refreshing Spring Water, Mild Spices, Hot Spices, Soothing Spices, Recipe: Brilliant Smallfish, Recipe: Longjaw Mud Snapper (+2 more)",
     cost = 0,
@@ -7347,7 +7347,7 @@ ForeverGuide_Data.Vendors = {
   },
   [506] = {
     name = "Danlyia",
-    zone = "Kalimdor",
+    zone = "Teldrassil",
     coords = "55.4, 57.0",
     item = "Refreshing Spring Water, Ice Cold Milk, Melon Juice, Moonberry Juice, Sweet Nectar, Tough Hunk of Bread (+14 more)",
     cost = 0,
@@ -7357,7 +7357,7 @@ ForeverGuide_Data.Vendors = {
   },
   [507] = {
     name = "Kriggon Talsone",
-    zone = "Eastern Kingdoms",
+    zone = "Westfall",
     coords = "36.2, 90.0",
     item = "Slitherskin Mackerel, Longjaw Mud Snapper, Bristle Whisker Catfish, Rockscale Cod, Recipe: Clam Chowder, Recipe: Slitherskin Mackerel (+4 more)",
     cost = 0,
@@ -7367,7 +7367,7 @@ ForeverGuide_Data.Vendors = {
   },
   [508] = {
     name = "Heldan Galesong",
-    zone = "Kalimdor",
+    zone = "Darkshore",
     coords = "37.0, 56.2",
     item = "Slitherskin Mackerel, Longjaw Mud Snapper, Bristle Whisker Catfish, Rockscale Cod, Recipe: Clam Chowder, Recipe: Rainbow Fin Albacore (+4 more)",
     cost = 0,
@@ -7377,7 +7377,7 @@ ForeverGuide_Data.Vendors = {
   },
   [509] = {
     name = "Ronald Burch",
-    zone = "Eastern Kingdoms",
+    zone = "Undercity",
     coords = "62.4, 43.4",
     item = "Refreshing Spring Water, Mild Spices, Hot Spices, Soothing Spices, Recipe: Bristle Whisker Catfish, Recipe: Rainbow Fin Albacore (+2 more)",
     cost = 0,
@@ -7387,7 +7387,7 @@ ForeverGuide_Data.Vendors = {
   },
   [510] = {
     name = "Tawny Grisette",
-    zone = "Eastern Kingdoms",
+    zone = "Undercity",
     coords = "62.2, 42.4",
     item = "Refreshing Spring Water, Ice Cold Milk, Melon Juice, Moonberry Juice, Sweet Nectar, Forest Mushroom Cap (+6 more)",
     cost = 0,
@@ -7397,7 +7397,7 @@ ForeverGuide_Data.Vendors = {
   },
   [511] = {
     name = "Gordon Wendham",
-    zone = "Eastern Kingdoms",
+    zone = "Undercity",
     coords = "61.4, 41.4",
     item = "Bastard Sword, Club, Shortsword, Short Staff, Hand Axe, Dirk (+10 more)",
     cost = 0,
@@ -7407,7 +7407,7 @@ ForeverGuide_Data.Vendors = {
   },
   [512] = {
     name = "Louis Warren",
-    zone = "Eastern Kingdoms",
+    zone = "Undercity",
     coords = "61.4, 41.2",
     item = "Cutlass, Mace, Hatchet, Quarter Staff, Tabar, Giant Mace (+10 more)",
     cost = 0,
@@ -7417,7 +7417,7 @@ ForeverGuide_Data.Vendors = {
   },
   [513] = {
     name = "Lauren Newcomb",
-    zone = "Eastern Kingdoms",
+    zone = "Undercity",
     coords = "64.0, 38.0",
     item = "Dirty Leather Vest, Tattered Cloth Vest, Tattered Cloth Pants, Tattered Cloth Boots, Dirty Leather Pants, Dirty Leather Boots (+33 more)",
     cost = 0,
@@ -7427,7 +7427,7 @@ ForeverGuide_Data.Vendors = {
   },
   [514] = {
     name = "Timothy Weldon",
-    zone = "Eastern Kingdoms",
+    zone = "Undercity",
     coords = "62.4, 41.0",
     item = "Large Wooden Shield, Wall Shield, Worn Heater Shield, Rusted Chain Vest, Rusted Chain Belt, Rusted Chain Leggings (+12 more)",
     cost = 0,
@@ -7437,7 +7437,7 @@ ForeverGuide_Data.Vendors = {
   },
   [515] = {
     name = "Walter Ellingson",
-    zone = "Eastern Kingdoms",
+    zone = "Undercity",
     coords = "62.4, 39.0",
     item = "Chainmail Armor, Chainmail Pants, Chainmail Boots, Chainmail Gloves, Wall Shield, Chainmail Belt (+2 more)",
     cost = 0,
@@ -7447,7 +7447,7 @@ ForeverGuide_Data.Vendors = {
   },
   [516] = {
     name = "Daniel Bartlett",
-    zone = "Eastern Kingdoms",
+    zone = "Undercity",
     coords = "64.0, 38.8",
     item = "Coarse Thread, Fine Thread, Black Dye, Red Dye, Mild Spices, Hot Spices (+26 more)",
     cost = 0,
@@ -7457,7 +7457,7 @@ ForeverGuide_Data.Vendors = {
   },
   [517] = {
     name = "Thomas Mordan",
-    zone = "Eastern Kingdoms",
+    zone = "Undercity",
     coords = "69.4, 39.2",
     item = "Infernal Stone, Demonic Figurine, Arcane Powder, Wild Berries, Wild Thornroot, Holy Candle (+12 more)",
     cost = 0,
@@ -7467,7 +7467,7 @@ ForeverGuide_Data.Vendors = {
   },
   [518] = {
     name = "Charles Seaton",
-    zone = "Eastern Kingdoms",
+    zone = "Undercity",
     coords = "77.0, 49.2",
     item = "Cutlass, Dacian Falx, Longsword, Claymore, Espadon, Scimitar (+3 more)",
     cost = 0,
@@ -7477,7 +7477,7 @@ ForeverGuide_Data.Vendors = {
   },
   [519] = {
     name = "Sydney Upton",
-    zone = "Eastern Kingdoms",
+    zone = "Undercity",
     coords = "69.8, 27.4",
     item = "Battle Staff, War Staff",
     cost = 0,
@@ -7487,7 +7487,7 @@ ForeverGuide_Data.Vendors = {
   },
   [520] = {
     name = "Morley Bates",
-    zone = "Eastern Kingdoms",
+    zone = "Undercity",
     coords = "72.2, 26.6",
     item = "Refreshing Spring Water, Ice Cold Milk, Melon Juice, Moonberry Juice, Sweet Nectar, Forest Mushroom Cap (+6 more)",
     cost = 0,
@@ -7497,7 +7497,7 @@ ForeverGuide_Data.Vendors = {
   },
   [521] = {
     name = "Lizbeth Cromwell",
-    zone = "Eastern Kingdoms",
+    zone = "Undercity",
     coords = "81.0, 29.2",
     item = "Fishing Pole, Recipe: Brilliant Smallfish, Recipe: Longjaw Mud Snapper, Strong Fishing Pole, Recipe: Rockscale Cod, Shiny Bauble (+4 more)",
     cost = 0,
@@ -7507,7 +7507,7 @@ ForeverGuide_Data.Vendors = {
   },
   [522] = {
     name = "Hannah Akeley",
-    zone = "Eastern Kingdoms",
+    zone = "Undercity",
     coords = "82.0, 16.8",
     item = "Infernal Stone, Demonic Figurine, Arcane Powder, Wild Berries, Wild Thornroot, Holy Candle (+12 more)",
     cost = 0,
@@ -7517,7 +7517,7 @@ ForeverGuide_Data.Vendors = {
   },
   [523] = {
     name = "Millie Gregorian",
-    zone = "Eastern Kingdoms",
+    zone = "Undercity",
     coords = "70.4, 29.4",
     item = "Coarse Thread, Fine Thread, Bleach, Black Dye, Red Dye, Green Dye (+14 more)",
     cost = 0,
@@ -7527,7 +7527,7 @@ ForeverGuide_Data.Vendors = {
   },
   [524] = {
     name = "Lucille Castleton",
-    zone = "Eastern Kingdoms",
+    zone = "Undercity",
     coords = "71.0, 29.2",
     item = "Plain Robe, Double-Stitched Robes, Robe of Apprenticeship, Chromatic Robe, Shimmering Silk Robes, Burning Robes (+1 more)",
     cost = 0,
@@ -7537,7 +7537,7 @@ ForeverGuide_Data.Vendors = {
   },
   [525] = {
     name = "Salazar Bloch",
-    zone = "Eastern Kingdoms",
+    zone = "Undercity",
     coords = "77.2, 38.4",
     item = "Scroll of Strength, Scroll of Intellect, Scroll of Stamina, Scroll of Spirit, Scroll of Protection II, Scroll of Stamina II (+6 more)",
     cost = 0,
@@ -7547,7 +7547,7 @@ ForeverGuide_Data.Vendors = {
   },
   [526] = {
     name = "Ezekiel Graves",
-    zone = "Eastern Kingdoms",
+    zone = "Undercity",
     coords = "75.4, 51.4",
     item = "Dust of Decay, Essence of Pain, Empty Vial, Leaded Vial, Lethargy Root, Thieves' Tools (+5 more)",
     cost = 0,
@@ -7557,7 +7557,7 @@ ForeverGuide_Data.Vendors = {
   },
   [527] = {
     name = "Elizabeth Van Talen",
-    zone = "Eastern Kingdoms",
+    zone = "Undercity",
     coords = "75.4, 73.4",
     item = "Weak Flux, Mining Pick, Strong Flux, Rough Blasting Powder, Copper Modulator, Coarse Blasting Powder (+10 more)",
     cost = 0,
@@ -7567,7 +7567,7 @@ ForeverGuide_Data.Vendors = {
   },
   [528] = {
     name = "Joseph Moore",
-    zone = "Eastern Kingdoms",
+    zone = "Undercity",
     coords = "70.2, 58.0",
     item = "Coarse Thread, Fine Thread, Black Dye, Red Dye, Green Dye, Salt (+12 more)",
     cost = 0,
@@ -7577,7 +7577,7 @@ ForeverGuide_Data.Vendors = {
   },
   [529] = {
     name = "Jonathan Chambers",
-    zone = "Eastern Kingdoms",
+    zone = "Undercity",
     coords = "69.4, 61.0",
     item = "Small Brown Pouch, Heavy Brown Bag, Brown Leather Satchel, Huge Brown Sack",
     cost = 0,
@@ -7587,7 +7587,7 @@ ForeverGuide_Data.Vendors = {
   },
   [530] = {
     name = "Samuel Van Brunt",
-    zone = "Eastern Kingdoms",
+    zone = "Undercity",
     coords = "61.2, 29.4",
     item = "Weak Flux, Mining Pick, Strong Flux, Coal, Blacksmith Hammer, Elemental Flux",
     cost = 0,
@@ -7597,7 +7597,7 @@ ForeverGuide_Data.Vendors = {
   },
   [531] = {
     name = "Sarah Killian",
-    zone = "Eastern Kingdoms",
+    zone = "Undercity",
     coords = "56.2, 36.4",
     item = "Weak Flux, Mining Pick, Strong Flux, Coal",
     cost = 0,
@@ -7607,7 +7607,7 @@ ForeverGuide_Data.Vendors = {
   },
   [532] = {
     name = "Geoffrey Hartwell",
-    zone = "Eastern Kingdoms",
+    zone = "Undercity",
     coords = "58.4, 32.4",
     item = "Broadsword, Flamberge, Bullova, War Hammer, Main Gauche, Falchion (+4 more)",
     cost = 0,
@@ -7617,7 +7617,7 @@ ForeverGuide_Data.Vendors = {
   },
   [533] = {
     name = "Francis Eliot",
-    zone = "Eastern Kingdoms",
+    zone = "Undercity",
     coords = "58.4, 32.4",
     item = "Hatchet, Battle Axe, Double Axe, Tabar, Bearded Axe, Cleaver (+2 more)",
     cost = 0,
@@ -7627,7 +7627,7 @@ ForeverGuide_Data.Vendors = {
   },
   [534] = {
     name = "Benijah Fenner",
-    zone = "Eastern Kingdoms",
+    zone = "Undercity",
     coords = "58.4, 32.4",
     item = "Mace, Quarter Staff, Maul, Flail, Long Staff, Giant Mace (+12 more)",
     cost = 0,
@@ -7637,7 +7637,7 @@ ForeverGuide_Data.Vendors = {
   },
   [535] = {
     name = "Nicholas Atwood",
-    zone = "Eastern Kingdoms",
+    zone = "Undercity",
     coords = "62.0, 27.6",
     item = "Ornate Blunderbuss, Solid Blunderbuss, Light Shot, Heavy Shot, Large Bore Blunderbuss, BKP 2700 \"Enforcer\" (+3 more)",
     cost = 0,
@@ -7647,7 +7647,7 @@ ForeverGuide_Data.Vendors = {
   },
   [536] = {
     name = "Abigail Sawyer",
-    zone = "Eastern Kingdoms",
+    zone = "Undercity",
     coords = "54.8, 38.0",
     item = "Rough Arrow, Sharp Arrow, Reinforced Bow, Heavy Recurve Bow, Razor Arrow, Small Quiver (+5 more)",
     cost = 0,
@@ -7657,7 +7657,7 @@ ForeverGuide_Data.Vendors = {
   },
   [537] = {
     name = "Algernon",
-    zone = "Eastern Kingdoms",
+    zone = "Undercity",
     coords = "51.4, 74.4",
     item = "Empty Vial, Leaded Vial, Crystal Vial, Imbued Vial, Recipe: Elixir of Shadow Power, Recipe: Superior Mana Potion",
     cost = 0,
@@ -7667,7 +7667,7 @@ ForeverGuide_Data.Vendors = {
   },
   [538] = {
     name = "Katrina Alliestar",
-    zone = "Eastern Kingdoms",
+    zone = "Undercity",
     coords = "54.4, 49.4",
     item = "Empty Vial, Leaded Vial, Crystal Vial, Herb Pouch",
     cost = 0,
@@ -7677,7 +7677,7 @@ ForeverGuide_Data.Vendors = {
   },
   [539] = {
     name = "Thaddeus Webb",
-    zone = "Eastern Kingdoms",
+    zone = "Undercity",
     coords = "61.4, 60.4",
     item = "Simple Wood, Copper Rod, Formula: Enchant Chest - Minor Intellect, Lesser Magic Essence, Strange Dust, Star Wood (+4 more)",
     cost = 0,
@@ -7687,7 +7687,7 @@ ForeverGuide_Data.Vendors = {
   },
   [540] = {
     name = "Lelanai",
-    zone = "Kalimdor",
+    zone = "Darnassus",
     coords = "38.2, 15.4",
     item = "Reins of the Striped Nightsaber, Reins of the Striped Frostsaber, Reins of the Spotted Frostsaber, Reins of the Swift Frostsaber, Reins of the Swift Mistsaber, Reins of the Swift Stormsaber (+2 more)",
     cost = 0,
@@ -7697,7 +7697,7 @@ ForeverGuide_Data.Vendors = {
   },
   [541] = {
     name = "Zachariah Post",
-    zone = "Eastern Kingdoms",
+    zone = "Tirisfal Glades",
     coords = "59.8, 52.6",
     item = "Red Skeletal Horse, Blue Skeletal Horse, Brown Skeletal Horse, Green Skeletal Warhorse, Purple Skeletal Warhorse",
     cost = 0,
@@ -7707,7 +7707,7 @@ ForeverGuide_Data.Vendors = {
   },
   [542] = {
     name = "Felicia Doan",
-    zone = "Eastern Kingdoms",
+    zone = "Undercity",
     coords = "63.8, 49.2",
     item = "Coarse Thread, Fine Thread, Red Dye, Mild Spices, Hot Spices, Weak Flux (+21 more)",
     cost = 0,
@@ -7717,7 +7717,7 @@ ForeverGuide_Data.Vendors = {
   },
   [543] = {
     name = "Truk Wildbeard",
-    zone = "Eastern Kingdoms",
+    zone = "The Hinterlands",
     coords = "14.4, 42.4",
     item = "Tough Jerky, Refreshing Spring Water, Dalaran Sharp, Dwarven Mild, Ice Cold Milk, Melon Juice (+14 more)",
     cost = 0,
@@ -7727,7 +7727,7 @@ ForeverGuide_Data.Vendors = {
   },
   [544] = {
     name = "Turhaw",
-    zone = "Kalimdor",
+    zone = "Thousand Needles",
     coords = "45.4, 51.0",
     item = "Tough Jerky, Refreshing Spring Water, Ice Cold Milk, Melon Juice, Moonberry Juice, Sweet Nectar (+6 more)",
     cost = 0,
@@ -7737,7 +7737,7 @@ ForeverGuide_Data.Vendors = {
   },
   [545] = {
     name = "Jawn Highmesa",
-    zone = "Kalimdor",
+    zone = "Thousand Needles",
     coords = "46.0, 51.4",
     item = "Refreshing Spring Water, Ice Cold Milk, Melon Juice, Sharp Arrow, Heavy Shot, Razor Arrow (+9 more)",
     cost = 0,
@@ -7747,7 +7747,7 @@ ForeverGuide_Data.Vendors = {
   },
   [546] = {
     name = "Jandia",
-    zone = "Kalimdor",
+    zone = "Thousand Needles",
     coords = "46.0, 51.4",
     item = "Coarse Thread, Fine Thread, Bleach, Mild Spices, Hot Spices, Weak Flux (+15 more)",
     cost = 0,
@@ -7757,7 +7757,7 @@ ForeverGuide_Data.Vendors = {
   },
   [547] = {
     name = "Montarr",
-    zone = "Kalimdor",
+    zone = "Thousand Needles",
     coords = "45.0, 50.4",
     item = "Mageroyal, Healing Potion, Scroll of Stamina II, Scroll of Spirit II, Scroll of Intellect II, Scroll of Agility (+26 more)",
     cost = 0,
@@ -7767,7 +7767,7 @@ ForeverGuide_Data.Vendors = {
   },
   [548] = {
     name = "Ogg'marr",
-    zone = "Kalimdor",
+    zone = "Dustwallow Marsh",
     coords = "36.6, 31.0",
     item = "Recipe: Heavy Crocolisk Stew, Sweet Nectar, Melon Juice, Ice Cold Milk, Cured Ham Steak, Roasted Quail (+10 more)",
     cost = 0,
@@ -7777,7 +7777,7 @@ ForeverGuide_Data.Vendors = {
   },
   [549] = {
     name = "Krak",
-    zone = "Kalimdor",
+    zone = "Dustwallow Marsh",
     coords = "36.4, 30.8",
     item = "Polished Scale Belt, Polished Scale Boots, Polished Scale Bracers, Polished Scale Gloves, Polished Scale Leggings, Polished Scale Vest",
     cost = 0,
@@ -7787,7 +7787,7 @@ ForeverGuide_Data.Vendors = {
   },
   [550] = {
     name = "Gregor MacVince",
-    zone = "Kalimdor",
+    zone = "Dustwallow Marsh",
     coords = "65.2, 51.4",
     item = "Pinto Bridle, Chestnut Mare Bridle, Brown Horse Bridle, Swift Palomino, Swift Brown Steed, Swift White Steed (+2 more)",
     cost = 0,
@@ -7797,7 +7797,7 @@ ForeverGuide_Data.Vendors = {
   },
   [551] = {
     name = "Mishta",
-    zone = "Kalimdor",
+    zone = "Silithus",
     coords = "49.8, 36.4",
     item = "Pattern: Sylvan Vest, Pattern: Sylvan Crown, Pattern: Sylvan Shoulders, Pattern: Satchel of Cenarius, Pattern: Cenarion Herb Bag, Pattern: Gaea's Embrace (+29 more)",
     cost = 0,
@@ -7807,7 +7807,7 @@ ForeverGuide_Data.Vendors = {
   },
   [552] = {
     name = "Hans Weston",
-    zone = "Kalimdor",
+    zone = "Dustwallow Marsh",
     coords = "64.6, 50.4",
     item = "Polished Scale Belt, Polished Scale Boots, Polished Scale Bracers, Polished Scale Gloves, Polished Scale Leggings, Polished Scale Vest (+2 more)",
     cost = 0,
@@ -7817,7 +7817,7 @@ ForeverGuide_Data.Vendors = {
   },
   [553] = {
     name = "Marie Holdston",
-    zone = "Kalimdor",
+    zone = "Dustwallow Marsh",
     coords = "64.6, 50.0",
     item = "Broadsword, Flamberge, Crescent Axe, Bullova, Truncheon, War Hammer (+4 more)",
     cost = 0,
@@ -7827,7 +7827,7 @@ ForeverGuide_Data.Vendors = {
   },
   [554] = {
     name = "Torq Ironblast",
-    zone = "Kalimdor",
+    zone = "Dustwallow Marsh",
     coords = "67.4, 48.0",
     item = "Light Shot, Heavy Shot, Large Bore Blunderbuss, BKP 2700 \"Enforcer\", Solid Shot, Accurate Slugs",
     cost = 0,
@@ -7837,7 +7837,7 @@ ForeverGuide_Data.Vendors = {
   },
   [555] = {
     name = "Piter Verance",
-    zone = "Kalimdor",
+    zone = "Dustwallow Marsh",
     coords = "67.4, 47.8",
     item = "Blessed Claymore, Executioner's Sword, Blurred Axe, Callous Axe, Marauder Axe, Saber Leggings (+4 more)",
     cost = 0,
@@ -7847,7 +7847,7 @@ ForeverGuide_Data.Vendors = {
   },
   [556] = {
     name = "Dwane Wertle",
-    zone = "Kalimdor",
+    zone = "Dustwallow Marsh",
     coords = "68.2, 47.4",
     item = "Tough Jerky, Dalaran Sharp, Dwarven Mild, Stormwind Brie, Darnassian Bleu, Haunch of Meat (+18 more)",
     cost = 0,
@@ -7857,7 +7857,7 @@ ForeverGuide_Data.Vendors = {
   },
   [557] = {
     name = "Jensen Farran",
-    zone = "Kalimdor",
+    zone = "Dustwallow Marsh",
     coords = "67.8, 49.8",
     item = "Rough Arrow, Sharp Arrow, Reinforced Bow, Heavy Recurve Bow, Razor Arrow, Small Quiver (+3 more)",
     cost = 0,
@@ -7867,7 +7867,7 @@ ForeverGuide_Data.Vendors = {
   },
   [558] = {
     name = "Bartender Lillian",
-    zone = "Kalimdor",
+    zone = "Dustwallow Marsh",
     coords = "66.6, 45.2",
     item = "Refreshing Spring Water, Ice Cold Milk, Melon Juice, Moonberry Juice, Sweet Nectar, Morning Glory Dew",
     cost = 0,
@@ -7877,7 +7877,7 @@ ForeverGuide_Data.Vendors = {
   },
   [559] = {
     name = "Craig Nollward",
-    zone = "Kalimdor",
+    zone = "Dustwallow Marsh",
     coords = "66.8, 45.2",
     item = "Tough Jerky, Dalaran Sharp, Dwarven Mild, Stormwind Brie, Darnassian Bleu, Haunch of Meat (+12 more)",
     cost = 0,
@@ -7887,7 +7887,7 @@ ForeverGuide_Data.Vendors = {
   },
   [560] = {
     name = "Charity Mipsy",
-    zone = "Kalimdor",
+    zone = "Dustwallow Marsh",
     coords = "67.4, 51.4",
     item = "Refreshing Spring Water, Melon Juice, Moonberry Juice, Sweet Nectar, Sharp Arrow, Heavy Shot (+14 more)",
     cost = 0,
@@ -7897,7 +7897,7 @@ ForeverGuide_Data.Vendors = {
   },
   [561] = {
     name = "Helenia Olden",
-    zone = "Kalimdor",
+    zone = "Dustwallow Marsh",
     coords = "66.4, 51.4",
     item = "Coarse Thread, Fine Thread, Black Dye, Red Dye, Mild Spices, Hot Spices (+27 more)",
     cost = 0,
@@ -7907,7 +7907,7 @@ ForeverGuide_Data.Vendors = {
   },
   [562] = {
     name = "Balai Lok'Wein",
-    zone = "Kalimdor",
+    zone = "Dustwallow Marsh",
     coords = "36.4, 30.4",
     item = "Lesser Mana Potion, Scroll of Spirit II, Scroll of Protection II, Scroll of Stamina II, Healing Potion, Scroll of Intellect II (+22 more)",
     cost = 0,
@@ -7917,7 +7917,7 @@ ForeverGuide_Data.Vendors = {
   },
   [563] = {
     name = "Uma Bartulm",
-    zone = "Kalimdor",
+    zone = "Dustwallow Marsh",
     coords = "64.0, 47.6",
     item = "Empty Vial, Leaded Vial, Crystal Vial, Imbued Vial, Herb Pouch",
     cost = 0,
@@ -7927,7 +7927,7 @@ ForeverGuide_Data.Vendors = {
   },
   [564] = {
     name = "Uttnar",
-    zone = "Eastern Kingdoms",
+    zone = "Arathi Highlands",
     coords = "74.2, 33.8",
     item = "Tough Jerky, Haunch of Meat, Mutton Chop, Wild Hog Shank, Cured Ham Steak, Roasted Quail",
     cost = 0,
@@ -7947,7 +7947,7 @@ ForeverGuide_Data.Vendors = {
   },
   [566] = {
     name = "Vargus",
-    zone = "Kalimdor",
+    zone = "Silithus",
     coords = "51.2, 38.8",
     item = "Plans: Heavy Obsidian Belt, Plans: Light Obsidian Belt, Plans: Ironvine Breastplate, Plans: Ironvine Gloves, Plans: Ironvine Belt, Weak Flux (+5 more)",
     cost = 0,
@@ -7957,7 +7957,7 @@ ForeverGuide_Data.Vendors = {
   },
   [567] = {
     name = "Ben Trias",
-    zone = "Eastern Kingdoms",
+    zone = "Stormwind City",
     coords = "60.4, 63.4",
     item = "Refreshing Spring Water, Dalaran Sharp, Dwarven Mild, Ice Cold Milk, Melon Juice, Moonberry Juice (+6 more)",
     cost = 0,
@@ -7967,7 +7967,7 @@ ForeverGuide_Data.Vendors = {
   },
   [568] = {
     name = "Lyesa Steelbrow",
-    zone = "Eastern Kingdoms",
+    zone = "Ironforge",
     coords = "36.0, 84.2",
     item = "Guild Tabard",
     cost = 0,
@@ -7977,7 +7977,7 @@ ForeverGuide_Data.Vendors = {
   },
   [569] = {
     name = "Brenwyn Wintersteel",
-    zone = "Eastern Kingdoms",
+    zone = "Ironforge",
     coords = "61.2, 89.0",
     item = "Sharp Throwing Axe, Cutlass, Dacian Falx, Longsword, Claymore, Espadon (+19 more)",
     cost = 0,
@@ -7987,7 +7987,7 @@ ForeverGuide_Data.Vendors = {
   },
   [570] = {
     name = "Fillius Fizzlespinner",
-    zone = "Eastern Kingdoms",
+    zone = "Ironforge",
     coords = "38.4, 73.4",
     item = "Coarse Thread, Fine Thread, Bleach, Mild Spices, Hot Spices, Weak Flux (+14 more)",
     cost = 0,
@@ -7997,7 +7997,7 @@ ForeverGuide_Data.Vendors = {
   },
   [571] = {
     name = "Bryllia Ironbrand",
-    zone = "Eastern Kingdoms",
+    zone = "Ironforge",
     coords = "39.0, 73.4",
     item = "Refreshing Spring Water, Melon Juice, Moonberry Juice, Sweet Nectar, Sharp Arrow, Heavy Shot (+14 more)",
     cost = 0,
@@ -8007,7 +8007,7 @@ ForeverGuide_Data.Vendors = {
   },
   [572] = {
     name = "Dolman Steelfury",
-    zone = "Eastern Kingdoms",
+    zone = "Ironforge",
     coords = "36.0, 66.0",
     item = "Bastard Sword, Club, Shortsword, Short Staff, Hand Axe, Dirk (+10 more)",
     cost = 0,
@@ -8017,7 +8017,7 @@ ForeverGuide_Data.Vendors = {
   },
   [573] = {
     name = "Grenil Steelfury",
-    zone = "Eastern Kingdoms",
+    zone = "Ironforge",
     coords = "36.0, 65.4",
     item = "Cutlass, Mace, Hatchet, Quarter Staff, Tabar, Giant Mace (+10 more)",
     cost = 0,
@@ -8027,7 +8027,7 @@ ForeverGuide_Data.Vendors = {
   },
   [574] = {
     name = "Bromiir Ormsen",
-    zone = "Eastern Kingdoms",
+    zone = "Ironforge",
     coords = "30.8, 58.4",
     item = "Dull Heater Shield, Light Mail Armor, Light Mail Belt, Light Mail Leggings, Light Mail Boots, Light Mail Bracers (+2 more)",
     cost = 0,
@@ -8037,7 +8037,7 @@ ForeverGuide_Data.Vendors = {
   },
   [575] = {
     name = "Mangorn Flinthammer",
-    zone = "Eastern Kingdoms",
+    zone = "Ironforge",
     coords = "30.8, 58.4",
     item = "Chainmail Armor, Chainmail Pants, Chainmail Boots, Chainmail Gloves, Wall Shield, Chainmail Belt (+2 more)",
     cost = 0,
@@ -8047,7 +8047,7 @@ ForeverGuide_Data.Vendors = {
   },
   [576] = {
     name = "Raena Flinthammer",
-    zone = "Eastern Kingdoms",
+    zone = "Ironforge",
     coords = "32.0, 58.8",
     item = "Heavy Weave Armor, Heavy Weave Pants, Heavy Weave Gloves, Heavy Weave Shoes, Tanned Leather Boots, Tanned Leather Gloves (+9 more)",
     cost = 0,
@@ -8057,7 +8057,7 @@ ForeverGuide_Data.Vendors = {
   },
   [577] = {
     name = "Myra Tyrngaarde",
-    zone = "Eastern Kingdoms",
+    zone = "Ironforge",
     coords = "23.4, 62.4",
     item = "Tough Hunk of Bread, Freshly Baked Bread, Moist Cornbread, Mulgore Spice Bread, Soft Banana Bread, Homemade Cherry Pie",
     cost = 0,
@@ -8067,7 +8067,7 @@ ForeverGuide_Data.Vendors = {
   },
   [578] = {
     name = "Barim Jurgenstaad",
-    zone = "Eastern Kingdoms",
+    zone = "Ironforge",
     coords = "19.4, 56.2",
     item = "Infernal Stone, Demonic Figurine, Arcane Powder, Wild Berries, Wild Thornroot, Holy Candle (+12 more)",
     cost = 0,
@@ -8077,7 +8077,7 @@ ForeverGuide_Data.Vendors = {
   },
   [579] = {
     name = "Innkeeper Firebrew",
-    zone = "Eastern Kingdoms",
+    zone = "Ironforge",
     coords = "18.4, 51.4",
     item = "Tough Jerky, Refreshing Spring Water, Ice Cold Milk, Melon Juice, Moonberry Juice, Sweet Nectar (+11 more)",
     cost = 0,
@@ -8087,7 +8087,7 @@ ForeverGuide_Data.Vendors = {
   },
   [580] = {
     name = "Gwenna Firebrew",
-    zone = "Eastern Kingdoms",
+    zone = "Ironforge",
     coords = "18.4, 51.4",
     item = "Refreshing Spring Water, Ice Cold Milk, Melon Juice, Moonberry Juice, Sweet Nectar, Flask of Stormwind Tawny (+5 more)",
     cost = 0,
@@ -8097,7 +8097,7 @@ ForeverGuide_Data.Vendors = {
   },
   [581] = {
     name = "Hegnar Swiftaxe",
-    zone = "Eastern Kingdoms",
+    zone = "Ironforge",
     coords = "61.8, 88.4",
     item = "Hatchet, Battle Axe, Double Axe, Tabar, Bearded Axe, Cleaver (+4 more)",
     cost = 0,
@@ -8107,7 +8107,7 @@ ForeverGuide_Data.Vendors = {
   },
   [582] = {
     name = "Kelomir Ironhand",
-    zone = "Eastern Kingdoms",
+    zone = "Ironforge",
     coords = "62.0, 89.0",
     item = "Mace, Quarter Staff, Maul, Flail, Long Staff, Giant Mace (+9 more)",
     cost = 0,
@@ -8117,7 +8117,7 @@ ForeverGuide_Data.Vendors = {
   },
   [583] = {
     name = "Skolmin Goldfury",
-    zone = "Eastern Kingdoms",
+    zone = "Ironforge",
     coords = "71.2, 67.6",
     item = "Rough Arrow, Sharp Arrow, Reinforced Bow, Heavy Recurve Bow, Razor Arrow, Small Quiver (+5 more)",
     cost = 0,
@@ -8127,7 +8127,7 @@ ForeverGuide_Data.Vendors = {
   },
   [584] = {
     name = "Bretta Goldfury",
-    zone = "Eastern Kingdoms",
+    zone = "Ironforge",
     coords = "72.2, 65.8",
     item = "Ornate Blunderbuss, Solid Blunderbuss, Light Shot, Heavy Shot, Large Bore Blunderbuss, BKP 2700 \"Enforcer\" (+3 more)",
     cost = 0,
@@ -8137,7 +8137,7 @@ ForeverGuide_Data.Vendors = {
   },
   [585] = {
     name = "Sognar Cliffbeard",
-    zone = "Eastern Kingdoms",
+    zone = "Ironforge",
     coords = "55.4, 81.4",
     item = "Tough Jerky, Haunch of Meat, Mutton Chop, Wild Hog Shank, Cured Ham Steak, Roasted Quail",
     cost = 0,
@@ -8147,7 +8147,7 @@ ForeverGuide_Data.Vendors = {
   },
   [586] = {
     name = "Dolkin Craghelm",
-    zone = "Eastern Kingdoms",
+    zone = "Ironforge",
     coords = "54.0, 88.6",
     item = "Scalemail Vest, Scalemail Pants, Scalemail Boots, Scalemail Gloves, Scalemail Bracers, Scalemail Belt (+15 more)",
     cost = 0,
@@ -8157,7 +8157,7 @@ ForeverGuide_Data.Vendors = {
   },
   [587] = {
     name = "Olthran Craghelm",
-    zone = "Eastern Kingdoms",
+    zone = "Ironforge",
     coords = "54.4, 87.2",
     item = "Brigandine Vest, Brigandine Belt, Brigandine Leggings, Brigandine Boots, Brigandine Bracers, Brigandine Gloves (+16 more)",
     cost = 0,
@@ -8167,7 +8167,7 @@ ForeverGuide_Data.Vendors = {
   },
   [588] = {
     name = "Bombus Finespindle",
-    zone = "Eastern Kingdoms",
+    zone = "Ironforge",
     coords = "39.2, 33.2",
     item = "Coarse Thread, Fine Thread, Black Dye, Red Dye, Green Dye, Salt (+11 more)",
     cost = 0,
@@ -8177,7 +8177,7 @@ ForeverGuide_Data.Vendors = {
   },
   [589] = {
     name = "Lissyphus Finespindle",
-    zone = "Eastern Kingdoms",
+    zone = "Ironforge",
     coords = "54.4, 88.2",
     item = "Embroidered Armor, Embroidered Pants, Embroidered Boots, Embroidered Gloves, Studded Doublet, Studded Belt (+15 more)",
     cost = 0,
@@ -8187,7 +8187,7 @@ ForeverGuide_Data.Vendors = {
   },
   [590] = {
     name = "Pithwick",
-    zone = "Eastern Kingdoms",
+    zone = "Ironforge",
     coords = "38.2, 74.4",
     item = "Small Brown Pouch, Heavy Brown Bag, Brown Leather Satchel, Huge Brown Sack",
     cost = 0,
@@ -8197,7 +8197,7 @@ ForeverGuide_Data.Vendors = {
   },
   [591] = {
     name = "Harick Boulderdrum",
-    zone = "Eastern Kingdoms",
+    zone = "Ironforge",
     coords = "22.2, 16.0",
     item = "Smoldering Wand, Gloom Wand, Burning Wand, Dusk Wand, Combustible Wand, Pitchwood Wand (+2 more)",
     cost = 0,
@@ -8207,7 +8207,7 @@ ForeverGuide_Data.Vendors = {
   },
   [592] = {
     name = "Gwina Stonebranch",
-    zone = "Eastern Kingdoms",
+    zone = "Ironforge",
     coords = "55.2, 57.6",
     item = "Empty Vial, Leaded Vial, Copper Rod, Crystal Vial, Herb Pouch",
     cost = 0,
@@ -8217,7 +8217,7 @@ ForeverGuide_Data.Vendors = {
   },
   [593] = {
     name = "Edris Barleybeard",
-    zone = "Eastern Kingdoms",
+    zone = "Ironforge",
     coords = "72.0, 75.4",
     item = "Refreshing Spring Water, Ice Cold Milk, Melon Juice, Moonberry Juice, Sweet Nectar, Flask of Stormwind Tawny (+5 more)",
     cost = 0,
@@ -8227,7 +8227,7 @@ ForeverGuide_Data.Vendors = {
   },
   [594] = {
     name = "Ginny Longberry",
-    zone = "Eastern Kingdoms",
+    zone = "Ironforge",
     coords = "30.6, 26.4",
     item = "Infernal Stone, Demonic Figurine, Arcane Powder, Wild Berries, Wild Thornroot, Holy Candle (+12 more)",
     cost = 0,
@@ -8237,7 +8237,7 @@ ForeverGuide_Data.Vendors = {
   },
   [595] = {
     name = "Bingus",
-    zone = "Eastern Kingdoms",
+    zone = "Ironforge",
     coords = "22.4, 16.2",
     item = "Truncheon, War Hammer, Battle Staff, Morning Star, War Maul, War Staff",
     cost = 0,
@@ -8247,7 +8247,7 @@ ForeverGuide_Data.Vendors = {
   },
   [596] = {
     name = "Poranna Snowbraid",
-    zone = "Eastern Kingdoms",
+    zone = "Ironforge",
     coords = "43.2, 28.4",
     item = "Coarse Thread, Fine Thread, Bleach, Black Dye, Red Dye, Green Dye (+9 more)",
     cost = 0,
@@ -8257,7 +8257,7 @@ ForeverGuide_Data.Vendors = {
   },
   [597] = {
     name = "Ingrys Stonebrow",
-    zone = "Eastern Kingdoms",
+    zone = "Ironforge",
     coords = "38.4, 5.4",
     item = "Thick Cloth Vest, Thick Cloth Pants, Thick Cloth Shoes, Thick Cloth Gloves, Russet Vest, Russet Pants (+14 more)",
     cost = 0,
@@ -8267,7 +8267,7 @@ ForeverGuide_Data.Vendors = {
   },
   [598] = {
     name = "Maeva Snowbraid",
-    zone = "Eastern Kingdoms",
+    zone = "Ironforge",
     coords = "38.4, 5.4",
     item = "Plain Robe, Double-Stitched Robes, Robe of Apprenticeship, Chromatic Robe, Shimmering Silk Robes, Burning Robes (+1 more)",
     cost = 0,
@@ -8277,7 +8277,7 @@ ForeverGuide_Data.Vendors = {
   },
   [599] = {
     name = "Tilli Thistlefuzz",
-    zone = "Eastern Kingdoms",
+    zone = "Ironforge",
     coords = "60.4, 44.2",
     item = "Simple Wood, Copper Rod, Formula: Enchant Chest - Minor Intellect, Formula: Enchant 2H Weapon - Lesser Intellect, Lesser Magic Essence, Strange Dust (+5 more)",
     cost = 0,
@@ -8287,7 +8287,7 @@ ForeverGuide_Data.Vendors = {
   },
   [600] = {
     name = "Emrul Riknussun",
-    zone = "Eastern Kingdoms",
+    zone = "Ironforge",
     coords = "58.8, 37.2",
     item = "Refreshing Spring Water, Mild Spices, Hot Spices, Soothing Spices, Recipe: Smoked Sagefish, Recipe: Sagefish Delight",
     cost = 0,
@@ -8297,7 +8297,7 @@ ForeverGuide_Data.Vendors = {
   },
   [601] = {
     name = "Tansy Puddlefizz",
-    zone = "Eastern Kingdoms",
+    zone = "Ironforge",
     coords = "47.8, 6.4",
     item = "Fishing Pole, Recipe: Slitherskin Mackerel, Recipe: Longjaw Mud Snapper, Strong Fishing Pole, Recipe: Rockscale Cod, Shiny Bauble (+4 more)",
     cost = 0,
@@ -8307,7 +8307,7 @@ ForeverGuide_Data.Vendors = {
   },
   [602] = {
     name = "Burbik Gearspanner",
-    zone = "Eastern Kingdoms",
+    zone = "Ironforge",
     coords = "46.4, 27.2",
     item = "Coarse Thread, Fine Thread, Bleach, Mild Spices, Hot Spices, Weak Flux (+14 more)",
     cost = 0,
@@ -8317,7 +8317,7 @@ ForeverGuide_Data.Vendors = {
   },
   [603] = {
     name = "Tynnus Venomsprout",
-    zone = "Eastern Kingdoms",
+    zone = "Ironforge",
     coords = "52.4, 13.6",
     item = "Dust of Decay, Essence of Pain, Empty Vial, Leaded Vial, Lethargy Root, Thieves' Tools (+5 more)",
     cost = 0,
@@ -8327,7 +8327,7 @@ ForeverGuide_Data.Vendors = {
   },
   [604] = {
     name = "Hjoldir Stoneblade",
-    zone = "Eastern Kingdoms",
+    zone = "Ironforge",
     coords = "45.2, 6.4",
     item = "Broadsword, Flamberge, Main Gauche, Falchion, Zweihander, Rondel",
     cost = 0,
@@ -8337,7 +8337,7 @@ ForeverGuide_Data.Vendors = {
   },
   [605] = {
     name = "Gearcutter Cogspinner",
-    zone = "Eastern Kingdoms",
+    zone = "Ironforge",
     coords = "67.8, 43.0",
     item = "Weak Flux, Mining Pick, Strong Flux, Rough Blasting Powder, Copper Tube, Copper Modulator (+14 more)",
     cost = 0,
@@ -8347,7 +8347,7 @@ ForeverGuide_Data.Vendors = {
   },
   [606] = {
     name = "Soolie Berryfizz",
-    zone = "Eastern Kingdoms",
+    zone = "Ironforge",
     coords = "66.4, 54.4",
     item = "Empty Vial, Leaded Vial, Recipe: Free Action Potion, Crystal Vial, Recipe: Elixir of Superior Defense, Imbued Vial",
     cost = 0,
@@ -8357,7 +8357,7 @@ ForeverGuide_Data.Vendors = {
   },
   [607] = {
     name = "Garyl",
-    zone = "Kalimdor",
+    zone = "Orgrimmar",
     coords = "43.8, 74.4",
     item = "Guild Tabard",
     cost = 0,
@@ -8367,7 +8367,7 @@ ForeverGuide_Data.Vendors = {
   },
   [608] = {
     name = "Thrumn",
-    zone = "Kalimdor",
+    zone = "Thunder Bluff",
     coords = "37.4, 62.0",
     item = "Guild Tabard",
     cost = 0,
@@ -8377,7 +8377,7 @@ ForeverGuide_Data.Vendors = {
   },
   [609] = {
     name = "Merill Pleasance",
-    zone = "Eastern Kingdoms",
+    zone = "Undercity",
     coords = "68.4, 44.2",
     item = "Guild Tabard",
     cost = 0,
@@ -8387,7 +8387,7 @@ ForeverGuide_Data.Vendors = {
   },
   [610] = {
     name = "Shalumon",
-    zone = "Kalimdor",
+    zone = "Darnassus",
     coords = "69.4, 23.2",
     item = "Guild Tabard",
     cost = 0,
@@ -8397,7 +8397,7 @@ ForeverGuide_Data.Vendors = {
   },
   [611] = {
     name = "Rebecca Laughlin",
-    zone = "Eastern Kingdoms",
+    zone = "Stormwind City",
     coords = "57.2, 68.6",
     item = "Guild Tabard",
     cost = 0,
@@ -8407,7 +8407,7 @@ ForeverGuide_Data.Vendors = {
   },
   [612] = {
     name = "Krinkle Goodsteel",
-    zone = "Kalimdor",
+    zone = "Tanaris",
     coords = "51.4, 28.8",
     item = "Weak Flux, Mining Pick, Strong Flux, Coal, Blacksmith Hammer, Plans: Golden Scale Coif (+1 more)",
     cost = 0,
@@ -8417,7 +8417,7 @@ ForeverGuide_Data.Vendors = {
   },
   [613] = {
     name = "Erika Tate",
-    zone = "Eastern Kingdoms",
+    zone = "Stormwind City",
     coords = "75.4, 37.2",
     item = "Refreshing Spring Water, Mild Spices, Hot Spices, Soothing Spices, Recipe: Smoked Sagefish, Recipe: Sagefish Delight",
     cost = 0,
@@ -8427,7 +8427,7 @@ ForeverGuide_Data.Vendors = {
   },
   [614] = {
     name = "Catherine Leland",
-    zone = "Eastern Kingdoms",
+    zone = "Stormwind City",
     coords = "45.4, 57.6",
     item = "Fishing Pole, Recipe: Brilliant Smallfish, Recipe: Bristle Whisker Catfish, Strong Fishing Pole, Recipe: Rainbow Fin Albacore, Shiny Bauble (+3 more)",
     cost = 0,
@@ -8437,7 +8437,7 @@ ForeverGuide_Data.Vendors = {
   },
   [615] = {
     name = "Eldraeith",
-    zone = "Eastern Kingdoms",
+    zone = "Stormwind City",
     coords = "46.4, 78.4",
     item = "Empty Vial, Leaded Vial, Crystal Vial, Herb Pouch",
     cost = 0,
@@ -8447,7 +8447,7 @@ ForeverGuide_Data.Vendors = {
   },
   [616] = {
     name = "Strumner Flintheel",
-    zone = "Eastern Kingdoms",
+    zone = "Blasted Lands",
     coords = "66.0, 17.2",
     item = "Brigandine Vest, Brigandine Belt, Brigandine Leggings, Brigandine Boots, Brigandine Bracers, Brigandine Gloves (+10 more)",
     cost = 0,
@@ -8457,7 +8457,7 @@ ForeverGuide_Data.Vendors = {
   },
   [617] = {
     name = "Kathrum Axehand",
-    zone = "Eastern Kingdoms",
+    zone = "Stormwind City",
     coords = "51.4, 12.4",
     item = "Crescent Axe, Bullova, Francisca, Great Axe",
     cost = 0,
@@ -8467,7 +8467,7 @@ ForeverGuide_Data.Vendors = {
   },
   [618] = {
     name = "Thulman Flintcrag",
-    zone = "Eastern Kingdoms",
+    zone = "Stormwind City",
     coords = "54.4, 15.2",
     item = "Old Blunderbuss, Ornate Blunderbuss, Solid Blunderbuss, Light Shot, Heavy Shot, Small Shot Pouch",
     cost = 0,
@@ -8477,7 +8477,7 @@ ForeverGuide_Data.Vendors = {
   },
   [619] = {
     name = "Kaita Deepforge",
-    zone = "Eastern Kingdoms",
+    zone = "Stormwind City",
     coords = "56.4, 16.2",
     item = "Weak Flux, Mining Pick, Strong Flux, Coal, Blacksmith Hammer, Plans: Hardened Iron Shortsword (+1 more)",
     cost = 0,
@@ -8487,7 +8487,7 @@ ForeverGuide_Data.Vendors = {
   },
   [620] = {
     name = "Brooke Stonebraid",
-    zone = "Eastern Kingdoms",
+    zone = "Stormwind City",
     coords = "51.2, 16.8",
     item = "Weak Flux, Mining Pick, Strong Flux, Coal",
     cost = 0,
@@ -8497,7 +8497,7 @@ ForeverGuide_Data.Vendors = {
   },
   [621] = {
     name = "Billibub Cogspinner",
-    zone = "Eastern Kingdoms",
+    zone = "Stormwind City",
     coords = "55.2, 7.4",
     item = "Weak Flux, Mining Pick, Strong Flux, Rough Blasting Powder, Copper Tube, Copper Modulator (+10 more)",
     cost = 0,
@@ -8507,7 +8507,7 @@ ForeverGuide_Data.Vendors = {
   },
   [622] = {
     name = "Spackle Thornberry",
-    zone = "Eastern Kingdoms",
+    zone = "Stormwind City",
     coords = "25.4, 77.8",
     item = "Grimoire of Firebolt (Rank 2), Grimoire of Firebolt (Rank 3), Grimoire of Firebolt (Rank 4), Grimoire of Firebolt (Rank 5), Grimoire of Firebolt (Rank 6), Grimoire of Firebolt (Rank 7) (+53 more)",
     cost = 0,
@@ -8517,7 +8517,7 @@ ForeverGuide_Data.Vendors = {
   },
   [623] = {
     name = "Jillian Tanner",
-    zone = "Eastern Kingdoms",
+    zone = "Stormwind City",
     coords = "67.2, 49.4",
     item = "Coarse Thread, Fine Thread, Black Dye, Red Dye, Green Dye, Salt (+10 more)",
     cost = 0,
@@ -8527,7 +8527,7 @@ ForeverGuide_Data.Vendors = {
   },
   [624] = {
     name = "Bruuk Barleybeard",
-    zone = "Eastern Kingdoms",
+    zone = "Ironforge",
     coords = "72.0, 75.4",
     item = "Flask of Stormwind Tawny, Flagon of Dwarven Honeymead, Jug of Badlands Bourbon, Skin of Dwarven Stout, Bottle of Dalaran Noir, Cherry Grog",
     cost = 0,
@@ -8537,7 +8537,7 @@ ForeverGuide_Data.Vendors = {
   },
   [625] = {
     name = "Alchemist Pestlezugg",
-    zone = "Kalimdor",
+    zone = "Tanaris",
     coords = "50.8, 27.0",
     item = "Empty Vial, Leaded Vial, Recipe: Nature Protection Potion, Crystal Vial, Recipe: Philosopher's Stone, Recipe: Transmute Iron to Gold (+3 more)",
     cost = 0,
@@ -8547,7 +8547,7 @@ ForeverGuide_Data.Vendors = {
   },
   [626] = {
     name = "Barkeep Morag",
-    zone = "Kalimdor",
+    zone = "Orgrimmar",
     coords = "54.4, 68.0",
     item = "Tough Jerky, Refreshing Spring Water, Ice Cold Milk, Melon Juice, Moonberry Juice, Sweet Nectar (+11 more)",
     cost = 0,
@@ -8557,7 +8557,7 @@ ForeverGuide_Data.Vendors = {
   },
   [627] = {
     name = "Bartender Wental",
-    zone = "Eastern Kingdoms",
+    zone = "Redridge Mountains",
     coords = "21.6, 44.0",
     item = "Tough Jerky, Refreshing Spring Water, Dalaran Sharp, Dwarven Mild, Ice Cold Milk, Melon Juice (+18 more)",
     cost = 0,
@@ -8567,7 +8567,7 @@ ForeverGuide_Data.Vendors = {
   },
   [628] = {
     name = "Innkeeper Renee",
-    zone = "Eastern Kingdoms",
+    zone = "Tirisfal Glades",
     coords = "61.6, 52.0",
     item = "Refreshing Spring Water, Ice Cold Milk, Melon Juice, Moonberry Juice, Sweet Nectar, Forest Mushroom Cap (+6 more)",
     cost = 0,
@@ -8577,7 +8577,7 @@ ForeverGuide_Data.Vendors = {
   },
   [629] = {
     name = "Killian Sanatha",
-    zone = "Eastern Kingdoms",
+    zone = "Silverpine Forest",
     coords = "33.0, 17.4",
     item = "Recipe: Longjaw Mud Snapper, Recipe: Rainbow Fin Albacore",
     cost = 0,
@@ -8587,7 +8587,7 @@ ForeverGuide_Data.Vendors = {
   },
   [630] = {
     name = "Kayla Smithe",
-    zone = "Eastern Kingdoms",
+    zone = "Tirisfal Glades",
     coords = "30.8, 66.4",
     item = "Grimoire of Firebolt (Rank 2), Grimoire of Firebolt (Rank 3), Grimoire of Firebolt (Rank 4), Grimoire of Firebolt (Rank 5), Grimoire of Firebolt (Rank 6), Grimoire of Firebolt (Rank 7) (+11 more)",
     cost = 0,
@@ -8597,7 +8597,7 @@ ForeverGuide_Data.Vendors = {
   },
   [631] = {
     name = "Gina Lang",
-    zone = "Eastern Kingdoms",
+    zone = "Tirisfal Glades",
     coords = "61.6, 52.4",
     item = "Grimoire of Firebolt (Rank 2), Grimoire of Firebolt (Rank 3), Grimoire of Firebolt (Rank 4), Grimoire of Firebolt (Rank 5), Grimoire of Firebolt (Rank 6), Grimoire of Firebolt (Rank 7) (+32 more)",
     cost = 0,
@@ -8607,7 +8607,7 @@ ForeverGuide_Data.Vendors = {
   },
   [632] = {
     name = "Martha Strain",
-    zone = "Eastern Kingdoms",
+    zone = "Undercity",
     coords = "85.4, 15.4",
     item = "Grimoire of Firebolt (Rank 2), Grimoire of Firebolt (Rank 3), Grimoire of Firebolt (Rank 4), Grimoire of Firebolt (Rank 5), Grimoire of Firebolt (Rank 6), Grimoire of Firebolt (Rank 7) (+53 more)",
     cost = 0,
@@ -8617,7 +8617,7 @@ ForeverGuide_Data.Vendors = {
   },
   [633] = {
     name = "Zane Bradford",
-    zone = "Eastern Kingdoms",
+    zone = "Undercity",
     coords = "70.0, 27.2",
     item = "Smoldering Wand, Gloom Wand, Burning Wand, Dusk Wand, Combustible Wand, Pitchwood Wand (+2 more)",
     cost = 0,
@@ -8627,7 +8627,7 @@ ForeverGuide_Data.Vendors = {
   },
   [634] = {
     name = "Lilly",
-    zone = "Eastern Kingdoms",
+    zone = "Silverpine Forest",
     coords = "43.0, 50.8",
     item = "Simple Wood, Copper Rod, Formula: Enchant Chest - Minor Intellect, Formula: Enchant Chest - Lesser Intellect, Lesser Magic Essence, Strange Dust (+5 more)",
     cost = 0,
@@ -8637,7 +8637,7 @@ ForeverGuide_Data.Vendors = {
   },
   [635] = {
     name = "Leo Sarn",
-    zone = "Eastern Kingdoms",
+    zone = "Silverpine Forest",
     coords = "53.8, 82.6",
     item = "Simple Wood, Copper Rod, Formula: Enchant Chest - Minor Intellect, Lesser Magic Essence, Strange Dust, Star Wood (+4 more)",
     cost = 0,
@@ -8657,7 +8657,7 @@ ForeverGuide_Data.Vendors = {
   },
   [637] = {
     name = "Tumi",
-    zone = "Kalimdor",
+    zone = "Orgrimmar",
     coords = "82.4, 23.4",
     item = "Scalemail Vest, Scalemail Pants, Scalemail Boots, Scalemail Gloves, Chainmail Armor, Chainmail Pants (+45 more)",
     cost = 0,
@@ -8667,7 +8667,7 @@ ForeverGuide_Data.Vendors = {
   },
   [638] = {
     name = "Innkeeper Thulbek",
-    zone = "Eastern Kingdoms",
+    zone = "Stranglethorn Vale",
     coords = "31.4, 29.6",
     item = "Morning Glory Dew, Moonberry Juice, Sweet Nectar, Melon Juice, Ice Cold Milk, Refreshing Spring Water (+13 more)",
     cost = 0,
@@ -8677,7 +8677,7 @@ ForeverGuide_Data.Vendors = {
   },
   [639] = {
     name = "Kurgul",
-    zone = "Kalimdor",
+    zone = "Orgrimmar",
     coords = "47.4, 46.8",
     item = "Grimoire of Firebolt (Rank 2), Grimoire of Firebolt (Rank 3), Grimoire of Firebolt (Rank 4), Grimoire of Firebolt (Rank 5), Grimoire of Firebolt (Rank 6), Grimoire of Firebolt (Rank 7) (+53 more)",
     cost = 0,
@@ -8687,7 +8687,7 @@ ForeverGuide_Data.Vendors = {
   },
   [640] = {
     name = "Katis",
-    zone = "Kalimdor",
+    zone = "Orgrimmar",
     coords = "44.4, 48.4",
     item = "Smoldering Wand, Gloom Wand, Burning Wand, Dusk Wand, Combustible Wand, Pitchwood Wand (+2 more)",
     cost = 0,
@@ -8697,7 +8697,7 @@ ForeverGuide_Data.Vendors = {
   },
   [641] = {
     name = "Shimra",
-    zone = "Kalimdor",
+    zone = "Orgrimmar",
     coords = "47.8, 80.6",
     item = "Coarse Thread, Fine Thread, Bleach, Black Dye, Red Dye, Green Dye (+28 more)",
     cost = 0,
@@ -8707,7 +8707,7 @@ ForeverGuide_Data.Vendors = {
   },
   [642] = {
     name = "Mirelle Tremayne",
-    zone = "Eastern Kingdoms",
+    zone = "Undercity",
     coords = "61.4, 28.4",
     item = "Scalemail Vest, Scalemail Pants, Scalemail Boots, Scalemail Gloves, Chainmail Armor, Chainmail Pants (+45 more)",
     cost = 0,
@@ -8717,7 +8717,7 @@ ForeverGuide_Data.Vendors = {
   },
   [643] = {
     name = "Gillian Moore",
-    zone = "Eastern Kingdoms",
+    zone = "Undercity",
     coords = "70.4, 58.4",
     item = "Cured Leather Armor, Cured Leather Pants, Cured Leather Boots, Cured Leather Gloves, Rough Leather Boots, Rough Leather Gloves (+32 more)",
     cost = 0,
@@ -8727,7 +8727,7 @@ ForeverGuide_Data.Vendors = {
   },
   [644] = {
     name = "Sheldon Von Croy",
-    zone = "Eastern Kingdoms",
+    zone = "Undercity",
     coords = "70.4, 28.4",
     item = "Thick Cloth Vest, Thick Cloth Pants, Thick Cloth Shoes, Thick Cloth Gloves, Knitted Sandals, Knitted Gloves (+35 more)",
     cost = 0,
@@ -8737,7 +8737,7 @@ ForeverGuide_Data.Vendors = {
   },
   [645] = {
     name = "Krond",
-    zone = "Kalimdor",
+    zone = "Stonetalon Mountains",
     coords = "46.2, 58.4",
     item = "Tough Jerky, Haunch of Meat, Mutton Chop, Wild Hog Shank, Cured Ham Steak, Roasted Quail",
     cost = 0,
@@ -8747,7 +8747,7 @@ ForeverGuide_Data.Vendors = {
   },
   [646] = {
     name = "Larhka",
-    zone = "Kalimdor",
+    zone = "The Barrens",
     coords = "52.0, 29.6",
     item = "Refreshing Spring Water, Ice Cold Milk, Melon Juice, Moonberry Juice, Sweet Nectar, Morning Glory Dew",
     cost = 0,
@@ -8757,7 +8757,7 @@ ForeverGuide_Data.Vendors = {
   },
   [647] = {
     name = "Gwyn Farrow",
-    zone = "Eastern Kingdoms",
+    zone = "Silverpine Forest",
     coords = "44.0, 39.8",
     item = "Forest Mushroom Cap, Red-speckled Mushroom, Spongy Morel, Delicious Cave Mold, Raw Black Truffle, Dried King Bolete",
     cost = 0,
@@ -8767,7 +8767,7 @@ ForeverGuide_Data.Vendors = {
   },
   [648] = {
     name = "Harn Longcast",
-    zone = "Kalimdor",
+    zone = "Mulgore",
     coords = "46.6, 59.2",
     item = "Fishing Pole, Recipe: Brilliant Smallfish, Recipe: Longjaw Mud Snapper, Strong Fishing Pole, Shiny Bauble, Nightcrawlers (+2 more)",
     cost = 0,
@@ -8777,7 +8777,7 @@ ForeverGuide_Data.Vendors = {
   },
   [649] = {
     name = "Zansoa",
-    zone = "Kalimdor",
+    zone = "Durotar",
     coords = "56.0, 73.4",
     item = "Fishing Pole, Recipe: Slitherskin Mackerel, Recipe: Rainbow Fin Albacore, Shiny Bauble, Nightcrawlers, Bright Baubles",
     cost = 0,
@@ -8787,7 +8787,7 @@ ForeverGuide_Data.Vendors = {
   },
   [650] = {
     name = "Yonada",
-    zone = "Kalimdor",
+    zone = "The Barrens",
     coords = "45.0, 59.2",
     item = "Coarse Thread, Fine Thread, Bleach, Black Dye, Red Dye, Green Dye (+13 more)",
     cost = 0,
@@ -8797,7 +8797,7 @@ ForeverGuide_Data.Vendors = {
   },
   [651] = {
     name = "Kitha",
-    zone = "Kalimdor",
+    zone = "Durotar",
     coords = "54.4, 41.4",
     item = "Grimoire of Firebolt (Rank 2), Grimoire of Firebolt (Rank 3), Grimoire of Firebolt (Rank 4), Grimoire of Firebolt (Rank 5), Grimoire of Firebolt (Rank 6), Grimoire of Firebolt (Rank 7) (+32 more)",
     cost = 0,
@@ -8807,7 +8807,7 @@ ForeverGuide_Data.Vendors = {
   },
   [652] = {
     name = "Dellylah",
-    zone = "Kalimdor",
+    zone = "Teldrassil",
     coords = "59.4, 40.8",
     item = "Refreshing Spring Water, Ice Cold Milk, Melon Juice, Moonberry Juice, Sweet Nectar, Morning Glory Dew (+8 more)",
     cost = 0,
@@ -8817,7 +8817,7 @@ ForeverGuide_Data.Vendors = {
   },
   [653] = {
     name = "Innkeeper Janene",
-    zone = "Kalimdor",
+    zone = "Dustwallow Marsh",
     coords = "66.4, 45.2",
     item = "Refreshing Spring Water, Ice Cold Milk, Melon Juice, Moonberry Juice, Sweet Nectar, Tough Hunk of Bread (+6 more)",
     cost = 0,
@@ -8827,7 +8827,7 @@ ForeverGuide_Data.Vendors = {
   },
   [654] = {
     name = "Thelgrum Stonehammer",
-    zone = "Kalimdor",
+    zone = "Darkshore",
     coords = "38.2, 41.2",
     item = "Weak Flux, Mining Pick, Strong Flux, Coal",
     cost = 0,
@@ -8837,7 +8837,7 @@ ForeverGuide_Data.Vendors = {
   },
   [655] = {
     name = "Elisa Steelhand",
-    zone = "Kalimdor",
+    zone = "Darkshore",
     coords = "38.2, 41.2",
     item = "Weak Flux, Mining Pick, Strong Flux, Coal, Blacksmith Hammer, Elemental Flux",
     cost = 0,
@@ -8847,7 +8847,7 @@ ForeverGuide_Data.Vendors = {
   },
   [656] = {
     name = "Gorbold Steelhand",
-    zone = "Kalimdor",
+    zone = "Darkshore",
     coords = "38.0, 41.2",
     item = "Coarse Thread, Fine Thread, Bleach, Black Dye, Red Dye, Green Dye (+28 more)",
     cost = 0,
@@ -8857,7 +8857,7 @@ ForeverGuide_Data.Vendors = {
   },
   [657] = {
     name = "Dannie Fizzwizzle",
-    zone = "Eastern Kingdoms",
+    zone = "Dun Morogh",
     coords = "47.2, 53.4",
     item = "Grimoire of Firebolt (Rank 2), Grimoire of Firebolt (Rank 3), Grimoire of Firebolt (Rank 4), Grimoire of Firebolt (Rank 5), Grimoire of Firebolt (Rank 6), Grimoire of Firebolt (Rank 7) (+32 more)",
     cost = 0,
@@ -8867,7 +8867,7 @@ ForeverGuide_Data.Vendors = {
   },
   [658] = {
     name = "Donni Anthania",
-    zone = "Eastern Kingdoms",
+    zone = "Elwynn Forest",
     coords = "44.2, 53.2",
     item = "Cat Carrier (Bombay), Cat Carrier (Cornish Rex), Cat Carrier (Orange Tabby), Cat Carrier (Silver Tabby)",
     cost = 0,
@@ -8877,7 +8877,7 @@ ForeverGuide_Data.Vendors = {
   },
   [659] = {
     name = "Dane Winslow",
-    zone = "Eastern Kingdoms",
+    zone = "Elwynn Forest",
     coords = "50.0, 42.6",
     item = "Grimoire of Firebolt (Rank 2), Grimoire of Firebolt (Rank 3), Grimoire of Firebolt (Rank 4), Grimoire of Firebolt (Rank 5), Grimoire of Firebolt (Rank 6), Grimoire of Firebolt (Rank 7) (+11 more)",
     cost = 0,
@@ -8887,7 +8887,7 @@ ForeverGuide_Data.Vendors = {
   },
   [660] = {
     name = "Cylina Darkheart",
-    zone = "Eastern Kingdoms",
+    zone = "Elwynn Forest",
     coords = "44.4, 66.0",
     item = "Grimoire of Firebolt (Rank 2), Grimoire of Firebolt (Rank 3), Grimoire of Firebolt (Rank 4), Grimoire of Firebolt (Rank 5), Grimoire of Firebolt (Rank 6), Grimoire of Firebolt (Rank 7) (+32 more)",
     cost = 0,
@@ -8897,7 +8897,7 @@ ForeverGuide_Data.Vendors = {
   },
   [661] = {
     name = "Wren Darkspring",
-    zone = "Eastern Kingdoms",
+    zone = "Dun Morogh",
     coords = "28.8, 66.2",
     item = "Grimoire of Firebolt (Rank 2), Grimoire of Firebolt (Rank 3), Grimoire of Firebolt (Rank 4), Grimoire of Firebolt (Rank 5), Grimoire of Firebolt (Rank 6), Grimoire of Firebolt (Rank 7) (+11 more)",
     cost = 0,
@@ -8907,7 +8907,7 @@ ForeverGuide_Data.Vendors = {
   },
   [662] = {
     name = "Jubahl Corpseseeker",
-    zone = "Eastern Kingdoms",
+    zone = "Ironforge",
     coords = "53.0, 6.2",
     item = "Grimoire of Firebolt (Rank 2), Grimoire of Firebolt (Rank 3), Grimoire of Firebolt (Rank 4), Grimoire of Firebolt (Rank 5), Grimoire of Firebolt (Rank 6), Grimoire of Firebolt (Rank 7) (+53 more)",
     cost = 0,
@@ -8917,7 +8917,7 @@ ForeverGuide_Data.Vendors = {
   },
   [663] = {
     name = "Riznek",
-    zone = "Kalimdor",
+    zone = "Thousand Needles",
     coords = "79.2, 75.4",
     item = "Refreshing Spring Water, Ice Cold Milk, Melon Juice, Moonberry Juice, Sweet Nectar, Morning Glory Dew",
     cost = 0,
@@ -8927,7 +8927,7 @@ ForeverGuide_Data.Vendors = {
   },
   [664] = {
     name = "Brivelthwerp",
-    zone = "Kalimdor",
+    zone = "Thousand Needles",
     coords = "77.4, 77.0",
     item = "Tigule's Strawberry Ice Cream",
     cost = 0,
@@ -8937,7 +8937,7 @@ ForeverGuide_Data.Vendors = {
   },
   [665] = {
     name = "Magus Tirth",
-    zone = "Kalimdor",
+    zone = "Thousand Needles",
     coords = "78.2, 75.8",
     item = "Ancona Chicken",
     cost = 0,
@@ -8947,7 +8947,7 @@ ForeverGuide_Data.Vendors = {
   },
   [666] = {
     name = "Ghok'kah",
-    zone = "Kalimdor",
+    zone = "Dustwallow Marsh",
     coords = "35.2, 30.8",
     item = "Orange Dye, Bleach, Blue Dye, Heavy Silken Thread, Green Dye, Red Dye (+10 more)",
     cost = 0,
@@ -8957,7 +8957,7 @@ ForeverGuide_Data.Vendors = {
   },
   [667] = {
     name = "Vizzklick",
-    zone = "Kalimdor",
+    zone = "Tanaris",
     coords = "51.0, 27.4",
     item = "Coarse Thread, Fine Thread, Bleach, Black Dye, Red Dye, Green Dye (+11 more)",
     cost = 0,
@@ -8967,7 +8967,7 @@ ForeverGuide_Data.Vendors = {
   },
   [668] = {
     name = "Jun'ha",
-    zone = "Eastern Kingdoms",
+    zone = "Arathi Highlands",
     coords = "72.6, 36.4",
     item = "Coarse Thread, Fine Thread, Bleach, Black Dye, Red Dye, Green Dye (+10 more)",
     cost = 0,
@@ -8977,7 +8977,7 @@ ForeverGuide_Data.Vendors = {
   },
   [669] = {
     name = "Brienna Starglow",
-    zone = "Kalimdor",
+    zone = "Feralas",
     coords = "89.0, 45.8",
     item = "Coarse Thread, Fine Thread, Bleach, Black Dye, Red Dye, Green Dye (+10 more)",
     cost = 0,
@@ -8987,7 +8987,7 @@ ForeverGuide_Data.Vendors = {
   },
   [670] = {
     name = "Innkeeper Brianna",
-    zone = "Eastern Kingdoms",
+    zone = "Redridge Mountains",
     coords = "21.8, 44.8",
     item = "Refreshing Spring Water, Slitherskin Mackerel, Ice Cold Milk, Melon Juice, Moonberry Juice, Sweet Nectar (+6 more)",
     cost = 0,
@@ -8997,7 +8997,7 @@ ForeverGuide_Data.Vendors = {
   },
   [671] = {
     name = "Jinky Twizzlefixxit",
-    zone = "Kalimdor",
+    zone = "Thousand Needles",
     coords = "77.6, 77.8",
     item = "Weak Flux, Mining Pick, Strong Flux, Rough Blasting Powder, Copper Modulator, Coarse Blasting Powder (+12 more)",
     cost = 0,
@@ -9007,7 +9007,7 @@ ForeverGuide_Data.Vendors = {
   },
   [672] = {
     name = "Harlown Darkweave",
-    zone = "Kalimdor",
+    zone = "Ashenvale",
     coords = "18.2, 60.0",
     item = "Coarse Thread, Fine Thread, Black Dye, Red Dye, Green Dye, Salt (+11 more)",
     cost = 0,
@@ -9017,7 +9017,7 @@ ForeverGuide_Data.Vendors = {
   },
   [673] = {
     name = "Innkeeper Hearthstove",
-    zone = "Eastern Kingdoms",
+    zone = "Loch Modan",
     coords = "35.4, 48.4",
     item = "Refreshing Spring Water, Ice Cold Milk, Melon Juice, Moonberry Juice, Sweet Nectar, Tough Hunk of Bread (+6 more)",
     cost = 0,
@@ -9027,7 +9027,7 @@ ForeverGuide_Data.Vendors = {
   },
   [674] = {
     name = "Innkeeper Saelienne",
-    zone = "Kalimdor",
+    zone = "Darnassus",
     coords = "66.8, 16.6",
     item = "Refreshing Spring Water, Ice Cold Milk, Melon Juice, Moonberry Juice, Sweet Nectar, Shiny Red Apple (+6 more)",
     cost = 0,
@@ -9037,7 +9037,7 @@ ForeverGuide_Data.Vendors = {
   },
   [675] = {
     name = "Innkeeper Keldamyr",
-    zone = "Kalimdor",
+    zone = "Teldrassil",
     coords = "55.6, 59.8",
     item = "Refreshing Spring Water, Ice Cold Milk, Melon Juice, Moonberry Juice, Sweet Nectar, Tough Hunk of Bread (+6 more)",
     cost = 0,
@@ -9047,7 +9047,7 @@ ForeverGuide_Data.Vendors = {
   },
   [676] = {
     name = "Innkeeper Shaussiy",
-    zone = "Kalimdor",
+    zone = "Darkshore",
     coords = "37.0, 44.0",
     item = "Refreshing Spring Water, Ice Cold Milk, Melon Juice, Moonberry Juice, Sweet Nectar, Tough Hunk of Bread (+6 more)",
     cost = 0,
@@ -9057,7 +9057,7 @@ ForeverGuide_Data.Vendors = {
   },
   [677] = {
     name = "Innkeeper Kimlya",
-    zone = "Kalimdor",
+    zone = "Ashenvale",
     coords = "37.0, 49.2",
     item = "Refreshing Spring Water, Slitherskin Mackerel, Ice Cold Milk, Melon Juice, Moonberry Juice, Sweet Nectar (+6 more)",
     cost = 0,
@@ -9067,7 +9067,7 @@ ForeverGuide_Data.Vendors = {
   },
   [678] = {
     name = "Innkeeper Bates",
-    zone = "Eastern Kingdoms",
+    zone = "Silverpine Forest",
     coords = "43.2, 41.2",
     item = "Refreshing Spring Water, Ice Cold Milk, Melon Juice, Moonberry Juice, Sweet Nectar, Forest Mushroom Cap (+6 more)",
     cost = 0,
@@ -9077,7 +9077,7 @@ ForeverGuide_Data.Vendors = {
   },
   [679] = {
     name = "Innkeeper Allison",
-    zone = "Eastern Kingdoms",
+    zone = "Stormwind City",
     coords = "52.4, 65.6",
     item = "Refreshing Spring Water, Ice Cold Milk, Melon Juice, Moonberry Juice, Sweet Nectar, Tough Hunk of Bread (+6 more)",
     cost = 0,
@@ -9087,7 +9087,7 @@ ForeverGuide_Data.Vendors = {
   },
   [680] = {
     name = "Innkeeper Norman",
-    zone = "Eastern Kingdoms",
+    zone = "Undercity",
     coords = "66.8, 38.6",
     item = "Refreshing Spring Water, Ice Cold Milk, Melon Juice, Moonberry Juice, Sweet Nectar, Forest Mushroom Cap (+6 more)",
     cost = 0,
@@ -9097,7 +9097,7 @@ ForeverGuide_Data.Vendors = {
   },
   [681] = {
     name = "Innkeeper Pala",
-    zone = "Kalimdor",
+    zone = "Thunder Bluff",
     coords = "45.4, 63.4",
     item = "Refreshing Spring Water, Dalaran Sharp, Dwarven Mild, Ice Cold Milk, Melon Juice, Moonberry Juice (+6 more)",
     cost = 0,
@@ -9107,7 +9107,7 @@ ForeverGuide_Data.Vendors = {
   },
   [682] = {
     name = "Innkeeper Kauth",
-    zone = "Kalimdor",
+    zone = "Mulgore",
     coords = "46.0, 64.0",
     item = "Refreshing Spring Water, Ice Cold Milk, Melon Juice, Moonberry Juice, Sweet Nectar, Tough Hunk of Bread (+6 more)",
     cost = 0,
@@ -9117,7 +9117,7 @@ ForeverGuide_Data.Vendors = {
   },
   [683] = {
     name = "Miles Welsh",
-    zone = "Kalimdor",
+    zone = "Thunder Bluff",
     coords = "25.4, 15.4",
     item = "Friendship Bread, Freshly-Squeezed Lemonade",
     cost = 0,
@@ -9127,7 +9127,7 @@ ForeverGuide_Data.Vendors = {
   },
   [684] = {
     name = "Elissa Dumas",
-    zone = "Kalimdor",
+    zone = "Darnassus",
     coords = "40.0, 81.2",
     item = "Friendship Bread, Freshly-Squeezed Lemonade",
     cost = 0,
@@ -9137,7 +9137,7 @@ ForeverGuide_Data.Vendors = {
   },
   [685] = {
     name = "Joanna Whitehall",
-    zone = "Eastern Kingdoms",
+    zone = "Undercity",
     coords = "52.8, 36.6",
     item = "Friendship Bread, Freshly-Squeezed Lemonade",
     cost = 0,
@@ -9147,7 +9147,7 @@ ForeverGuide_Data.Vendors = {
   },
   [686] = {
     name = "Deze Snowbane",
-    zone = "Kalimdor",
+    zone = "Orgrimmar",
     coords = "79.0, 29.6",
     item = "Friendship Bread, Freshly-Squeezed Lemonade",
     cost = 0,
@@ -9157,7 +9157,7 @@ ForeverGuide_Data.Vendors = {
   },
   [687] = {
     name = "Alexander Calder",
-    zone = "Eastern Kingdoms",
+    zone = "Ironforge",
     coords = "50.2, 6.2",
     item = "Friendship Bread, Freshly-Squeezed Lemonade",
     cost = 0,
@@ -9167,7 +9167,7 @@ ForeverGuide_Data.Vendors = {
   },
   [688] = {
     name = "Zan Shivsproket",
-    zone = "Eastern Kingdoms",
+    zone = "Alterac Mountains",
     coords = "86.0, 80.0",
     item = "Weak Flux, Mining Pick, Strong Flux, Rough Blasting Powder, Copper Tube, Copper Modulator (+11 more)",
     cost = 0,
@@ -9177,7 +9177,7 @@ ForeverGuide_Data.Vendors = {
   },
   [689] = {
     name = "Smudge Thunderwood",
-    zone = "Eastern Kingdoms",
+    zone = "Alterac Mountains",
     coords = "86.0, 79.4",
     item = "Dust of Decay, Essence of Pain, Empty Vial, Leaded Vial, Lethargy Root, Thieves' Tools (+6 more)",
     cost = 0,
@@ -9187,7 +9187,7 @@ ForeverGuide_Data.Vendors = {
   },
   [690] = {
     name = "Innkeeper Trelayne",
-    zone = "Eastern Kingdoms",
+    zone = "Duskwood",
     coords = "73.8, 44.4",
     item = "Refreshing Spring Water, Dalaran Sharp, Dwarven Mild, Ice Cold Milk, Melon Juice, Moonberry Juice (+6 more)",
     cost = 0,
@@ -9197,7 +9197,7 @@ ForeverGuide_Data.Vendors = {
   },
   [691] = {
     name = "Innkeeper Wiley",
-    zone = "Kalimdor",
+    zone = "The Barrens",
     coords = "62.0, 39.4",
     item = "Refreshing Spring Water, Slitherskin Mackerel, Ice Cold Milk, Melon Juice, Moonberry Juice, Sweet Nectar (+6 more)",
     cost = 0,
@@ -9207,7 +9207,7 @@ ForeverGuide_Data.Vendors = {
   },
   [692] = {
     name = "Innkeeper Skindle",
-    zone = "Eastern Kingdoms",
+    zone = "Stranglethorn Vale",
     coords = "27.0, 77.2",
     item = "Morning Glory Dew, Moonberry Juice, Sweet Nectar, Melon Juice, Ice Cold Milk, Refreshing Spring Water (+6 more)",
     cost = 0,
@@ -9217,7 +9217,7 @@ ForeverGuide_Data.Vendors = {
   },
   [693] = {
     name = "Innkeeper Grosk",
-    zone = "Kalimdor",
+    zone = "Durotar",
     coords = "51.4, 41.6",
     item = "Tough Jerky, Refreshing Spring Water, Ice Cold Milk, Melon Juice, Moonberry Juice, Sweet Nectar (+6 more)",
     cost = 0,
@@ -9227,7 +9227,7 @@ ForeverGuide_Data.Vendors = {
   },
   [694] = {
     name = "Innkeeper Gryshka",
-    zone = "Kalimdor",
+    zone = "Orgrimmar",
     coords = "54.0, 68.6",
     item = "Tough Jerky, Refreshing Spring Water, Ice Cold Milk, Melon Juice, Moonberry Juice, Sweet Nectar (+6 more)",
     cost = 0,
@@ -9237,7 +9237,7 @@ ForeverGuide_Data.Vendors = {
   },
   [695] = {
     name = "Caretaker Alen",
-    zone = "Eastern Kingdoms",
+    zone = "Eastern Plaguelands",
     coords = "79.4, 63.8",
     item = "Sharp Throwing Axe, Keen Throwing Knife, Deadly Throwing Axe, Refreshing Spring Water, Ice Cold Milk, Melon Juice (+24 more)",
     cost = 0,
@@ -9247,7 +9247,7 @@ ForeverGuide_Data.Vendors = {
   },
   [696] = {
     name = "Yuka Screwspigot",
-    zone = "Eastern Kingdoms",
+    zone = "Burning Steppes",
     coords = "66.0, 22.0",
     item = "Copper Tube, Copper Modulator, Silver Contact, Bronze Framework, Gyrochronatom, Mining Pick (+11 more)",
     cost = 0,
@@ -9257,7 +9257,7 @@ ForeverGuide_Data.Vendors = {
   },
   [697] = {
     name = "Master Smith Burninate",
-    zone = "Eastern Kingdoms",
+    zone = "Searing Gorge",
     coords = "38.4, 28.4",
     item = "Gleaming Throwing Axe, Wicked Throwing Dagger, Deadly Throwing Axe, Heavy Throwing Dagger, Tough Jerky, Refreshing Spring Water (+28 more)",
     cost = 0,
@@ -9267,7 +9267,7 @@ ForeverGuide_Data.Vendors = {
   },
   [698] = {
     name = "Kelgruk Bloodaxe",
-    zone = "Kalimdor",
+    zone = "Orgrimmar",
     coords = "81.8, 18.6",
     item = "Cutlass, Dacian Falx, Longsword, Claymore, Espadon, Scimitar (+11 more)",
     cost = 0,
@@ -9277,7 +9277,7 @@ ForeverGuide_Data.Vendors = {
   },
   [699] = {
     name = "Nargatt",
-    zone = "Eastern Kingdoms",
+    zone = "Stranglethorn Vale",
     coords = "32.2, 29.2",
     item = "Morning Glory Dew, Moonberry Juice, Sweet Nectar, Melon Juice, Ice Cold Milk, Refreshing Spring Water (+12 more)",
     cost = 0,
@@ -9287,7 +9287,7 @@ ForeverGuide_Data.Vendors = {
   },
   [700] = {
     name = "Marin Noggenfogger",
-    zone = "Kalimdor",
+    zone = "Tanaris",
     coords = "51.8, 28.4",
     item = "Noggenfogger Elixir",
     cost = 0,
@@ -9297,7 +9297,7 @@ ForeverGuide_Data.Vendors = {
   },
   [701] = {
     name = "Alessandro Luca",
-    zone = "Eastern Kingdoms",
+    zone = "Undercity",
     coords = "58.0, 55.8",
     item = "Field Testing Kit",
     cost = 0,
@@ -9307,7 +9307,7 @@ ForeverGuide_Data.Vendors = {
   },
   [702] = {
     name = "Innkeeper Byula",
-    zone = "Kalimdor",
+    zone = "The Barrens",
     coords = "45.4, 59.0",
     item = "Refreshing Spring Water, Ice Cold Milk, Melon Juice, Moonberry Juice, Sweet Nectar, Shiny Red Apple (+6 more)",
     cost = 0,
@@ -9317,7 +9317,7 @@ ForeverGuide_Data.Vendors = {
   },
   [703] = {
     name = "Innkeeper Jayka",
-    zone = "Kalimdor",
+    zone = "Stonetalon Mountains",
     coords = "47.4, 62.0",
     item = "Tough Jerky, Refreshing Spring Water, Ice Cold Milk, Melon Juice, Moonberry Juice, Sweet Nectar (+6 more)",
     cost = 0,
@@ -9327,7 +9327,7 @@ ForeverGuide_Data.Vendors = {
   },
   [704] = {
     name = "Innkeeper Fizzgrimble",
-    zone = "Kalimdor",
+    zone = "Tanaris",
     coords = "52.4, 27.8",
     item = "Tough Jerky, Refreshing Spring Water, Ice Cold Milk, Melon Juice, Moonberry Juice, Sweet Nectar (+7 more)",
     cost = 0,
@@ -9337,7 +9337,7 @@ ForeverGuide_Data.Vendors = {
   },
   [705] = {
     name = "Innkeeper Shyria",
-    zone = "Kalimdor",
+    zone = "Feralas",
     coords = "31.0, 43.4",
     item = "Tough Jerky, Refreshing Spring Water, Ice Cold Milk, Melon Juice, Moonberry Juice, Sweet Nectar (+12 more)",
     cost = 0,
@@ -9347,7 +9347,7 @@ ForeverGuide_Data.Vendors = {
   },
   [706] = {
     name = "Innkeeper Greul",
-    zone = "Kalimdor",
+    zone = "Feralas",
     coords = "74.8, 45.0",
     item = "Refreshing Spring Water, Ice Cold Milk, Melon Juice, Moonberry Juice, Sweet Nectar, Tough Hunk of Bread (+6 more)",
     cost = 0,
@@ -9357,7 +9357,7 @@ ForeverGuide_Data.Vendors = {
   },
   [707] = {
     name = "Innkeeper Thulfram",
-    zone = "Eastern Kingdoms",
+    zone = "The Hinterlands",
     coords = "13.4, 41.8",
     item = "Refreshing Spring Water, Ice Cold Milk, Melon Juice, Moonberry Juice, Sweet Nectar, Thunder Ale (+8 more)",
     cost = 0,
@@ -9367,7 +9367,7 @@ ForeverGuide_Data.Vendors = {
   },
   [708] = {
     name = "Gregan Brewspewer",
-    zone = "Kalimdor",
+    zone = "Feralas",
     coords = "45.0, 25.4",
     item = "Bait",
     cost = 0,
@@ -9377,7 +9377,7 @@ ForeverGuide_Data.Vendors = {
   },
   [709] = {
     name = "Pratt McGrubben",
-    zone = "Kalimdor",
+    zone = "Feralas",
     coords = "30.4, 42.8",
     item = "Coarse Thread, Fine Thread, Black Dye, Red Dye, Green Dye, Salt (+13 more)",
     cost = 0,
@@ -9387,7 +9387,7 @@ ForeverGuide_Data.Vendors = {
   },
   [710] = {
     name = "Jangdor Swiftstrider",
-    zone = "Kalimdor",
+    zone = "Feralas",
     coords = "74.4, 42.8",
     item = "Coarse Thread, Fine Thread, Black Dye, Red Dye, Green Dye, Salt (+14 more)",
     cost = 0,
@@ -9397,7 +9397,7 @@ ForeverGuide_Data.Vendors = {
   },
   [711] = {
     name = "Quintis Jonespyre",
-    zone = "Kalimdor",
+    zone = "Feralas",
     coords = "32.4, 43.8",
     item = "Evergreen Pouch, Packet of Tharlendris Seeds",
     cost = 0,
@@ -9407,7 +9407,7 @@ ForeverGuide_Data.Vendors = {
   },
   [712] = {
     name = "Darnall",
-    zone = "Kalimdor",
+    zone = "Moonglade",
     coords = "51.4, 33.2",
     item = "Coarse Thread, Fine Thread, Bleach, Black Dye, Red Dye, Green Dye (+12 more)",
     cost = 0,
@@ -9417,7 +9417,7 @@ ForeverGuide_Data.Vendors = {
   },
   [713] = {
     name = "Mardrack Greenwell",
-    zone = "Kalimdor",
+    zone = "Feralas",
     coords = "31.0, 43.2",
     item = "Refreshing Spring Water, Ice Cold Milk, Melon Juice, Moonberry Juice, Sweet Nectar, Tough Hunk of Bread (+14 more)",
     cost = 0,
@@ -9427,7 +9427,7 @@ ForeverGuide_Data.Vendors = {
   },
   [714] = {
     name = "Faralorn",
-    zone = "Kalimdor",
+    zone = "Feralas",
     coords = "30.6, 43.4",
     item = "Refreshing Spring Water, Ice Cold Milk, Melon Juice, Moonberry Juice, Sweet Nectar, Rough Arrow (+21 more)",
     cost = 0,
@@ -9437,7 +9437,7 @@ ForeverGuide_Data.Vendors = {
   },
   [715] = {
     name = "Harklane",
-    zone = "Kalimdor",
+    zone = "Feralas",
     coords = "31.0, 46.2",
     item = "Refreshing Spring Water, Slitherskin Mackerel, Ice Cold Milk, Melon Juice, Moonberry Juice, Sweet Nectar (+6 more)",
     cost = 0,
@@ -9447,7 +9447,7 @@ ForeverGuide_Data.Vendors = {
   },
   [716] = {
     name = "Savanne",
-    zone = "Kalimdor",
+    zone = "Feralas",
     coords = "31.0, 46.0",
     item = "Fishing Pole, Strong Fishing Pole, Shiny Bauble, Nightcrawlers, Bright Baubles, Aquadynamic Fish Attractor",
     cost = 0,
@@ -9457,7 +9457,7 @@ ForeverGuide_Data.Vendors = {
   },
   [717] = {
     name = "Vivianna",
-    zone = "Kalimdor",
+    zone = "Feralas",
     coords = "31.2, 43.4",
     item = "Coarse Thread, Fine Thread, Bleach, Black Dye, Red Dye, Mild Spices (+29 more)",
     cost = 0,
@@ -9467,7 +9467,7 @@ ForeverGuide_Data.Vendors = {
   },
   [718] = {
     name = "Zjolnir",
-    zone = "Kalimdor",
+    zone = "Durotar",
     coords = "55.2, 75.4",
     item = "Whistle of the Emerald Raptor, Whistle of the Turquoise Raptor, Whistle of the Violet Raptor, Swift Blue Raptor, Swift Olive Raptor, Swift Orange Raptor (+2 more)",
     cost = 0,
@@ -9477,7 +9477,7 @@ ForeverGuide_Data.Vendors = {
   },
   [719] = {
     name = "Milli Featherwhistle",
-    zone = "Eastern Kingdoms",
+    zone = "Dun Morogh",
     coords = "49.2, 48.0",
     item = "Red Mechanostrider, Blue Mechanostrider, Green Mechanostrider, Unpainted Mechanostrider, Swift Green Mechanostrider, Swift White Mechanostrider (+3 more)",
     cost = 0,
@@ -9487,7 +9487,7 @@ ForeverGuide_Data.Vendors = {
   },
   [720] = {
     name = "Thalgus Thunderfist",
-    zone = "Eastern Kingdoms",
+    zone = "Ironforge",
     coords = "60.8, 89.8",
     item = "Light Quiver, Ornate Blunderbuss, Hunter's Boomstick, Rough Arrow, Sharp Arrow, Light Shot (+14 more)",
     cost = 0,
@@ -9497,7 +9497,7 @@ ForeverGuide_Data.Vendors = {
   },
   [721] = {
     name = "Bimble Longberry",
-    zone = "Eastern Kingdoms",
+    zone = "Ironforge",
     coords = "20.2, 23.6",
     item = "Shiny Red Apple, Tel'Abim Banana, Snapvine Watermelon, Goldenbark Apple, Moon Harvest Pumpkin, Deep Fried Plantains",
     cost = 0,
@@ -9507,7 +9507,7 @@ ForeverGuide_Data.Vendors = {
   },
   [722] = {
     name = "Dirge Quikcleave",
-    zone = "Kalimdor",
+    zone = "Tanaris",
     coords = "52.6, 28.0",
     item = "Tough Jerky, Refreshing Spring Water, Ice Cold Milk, Melon Juice, Moonberry Juice, Sweet Nectar (+7 more)",
     cost = 0,
@@ -9517,7 +9517,7 @@ ForeverGuide_Data.Vendors = {
   },
   [723] = {
     name = "Wrinkle Goodsteel",
-    zone = "Kalimdor",
+    zone = "Tanaris",
     coords = "50.8, 27.6",
     item = "Augmented Chain Vest, Augmented Chain Leggings, Augmented Chain Belt, Augmented Chain Boots, Augmented Chain Bracers, Augmented Chain Gloves (+19 more)",
     cost = 0,
@@ -9527,7 +9527,7 @@ ForeverGuide_Data.Vendors = {
   },
   [724] = {
     name = "Blizrik Buckshot",
-    zone = "Kalimdor",
+    zone = "Tanaris",
     coords = "50.8, 27.4",
     item = "Light Shot, Heavy Shot, Large Bore Blunderbuss, BKP 2700 \"Enforcer\", BKP 42 \"Ultra\", Solid Shot (+2 more)",
     cost = 0,
@@ -9537,7 +9537,7 @@ ForeverGuide_Data.Vendors = {
   },
   [725] = {
     name = "Gikkix",
-    zone = "Kalimdor",
+    zone = "Tanaris",
     coords = "66.6, 22.0",
     item = "Refreshing Spring Water, Slitherskin Mackerel, Ice Cold Milk, Melon Juice, Moonberry Juice, Sweet Nectar (+10 more)",
     cost = 0,
@@ -9547,7 +9547,7 @@ ForeverGuide_Data.Vendors = {
   },
   [726] = {
     name = "Jabbey",
-    zone = "Kalimdor",
+    zone = "Tanaris",
     coords = "67.0, 22.0",
     item = "Refreshing Spring Water, Ice Cold Milk, Melon Juice, Moonberry Juice, Sweet Nectar, Sharp Arrow (+16 more)",
     cost = 0,
@@ -9557,7 +9557,7 @@ ForeverGuide_Data.Vendors = {
   },
   [727] = {
     name = "Loorana",
-    zone = "Kalimdor",
+    zone = "Feralas",
     coords = "75.4, 43.8",
     item = "Refreshing Spring Water, Ice Cold Milk, Melon Juice, Moonberry Juice, Sweet Nectar, Tough Hunk of Bread (+6 more)",
     cost = 0,
@@ -9567,7 +9567,7 @@ ForeverGuide_Data.Vendors = {
   },
   [728] = {
     name = "Sheendra Tallgrass",
-    zone = "Kalimdor",
+    zone = "Feralas",
     coords = "74.4, 42.8",
     item = "Coarse Thread, Fine Thread, Bleach, Black Dye, Red Dye, Mild Spices (+29 more)",
     cost = 0,
@@ -9577,7 +9577,7 @@ ForeverGuide_Data.Vendors = {
   },
   [729] = {
     name = "Calandrath",
-    zone = "Kalimdor",
+    zone = "Silithus",
     coords = "51.8, 39.0",
     item = "Gleaming Throwing Axe, Wicked Throwing Dagger, Sharp Throwing Axe, Keen Throwing Knife, Tough Jerky, Refreshing Spring Water (+22 more)",
     cost = 0,
@@ -9587,7 +9587,7 @@ ForeverGuide_Data.Vendors = {
   },
   [730] = {
     name = "Janet Hommers",
-    zone = "Kalimdor",
+    zone = "Desolace",
     coords = "66.2, 6.6",
     item = "Refreshing Spring Water, Ice Cold Milk, Melon Juice, Moonberry Juice, Sweet Nectar, Forest Mushroom Cap (+8 more)",
     cost = 0,
@@ -9597,7 +9597,7 @@ ForeverGuide_Data.Vendors = {
   },
   [731] = {
     name = "Harnor",
-    zone = "Kalimdor",
+    zone = "Desolace",
     coords = "51.2, 53.2",
     item = "Refreshing Spring Water, Ice Cold Milk, Melon Juice, Moonberry Juice, Sweet Nectar, Forest Mushroom Cap (+6 more)",
     cost = 0,
@@ -9607,7 +9607,7 @@ ForeverGuide_Data.Vendors = {
   },
   [732] = {
     name = "Logannas",
-    zone = "Kalimdor",
+    zone = "Feralas",
     coords = "32.4, 44.0",
     item = "Empty Vial, Leaded Vial, Superior Healing Potion, Recipe: Nature Protection Potion, Greater Mana Potion, Crystal Vial (+2 more)",
     cost = 0,
@@ -9617,7 +9617,7 @@ ForeverGuide_Data.Vendors = {
   },
   [733] = {
     name = "Bronk",
-    zone = "Kalimdor",
+    zone = "Feralas",
     coords = "76.0, 43.4",
     item = "Empty Vial, Leaded Vial, Superior Healing Potion, Recipe: Nature Protection Potion, Greater Mana Potion, Crystal Vial (+2 more)",
     cost = 0,
@@ -9627,7 +9627,7 @@ ForeverGuide_Data.Vendors = {
   },
   [734] = {
     name = "Worb Strongstitch",
-    zone = "Kalimdor",
+    zone = "Feralas",
     coords = "74.6, 42.6",
     item = "Russet Vest, Russet Pants, Russet Boots, Russet Gloves, Studded Doublet, Studded Belt (+10 more)",
     cost = 0,
@@ -9637,7 +9637,7 @@ ForeverGuide_Data.Vendors = {
   },
   [735] = {
     name = "Nioma",
-    zone = "Eastern Kingdoms",
+    zone = "The Hinterlands",
     coords = "13.4, 43.4",
     item = "Coarse Thread, Fine Thread, Black Dye, Red Dye, Green Dye, Salt (+11 more)",
     cost = 0,
@@ -9647,7 +9647,7 @@ ForeverGuide_Data.Vendors = {
   },
   [736] = {
     name = "Harggan",
-    zone = "Eastern Kingdoms",
+    zone = "The Hinterlands",
     coords = "13.4, 44.0",
     item = "Weak Flux, Mining Pick, Strong Flux, Coal, Blacksmith Hammer, Plans: Mithril Plate Bracers (+1 more)",
     cost = 0,
@@ -9657,7 +9657,7 @@ ForeverGuide_Data.Vendors = {
   },
   [737] = {
     name = "Gharash",
-    zone = "Eastern Kingdoms",
+    zone = "Swamp of Sorrows",
     coords = "45.4, 51.4",
     item = "Weak Flux, Mining Pick, Strong Flux, Coal, Blacksmith Hammer, Plans: Mithril Plate Bracers (+1 more)",
     cost = 0,
@@ -9667,7 +9667,7 @@ ForeverGuide_Data.Vendors = {
   },
   [738] = {
     name = "Rartar",
-    zone = "Eastern Kingdoms",
+    zone = "Swamp of Sorrows",
     coords = "45.4, 57.0",
     item = "Empty Vial, Leaded Vial, Superior Healing Potion, Greater Mana Potion, Crystal Vial, Recipe: Potion of Demon Slaying (+1 more)",
     cost = 0,
@@ -9677,7 +9677,7 @@ ForeverGuide_Data.Vendors = {
   },
   [739] = {
     name = "Nina Lightbrew",
-    zone = "Eastern Kingdoms",
+    zone = "Blasted Lands",
     coords = "66.8, 18.2",
     item = "Empty Vial, Leaded Vial, Superior Healing Potion, Greater Mana Potion, Crystal Vial, Recipe: Potion of Demon Slaying (+1 more)",
     cost = 0,
@@ -9687,7 +9687,7 @@ ForeverGuide_Data.Vendors = {
   },
   [740] = {
     name = "Kixxle",
-    zone = "Eastern Kingdoms",
+    zone = "Wetlands",
     coords = "50.2, 37.8",
     item = "Mageroyal, Healing Potion, Earthroot, Bruiseweed, Wild Steelbloom, Kingsblood (+5 more)",
     cost = 0,
@@ -9697,7 +9697,7 @@ ForeverGuide_Data.Vendors = {
   },
   [741] = {
     name = "Tarban Hearthgrain",
-    zone = "Kalimdor",
+    zone = "The Barrens",
     coords = "55.0, 32.0",
     item = "Refreshing Spring Water, Mild Spices, Hot Spices, Soothing Spices, Tough Hunk of Bread, Freshly Baked Bread (+6 more)",
     cost = 0,
@@ -9707,7 +9707,7 @@ ForeverGuide_Data.Vendors = {
   },
   [742] = {
     name = "Hewa",
-    zone = "Kalimdor",
+    zone = "Thunder Bluff",
     coords = "45.0, 55.4",
     item = "Thick Cloth Vest, Thick Cloth Pants, Thick Cloth Shoes, Thick Cloth Gloves, Heavy Weave Armor, Heavy Weave Pants (+9 more)",
     cost = 0,
@@ -9717,7 +9717,7 @@ ForeverGuide_Data.Vendors = {
   },
   [743] = {
     name = "Ahanu",
-    zone = "Kalimdor",
+    zone = "Thunder Bluff",
     coords = "45.2, 55.4",
     item = "Cured Leather Armor, Cured Leather Pants, Cured Leather Boots, Cured Leather Gloves, Tanned Leather Boots, Tanned Leather Gloves (+6 more)",
     cost = 0,
@@ -9727,7 +9727,7 @@ ForeverGuide_Data.Vendors = {
   },
   [744] = {
     name = "Elki",
-    zone = "Kalimdor",
+    zone = "Thunder Bluff",
     coords = "44.6, 57.8",
     item = "Scalemail Vest, Scalemail Pants, Scalemail Boots, Scalemail Gloves, Chainmail Armor, Chainmail Pants (+10 more)",
     cost = 0,
@@ -9737,7 +9737,7 @@ ForeverGuide_Data.Vendors = {
   },
   [745] = {
     name = "Chepi",
-    zone = "Kalimdor",
+    zone = "Thunder Bluff",
     coords = "36.4, 54.4",
     item = "Infernal Stone, Demonic Figurine, Arcane Powder, Wild Berries, Wild Thornroot, Holy Candle (+12 more)",
     cost = 0,
@@ -9747,7 +9747,7 @@ ForeverGuide_Data.Vendors = {
   },
   [746] = {
     name = "Kuruk",
-    zone = "Kalimdor",
+    zone = "Thunder Bluff",
     coords = "39.0, 64.2",
     item = "Refreshing Spring Water, Ice Cold Milk, Melon Juice, Moonberry Juice, Sweet Nectar, Rough Arrow (+25 more)",
     cost = 0,
@@ -9757,7 +9757,7 @@ ForeverGuide_Data.Vendors = {
   },
   [747] = {
     name = "Pakwa",
-    zone = "Kalimdor",
+    zone = "Thunder Bluff",
     coords = "39.2, 63.8",
     item = "Small Brown Pouch, Heavy Brown Bag, Brown Leather Satchel, Huge Brown Sack",
     cost = 0,
@@ -9767,7 +9767,7 @@ ForeverGuide_Data.Vendors = {
   },
   [748] = {
     name = "Ohanko",
-    zone = "Kalimdor",
+    zone = "Thunder Bluff",
     coords = "53.2, 57.2",
     item = "Flamberge, Bullova, War Hammer, Zweihander, Great Axe, War Maul",
     cost = 0,
@@ -9777,7 +9777,7 @@ ForeverGuide_Data.Vendors = {
   },
   [749] = {
     name = "Halpa",
-    zone = "Kalimdor",
+    zone = "Thunder Bluff",
     coords = "62.2, 58.4",
     item = "Prairie Dog Whistle",
     cost = 0,
@@ -9787,7 +9787,7 @@ ForeverGuide_Data.Vendors = {
   },
   [750] = {
     name = "Jeremiah Payson",
-    zone = "Eastern Kingdoms",
+    zone = "Undercity",
     coords = "67.4, 43.4",
     item = "Cockroach",
     cost = 0,
@@ -9797,7 +9797,7 @@ ForeverGuide_Data.Vendors = {
   },
   [751] = {
     name = "Xan'tish",
-    zone = "Kalimdor",
+    zone = "Orgrimmar",
     coords = "19.0, 59.4",
     item = "Black Kingsnake, Brown Snake, Crimson Snake",
     cost = 0,
@@ -9807,7 +9807,7 @@ ForeverGuide_Data.Vendors = {
   },
   [752] = {
     name = "Gretta Ganter",
-    zone = "Eastern Kingdoms",
+    zone = "Dun Morogh",
     coords = "31.4, 44.6",
     item = "Fishing Pole, Recipe: Brilliant Smallfish, Strong Fishing Pole, Shiny Bauble, Nightcrawlers, Bright Baubles (+1 more)",
     cost = 0,
@@ -9817,7 +9817,7 @@ ForeverGuide_Data.Vendors = {
   },
   [753] = {
     name = "Shylenai",
-    zone = "Kalimdor",
+    zone = "Darnassus",
     coords = "69.4, 45.4",
     item = "Great Horned Owl, Hawk Owl",
     cost = 0,
@@ -9827,7 +9827,7 @@ ForeverGuide_Data.Vendors = {
   },
   [754] = {
     name = "Lil Timmy",
-    zone = "Eastern Kingdoms",
+    zone = "Stormwind City",
     coords = "50.4, 34.0",
     item = "Cat Carrier (White Kitten)",
     cost = 0,
@@ -9837,7 +9837,7 @@ ForeverGuide_Data.Vendors = {
   },
   [755] = {
     name = "Jubie Gadgetspring",
-    zone = "Kalimdor",
+    zone = "Azshara",
     coords = "45.2, 90.8",
     item = "Weak Flux, Mining Pick, Strong Flux, Rough Blasting Powder, Coarse Blasting Powder, Wooden Stock (+11 more)",
     cost = 0,
@@ -9847,7 +9847,7 @@ ForeverGuide_Data.Vendors = {
   },
   [756] = {
     name = "Outfitter Eric",
-    zone = "Eastern Kingdoms",
+    zone = "Ironforge",
     coords = "43.2, 29.2",
     item = "Coarse Thread, Fine Thread, Bleach, Black Dye, Red Dye, Green Dye (+14 more)",
     cost = 0,
@@ -9857,7 +9857,7 @@ ForeverGuide_Data.Vendors = {
   },
   [757] = {
     name = "Muuran",
-    zone = "Kalimdor",
+    zone = "Desolace",
     coords = "55.6, 56.4",
     item = "Truncheon, War Hammer, Battle Staff, Morning Star, War Maul, War Staff (+1 more)",
     cost = 0,
@@ -9867,7 +9867,7 @@ ForeverGuide_Data.Vendors = {
   },
   [758] = {
     name = "Innkeeper Heather",
-    zone = "Eastern Kingdoms",
+    zone = "Westfall",
     coords = "52.8, 53.4",
     item = "Refreshing Spring Water, Slitherskin Mackerel, Ice Cold Milk, Melon Juice, Moonberry Juice, Sweet Nectar (+6 more)",
     cost = 0,
@@ -9877,7 +9877,7 @@ ForeverGuide_Data.Vendors = {
   },
   [759] = {
     name = "Christopher Hewen",
-    zone = "Eastern Kingdoms",
+    zone = "Westfall",
     coords = "52.2, 52.8",
     item = "Coarse Thread, Fine Thread, Bleach, Black Dye, Red Dye, Green Dye (+28 more)",
     cost = 0,
@@ -9887,7 +9887,7 @@ ForeverGuide_Data.Vendors = {
   },
   [760] = {
     name = "Bashana Runetotem",
-    zone = "Kalimdor",
+    zone = "Thunder Bluff",
     coords = "70.2, 33.6",
     item = "Evergreen Pouch, Packet of Tharlendris Seeds",
     cost = 0,
@@ -9897,7 +9897,7 @@ ForeverGuide_Data.Vendors = {
   },
   [761] = {
     name = "Sraaz",
-    zone = "Eastern Kingdoms",
+    zone = "Ironforge",
     coords = "39.0, 40.6",
     item = "Homemade Cherry Pie",
     cost = 0,
@@ -9907,7 +9907,7 @@ ForeverGuide_Data.Vendors = {
   },
   [762] = {
     name = "Jazzrik",
-    zone = "Eastern Kingdoms",
+    zone = "Badlands",
     coords = "42.4, 52.4",
     item = "Weak Flux, Mining Pick, Strong Flux, Coal, Blacksmith Hammer, Plans: Solid Iron Maul (+1 more)",
     cost = 0,
@@ -9917,7 +9917,7 @@ ForeverGuide_Data.Vendors = {
   },
   [763] = {
     name = "Innkeeper Shul'kar",
-    zone = "Eastern Kingdoms",
+    zone = "Badlands",
     coords = "2.8, 45.8",
     item = "Tough Jerky, Refreshing Spring Water, Ice Cold Milk, Melon Juice, Moonberry Juice, Sweet Nectar (+6 more)",
     cost = 0,
@@ -9937,7 +9937,7 @@ ForeverGuide_Data.Vendors = {
   },
   [765] = {
     name = "Innkeeper Adegwa",
-    zone = "Eastern Kingdoms",
+    zone = "Arathi Highlands",
     coords = "73.8, 32.4",
     item = "Refreshing Spring Water, Dalaran Sharp, Dwarven Mild, Ice Cold Milk, Melon Juice, Moonberry Juice (+6 more)",
     cost = 0,
@@ -9947,7 +9947,7 @@ ForeverGuide_Data.Vendors = {
   },
   [766] = {
     name = "Cawind Trueaim",
-    zone = "Kalimdor",
+    zone = "Feralas",
     coords = "74.8, 45.4",
     item = "Rough Arrow, Sharp Arrow, Light Shot, Heavy Shot, Large Bore Blunderbuss, BKP 2700 \"Enforcer\" (+10 more)",
     cost = 0,
@@ -9957,7 +9957,7 @@ ForeverGuide_Data.Vendors = {
   },
   [767] = {
     name = "Borand",
-    zone = "Kalimdor",
+    zone = "Stonetalon Mountains",
     coords = "45.2, 59.2",
     item = "Laminated Recurve Bow, Rough Arrow, Sharp Arrow, Reinforced Bow, Small Quiver, Fine Longbow (+1 more)",
     cost = 0,
@@ -9967,7 +9967,7 @@ ForeverGuide_Data.Vendors = {
   },
   [768] = {
     name = "Starn",
-    zone = "Kalimdor",
+    zone = "Thousand Needles",
     coords = "45.0, 50.4",
     item = "Ornate Blunderbuss, Hunter's Boomstick, Rough Arrow, Sharp Arrow, Light Shot, Heavy Shot (+13 more)",
     cost = 0,
@@ -9977,7 +9977,7 @@ ForeverGuide_Data.Vendors = {
   },
   [769] = {
     name = "Zanara",
-    zone = "Kalimdor",
+    zone = "Dustwallow Marsh",
     coords = "35.4, 30.2",
     item = "Jagged Arrow, Small Quiver, Rough Arrow, Razor Arrow, Reinforced Bow, Heavy Recurve Bow (+3 more)",
     cost = 0,
@@ -9987,7 +9987,7 @@ ForeverGuide_Data.Vendors = {
   },
   [770] = {
     name = "Nadia Vernon",
-    zone = "Eastern Kingdoms",
+    zone = "Silverpine Forest",
     coords = "45.0, 39.4",
     item = "Laminated Recurve Bow, Rough Arrow, Sharp Arrow, Reinforced Bow, Small Quiver, Fine Longbow (+1 more)",
     cost = 0,
@@ -9997,7 +9997,7 @@ ForeverGuide_Data.Vendors = {
   },
   [771] = {
     name = "Mu'uta",
-    zone = "Eastern Kingdoms",
+    zone = "Arathi Highlands",
     coords = "72.4, 33.4",
     item = "Rough Arrow, Sharp Arrow, Reinforced Bow, Heavy Recurve Bow, Razor Arrow, Small Quiver (+3 more)",
     cost = 0,
@@ -10007,7 +10007,7 @@ ForeverGuide_Data.Vendors = {
   },
   [772] = {
     name = "Kireena",
-    zone = "Kalimdor",
+    zone = "Desolace",
     coords = "51.0, 53.4",
     item = "Coarse Thread, Fine Thread, Bleach, Mild Spices, Hot Spices, Weak Flux (+29 more)",
     cost = 0,
@@ -10027,7 +10027,7 @@ ForeverGuide_Data.Vendors = {
   },
   [774] = {
     name = "Nessa Shadowsong",
-    zone = "Kalimdor",
+    zone = "Teldrassil",
     coords = "56.2, 92.4",
     item = "Fishing Pole, Recipe: Slitherskin Mackerel, Strong Fishing Pole, Recipe: Rainbow Fin Albacore, Shiny Bauble, Nightcrawlers (+2 more)",
     cost = 0,
@@ -10037,7 +10037,7 @@ ForeverGuide_Data.Vendors = {
   },
   [775] = {
     name = "Gubber Blump",
-    zone = "Kalimdor",
+    zone = "Darkshore",
     coords = "36.0, 44.8",
     item = "Fishing Pole, Shiny Bauble",
     cost = 0,
@@ -10047,7 +10047,7 @@ ForeverGuide_Data.Vendors = {
   },
   [776] = {
     name = "Dulciea Frostmoon",
-    zone = "Kalimdor",
+    zone = "Feralas",
     coords = "30.8, 43.2",
     item = "Russet Vest, Russet Pants, Russet Boots, Russet Gloves, Embroidered Armor, Embroidered Pants (+8 more)",
     cost = 0,
@@ -10057,7 +10057,7 @@ ForeverGuide_Data.Vendors = {
   },
   [777] = {
     name = "Gruul Darkblade",
-    zone = "Kalimdor",
+    zone = "Azshara",
     coords = "22.2, 51.2",
     item = "Falchion, Zweihander, Francisca, Great Axe, Morning Star, War Maul (+2 more)",
     cost = 0,
@@ -10067,7 +10067,7 @@ ForeverGuide_Data.Vendors = {
   },
   [778] = {
     name = "Trayexir",
-    zone = "Kalimdor",
+    zone = "Durotar",
     coords = "56.4, 73.2",
     item = "Gladius, Two-handed Sword, Tomahawk, Large Axe, Cudgel, Wooden Mallet (+8 more)",
     cost = 0,
@@ -10077,7 +10077,7 @@ ForeverGuide_Data.Vendors = {
   },
   [779] = {
     name = "Altsoba Ragetotem",
-    zone = "Kalimdor",
+    zone = "Felwood",
     coords = "34.8, 53.0",
     item = "Crescent Axe, Bullova, Truncheon, War Hammer, Battle Staff, Francisca (+4 more)",
     cost = 0,
@@ -10087,7 +10087,7 @@ ForeverGuide_Data.Vendors = {
   },
   [780] = {
     name = "Sanuye Runetotem",
-    zone = "Kalimdor",
+    zone = "The Barrens",
     coords = "45.0, 59.0",
     item = "Tanned Leather Boots, Tanned Leather Gloves, Tanned Leather Pants, Tanned Leather Jerkin, Tanned Leather Belt, Tanned Leather Bracers",
     cost = 0,
@@ -10097,7 +10097,7 @@ ForeverGuide_Data.Vendors = {
   },
   [781] = {
     name = "Rivern Frostwind",
-    zone = "Kalimdor",
+    zone = "Winterspring",
     coords = "49.8, 9.8",
     item = "Reins of the Winterspring Frostsaber",
     cost = 0,
@@ -10107,7 +10107,7 @@ ForeverGuide_Data.Vendors = {
   },
   [782] = {
     name = "Argent Quartermaster Lightspark",
-    zone = "Eastern Kingdoms",
+    zone = "Western Plaguelands",
     coords = "42.8, 83.8",
     item = "Arcane Mantle of the Dawn, Nature Mantle of the Dawn, Shadow Mantle of the Dawn, Chromatic Mantle of the Dawn, Hallowed Brazier, Frost Mantle of the Dawn (+14 more)",
     cost = 0,
@@ -10117,7 +10117,7 @@ ForeverGuide_Data.Vendors = {
   },
   [783] = {
     name = "Quartermaster Miranda Breechlock",
-    zone = "Eastern Kingdoms",
+    zone = "Eastern Plaguelands",
     coords = "81.4, 60.0",
     item = "Recipe: Transmute Air to Fire, Enriched Manna Biscuit, Blessed Sunfruit, Blessed Sunfruit Juice, Flame Mantle of the Dawn, Frost Mantle of the Dawn (+14 more)",
     cost = 0,
@@ -10127,7 +10127,7 @@ ForeverGuide_Data.Vendors = {
   },
   [784] = {
     name = "Alchemist Arbington",
-    zone = "Eastern Kingdoms",
+    zone = "Western Plaguelands",
     coords = "42.6, 83.8",
     item = "Arcane Quickener",
     cost = 0,
@@ -10137,7 +10137,7 @@ ForeverGuide_Data.Vendors = {
   },
   [785] = {
     name = "Apothecary Dithers",
-    zone = "Eastern Kingdoms",
+    zone = "Tirisfal Glades",
     coords = "83.2, 69.2",
     item = "Arcane Quickener",
     cost = 0,
@@ -10147,7 +10147,7 @@ ForeverGuide_Data.Vendors = {
   },
   [786] = {
     name = "Innkeeper Lyshaerya",
-    zone = "Kalimdor",
+    zone = "Desolace",
     coords = "66.2, 6.6",
     item = "Refreshing Spring Water, Ice Cold Milk, Melon Juice, Moonberry Juice, Sweet Nectar, Tough Hunk of Bread (+6 more)",
     cost = 0,
@@ -10157,7 +10157,7 @@ ForeverGuide_Data.Vendors = {
   },
   [787] = {
     name = "Innkeeper Sikewa",
-    zone = "Kalimdor",
+    zone = "Desolace",
     coords = "24.0, 68.2",
     item = "Refreshing Spring Water, Dalaran Sharp, Dwarven Mild, Ice Cold Milk, Melon Juice, Moonberry Juice (+6 more)",
     cost = 0,
@@ -10167,7 +10167,7 @@ ForeverGuide_Data.Vendors = {
   },
   [788] = {
     name = "Innkeeper Abeqwa",
-    zone = "Kalimdor",
+    zone = "Thousand Needles",
     coords = "46.0, 51.4",
     item = "Refreshing Spring Water, Dalaran Sharp, Dwarven Mild, Ice Cold Milk, Melon Juice, Moonberry Juice (+6 more)",
     cost = 0,
@@ -10177,7 +10177,7 @@ ForeverGuide_Data.Vendors = {
   },
   [789] = {
     name = "Innkeeper Vizzie",
-    zone = "Kalimdor",
+    zone = "Winterspring",
     coords = "61.2, 38.8",
     item = "Tough Jerky, Refreshing Spring Water, Ice Cold Milk, Melon Juice, Moonberry Juice, Sweet Nectar (+7 more)",
     cost = 0,
@@ -10187,7 +10187,7 @@ ForeverGuide_Data.Vendors = {
   },
   [790] = {
     name = "Xai'ander",
-    zone = "Kalimdor",
+    zone = "Ashenvale",
     coords = "35.8, 52.0",
     item = "Dacian Falx, Longsword, Maul, Flail, Battle Axe, Double Axe (+10 more)",
     cost = 0,
@@ -10197,7 +10197,7 @@ ForeverGuide_Data.Vendors = {
   },
   [791] = {
     name = "Nixxrak",
-    zone = "Kalimdor",
+    zone = "Winterspring",
     coords = "61.6, 37.8",
     item = "Brigandine Vest, Brigandine Belt, Brigandine Leggings, Brigandine Boots, Brigandine Bracers, Brigandine Gloves (+10 more)",
     cost = 0,
@@ -10207,7 +10207,7 @@ ForeverGuide_Data.Vendors = {
   },
   [792] = {
     name = "Blixxrak",
-    zone = "Kalimdor",
+    zone = "Winterspring",
     coords = "61.6, 37.8",
     item = "Embroidered Armor, Embroidered Pants, Embroidered Boots, Embroidered Gloves, Reinforced Leather Vest, Reinforced Leather Belt (+8 more)",
     cost = 0,
@@ -10217,7 +10217,7 @@ ForeverGuide_Data.Vendors = {
   },
   [793] = {
     name = "Wixxrak",
-    zone = "Kalimdor",
+    zone = "Winterspring",
     coords = "61.6, 38.0",
     item = "Light Shot, Heavy Shot, Falchion, Zweihander, Francisca, Great Axe (+9 more)",
     cost = 0,
@@ -10227,7 +10227,7 @@ ForeverGuide_Data.Vendors = {
   },
   [794] = {
     name = "Xizzer Fizzbolt",
-    zone = "Kalimdor",
+    zone = "Winterspring",
     coords = "60.8, 38.4",
     item = "Weak Flux, Mining Pick, Strong Flux, Rough Blasting Powder, Copper Modulator, Coarse Blasting Powder (+15 more)",
     cost = 0,
@@ -10237,7 +10237,7 @@ ForeverGuide_Data.Vendors = {
   },
   [795] = {
     name = "Lunnix Sprocketslip",
-    zone = "Kalimdor",
+    zone = "Winterspring",
     coords = "61.6, 38.4",
     item = "Weak Flux, Mining Pick, Strong Flux, Coal",
     cost = 0,
@@ -10247,7 +10247,7 @@ ForeverGuide_Data.Vendors = {
   },
   [796] = {
     name = "Himmik",
-    zone = "Kalimdor",
+    zone = "Winterspring",
     coords = "61.2, 39.0",
     item = "Tough Jerky, Refreshing Spring Water, Slitherskin Mackerel, Ice Cold Milk, Melon Juice, Moonberry Juice (+13 more)",
     cost = 0,
@@ -10257,7 +10257,7 @@ ForeverGuide_Data.Vendors = {
   },
   [797] = {
     name = "Evie Whirlbrew",
-    zone = "Kalimdor",
+    zone = "Winterspring",
     coords = "60.8, 37.8",
     item = "Empty Vial, Leaded Vial, Superior Healing Potion, Greater Mana Potion, Crystal Vial, Imbued Vial (+2 more)",
     cost = 0,
@@ -10267,7 +10267,7 @@ ForeverGuide_Data.Vendors = {
   },
   [798] = {
     name = "Argent Quartermaster Hasana",
-    zone = "Eastern Kingdoms",
+    zone = "Tirisfal Glades",
     coords = "83.2, 68.2",
     item = "Recipe: Transmute Air to Fire, Enriched Manna Biscuit, Blessed Sunfruit, Blessed Sunfruit Juice, Flame Mantle of the Dawn, Frost Mantle of the Dawn (+14 more)",
     cost = 0,
@@ -10277,7 +10277,7 @@ ForeverGuide_Data.Vendors = {
   },
   [799] = {
     name = "Gorn One Eye",
-    zone = "Kalimdor",
+    zone = "Felwood",
     coords = "65.2, 2.6",
     item = "Refreshing Spring Water, Melon Juice, Moonberry Juice, Sweet Nectar, Sharp Arrow, Heavy Shot (+16 more)",
     cost = 0,
@@ -10287,7 +10287,7 @@ ForeverGuide_Data.Vendors = {
   },
   [800] = {
     name = "Graw Cornerstone",
-    zone = "Eastern Kingdoms",
+    zone = "Searing Gorge",
     coords = "41.4, 74.4",
     item = "Chainmail Armor, Chainmail Pants, Chainmail Boots, Chainmail Gloves, Chainmail Belt, Chainmail Bracers",
     cost = 0,
@@ -10297,7 +10297,7 @@ ForeverGuide_Data.Vendors = {
   },
   [801] = {
     name = "Masat T'andr",
-    zone = "Eastern Kingdoms",
+    zone = "Swamp of Sorrows",
     coords = "26.2, 31.4",
     item = "Coarse Thread, Fine Thread, Black Dye, Red Dye, Green Dye, Salt (+13 more)",
     cost = 0,
@@ -10307,7 +10307,7 @@ ForeverGuide_Data.Vendors = {
   },
   [802] = {
     name = "Dargon",
-    zone = "Kalimdor",
+    zone = "Moonglade",
     coords = "48.4, 38.8",
     item = "Refreshing Spring Water, Ice Cold Milk, Melon Juice, Moonberry Juice, Sweet Nectar, Morning Glory Dew (+8 more)",
     cost = 0,
@@ -10317,7 +10317,7 @@ ForeverGuide_Data.Vendors = {
   },
   [803] = {
     name = "Daeolyn Summerleaf",
-    zone = "Kalimdor",
+    zone = "Moonglade",
     coords = "45.2, 34.4",
     item = "Refreshing Spring Water, Ice Cold Milk, Melon Juice, Moonberry Juice, Sweet Nectar, Sharp Arrow (+15 more)",
     cost = 0,
@@ -10327,7 +10327,7 @@ ForeverGuide_Data.Vendors = {
   },
   [804] = {
     name = "Lorelae Wintersong",
-    zone = "Kalimdor",
+    zone = "Moonglade",
     coords = "48.4, 40.0",
     item = "Coarse Thread, Fine Thread, Bleach, Black Dye, Red Dye, Mild Spices (+28 more)",
     cost = 0,
@@ -10337,7 +10337,7 @@ ForeverGuide_Data.Vendors = {
   },
   [805] = {
     name = "Kharedon",
-    zone = "Kalimdor",
+    zone = "Moonglade",
     coords = "56.4, 30.0",
     item = "Embroidered Armor, Embroidered Pants, Embroidered Boots, Embroidered Gloves, Reinforced Leather Vest, Reinforced Leather Belt (+9 more)",
     cost = 0,
@@ -10347,7 +10347,7 @@ ForeverGuide_Data.Vendors = {
   },
   [806] = {
     name = "Meliri",
-    zone = "Kalimdor",
+    zone = "Moonglade",
     coords = "51.2, 42.2",
     item = "Falchion, Zweihander, Francisca, Great Axe, Morning Star, War Maul (+2 more)",
     cost = 0,
@@ -10357,7 +10357,7 @@ ForeverGuide_Data.Vendors = {
   },
   [807] = {
     name = "My'lanna",
-    zone = "Kalimdor",
+    zone = "Moonglade",
     coords = "44.4, 34.0",
     item = "Refreshing Spring Water, Ice Cold Milk, Melon Juice, Moonberry Juice, Sweet Nectar, Morning Glory Dew (+8 more)",
     cost = 0,
@@ -10367,7 +10367,7 @@ ForeverGuide_Data.Vendors = {
   },
   [808] = {
     name = "Tukk",
-    zone = "Kalimdor",
+    zone = "Desolace",
     coords = "25.0, 71.8",
     item = "Refreshing Spring Water, Ice Cold Milk, Melon Juice, Moonberry Juice, Sweet Nectar, Rough Arrow (+21 more)",
     cost = 0,
@@ -10377,7 +10377,7 @@ ForeverGuide_Data.Vendors = {
   },
   [809] = {
     name = "Lah'Mawhani",
-    zone = "Kalimdor",
+    zone = "Desolace",
     coords = "23.0, 71.6",
     item = "Coarse Thread, Fine Thread, Bleach, Black Dye, Red Dye, Mild Spices (+26 more)",
     cost = 0,
@@ -10387,7 +10387,7 @@ ForeverGuide_Data.Vendors = {
   },
   [810] = {
     name = "Narianna",
-    zone = "Kalimdor",
+    zone = "Moonglade",
     coords = "53.2, 42.6",
     item = "Worn Shortbow, Polished Shortbow, Hornwood Recurve Bow, Laminated Recurve Bow, Rough Arrow, Sharp Arrow (+6 more)",
     cost = 0,
@@ -10397,7 +10397,7 @@ ForeverGuide_Data.Vendors = {
   },
   [811] = {
     name = "Mai'Lahii",
-    zone = "Kalimdor",
+    zone = "Desolace",
     coords = "22.6, 72.0",
     item = "Fishing Pole, Strong Fishing Pole, Shiny Bauble, Nightcrawlers, Bright Baubles, Aquadynamic Fish Attractor",
     cost = 0,
@@ -10407,7 +10407,7 @@ ForeverGuide_Data.Vendors = {
   },
   [812] = {
     name = "Wulan",
-    zone = "Kalimdor",
+    zone = "Desolace",
     coords = "26.2, 69.8",
     item = "Refreshing Spring Water, Mild Spices, Hot Spices, Soothing Spices, Recipe: Rockscale Cod, Expert Cookbook (+3 more)",
     cost = 0,
@@ -10417,7 +10417,7 @@ ForeverGuide_Data.Vendors = {
   },
   [813] = {
     name = "Kulwia",
-    zone = "Kalimdor",
+    zone = "Stonetalon Mountains",
     coords = "45.4, 59.4",
     item = "Coarse Thread, Fine Thread, Bleach, Mild Spices, Hot Spices, Weak Flux (+13 more)",
     cost = 0,
@@ -10427,7 +10427,7 @@ ForeverGuide_Data.Vendors = {
   },
   [814] = {
     name = "Hae'Wilani",
-    zone = "Kalimdor",
+    zone = "Desolace",
     coords = "25.8, 71.0",
     item = "Crescent Axe, Bullova, Francisca, Great Axe, Merciless Axe, Midnight Axe",
     cost = 0,
@@ -10437,7 +10437,7 @@ ForeverGuide_Data.Vendors = {
   },
   [815] = {
     name = "Innkeeper Kaylisk",
-    zone = "Kalimdor",
+    zone = "Ashenvale",
     coords = "74.0, 60.6",
     item = "Tough Jerky, Refreshing Spring Water, Ice Cold Milk, Melon Juice, Moonberry Juice, Sweet Nectar (+6 more)",
     cost = 0,
@@ -10447,7 +10447,7 @@ ForeverGuide_Data.Vendors = {
   },
   [816] = {
     name = "Vendor-Tron 1000",
-    zone = "Azeroth",
+    zone = "Desolace",
     coords = "60.2, 38.2",
     item = "Greater Healing Potion, Coarse Thread, Fine Thread, Black Dye, Red Dye, Mild Spices (+31 more)",
     cost = 0,
@@ -10457,7 +10457,7 @@ ForeverGuide_Data.Vendors = {
   },
   [817] = {
     name = "Super-Seller 680",
-    zone = "Azeroth",
+    zone = "Desolace",
     coords = "40.4, 79.2",
     item = "Refreshing Spring Water, Melon Juice, Scroll of Agility II, Moonberry Juice, Sweet Nectar, Scroll of Stamina II (+26 more)",
     cost = 0,
@@ -10467,7 +10467,7 @@ ForeverGuide_Data.Vendors = {
   },
   [818] = {
     name = "Augustus the Touched",
-    zone = "Eastern Kingdoms",
+    zone = "Eastern Plaguelands",
     coords = "14.4, 33.4",
     item = "Forest Mushroom Cap, Red-speckled Mushroom, Spongy Morel, Delicious Cave Mold, Raw Black Truffle, Dried King Bolete (+1 more)",
     cost = 0,
@@ -10477,7 +10477,7 @@ ForeverGuide_Data.Vendors = {
   },
   [819] = {
     name = "Hraug",
-    zone = "Kalimdor",
+    zone = "Durotar",
     coords = "40.6, 68.4",
     item = "Grimoire of Firebolt (Rank 2), Grimoire of Firebolt (Rank 3), Grimoire of Firebolt (Rank 4), Grimoire of Firebolt (Rank 5), Grimoire of Firebolt (Rank 6), Grimoire of Firebolt (Rank 7) (+11 more)",
     cost = 0,
@@ -10487,7 +10487,7 @@ ForeverGuide_Data.Vendors = {
   },
   [820] = {
     name = "Sergeant Ba'sha",
-    zone = "Kalimdor",
+    zone = "Orgrimmar",
     coords = "41.4, 68.4",
     item = "Insignia of the Horde, Insignia of the Horde, Insignia of the Horde, Insignia of the Horde, Insignia of the Horde, Insignia of the Horde (+20 more)",
     cost = 0,
@@ -10497,7 +10497,7 @@ ForeverGuide_Data.Vendors = {
   },
   [821] = {
     name = "Master Sergeant Biggins",
-    zone = "Azeroth",
+    zone = "Alterac Valley",
     coords = "",
     item = "Combat Mana Potion, Combat Healing Potion, Alliance Battle Standard, Knight's Colors",
     cost = 0,
@@ -10507,7 +10507,7 @@ ForeverGuide_Data.Vendors = {
   },
   [822] = {
     name = "Brave Stonehide",
-    zone = "Azeroth",
+    zone = "Alterac Valley",
     coords = "",
     item = "Combat Mana Potion, Combat Healing Potion, Horde Battle Standard, Stone Guard's Herald",
     cost = 0,
@@ -10517,7 +10517,7 @@ ForeverGuide_Data.Vendors = {
   },
   [823] = {
     name = "Greshka",
-    zone = "Eastern Kingdoms",
+    zone = "Swamp of Sorrows",
     coords = "48.4, 55.4",
     item = "Grimoire of Firebolt (Rank 2), Grimoire of Firebolt (Rank 3), Grimoire of Firebolt (Rank 4), Grimoire of Firebolt (Rank 5), Grimoire of Firebolt (Rank 6), Grimoire of Firebolt (Rank 7) (+53 more)",
     cost = 0,
@@ -10527,7 +10527,7 @@ ForeverGuide_Data.Vendors = {
   },
   [824] = {
     name = "Jase Farlane",
-    zone = "Eastern Kingdoms",
+    zone = "Eastern Plaguelands",
     coords = "80.4, 57.6",
     item = "Coarse Thread, Fine Thread, Black Dye, Red Dye, Mild Spices, Hot Spices (+24 more)",
     cost = 0,
@@ -10537,7 +10537,7 @@ ForeverGuide_Data.Vendors = {
   },
   [825] = {
     name = "Leonard Porter",
-    zone = "Eastern Kingdoms",
+    zone = "Western Plaguelands",
     coords = "43.0, 84.2",
     item = "Coarse Thread, Fine Thread, Black Dye, Red Dye, Green Dye, Salt (+12 more)",
     cost = 0,
@@ -10547,7 +10547,7 @@ ForeverGuide_Data.Vendors = {
   },
   [826] = {
     name = "Werg Thickblade",
-    zone = "Eastern Kingdoms",
+    zone = "Tirisfal Glades",
     coords = "83.2, 69.6",
     item = "Coarse Thread, Fine Thread, Black Dye, Red Dye, Green Dye, Salt (+12 more)",
     cost = 0,
@@ -10557,7 +10557,7 @@ ForeverGuide_Data.Vendors = {
   },
   [827] = {
     name = "Zannok Hidepiercer",
-    zone = "Kalimdor",
+    zone = "Silithus",
     coords = "81.8, 17.8",
     item = "Coarse Thread, Fine Thread, Black Dye, Red Dye, Green Dye, Salt (+12 more)",
     cost = 0,
@@ -10567,7 +10567,7 @@ ForeverGuide_Data.Vendors = {
   },
   [828] = {
     name = "Blimo Gadgetspring",
-    zone = "Kalimdor",
+    zone = "Azshara",
     coords = "45.2, 90.8",
     item = "Coarse Thread, Fine Thread, Black Dye, Red Dye, Mild Spices, Hot Spices (+25 more)",
     cost = 0,
@@ -10577,7 +10577,7 @@ ForeverGuide_Data.Vendors = {
   },
   [829] = {
     name = "Gigget Zipcoil",
-    zone = "Eastern Kingdoms",
+    zone = "The Hinterlands",
     coords = "34.4, 38.4",
     item = "Coarse Thread, Fine Thread, Black Dye, Red Dye, Mild Spices, Hot Spices (+24 more)",
     cost = 0,
@@ -10587,7 +10587,7 @@ ForeverGuide_Data.Vendors = {
   },
   [830] = {
     name = "Nergal",
-    zone = "Kalimdor",
+    zone = "Un'Goro Crater",
     coords = "43.2, 7.8",
     item = "Tough Jerky, Refreshing Spring Water, Ice Cold Milk, Melon Juice, Moonberry Juice, Sweet Nectar (+23 more)",
     cost = 0,
@@ -10597,7 +10597,7 @@ ForeverGuide_Data.Vendors = {
   },
   [831] = {
     name = "Christi Galvanis",
-    zone = "Kalimdor",
+    zone = "Desolace",
     coords = "66.4, 6.8",
     item = "Refreshing Spring Water, Ice Cold Milk, Melon Juice, Moonberry Juice, Sweet Nectar, Rough Arrow (+21 more)",
     cost = 0,
@@ -10607,7 +10607,7 @@ ForeverGuide_Data.Vendors = {
   },
   [832] = {
     name = "Wik'Tar",
-    zone = "Kalimdor",
+    zone = "Ashenvale",
     coords = "11.8, 34.0",
     item = "Slitherskin Mackerel, Longjaw Mud Snapper, Bristle Whisker Catfish, Rockscale Cod, Fishing Pole, Strong Fishing Pole (+8 more)",
     cost = 0,
@@ -10627,7 +10627,7 @@ ForeverGuide_Data.Vendors = {
   },
   [834] = {
     name = "Thanthaldis Snowgleam",
-    zone = "Eastern Kingdoms",
+    zone = "Alterac Mountains",
     coords = "39.4, 81.4",
     item = "Major Healing Draught, Superior Healing Draught, Major Mana Draught, Superior Mana Draught, Stormpike Battle Charger, Stormpike Battle Tabard (+31 more)",
     cost = 0,
@@ -10637,7 +10637,7 @@ ForeverGuide_Data.Vendors = {
   },
   [835] = {
     name = "Jekyll Flandring",
-    zone = "Eastern Kingdoms",
+    zone = "Alterac Mountains",
     coords = "62.8, 59.4",
     item = "Major Healing Draught, Superior Healing Draught, Major Mana Draught, Superior Mana Draught, Horn of the Frostwolf Howler, Frostwolf Battle Tabard (+31 more)",
     cost = 0,
@@ -10647,7 +10647,7 @@ ForeverGuide_Data.Vendors = {
   },
   [836] = {
     name = "Kaymard Copperpinch",
-    zone = "Kalimdor",
+    zone = "Orgrimmar",
     coords = "53.2, 66.4",
     item = "Greatfather's Winter Ale, Steamwheedle Fizzy Spirits, Blended Bean Brew, Green Garden Tea, Holiday Cheesewheel, Graccu's Homemade Meat Pie (+1 more)",
     cost = 0,
@@ -10657,7 +10657,7 @@ ForeverGuide_Data.Vendors = {
   },
   [837] = {
     name = "Penney Copperpinch",
-    zone = "Kalimdor",
+    zone = "Orgrimmar",
     coords = "52.8, 66.6",
     item = "Holiday Spices, UNUSED ITEM, Holiday Spirits, Recipe: Gingerbread Cookie, Recipe: Egg Nog, Snowball (+4 more)",
     cost = 0,
@@ -10667,7 +10667,7 @@ ForeverGuide_Data.Vendors = {
   },
   [838] = {
     name = "Jaycrue Copperpinch",
-    zone = "Eastern Kingdoms",
+    zone = "Undercity",
     coords = "67.2, 38.4",
     item = "Spicy Beefstick, Graccu's Homemade Meat Pie, Holiday Cheesewheel, Green Garden Tea, Blended Bean Brew, Steamwheedle Fizzy Spirits (+1 more)",
     cost = 0,
@@ -10677,7 +10677,7 @@ ForeverGuide_Data.Vendors = {
   },
   [839] = {
     name = "Wulmort Jinglepocket",
-    zone = "Eastern Kingdoms",
+    zone = "Ironforge",
     coords = "33.4, 65.4",
     item = "Holiday Spices, UNUSED ITEM, Holiday Spirits, Recipe: Gingerbread Cookie, Recipe: Egg Nog, Snowball (+4 more)",
     cost = 0,
@@ -10687,7 +10687,7 @@ ForeverGuide_Data.Vendors = {
   },
   [840] = {
     name = "Macey Jinglepocket",
-    zone = "Eastern Kingdoms",
+    zone = "Ironforge",
     coords = "32.4, 67.4",
     item = "Greatfather's Winter Ale, Steamwheedle Fizzy Spirits, Blended Bean Brew, Green Garden Tea, Holiday Cheesewheel, Graccu's Homemade Meat Pie (+1 more)",
     cost = 0,
@@ -10697,7 +10697,7 @@ ForeverGuide_Data.Vendors = {
   },
   [841] = {
     name = "Khole Jinglepocket",
-    zone = "Eastern Kingdoms",
+    zone = "Stormwind City",
     coords = "55.0, 59.2",
     item = "Holiday Spices, UNUSED ITEM, Holiday Spirits, Recipe: Gingerbread Cookie, Recipe: Egg Nog, Snowball (+4 more)",
     cost = 0,
@@ -10707,7 +10707,7 @@ ForeverGuide_Data.Vendors = {
   },
   [842] = {
     name = "Guchie Jinglepocket",
-    zone = "Eastern Kingdoms",
+    zone = "Stormwind City",
     coords = "55.0, 60.0",
     item = "Greatfather's Winter Ale, Steamwheedle Fizzy Spirits, Blended Bean Brew, Green Garden Tea, Holiday Cheesewheel, Graccu's Homemade Meat Pie (+1 more)",
     cost = 0,
@@ -10717,7 +10717,7 @@ ForeverGuide_Data.Vendors = {
   },
   [843] = {
     name = "Brinna Valanaar",
-    zone = "Kalimdor",
+    zone = "Azshara",
     coords = "12.0, 78.2",
     item = "Rough Arrow, Sharp Arrow, Reinforced Bow, Heavy Recurve Bow, Razor Arrow, Small Quiver (+3 more)",
     cost = 0,
@@ -10727,7 +10727,7 @@ ForeverGuide_Data.Vendors = {
   },
   [844] = {
     name = "Field Repair Bot 74A",
-    zone = "Azeroth",
+    zone = "Ahn'Qiraj",
     coords = "",
     item = "Blank Parchment, Engineer's Ink, Blacksmith Hammer, Heavy Stock, Wooden Stock, Coarse Blasting Powder (+4 more)",
     cost = 0,
@@ -10747,7 +10747,7 @@ ForeverGuide_Data.Vendors = {
   },
   [846] = {
     name = "Gorzeeki Wildeyes",
-    zone = "Eastern Kingdoms",
+    zone = "Burning Steppes",
     coords = "12.4, 31.4",
     item = "Black Lodestone, J'eevee's Jar, Xorothian Glyphs, Shadowy Potion",
     cost = 0,
@@ -10757,7 +10757,7 @@ ForeverGuide_Data.Vendors = {
   },
   [847] = {
     name = "Alowicious Czervik",
-    zone = "Kalimdor",
+    zone = "Orgrimmar",
     coords = "51.8, 69.8",
     item = "Tigule's Strawberry Ice Cream, Moonbrook Riot Taffy, Styleen's Sour Suckerpop, Bellara's Nutterbar",
     cost = 0,
@@ -10767,7 +10767,7 @@ ForeverGuide_Data.Vendors = {
   },
   [848] = {
     name = "Emmithue Smails",
-    zone = "Eastern Kingdoms",
+    zone = "Stormwind City",
     coords = "53.8, 65.2",
     item = "Tigule's Strawberry Ice Cream, Moonbrook Riot Taffy, Styleen's Sour Suckerpop, Bellara's Nutterbar",
     cost = 0,
@@ -10777,7 +10777,7 @@ ForeverGuide_Data.Vendors = {
   },
   [849] = {
     name = "Ur'dan",
-    zone = "Kalimdor",
+    zone = "Felwood",
     coords = "36.2, 44.4",
     item = "Xorothian Stardust",
     cost = 0,
@@ -10787,7 +10787,7 @@ ForeverGuide_Data.Vendors = {
   },
   [850] = {
     name = "Zorbin Fandazzle",
-    zone = "Kalimdor",
+    zone = "Feralas",
     coords = "44.8, 43.4",
     item = "Weak Flux, Mining Pick, Strong Flux, Rough Blasting Powder, Copper Tube, Coarse Blasting Powder (+11 more)",
     cost = 0,
@@ -10797,7 +10797,7 @@ ForeverGuide_Data.Vendors = {
   },
   [851] = {
     name = "Lard",
-    zone = "Eastern Kingdoms",
+    zone = "The Hinterlands",
     coords = "78.2, 81.2",
     item = "Refreshing Spring Water, Slitherskin Mackerel, Ice Cold Milk, Melon Juice, Moonberry Juice, Sweet Nectar (+6 more)",
     cost = 0,
@@ -10807,7 +10807,7 @@ ForeverGuide_Data.Vendors = {
   },
   [852] = {
     name = "Smith Slagtree",
-    zone = "Eastern Kingdoms",
+    zone = "The Hinterlands",
     coords = "77.4, 80.2",
     item = "Weak Flux, Mining Pick, Strong Flux, Coal, Blacksmith Hammer, Elemental Flux",
     cost = 0,
@@ -10817,7 +10817,7 @@ ForeverGuide_Data.Vendors = {
   },
   [853] = {
     name = "Otho Moji'ko",
-    zone = "Eastern Kingdoms",
+    zone = "The Hinterlands",
     coords = "79.2, 79.0",
     item = "Refreshing Spring Water, Mild Spices, Hot Spices, Soothing Spices, Recipe: Smoked Sagefish, Recipe: Sagefish Delight",
     cost = 0,
@@ -10827,7 +10827,7 @@ ForeverGuide_Data.Vendors = {
   },
   [854] = {
     name = "Mystic Yayo'jin",
-    zone = "Eastern Kingdoms",
+    zone = "The Hinterlands",
     coords = "78.8, 78.4",
     item = "Infernal Stone, Demonic Figurine, Arcane Powder, Wild Berries, Wild Thornroot, Holy Candle (+12 more)",
     cost = 0,
@@ -10837,7 +10837,7 @@ ForeverGuide_Data.Vendors = {
   },
   [855] = {
     name = "Katoom the Angler",
-    zone = "Eastern Kingdoms",
+    zone = "The Hinterlands",
     coords = "80.2, 81.4",
     item = "Fishing Pole, Shiny Bauble, Nightcrawlers, Bright Baubles, Aquadynamic Fish Attractor, Strong Fishing Pole",
     cost = 0,
@@ -10847,7 +10847,7 @@ ForeverGuide_Data.Vendors = {
   },
   [856] = {
     name = "Illiyana Moonblaze",
-    zone = "Kalimdor",
+    zone = "Ashenvale",
     coords = "61.4, 83.8",
     item = "Major Healing Draught, Superior Healing Draught, Major Mana Draught, Superior Mana Draught, Warsong Gulch Enriched Ration, Warsong Gulch Iron Ration (+67 more)",
     cost = 0,
@@ -10857,7 +10857,7 @@ ForeverGuide_Data.Vendors = {
   },
   [857] = {
     name = "Kelm Hargunth",
-    zone = "Kalimdor",
+    zone = "The Barrens",
     coords = "46.6, 8.4",
     item = "Major Healing Draught, Superior Healing Draught, Major Mana Draught, Superior Mana Draught, Warsong Gulch Enriched Ration, Warsong Gulch Iron Ration (+67 more)",
     cost = 0,
@@ -10867,7 +10867,7 @@ ForeverGuide_Data.Vendors = {
   },
   [858] = {
     name = "Sylannia",
-    zone = "Kalimdor",
+    zone = "Elwynn Forest",
     coords = "42.0, 70.0",
     item = "Bottled Winterspring Water, Fizzy Faire Drink, Darkmoon Special Reserve, Cheap Beer",
     cost = 0,
@@ -10877,7 +10877,7 @@ ForeverGuide_Data.Vendors = {
   },
   [859] = {
     name = "Stamp Thunderhorn",
-    zone = "Kalimdor",
+    zone = "Elwynn Forest",
     coords = "42.0, 70.0",
     item = "Deep Fried Candybar, Crunchy Frog, Red Hot Wings, Pickled Kodo Foot, Spiced Beef Jerky, Darkmoon Dog",
     cost = 0,
@@ -10887,7 +10887,7 @@ ForeverGuide_Data.Vendors = {
   },
   [860] = {
     name = "Lhara",
-    zone = "Kalimdor",
+    zone = "Elwynn Forest",
     coords = "41.2, 69.8",
     item = "Mageroyal, Sylvan Shortbow, Earthroot, Dense Shortbow, Wild Steelbloom, Liferoot (+19 more)",
     cost = 0,
@@ -10897,7 +10897,7 @@ ForeverGuide_Data.Vendors = {
   },
   [861] = {
     name = "Professor Thaddeus Paleo",
-    zone = "Kalimdor",
+    zone = "Mulgore",
     coords = "36.4, 38.0",
     item = "Scroll of Strength, Scroll of Intellect, Scroll of Stamina, Scroll of Agility, Scroll of Stamina III, Scroll of Stamina II (+24 more)",
     cost = 0,
@@ -10907,7 +10907,7 @@ ForeverGuide_Data.Vendors = {
   },
   [862] = {
     name = "Flik",
-    zone = "Kalimdor",
+    zone = "Elwynn Forest",
     coords = "40.4, 69.4",
     item = "Heavy Leather Ball, Wood Frog Box, Tree Frog Box",
     cost = 0,
@@ -10917,7 +10917,7 @@ ForeverGuide_Data.Vendors = {
   },
   [863] = {
     name = "Rin'wosho the Trader",
-    zone = "Eastern Kingdoms",
+    zone = "Stranglethorn Vale",
     coords = "15.0, 16.0",
     item = "Recipe: Living Action Potion, Recipe: Mageblood Elixir, Plans: Darksoul Breastplate, Plans: Bloodsoul Breastplate, Pattern: Blood Tiger Breastplate, Pattern: Primal Batskin Jerkin (+16 more)",
     cost = 0,
@@ -10927,7 +10927,7 @@ ForeverGuide_Data.Vendors = {
   },
   [864] = {
     name = "Mirvyna Jinglepocket",
-    zone = "Eastern Kingdoms",
+    zone = "Alterac Mountains",
     coords = "40.0, 80.2",
     item = "Morning Glory Dew, Dried King Bolete, Roasted Quail, Deep Fried Plantains",
     cost = 0,
@@ -10937,7 +10937,7 @@ ForeverGuide_Data.Vendors = {
   },
   [865] = {
     name = "Dillord Copperpinch",
-    zone = "Eastern Kingdoms",
+    zone = "Alterac Mountains",
     coords = "62.0, 58.6",
     item = "Morning Glory Dew, Dried King Bolete, Roasted Quail, Deep Fried Plantains",
     cost = 0,
@@ -10947,7 +10947,7 @@ ForeverGuide_Data.Vendors = {
   },
   [866] = {
     name = "Gapp Jinglepocket",
-    zone = "Kalimdor",
+    zone = "Ashenvale",
     coords = "62.0, 82.8",
     item = "Melon Juice, Moonberry Juice, Sweet Nectar, Mutton Chop, Wild Hog Shank, Snapvine Watermelon (+10 more)",
     cost = 0,
@@ -10957,7 +10957,7 @@ ForeverGuide_Data.Vendors = {
   },
   [867] = {
     name = "Hecht Copperpinch",
-    zone = "Kalimdor",
+    zone = "The Barrens",
     coords = "46.6, 8.4",
     item = "Melon Juice, Moonberry Juice, Sweet Nectar, Mutton Chop, Wild Hog Shank, Snapvine Watermelon (+10 more)",
     cost = 0,
@@ -10967,7 +10967,7 @@ ForeverGuide_Data.Vendors = {
   },
   [868] = {
     name = "Targot Jinglepocket",
-    zone = "Eastern Kingdoms",
+    zone = "Arathi Highlands",
     coords = "46.4, 45.4",
     item = "Melon Juice, Moonberry Juice, Sweet Nectar, Mutton Chop, Wild Hog Shank, Snapvine Watermelon (+10 more)",
     cost = 0,
@@ -10977,7 +10977,7 @@ ForeverGuide_Data.Vendors = {
   },
   [869] = {
     name = "Kosco Copperpinch",
-    zone = "Eastern Kingdoms",
+    zone = "Arathi Highlands",
     coords = "74.0, 29.2",
     item = "Melon Juice, Moonberry Juice, Sweet Nectar, Mutton Chop, Wild Hog Shank, Snapvine Watermelon (+10 more)",
     cost = 0,
@@ -10987,7 +10987,7 @@ ForeverGuide_Data.Vendors = {
   },
   [870] = {
     name = "Rutherford Twing",
-    zone = "Eastern Kingdoms",
+    zone = "Arathi Highlands",
     coords = "73.4, 29.8",
     item = "Superior Healing Draught, Superior Mana Draught, Deathguard's Cloak, Defiler's Talisman, Defiler's Chain Girdle, Defiler's Chain Girdle (+63 more)",
     cost = 0,
@@ -10997,7 +10997,7 @@ ForeverGuide_Data.Vendors = {
   },
   [871] = {
     name = "Samuel Hawke",
-    zone = "Eastern Kingdoms",
+    zone = "Arathi Highlands",
     coords = "46.0, 45.2",
     item = "Superior Healing Draught, Superior Mana Draught, Highlander's Plate Girdle, Highlander's Lamellar Girdle, Highlander's Chain Girdle, Highlander's Leather Girdle (+63 more)",
     cost = 0,
@@ -11007,7 +11007,7 @@ ForeverGuide_Data.Vendors = {
   },
   [872] = {
     name = "Khur Hornstriker",
-    zone = "Kalimdor",
+    zone = "Silithus",
     coords = "48.8, 37.0",
     item = "Dust of Decay, Essence of Pain, Empty Vial, Leaded Vial, Lethargy Root, Thieves' Tools (+22 more)",
     cost = 0,
@@ -11017,7 +11017,7 @@ ForeverGuide_Data.Vendors = {
   },
   [873] = {
     name = "Mylini Frostmoon",
-    zone = "Kalimdor",
+    zone = "Felwood",
     coords = "62.4, 25.8",
     item = "Broadsword, Flamberge, Crescent Axe, Bullova, Main Gauche, Falchion (+4 more)",
     cost = 0,
@@ -11027,7 +11027,7 @@ ForeverGuide_Data.Vendors = {
   },
   [874] = {
     name = "Rachelle Gothena",
-    zone = "Kalimdor",
+    zone = "Orgrimmar",
     coords = "53.0, 65.4",
     item = "Tigule's Strawberry Ice Cream, Moonbrook Riot Taffy, Styleen's Sour Suckerpop, Bellara's Nutterbar, Hallow's End Pumpkin Treat",
     cost = 0,
@@ -11037,7 +11037,7 @@ ForeverGuide_Data.Vendors = {
   },
   [875] = {
     name = "Kania",
-    zone = "Kalimdor",
+    zone = "Silithus",
     coords = "52.0, 39.4",
     item = "Simple Wood, Copper Rod, Formula: Enchant Chest - Minor Intellect, Lesser Magic Essence, Strange Dust, Star Wood (+9 more)",
     cost = 0,
@@ -11047,7 +11047,7 @@ ForeverGuide_Data.Vendors = {
   },
   [876] = {
     name = "Lunar Festival Vendor",
-    zone = "Kalimdor",
+    zone = "Ironforge",
     coords = "29.4, 14.4",
     item = "Red Rocket Cluster, Green Rocket Cluster, Blue Rocket Cluster, Small Red Rocket, Small Green Rocket, Small Blue Rocket (+2 more)",
     cost = 0,
@@ -11057,7 +11057,7 @@ ForeverGuide_Data.Vendors = {
   },
   [877] = {
     name = "Vi'el",
-    zone = "Kalimdor",
+    zone = "Winterspring",
     coords = "58.8, 78.4",
     item = "Infernal Stone, Gromsblood, Felcloth, Demonic Figurine, Arcane Powder, Wild Berries (+14 more)",
     cost = 0,
@@ -11067,7 +11067,7 @@ ForeverGuide_Data.Vendors = {
   },
   [878] = {
     name = "Jessica Chambers",
-    zone = "Eastern Kingdoms",
+    zone = "Eastern Plaguelands",
     coords = "81.4, 58.2",
     item = "Refreshing Spring Water, Ice Cold Milk, Melon Juice, Moonberry Juice, Sweet Nectar, Tough Hunk of Bread (+6 more)",
     cost = 0,
@@ -11077,7 +11077,7 @@ ForeverGuide_Data.Vendors = {
   },
   [879] = {
     name = "Craftsman Wilhelm",
-    zone = "Eastern Kingdoms",
+    zone = "Eastern Plaguelands",
     coords = "81.0, 59.4",
     item = "Weak Flux, Mining Pick, Strong Flux, Coal, Blacksmith Hammer, Elemental Flux",
     cost = 0,
@@ -11087,7 +11087,7 @@ ForeverGuide_Data.Vendors = {
   },
   [880] = {
     name = "Innkeeper Faralia",
-    zone = "Kalimdor",
+    zone = "Stonetalon Mountains",
     coords = "35.6, 5.8",
     item = "Refreshing Spring Water, Ice Cold Milk, Melon Juice, Moonberry Juice, Sweet Nectar, Tough Hunk of Bread (+6 more)",
     cost = 0,
@@ -11097,7 +11097,7 @@ ForeverGuide_Data.Vendors = {
   },
   [881] = {
     name = "Garon Hutchins",
-    zone = "Kalimdor",
+    zone = "Silithus",
     coords = "52.4, 38.4",
     item = "Friendship Bread, Freshly-Squeezed Lemonade",
     cost = 0,
@@ -11107,7 +11107,7 @@ ForeverGuide_Data.Vendors = {
   },
   [882] = {
     name = "Raider Bork",
-    zone = "Azeroth",
+    zone = "Alterac Valley",
     coords = "",
     item = "Red Skeletal Warhorse, Black War Kodo, Whistle of the Black War Raptor, Horn of the Black War Wolf",
     cost = 0,
@@ -11117,7 +11117,7 @@ ForeverGuide_Data.Vendors = {
   },
   [883] = {
     name = "Lieutenant Karter",
-    zone = "Azeroth",
+    zone = "Alterac Valley",
     coords = "",
     item = "Black War Ram, Black Battlestrider, Reins of the Black War Tiger, Black War Steed Bridle",
     cost = 0,
@@ -11127,7 +11127,7 @@ ForeverGuide_Data.Vendors = {
   },
   [884] = {
     name = "Renn'az",
-    zone = "Eastern Kingdoms",
+    zone = "The Hinterlands",
     coords = "76.8, 81.2",
     item = "Rough Arrow, Sharp Arrow, Razor Arrow, Small Quiver, Medium Quiver, Jagged Arrow",
     cost = 0,
@@ -11137,7 +11137,7 @@ ForeverGuide_Data.Vendors = {
   },
   [885] = {
     name = "Wagner Hammerstrike",
-    zone = "Eastern Kingdoms",
+    zone = "Dun Morogh",
     coords = "52.4, 36.0",
     item = "Blue Firework, Yellow Rose Firework, Red Firework, Green Firework, Red Streaks Firework",
     cost = 0,
@@ -11147,7 +11147,7 @@ ForeverGuide_Data.Vendors = {
   },
   [886] = {
     name = "Javnir Nashak",
-    zone = "Kalimdor",
+    zone = "Durotar",
     coords = "46.0, 13.4",
     item = "Green Firework, Blue Firework, Red Firework, Yellow Rose Firework, Red Streaks Firework",
     cost = 0,
@@ -11157,7 +11157,7 @@ ForeverGuide_Data.Vendors = {
   },
   [887] = {
     name = "Orphan Matron Nightingale",
-    zone = "Eastern Kingdoms",
+    zone = "Stormwind City",
     coords = "47.2, 38.4",
     item = "Freshly-Squeezed Lemonade, Friendship Bread",
     cost = 0,
@@ -11167,7 +11167,7 @@ ForeverGuide_Data.Vendors = {
   },
   [888] = {
     name = "Nat Pagle",
-    zone = "Kalimdor",
+    zone = "Dustwallow Marsh",
     coords = "58.4, 60.0",
     item = "Mudskunk Lure",
     cost = 0,
@@ -11177,7 +11177,7 @@ ForeverGuide_Data.Vendors = {
   },
   [889] = {
     name = "Hillsbrad Tailor",
-    zone = "Eastern Kingdoms",
+    zone = "Hillsbrad Foothills",
     coords = "35.4, 43.6",
     item = "Knitted Bracers, Knitted Belt, Knitted Tunic, Knitted Pants, Knitted Gloves, Knitted Sandals",
     cost = 0,
@@ -11187,7 +11187,7 @@ ForeverGuide_Data.Vendors = {
   },
   [890] = {
     name = "Kalin Windflight",
-    zone = "Kalimdor",
+    zone = "Feralas",
     coords = "49.2, 19.8",
     item = "Colossal Parachute",
     cost = 0,
@@ -11317,7 +11317,7 @@ ForeverGuide_Data.Vendors = {
   },
   [903] = {
     name = "Magnus Frostwake",
-    zone = "Eastern Kingdoms",
+    zone = "Western Plaguelands",
     coords = "68.0, 77.4",
     item = "Plans: Ebon Shiv, Pattern: Storm Gauntlets, Plans: Ornate Thorium Handaxe, Plans: Huge Thorium Battleaxe, Recipe: Transmute Water to Air, Recipe: Major Mana Potion",
     cost = 0,
@@ -11327,7 +11327,7 @@ ForeverGuide_Data.Vendors = {
   },
   [904] = {
     name = "Baker Masterson",
-    zone = "Eastern Kingdoms",
+    zone = "Western Plaguelands",
     coords = "69.4, 79.4",
     item = "Refreshing Spring Water, Ice Cold Milk, Melon Juice, Moonberry Juice, Sweet Nectar, Tough Hunk of Bread (+6 more)",
     cost = 0,
@@ -11337,7 +11337,7 @@ ForeverGuide_Data.Vendors = {
   },
   [905] = {
     name = "Katrina Shimmerstar",
-    zone = "Eastern Kingdoms",
+    zone = "Ironforge",
     coords = "33.0, 65.4",
     item = "Hallow's End Pumpkin Treat, Bellara's Nutterbar, Moonbrook Riot Taffy, Styleen's Sour Suckerpop, Tigule's Strawberry Ice Cream",
     cost = 0,
@@ -11347,7 +11347,7 @@ ForeverGuide_Data.Vendors = {
   },
   [906] = {
     name = "Lieutenant General Andorov",
-    zone = "Azeroth",
+    zone = "Ruins of Ahn'Qiraj",
     coords = "",
     item = "Major Mana Potion, Heavy Runecloth Bandage, Major Healing Potion, Plans: Jagged Obsidian Shield, Plans: Obsidian Mail Tunic",
     cost = 0,
@@ -11377,7 +11377,7 @@ ForeverGuide_Data.Vendors = {
   },
   [909] = {
     name = "Pyrewood Tailor",
-    zone = "Eastern Kingdoms",
+    zone = "Silverpine Forest",
     coords = "45.8, 71.4",
     item = "Knitted Sandals, Knitted Gloves, Knitted Pants, Knitted Tunic, Knitted Belt, Knitted Bracers",
     cost = 0,
@@ -11387,7 +11387,7 @@ ForeverGuide_Data.Vendors = {
   },
   [910] = {
     name = "Pyrewood Armorer",
-    zone = "Eastern Kingdoms",
+    zone = "Silverpine Forest",
     coords = "46.2, 71.4",
     item = "Chainmail Armor, Chainmail Pants, Chainmail Boots, Chainmail Gloves, Wall Shield, Chainmail Belt (+2 more)",
     cost = 0,
@@ -11397,7 +11397,7 @@ ForeverGuide_Data.Vendors = {
   },
   [911] = {
     name = "Pyrewood Leatherworker",
-    zone = "Eastern Kingdoms",
+    zone = "Silverpine Forest",
     coords = "44.0, 74.0",
     item = "Rough Leather Boots, Rough Leather Gloves, Rough Leather Pants, Rough Leather Vest, Rough Leather Belt, Rough Leather Bracers",
     cost = 0,
@@ -11407,7 +11407,7 @@ ForeverGuide_Data.Vendors = {
   },
   [912] = {
     name = "Nathaniel Steenwick",
-    zone = "Eastern Kingdoms",
+    zone = "Undercity",
     coords = "77.0, 50.8",
     item = "Small Throwing Knife, Wicked Throwing Dagger, Gleaming Throwing Axe, Heavy Throwing Dagger, Balanced Throwing Dagger, Keen Throwing Knife (+4 more)",
     cost = 0,
@@ -11427,7 +11427,7 @@ ForeverGuide_Data.Vendors = {
   },
   [914] = {
     name = "Fizzlebang Booms",
-    zone = "Eastern Kingdoms",
+    zone = "Ironforge",
     coords = "72.4, 52.8",
     item = "Red Fireworks Rocket",
     cost = 0,
@@ -11437,7 +11437,7 @@ ForeverGuide_Data.Vendors = {
   },
   [915] = {
     name = "Wizbang Booms",
-    zone = "Azeroth",
+    zone = "Ironforge",
     coords = "30.4, 62.0",
     item = "Red Fireworks Rocket, Red Sparkler, White Sparkler, Blue Sparkler, Blue Firework, Green Firework (+4 more)",
     cost = 0,
@@ -11447,7 +11447,7 @@ ForeverGuide_Data.Vendors = {
   },
   [916] = {
     name = "Ziggle Sparks",
-    zone = "Azeroth",
+    zone = "Stranglethorn Vale",
     coords = "27.4, 77.6",
     item = "Red Fireworks Rocket, Red Sparkler, White Sparkler, Blue Sparkler, Blue Firework, Green Firework (+4 more)",
     cost = 0,
@@ -11457,7 +11457,7 @@ ForeverGuide_Data.Vendors = {
   },
   [917] = {
     name = "Jaxxil Sparks",
-    zone = "Azeroth",
+    zone = "The Barrens",
     coords = "61.8, 39.4",
     item = "Red Fireworks Rocket, Red Sparkler, White Sparkler, Blue Sparkler, Blue Firework, Green Firework (+4 more)",
     cost = 0,
@@ -11467,7 +11467,7 @@ ForeverGuide_Data.Vendors = {
   },
   [918] = {
     name = "Kizzak Sparks",
-    zone = "Azeroth",
+    zone = "Orgrimmar",
     coords = "74.0, 27.6",
     item = "Red Fireworks Rocket, Red Sparkler, White Sparkler, Blue Sparkler, Blue Firework, Green Firework (+4 more)",
     cost = 0,
@@ -11477,7 +11477,7 @@ ForeverGuide_Data.Vendors = {
   },
   [919] = {
     name = "Darkcaller Yanka",
-    zone = "Eastern Kingdoms",
+    zone = "Tirisfal Glades",
     coords = "55.4, 69.8",
     item = "Forsaken Stink Bomb Cluster",
     cost = 0,
@@ -11487,7 +11487,7 @@ ForeverGuide_Data.Vendors = {
   },
   [920] = {
     name = "Sergeant Hartman",
-    zone = "Eastern Kingdoms",
+    zone = "Hillsbrad Foothills",
     coords = "50.0, 57.2",
     item = "Stink Bomb Cleaner",
     cost = 0,
@@ -11497,7 +11497,7 @@ ForeverGuide_Data.Vendors = {
   },
   [921] = {
     name = "Officer Areyn",
-    zone = "Eastern Kingdoms",
+    zone = "Stormwind City",
     coords = "73.4, 52.6",
     item = "Private's Tabard, Sergeant's Cape, Sergeant's Cape, Sergeant's Cape, Master Sergeant's Insignia, Master Sergeant's Insignia (+20 more)",
     cost = 0,
@@ -11507,7 +11507,7 @@ ForeverGuide_Data.Vendors = {
   },
   [922] = {
     name = "Seersa Copperpinch",
-    zone = "Kalimdor",
+    zone = "Thunder Bluff",
     coords = "43.4, 57.8",
     item = "Holiday Spices, UNUSED ITEM, Holiday Spirits, Recipe: Gingerbread Cookie, Recipe: Egg Nog, Snowball (+4 more)",
     cost = 0,

@@ -1526,6 +1526,30 @@ function FG:GetVendorIcon(v)
   return "Interface\\Icons\\INV_Misc_Coin_01"
 end
 
+function FG:GetVendorTitle(c)
+  if not c or not c.location or c.location == "" then return nil end
+  local loc = c.location
+  local title = loc:match("^%s*<([^>]+)>%s*$") or loc
+  local t_lower = title:lower()
+  if t_lower == "reuse me" or t_lower == "dwarven mortar team" or t_lower == "the argent dawn" or t_lower == "the night watch" or t_lower == "scarlet crusade" or t_lower == "defias brotherhood" then
+    return nil
+  end
+  if t_lower:find("merchant") or t_lower:find("supplies") or t_lower:find("vendor") or t_lower:find("trader") or t_lower:find("tradesman")
+     or t_lower:find("innkeeper") or t_lower:find("stable master") or t_lower:find("blacksmith") or t_lower:find("weaponsmith")
+     or t_lower:find("armorsmith") or t_lower:find("armorer") or t_lower:find("gunsmith") or t_lower:find("bowyer")
+     or t_lower:find("tailor") or t_lower:find("leatherwork") or t_lower:find("alchemist") or t_lower:find("herbal")
+     or t_lower:find("engineer") or t_lower:find("mining") or t_lower:find("smelter") or t_lower:find("cook")
+     or t_lower:find("baker") or t_lower:find("butcher") or t_lower:find("fish") or t_lower:find("first aid")
+     or t_lower:find("physician") or t_lower:find("healer") or t_lower:find("reagent") or t_lower:find("poison")
+     or t_lower:find("potion") or t_lower:find("ale") or t_lower:find("wine") or t_lower:find("drink")
+     or t_lower:find("food") or t_lower:find("bartender") or t_lower:find("trainer") or t_lower:find("breeder")
+     or t_lower:find("goods") or t_lower:find("quartermaster") or t_lower:find("banker") or t_lower:find("auctioneer")
+     or t_lower:find("flight master") or t_lower:find("gryphon master") or t_lower:find("wind rider master") or t_lower:find("bat handler") then
+    return title
+  end
+  return nil
+end
+
 function FG:GetQuestIcon(qData)
   if not qData then return "Interface\\Icons\\inv_misc_book_07" end
   if qData.isForever then return "Interface\\Icons\\INV_Misc_Book_09" end
@@ -4696,14 +4720,39 @@ function FG:PopulateCodexResults(query)
       end
 
       local vCount = 0
+      local countedVendors = {}
       if FG.Data.Vendors then
         for _, v in pairs(FG.Data.Vendors) do
-          if v.zone and v.zone:lower() == pZoneLower then vCount = vCount + 1 end
+          local vZone = v.zone
+          if (vZone == "Azeroth" or vZone == "Eastern Kingdoms" or vZone == "Kalimdor" or not vZone) and v.name then
+            local cObj = FG:FindCreatureByName(v.name)
+            if cObj and cObj.zone then vZone = cObj.zone end
+          end
+          if vZone and vZone:lower() == pZoneLower then
+            vCount = vCount + 1
+            if v.name then countedVendors[v.name:lower()] = true end
+          end
         end
       end
       if FG.Data.Flightpaths then
         for _, fp in pairs(FG.Data.Flightpaths) do
-          if fp.zone and fp.zone:lower() == pZoneLower then vCount = vCount + 1 end
+          if fp.zone and fp.zone:lower() == pZoneLower then
+            vCount = vCount + 1
+            if fp.name then countedVendors[fp.name:lower()] = true end
+          end
+        end
+      end
+      if FG.Data.Creatures then
+        for _, c in pairs(FG.Data.Creatures) do
+          local inZone = c.zone and c.zone:lower() == pZoneLower
+          local inSub = pSubLower ~= "" and ((c.location and c.location:lower():find(pSubLower, 1, true)) or (c.zone and c.zone:lower():find(pSubLower, 1, true)))
+          if (inZone or inSub) and not FG:IsInternalCreature(c.name, c.family) then
+            local vTitle = FG:GetVendorTitle(c)
+            if vTitle and c.name and not countedVendors[c.name:lower()] then
+              countedVendors[c.name:lower()] = true
+              vCount = vCount + 1
+            end
+          end
         end
       end
 
@@ -4842,12 +4891,19 @@ function FG:PopulateCodexResults(query)
 
       -- 4. Nearby Vendors & Flight Masters
       if showVendors then
+        local addedVendors = {}
         if FG.Data.Vendors then
           for _, v in pairs(FG.Data.Vendors) do
-            local inZone = v.zone and v.zone:lower() == pZoneLower
+            local vZone = v.zone
+            if (vZone == "Azeroth" or vZone == "Eastern Kingdoms" or vZone == "Kalimdor" or not vZone) and v.name then
+              local cObj = FG:FindCreatureByName(v.name)
+              if cObj and cObj.zone then vZone = cObj.zone end
+            end
+            local inZone = vZone and vZone:lower() == pZoneLower
             if inZone then
               if q == "" or (v.name and v.name:lower():find(q, 1, true)) or (v.item and v.item:lower():find(q, 1, true)) then
                 table.insert(matches, { type = "vendor", data = v, isNearby = true })
+                if v.name then addedVendors[v.name:lower()] = true end
               end
             end
           end
@@ -4859,6 +4915,29 @@ function FG:PopulateCodexResults(query)
               local vData = { name = fp.name, zone = fp.zone, coords = fp.coords, item = fp.faction .. " Flight Master", tip = fp.notes or fp.connections }
               if q == "" or (fp.name and fp.name:lower():find(q, 1, true)) then
                 table.insert(matches, { type = "vendor", data = vData, isNearby = true })
+                if fp.name then addedVendors[fp.name:lower()] = true end
+              end
+            end
+          end
+        end
+        if FG.Data.Creatures then
+          for _, c in pairs(FG.Data.Creatures) do
+            local inZone = c.zone and c.zone:lower() == pZoneLower
+            local inSub = pSubLower ~= "" and ((c.location and c.location:lower():find(pSubLower, 1, true)) or (c.zone and c.zone:lower():find(pSubLower, 1, true)))
+            if (inZone or inSub) and not FG:IsInternalCreature(c.name, c.family) then
+              local vTitle = FG:GetVendorTitle(c)
+              if vTitle and c.name and not addedVendors[c.name:lower()] then
+                if q == "" or c.name:lower():find(q, 1, true) or vTitle:lower():find(q, 1, true) then
+                  local vData = {
+                    name = c.name,
+                    zone = c.zone or pZone,
+                    coords = c.coords,
+                    item = vTitle,
+                    tip = "<" .. vTitle .. ">" .. ((c.minLevel and c.minLevel > 0) and (" • Level " .. c.minLevel) or ""),
+                  }
+                  table.insert(matches, { type = "vendor", data = vData, isNearby = true })
+                  addedVendors[c.name:lower()] = true
+                end
               end
             end
           end
@@ -5304,13 +5383,56 @@ function FG:PopulateCodexResults(query)
       end
     end
 
-    if (cat == "all" or cat == "vendors") and FG.Data.Vendors then
-      for _, v in pairs(FG.Data.Vendors) do
-        local matchName = v.name and v.name:lower():find(q, 1, true)
-        local matchItem = v.item and v.item:lower():find(q, 1, true)
-        local matchZone = v.zone and v.zone:lower():find(q, 1, true)
-        if matchName or matchItem or matchZone then
-          table.insert(matches, { type = "vendor", data = v })
+    if (cat == "all" or cat == "vendors") then
+      local addedGlobalVendors = {}
+      if FG.Data.Vendors then
+        for _, v in pairs(FG.Data.Vendors) do
+          local vZone = v.zone
+          if (vZone == "Azeroth" or vZone == "Eastern Kingdoms" or vZone == "Kalimdor" or not vZone) and v.name then
+            local cObj = FG:FindCreatureByName(v.name)
+            if cObj and cObj.zone then vZone = cObj.zone end
+          end
+          local matchName = v.name and v.name:lower():find(q, 1, true)
+          local matchItem = v.item and v.item:lower():find(q, 1, true)
+          local matchZone = vZone and vZone:lower():find(q, 1, true)
+          if matchName or matchItem or matchZone then
+            table.insert(matches, { type = "vendor", data = v })
+            if v.name then addedGlobalVendors[v.name:lower()] = true end
+          end
+        end
+      end
+      if FG.Data.Flightpaths then
+        for _, fp in pairs(FG.Data.Flightpaths) do
+          local matchName = fp.name and fp.name:lower():find(q, 1, true)
+          local matchZone = fp.zone and fp.zone:lower():find(q, 1, true)
+          if matchName or matchZone then
+            local vData = { name = fp.name, zone = fp.zone, coords = fp.coords, item = fp.faction .. " Flight Master", tip = fp.notes or fp.connections }
+            table.insert(matches, { type = "vendor", data = vData })
+            if fp.name then addedGlobalVendors[fp.name:lower()] = true end
+          end
+        end
+      end
+      if FG.Data.Creatures then
+        for _, c in pairs(FG.Data.Creatures) do
+          if not FG:IsInternalCreature(c.name, c.family) then
+            local vTitle = FG:GetVendorTitle(c)
+            if vTitle and c.name and not addedGlobalVendors[c.name:lower()] then
+              local matchName = c.name and c.name:lower():find(q, 1, true)
+              local matchTitle = vTitle and vTitle:lower():find(q, 1, true)
+              local matchZone = c.zone and c.zone:lower():find(q, 1, true)
+              if matchName or matchTitle or matchZone then
+                local vData = {
+                  name = c.name,
+                  zone = c.zone,
+                  coords = c.coords,
+                  item = vTitle,
+                  tip = "<" .. vTitle .. ">" .. ((c.minLevel and c.minLevel > 0) and (" • Level " .. c.minLevel) or ""),
+                }
+                table.insert(matches, { type = "vendor", data = vData })
+                addedGlobalVendors[c.name:lower()] = true
+              end
+            end
+          end
         end
       end
     end
