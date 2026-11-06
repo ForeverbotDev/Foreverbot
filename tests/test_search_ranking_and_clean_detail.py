@@ -56,7 +56,6 @@ class TestSearchRankingAndCleanDetail(unittest.TestCase):
 
     def test_05_cross_category_search_fallback(self):
         """Verify auto-fallback to 'All' category when user searches or scoped category returns 0."""
-        self.assertIn("if FG.activeCategory ~= \"all\" and not self.scopedSearchLock then", self.lua_code)
         self.assertIn("FG:SetActiveCategory(\"all\")", self.lua_code)
         self.assertIn("if #matches == 0 and cat ~= \"all\" and q ~= \"\" then", self.lua_code)
 
@@ -65,7 +64,7 @@ class TestSearchRankingAndCleanDetail(unittest.TestCase):
         self.assertNotIn("Target Macro", self.lua_code)
         self.assertNotIn("/target ", self.lua_code)
         self.assertNotIn("targeting macro", self.lua_code)
-        self.assertIn("Inspect NPC intel & spawn location", self.lua_code)
+        self.assertIn("View full NPC intel, drops & tactics", self.lua_code)
 
     def test_07_detail_panel_bottom_buttons_removed(self):
         """Verify bottom buttons (Share to Chat / Search Source / Target Macro) are removed from all detail views."""

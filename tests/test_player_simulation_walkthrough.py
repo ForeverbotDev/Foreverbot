@@ -134,7 +134,7 @@ class TestPlayerSimulationWalkthrough(unittest.TestCase):
 
         # Verify target macro feature has been cleanly removed to avoid combat lockdown / macro cap errors
         self.assertNotIn('/target ', self.lua_code)
-        self.assertIn('Inspect NPC intel & spawn location', self.lua_code)
+        self.assertIn('View full NPC intel, drops & tactics', self.lua_code)
 
     def test_06_quest_lore_objectives_rewards_and_dialogue(self):
         """Simulate inspecting a quest: full lore text, objectives, rewards, and completion dialogue."""

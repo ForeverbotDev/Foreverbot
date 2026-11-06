@@ -1328,6 +1328,88 @@ function FG:GetZoneData(zoneName)
   return nil
 end
 
+function FG:GetPlayerCoords()
+  local px, py = nil, nil
+  if GetPlayerMapPosition then
+    px, py = GetPlayerMapPosition("player")
+  end
+  if (not px or (px == 0 and py == 0)) and C_Map and C_Map.GetPlayerMapPosition and C_Map.GetBestMapForUnit then
+    local mapID = C_Map.GetBestMapForUnit("player")
+    if mapID then
+      local pos = C_Map.GetPlayerMapPosition(mapID, "player")
+      if pos then
+        px, py = pos:GetXY()
+      end
+    end
+  end
+  if px and py and (px > 0 or py > 0) then
+    return px * 100, py * 100
+  end
+  return nil, nil
+end
+
+function FG:GetDistanceAndBearing(coordStr)
+  if not coordStr or coordStr == "" then return nil, nil, nil end
+  local cx, cy = coordStr:match("(%d+%.?%d*)%s*,%s*(%d+%.?%d*)")
+  if not cx or not cy then return nil, nil, nil end
+  cx = tonumber(cx)
+  cy = tonumber(cy)
+  if not cx or not cy then return nil, nil, nil end
+
+  local px, py = FG:GetPlayerCoords()
+  if not px or not py then
+    return nil, nil, string.format("[%0.1f, %0.1f]", cx, cy), cx, cy
+  end
+
+  local dx = cx - px
+  local dy = cy - py
+  local distPct = math.sqrt(dx * dx + dy * dy)
+  local distYards = math.floor(distPct * 35)
+
+  local bearing = ""
+  if dy < -1.0 then bearing = "N" elseif dy > 1.0 then bearing = "S" end
+  if dx > 1.0 then bearing = bearing .. "E" elseif dx < -1.0 then bearing = bearing .. "W" end
+  if bearing == "" then bearing = "Nearby" end
+
+  local distStr = ""
+  if distYards < 60 then
+    distStr = "Right here (<60yd)"
+  elseif distYards < 1500 then
+    distStr = string.format("~%d yd %s", distYards, bearing)
+  else
+    distStr = string.format("~%0.1f mi %s", distYards / 1760, bearing)
+  end
+
+  return distPct, distYards, distStr, cx, cy
+end
+
+function FG:TrackEntityCoords(name, zone, coords)
+  if not coords or coords == "" then
+    print(string.format("|cffdf80ff[Sparky Radar]|r %s location coordinates are not specified.", name or "Target"))
+    return
+  end
+  local cx, cy = coords:match("(%d+%.?%d*)%s*,%s*(%d+%.?%d*)")
+  if not cx or not cy then return end
+  cx = tonumber(cx)
+  cy = tonumber(cy)
+
+  local _, _, distStr = FG:GetDistanceAndBearing(coords)
+  local distMsg = distStr and (" (" .. distStr .. ")") or ""
+  print(string.format("|cffdf80ff[Sparky Radar]|r Tracking |cffffffff%s|r at |cff38bdf8[%0.1f, %0.1f]|r in |cffcf52ff%s|r%s.", name or "Target", cx, cy, zone or (FG.currentZone or "Current Zone"), distMsg))
+
+  if TomTom and TomTom.AddWaypoint then
+    local mZone = zone or GetZoneText()
+    TomTom:AddWaypoint(mZone, cx, cy, { title = name })
+  elseif C_Map and C_Map.SetUserWaypoint and C_Map.GetBestMapForUnit and UiMapPoint then
+    local mapID = C_Map.GetBestMapForUnit("player")
+    if mapID then
+      local pt = UiMapPoint.CreateFromCoordinates(mapID, cx / 100, cy / 100)
+      C_Map.SetUserWaypoint(pt)
+    end
+  end
+end
+
+
 function FG:ShowCurrentZoneIntel()
   local currentZone = FG:GetCurrentZone()
   local zoneInfo = FG:GetZoneData(currentZone)
@@ -1424,7 +1506,7 @@ function FG:CreateCodexRowButton(parent, i)
 
   local titleText = btn:CreateFontString(nil, "OVERLAY", "GameFontHighlight")
   titleText:SetPoint("TOPLEFT", btn, "TOPLEFT", 48, -6)
-  titleText:SetPoint("RIGHT", btn, "RIGHT", -68, 0)
+  titleText:SetPoint("RIGHT", btn, "RIGHT", -78, 0)
   titleText:SetJustifyH("LEFT")
   titleText:SetWordWrap(false)
   SharpenFontString(titleText, 12, "OUTLINE")
@@ -1432,18 +1514,54 @@ function FG:CreateCodexRowButton(parent, i)
 
   local subText = btn:CreateFontString(nil, "OVERLAY", "GameFontNormalSmall")
   subText:SetPoint("TOPLEFT", titleText, "BOTTOMLEFT", 0, -2)
-  subText:SetPoint("RIGHT", btn, "RIGHT", -68, 0)
+  subText:SetPoint("RIGHT", btn, "RIGHT", -78, 0)
   subText:SetHeight(15)
   subText:SetJustifyH("LEFT")
   subText:SetWordWrap(false)
   SharpenFontString(subText, 10.5, "OUTLINE")
   btn.Sub = subText
 
-  local hint = btn:CreateFontString(nil, "OVERLAY", "GameFontHighlightSmall")
-  hint:SetPoint("RIGHT", btn, "RIGHT", -12, 0)
-  hint:SetText("|cff9d8ec2Inspect >|r")
+  local inspectBtn = CreateFrame("Button", nil, btn)
+  inspectBtn:SetSize(68, 26)
+  inspectBtn:SetPoint("RIGHT", btn, "RIGHT", -8, 0)
+  inspectBtn:SetBackdrop({
+    bgFile = "Interface\\Buttons\\WHITE8X8",
+    edgeFile = "Interface\\Buttons\\WHITE8X8",
+    tile = false, tileSize = 0, edgeSize = 1,
+    insets = { left = 1, right = 1, top = 1, bottom = 1 },
+  })
+  inspectBtn:SetBackdropColor(0.18, 0.14, 0.28, 0.90)
+  inspectBtn:SetBackdropBorderColor(0.45, 0.35, 0.65, 0.90)
+
+  local hint = inspectBtn:CreateFontString(nil, "OVERLAY", "GameFontHighlightSmall")
+  hint:SetPoint("CENTER", inspectBtn, "CENTER", 0, 0)
+  hint:SetText("|cffcf52ffInspect >|r")
   SharpenFontString(hint, 10, "OUTLINE")
+  inspectBtn.Text = hint
+  btn.InspectBtn = inspectBtn
   btn.Hint = hint
+
+  inspectBtn:SetScript("OnEnter", function(self)
+    self:SetBackdropColor(0.30, 0.20, 0.50, 0.98)
+    self:SetBackdropBorderColor(0.80, 0.50, 1.0, 1.0)
+    GameTooltip:SetOwner(self, "ANCHOR_TOPRIGHT")
+    GameTooltip:AddLine("|cffdf80ffInspect Intel|r", 1, 1, 1)
+    GameTooltip:AddLine("Click to view full detail, tactics, drops & coordinates.", 0.85, 0.85, 0.85, true)
+    GameTooltip:Show()
+  end)
+  inspectBtn:SetScript("OnLeave", function(self)
+    self:SetBackdropColor(0.18, 0.14, 0.28, 0.90)
+    self:SetBackdropBorderColor(0.45, 0.35, 0.65, 0.90)
+    GameTooltip:Hide()
+  end)
+  inspectBtn:SetScript("OnClick", function(self)
+    if self.onClick then
+      self.onClick()
+    elseif self.entityType and self.entityData then
+      FG:ShowDetailPanel(self.entityType, self.entityData)
+      FG:PlaySparkSound("shimmer")
+    end
+  end)
 
   return btn
 end
@@ -1726,28 +1844,95 @@ function FG:GetCreatureIcon(c)
 
   -- 6. Beasts
   if fam == "beast" then
-    if name:find("wolf") or name:find("worg") or name:find("coyote") or name:find("fox") then return "Interface\\Icons\\Ability_Hunter_Pet_Wolf" end
-    if name:find("bear") or name:find("grizzly") or name:find("polar") then return "Interface\\Icons\\Ability_Hunter_Pet_Bear" end
-    if name:find("cat") or name:find("lion") or name:find("tiger") or name:find("panther") or name:find("leopard") or name:find("lynx") or name:find("cougar") or name:find("saber") or name:find("stalker") then return "Interface\\Icons\\Ability_Hunter_Pet_Cat" end
-    if name:find("boar") or name:find("pig") or name:find("swine") then return "Interface\\Icons\\Ability_Hunter_Pet_Boar" end
-    if name:find("spider") or name:find("tarantula") or name:find("widow") or name:find("creeper") or name:find("weaver") then return "Interface\\Icons\\Ability_Hunter_Pet_Spider" end
-    if name:find("raptor") then return "Interface\\Icons\\Ability_Hunter_Pet_Raptor" end
-    if name:find("bat") then return "Interface\\Icons\\Ability_Hunter_Pet_Bat" end
-    if name:find("bird") or name:find("hawk") or name:find("eagle") or name:find("falcon") or name:find("owl") or name:find("buzzard") or name:find("vulture") or name:find("condor") then return "Interface\\Icons\\Ability_Hunter_Pet_Owl" end
-    if name:find("crab") or name:find("crawler") or name:find("pincer") or name:find("lobster") then return "Interface\\Icons\\Ability_Hunter_Pet_Crab" end
-    if name:find("croc") or name:find("alligator") then return "Interface\\Icons\\Ability_Hunter_Pet_Crocolisk" end
-    if name:find("gorilla") or name:find("ape") then return "Interface\\Icons\\Ability_Hunter_Pet_Gorilla" end
-    if name:find("hyena") then return "Interface\\Icons\\Ability_Hunter_Pet_Hyena" end
-    if name:find("snake") or name:find("cobra") or name:find("viper") or name:find("serpent") or name:find("adder") then return "Interface\\Icons\\Spell_Nature_GuardianWard" end
-    if name:find("strider") then return "Interface\\Icons\\Ability_Hunter_Pet_TallStrider" end
-    if name:find("scorpid") or name:find("scorpion") or name:find("silithid") then return "Interface\\Icons\\Ability_Hunter_Pet_Scorpid" end
-    if name:find("turtle") or name:find("tortoise") or name:find("snapper") then return "Interface\\Icons\\Ability_Hunter_Pet_Turtle" end
-    if name:find("wasp") or name:find("stinger") or name:find("hornet") or name:find("bee") then return "Interface\\Icons\\Ability_Hunter_Pet_Wasp" end
-    if name:find("ram") or name:find("goat") then return "Interface\\Icons\\Ability_Mount_MountainRam" end
-    if name:find("kodo") then return "Interface\\Icons\\Ability_Mount_Kodo_01" end
-    if name:find("horse") or name:find("steed") or name:find("stallion") or name:find("mare") then return "Interface\\Icons\\Ability_Mount_RidingHorse" end
-    if name:find("frenzy") or name:find("fish") or name:find("piranha") then return "Interface\\Icons\\Trade_Fishing" end
-    return "Interface\\Icons\\Ability_Hunter_Pet_Wolf"
+    -- Giraffe & Long-Necked Savannah Grazers
+    if name:find("giraffe") or name:find("strider") or name:find("plainstrider") or name:find("foreststrider") or name:find("stepstrider") or name:find("mazzranache") then
+      return "Interface\\Icons\\Ability_Hunter_Pet_TallStrider"
+    end
+    -- Gazelle, Deer, Stag, Antelope, Courser, Talbuk, Ram, Goat, Sheep
+    if name:find("gazelle") or name:find("stag") or name:find("deer") or name:find("doe") or name:find("buck") or name:find("courser") or name:find("antelope") or name:find("talbuk") or name:find("reindeer") or name:find("ram") or name:find("goat") or name:find("sheep") then
+      return "Interface\\Icons\\Ability_Mount_MountainRam"
+    end
+    -- Equines (Zhevra, Horse, Steed, Stallion, Mare, Mule, Donkey, Pony, Charger)
+    if name:find("zhevra") or name:find("horse") or name:find("steed") or name:find("stallion") or name:find("mare") or name:find("mule") or name:find("donkey") or name:find("pony") or name:find("charger") or name:find("equine") then
+      return "Interface\\Icons\\Ability_Mount_RidingHorse"
+    end
+    -- Kodo, Thunder Lizard, Lightning Hide, Clefthoof, Rhino, Stegodon
+    if name:find("kodo") or name:find("clefthoof") or name:find("rhino") or name:find("thunder lizard") or name:find("lightning hide") or name:find("stegodon") or name:find("thunderhead") or name:find("brontus") or name:find("arra'chea") or name:find("thunderer") then
+      return "Interface\\Icons\\Ability_Mount_Kodo_01"
+    end
+    -- Crocolisks, Alligators, Basilisks, Lizards, Threshadons
+    if name:find("croc") or name:find("alligator") or name:find("crocolisk") or name:find("basilisk") or name:find("reaver") or name:find("lashtail") or name:find("snapjaw") or name:find("threshadon") or name:find("scale belly") or name:find("gator") or name:find("reptile") or name:find("slink") then
+      return "Interface\\Icons\\Ability_Hunter_Pet_Crocolisk"
+    end
+    -- Raptors and Dinosaurs
+    if name:find("raptor") or name:find("scythemaw") or name:find("razormaw") or name:find("taillasher") or name:find("scytheclaw") or name:find("screecher") or name:find("tethis") or name:find("sarltooth") or name:find("riptooth") then
+      return "Interface\\Icons\\Ability_Hunter_Pet_Raptor"
+    end
+    -- Cats / Felines
+    if name:find("cat") or name:find("lion") or name:find("tiger") or name:find("tigress") or name:find("panther") or name:find("pantheress") or name:find("leopard") or name:find("lynx") or name:find("cougar") or name:find("saber") or name:find("stalker") or name:find("jaguar") or name:find("pridewing") or name:find("pridemother") or name:find("pridelord") or name:find("shadowclaw") or name:find("dishu") or name:find("antilos") or name:find("araga") or name:find("bhag'thera") or name:find("broken tooth") or name:find("humar") or name:find("rak'shiri") or name:find("bangalash") or name:find("clutchmother") or name:find("sirobi") or name:find("feras") or name:find("sin'dall") or name:find("konda") or name:find("claw") or name:find("prowler") or name:find("huntress") then
+      return "Interface\\Icons\\Ability_Hunter_Pet_Cat"
+    end
+    -- Bears / Ursines
+    if name:find("bear") or name:find("grizzly") or name:find("polar") or name:find("ursoc") or name:find("mauler") or name:find("ursa") or name:find("barnabus") or name:find("samras") or name:find("bjarn") or name:find("borelgore") or name:find("brumeran") or name:find("cliff jumper") or name:find("mangeclaw") or name:find("sooty") or name:find("grizzled") or name:find("den mother") then
+      return "Interface\\Icons\\Ability_Hunter_Pet_Bear"
+    end
+    -- Boars / Swine
+    if name:find("boar") or name:find("pig") or name:find("swine") or name:find("tusk") or name:find("agam'ar") or name:find("agathelos") or name:find("bellygrub") or name:find("thundersnout") or name:find("rotgut") or name:find("goretusk") or name:find("snout") or name:find("princess") or name:find("porcine") or name:find("sow") or name:find("gruntler") or name:find("snort") then
+      return "Interface\\Icons\\Ability_Hunter_Pet_Boar"
+    end
+    -- Spiders / Arachnids
+    if name:find("spider") or name:find("tarantula") or name:find("widow") or name:find("creeper") or name:find("weaver") or name:find("spinette") or name:find("web") or name:find("besseleth") or name:find("chatter") or name:find("recluse") or name:find("naraxis") or name:find("spinner") or name:find("lurker") or name:find("shadra") or name:find("fang") or name:find("fangor") or name:find("fangore") or name:find("broodguard") then
+      return "Interface\\Icons\\Ability_Hunter_Pet_Spider"
+    end
+    -- Scorpions / Scorpids / Silithids
+    if name:find("scorpid") or name:find("scorpion") or name:find("deathsting") or name:find("sarkoth") or name:find("silithid") or name:find("beetle") then
+      return "Interface\\Icons\\Ability_Hunter_Pet_Scorpid"
+    end
+    -- Turtles / Tortoises
+    if name:find("turtle") or name:find("tortoise") or name:find("snapper") or name:find("ironback") or name:find("shell") then
+      return "Interface\\Icons\\Ability_Hunter_Pet_Turtle"
+    end
+    -- Birds / Avians / Winged
+    if name:find("bird") or name:find("hawk") or name:find("eagle") or name:find("falcon") or name:find("owl") or name:find("buzzard") or name:find("vulture") or name:find("condor") or name:find("carrion") or name:find("roc") or name:find("fleshripper") or name:find("skyblade") or name:find("soarer") or name:find("gryphon") or name:find("hippogryph") or name:find("wyvern") or name:find("wind rider") or name:find("chimaera") or name:find("chimaerok") or name:find("hydra") or name:find("wind serpent") or name:find("bonepicker") or name:find("arikara") or name:find("vultros") or name:find("corvus") or name:find("feather") or name:find("swoop") or name:find("razorbeak") or name:find("strigid") or name:find("zaricotl") then
+      return "Interface\\Icons\\Ability_Hunter_Pet_Owl"
+    end
+    if name:find("pollo") or name:find("chicken") or name:find("rooster") then
+      return "Interface\\Icons\\INV_Egg_02"
+    end
+    -- Bats
+    if name:find("bat") or name:find("blind hunter") or name:find("blood seeker") or name:find("vampire") or name:find("dreadbat") or name:find("ressan") then
+      return "Interface\\Icons\\Ability_Hunter_Pet_Bat"
+    end
+    -- Snakes / Serpents
+    if name:find("snake") or name:find("cobra") or name:find("viper") or name:find("serpent") or name:find("adder") or name:find("python") then
+      return "Interface\\Icons\\Spell_Nature_GuardianWard"
+    end
+    -- Gorillas / Apes
+    if name:find("gorilla") or name:find("ape") or name:find("groddok") or name:find("mukla") or name:find("kalu") or name:find("mokk") or name:find("silverback") then
+      return "Interface\\Icons\\Ability_Hunter_Pet_Gorilla"
+    end
+    -- Hyenas
+    if name:find("hyena") or name:find("snickerfang") or name:find("hazzali") then
+      return "Interface\\Icons\\Ability_Hunter_Pet_Hyena"
+    end
+    -- Crabs / Crustaceans
+    if name:find("crab") or name:find("crawler") or name:find("pincer") or name:find("lobster") or name:find("crustacean") or name:find("clack") then
+      return "Interface\\Icons\\Ability_Hunter_Pet_Crab"
+    end
+    -- Wasps / Insects
+    if name:find("wasp") or name:find("stinger") or name:find("hornet") or name:find("bee") or name:find("flyer") or name:find("sting") then
+      return "Interface\\Icons\\Ability_Hunter_Pet_Wasp"
+    end
+    -- Fish / Aquatic
+    if name:find("fish") or name:find("frenzy") or name:find("shark") or name:find("piranha") or name:find("thresher") or name:find("thrasher") then
+      return "Interface\\Icons\\Trade_Fishing"
+    end
+    -- Wolves, Worgs, Canines
+    if name:find("wolf") or name:find("worg") or name:find("coyote") or name:find("fox") or name:find("hound") or name:find("mastiff") or name:find("dog") or name:find("pup") or name:find("whelp") or name:find("ravager") or name:find("snarlmane") or name:find("lupos") or name:find("bloodshot") or name:find("timber") or name:find("scavenger") or name:find("snarl") or name:find("howler") or name:find("barker") or name:find("howl") or name:find("silvermane") then
+      return "Interface\\Icons\\Ability_Hunter_Pet_Wolf"
+    end
+    -- Factual Blizzard Beast fallback: Hunter Beast Tracking paw print (never a wolf!)
+    return "Interface\\Icons\\Ability_Tracking"
   end
 
   -- 7. Elementals
@@ -2173,6 +2358,15 @@ function FG:ConfigureRowButton(btn, match)
     btn.Title:SetText("|cff66ccff" .. folder.name .. "|r")
     btn.Sub:SetText("|cff8899aa" .. (folder.desc or folder.count or "Folder") .. "|r")
     btn.Hint:SetText("|cff38bdf8Open >|r")
+    if btn.InspectBtn then
+      btn.InspectBtn:Show()
+      btn.InspectBtn.onClick = function()
+        FG:NavigateToFolder(folder.path)
+        FG:PlaySparkSound("shimmer")
+      end
+      btn.InspectBtn.entityType = nil
+      btn.InspectBtn.entityData = nil
+    end
 
     btn:SetScript("OnEnter", function(self)
       self:SetBackdropColor(0.14, 0.20, 0.30, 0.98)
@@ -2197,7 +2391,13 @@ function FG:ConfigureRowButton(btn, match)
     btn:SetHeight(50)
     btn:SetBackdropColor(0.10, 0.12, 0.16, 0.90)
     btn:SetBackdropBorderColor(0.18, 0.24, 0.33, 0.70)
-    btn.Hint:SetText("|cff9d8ec2Inspect >|r")
+    btn.Hint:SetText("|cffcf52ffInspect >|r")
+    if btn.InspectBtn then
+      btn.InspectBtn:Show()
+      btn.InspectBtn.onClick = nil
+      btn.InspectBtn.entityType = "item"
+      btn.InspectBtn.entityData = item
+    end
 
     if btn.IconFrame then
       btn.IconFrame:Show()
@@ -2212,12 +2412,12 @@ function FG:ConfigureRowButton(btn, match)
     end
     btn.Title:ClearAllPoints()
     btn.Title:SetPoint("TOPLEFT", btn, "TOPLEFT", 48, -6)
-    btn.Title:SetPoint("RIGHT", btn, "RIGHT", -68, 0)
+    btn.Title:SetPoint("RIGHT", btn, "RIGHT", -78, 0)
     btn.Title:SetJustifyH("LEFT")
     btn.Title:SetWordWrap(false)
     btn.Sub:ClearAllPoints()
     btn.Sub:SetPoint("TOPLEFT", btn.Title, "BOTTOMLEFT", 0, -2)
-    btn.Sub:SetPoint("RIGHT", btn, "RIGHT", -68, 0)
+    btn.Sub:SetPoint("RIGHT", btn, "RIGHT", -78, 0)
     btn.Sub:SetHeight(15)
     btn.Sub:SetJustifyH("LEFT")
     btn.Sub:SetWordWrap(false)
@@ -2255,7 +2455,7 @@ function FG:ConfigureRowButton(btn, match)
         GameTooltip:AddLine("|cffcf52ffSpark Intel:|r " .. item.tip, 0.3, 0.8, 1.0, true)
       end
       GameTooltip:AddLine(" ")
-      GameTooltip:AddLine("|cffdf80ff<Left-Click>|r Inspect full item stats & sources", 0.85, 0.85, 0.85)
+      GameTooltip:AddLine("|cffdf80ff<Inspect Button>|r View full item stats & sources", 0.85, 0.85, 0.85)
       GameTooltip:AddLine("|cffdf80ff<Shift-Click>|r Share link to chat", 0.7, 0.7, 0.7)
       GameTooltip:Show()
     end)
@@ -2268,9 +2468,8 @@ function FG:ConfigureRowButton(btn, match)
       if IsShiftKeyDown() then
         FG:LinkEntityToChat("item", item)
       else
-        FG:ShowDetailPanel("item", item)
+        FG:PlaySparkSound("shimmer")
       end
-      FG:PlaySparkSound("shimmer")
     end)
 
   elseif match.type == "quest" then
@@ -2278,7 +2477,13 @@ function FG:ConfigureRowButton(btn, match)
     btn:SetHeight(50)
     btn:SetBackdropColor(0.10, 0.12, 0.16, 0.90)
     btn:SetBackdropBorderColor(0.18, 0.24, 0.33, 0.70)
-    btn.Hint:SetText("|cff9d8ec2Inspect >|r")
+    btn.Hint:SetText("|cffcf52ffInspect >|r")
+    if btn.InspectBtn then
+      btn.InspectBtn:Show()
+      btn.InspectBtn.onClick = nil
+      btn.InspectBtn.entityType = "quest"
+      btn.InspectBtn.entityData = qData
+    end
 
     local st = FG:GetQuestStatus(qData.id, qData.title)
     if btn.IconFrame then
@@ -2296,12 +2501,12 @@ function FG:ConfigureRowButton(btn, match)
     end
     btn.Title:ClearAllPoints()
     btn.Title:SetPoint("TOPLEFT", btn, "TOPLEFT", 48, -6)
-    btn.Title:SetPoint("RIGHT", btn, "RIGHT", -68, 0)
+    btn.Title:SetPoint("RIGHT", btn, "RIGHT", -78, 0)
     btn.Title:SetJustifyH("LEFT")
     btn.Title:SetWordWrap(false)
     btn.Sub:ClearAllPoints()
     btn.Sub:SetPoint("TOPLEFT", btn.Title, "BOTTOMLEFT", 0, -2)
-    btn.Sub:SetPoint("RIGHT", btn, "RIGHT", -68, 0)
+    btn.Sub:SetPoint("RIGHT", btn, "RIGHT", -78, 0)
     btn.Sub:SetHeight(15)
     btn.Sub:SetJustifyH("LEFT")
     btn.Sub:SetWordWrap(false)
@@ -2325,26 +2530,29 @@ function FG:ConfigureRowButton(btn, match)
     btn.Title:SetText(titleColor .. qData.title .. "|r" .. foreverTag .. statusBadge)
 
     local parts = {}
-    if st == "completed" then
-      table.insert(parts, "|cff22c55eCompleted|r")
-    elseif st == "ready_to_turn_in" then
-      table.insert(parts, "|cff38bdf8Ready to Turn In|r")
-    elseif st == "active" then
-      table.insert(parts, "|cffffd100Active in Log|r")
-    else
-      table.insert(parts, "|cff94a3b8Uncompleted|r")
+    local startNpc = qData.npc
+    local cObj = startNpc and FG:FindCreatureByName(startNpc)
+    local qCoords = (cObj and cObj.coords) or qData.coords
+    if qCoords and qCoords ~= "" then
+      local distPct, distYards, distStr = FG:GetDistanceAndBearing(qCoords)
+      if distStr then
+        table.insert(parts, "|cff38bdf8[" .. qCoords .. "]|r |cff22c55e" .. distStr .. "|r")
+      else
+        table.insert(parts, "|cff38bdf8[" .. qCoords .. "]|r")
+      end
     end
 
     local reqLvl = tonumber(qData.reqLevel) or 1
     local qLvl = tonumber(qData.questLevel) or 0
     if reqLvl > 1 then
-      table.insert(parts, "|cff38bdf8Avail: Lvl " .. reqLvl .. "+|r")
+      table.insert(parts, "|cff38bdf8Lvl " .. reqLvl .. "+|r")
     end
-    if qLvl > 0 then
-      table.insert(parts, "|cff22c55eRec: Lvl " .. qLvl .. "|r")
+    if not match.isNearby and qData.zone and qData.zone ~= "" then
+      table.insert(parts, "|cff8ba5cc" .. qData.zone .. "|r")
     end
-    if qData.zone and qData.zone ~= "" then table.insert(parts, "|cff8ba5cc" .. qData.zone .. "|r") end
-    if qData.npc and qData.npc ~= "" then table.insert(parts, "|cff94a3b8Starts: " .. qData.npc .. "|r") end
+    if qData.npc and qData.npc ~= "" then
+      table.insert(parts, "|cff94a3b8Starts: " .. qData.npc .. "|r")
+    end
     btn.Sub:SetText(table.concat(parts, " |cff475569·|r "))
 
     btn:SetScript("OnEnter", function(self)
@@ -2363,12 +2571,16 @@ function FG:ConfigureRowButton(btn, match)
       end
       GameTooltip:AddLine("Available: Level " .. (qData.reqLevel or "1") .. "+", 0.4, 0.8, 1.0)
       GameTooltip:AddLine("Recommended: Level " .. (qData.questLevel or "?"), 0.2, 1.0, 0.4)
+      if qData.npc and qData.npc ~= "" then
+        GameTooltip:AddLine("Questgiver: " .. qData.npc .. (qCoords and (" (" .. qCoords .. ")") or ""), 0.3, 0.8, 1.0)
+      end
       if qData.objectives and qData.objectives ~= "" then
         GameTooltip:AddLine(" ")
         GameTooltip:AddLine("Objectives: " .. qData.objectives, 0.8, 0.8, 0.8, true)
       end
       GameTooltip:AddLine(" ")
-      GameTooltip:AddLine("|cffdf80ff<Left-Click>|r Inspect full quest details, rewards & NPC", 0.85, 0.85, 0.85)
+      GameTooltip:AddLine("|cffdf80ff<Click Row>|r Track quest coordinates", 0.85, 0.85, 0.85)
+      GameTooltip:AddLine("|cffdf80ff<Inspect Button>|r View full quest details & rewards", 0.85, 0.85, 0.85)
       GameTooltip:AddLine("|cffdf80ff<Shift-Click>|r Share link to chat", 0.7, 0.7, 0.7)
       GameTooltip:Show()
     end)
@@ -2381,9 +2593,14 @@ function FG:ConfigureRowButton(btn, match)
       if IsShiftKeyDown() then
         FG:LinkEntityToChat("quest", qData)
       else
-        FG:ShowDetailPanel("quest", qData)
+        if qCoords and qCoords ~= "" then
+          local targetName = (qData.npc and qData.npc ~= "") and (qData.npc .. " (" .. qData.title .. ")") or qData.title
+          FG:TrackEntityCoords(targetName, qData.zone, qCoords)
+        else
+          print(string.format("|cffdf80ff[Sparky Quest]|r %s in %s. Starts from: %s", qData.title, qData.zone or "Azeroth", qData.npc or "Unknown"))
+        end
+        FG:PlaySparkSound("shimmer")
       end
-      FG:PlaySparkSound("shimmer")
     end)
 
   elseif match.type == "creature" then
@@ -2391,7 +2608,13 @@ function FG:ConfigureRowButton(btn, match)
     btn:SetHeight(50)
     btn:SetBackdropColor(0.10, 0.12, 0.16, 0.90)
     btn:SetBackdropBorderColor(0.18, 0.24, 0.33, 0.70)
-    btn.Hint:SetText("|cff9d8ec2Inspect >|r")
+    btn.Hint:SetText("|cffcf52ffInspect >|r")
+    if btn.InspectBtn then
+      btn.InspectBtn:Show()
+      btn.InspectBtn.onClick = nil
+      btn.InspectBtn.entityType = "creature"
+      btn.InspectBtn.entityData = c
+    end
 
     if btn.IconFrame then
       btn.IconFrame:Show()
@@ -2407,12 +2630,12 @@ function FG:ConfigureRowButton(btn, match)
     end
     btn.Title:ClearAllPoints()
     btn.Title:SetPoint("TOPLEFT", btn, "TOPLEFT", 48, -6)
-    btn.Title:SetPoint("RIGHT", btn, "RIGHT", -68, 0)
+    btn.Title:SetPoint("RIGHT", btn, "RIGHT", -78, 0)
     btn.Title:SetJustifyH("LEFT")
     btn.Title:SetWordWrap(false)
     btn.Sub:ClearAllPoints()
     btn.Sub:SetPoint("TOPLEFT", btn.Title, "BOTTOMLEFT", 0, -2)
-    btn.Sub:SetPoint("RIGHT", btn, "RIGHT", -68, 0)
+    btn.Sub:SetPoint("RIGHT", btn, "RIGHT", -78, 0)
     btn.Sub:SetHeight(15)
     btn.Sub:SetJustifyH("LEFT")
     btn.Sub:SetWordWrap(false)
@@ -2424,9 +2647,23 @@ function FG:ConfigureRowButton(btn, match)
     btn.Title:SetText("|c" .. classColor .. c.name .. "|r" .. foreverTag .. " |cff7e8c9e(Lvl " .. lvlStr .. classTag .. ")|r")
 
     local parts = {}
-    if c.zone and c.zone ~= "" then table.insert(parts, "|cff8ba5cc" .. c.zone .. "|r") end
-    if c.location and c.location ~= "" then table.insert(parts, "|cff94a3b8" .. c.location .. "|r") end
-    if c.coords and c.coords ~= "" then table.insert(parts, "|cff7e8c9e(" .. c.coords .. ")|r") end
+    if c.coords and c.coords ~= "" then
+      local distPct, distYards, distStr = FG:GetDistanceAndBearing(c.coords)
+      if distStr then
+        table.insert(parts, "|cff38bdf8[" .. c.coords .. "]|r |cff22c55e" .. distStr .. "|r")
+      else
+        table.insert(parts, "|cff38bdf8[" .. c.coords .. "]|r")
+      end
+    end
+    if not match.isNearby and c.zone and c.zone ~= "" then
+      table.insert(parts, "|cff8ba5cc" .. c.zone .. "|r")
+    end
+    if c.location and c.location ~= "" then
+      table.insert(parts, "|cff94a3b8" .. c.location .. "|r")
+    end
+    if #parts == 0 then
+      table.insert(parts, "|cff7e8c9e" .. (c.family or "Creature") .. "|r")
+    end
     btn.Sub:SetText(table.concat(parts, " |cff475569·|r "))
 
     btn:SetScript("OnEnter", function(self)
@@ -2437,14 +2674,18 @@ function FG:ConfigureRowButton(btn, match)
       GameTooltip:AddLine("Level: " .. lvlStr .. " (" .. (c.classification or "Normal") .. ")", 1, 1, 1)
       if c.zone and c.zone ~= "" then GameTooltip:AddLine("Zone: " .. c.zone, 0.3, 0.8, 1.0) end
       if c.location and c.location ~= "" then GameTooltip:AddLine("Location: " .. c.location, 0.2, 1, 0.2) end
-      if c.coords and c.coords ~= "" then GameTooltip:AddLine("Coords: " .. c.coords, 0.2, 1, 0.2) end
+      if c.coords and c.coords ~= "" then
+        local _, _, distStr = FG:GetDistanceAndBearing(c.coords)
+        GameTooltip:AddLine("Coordinates: " .. c.coords .. (distStr and (" (" .. distStr .. ")") or ""), 0.2, 1, 0.2)
+      end
       if c.health and c.health > 0 then GameTooltip:AddLine("Health: " .. c.health, 1, 0.3, 0.3) end
       if c.strategy and c.strategy ~= "" then
         GameTooltip:AddLine(" ")
         GameTooltip:AddLine("Notes: " .. c.strategy, 0.8, 0.8, 0.8, true)
       end
       GameTooltip:AddLine(" ")
-      GameTooltip:AddLine("|cffdf80ff<Left-Click>|r Inspect NPC intel & spawn location", 0.85, 0.85, 0.85)
+      GameTooltip:AddLine("|cffdf80ff<Click Row>|r Set map pin & track coordinates", 0.85, 0.85, 0.85)
+      GameTooltip:AddLine("|cffdf80ff<Inspect Button>|r View full NPC intel, drops & tactics", 0.85, 0.85, 0.85)
       GameTooltip:AddLine("|cffdf80ff<Shift-Click>|r Share link to chat", 0.7, 0.7, 0.7)
       GameTooltip:Show()
     end)
@@ -2457,9 +2698,9 @@ function FG:ConfigureRowButton(btn, match)
       if IsShiftKeyDown() then
         FG:LinkEntityToChat("creature", c)
       else
-        FG:ShowDetailPanel("creature", c)
+        FG:TrackEntityCoords(c.name, c.zone, c.coords)
+        FG:PlaySparkSound("shimmer")
       end
-      FG:PlaySparkSound("shimmer")
     end)
 
   elseif match.type == "dungeon" then
@@ -2467,7 +2708,13 @@ function FG:ConfigureRowButton(btn, match)
     btn:SetHeight(50)
     btn:SetBackdropColor(0.10, 0.12, 0.16, 0.90)
     btn:SetBackdropBorderColor(0.18, 0.24, 0.33, 0.70)
-    btn.Hint:SetText("|cff9d8ec2Inspect >|r")
+    btn.Hint:SetText("|cffcf52ffInspect >|r")
+    if btn.InspectBtn then
+      btn.InspectBtn:Show()
+      btn.InspectBtn.onClick = nil
+      btn.InspectBtn.entityType = "dungeon"
+      btn.InspectBtn.entityData = d
+    end
 
     if btn.IconFrame then
       btn.IconFrame:Show()
@@ -2476,12 +2723,12 @@ function FG:ConfigureRowButton(btn, match)
     end
     btn.Title:ClearAllPoints()
     btn.Title:SetPoint("TOPLEFT", btn, "TOPLEFT", 48, -6)
-    btn.Title:SetPoint("RIGHT", btn, "RIGHT", -68, 0)
+    btn.Title:SetPoint("RIGHT", btn, "RIGHT", -78, 0)
     btn.Title:SetJustifyH("LEFT")
     btn.Title:SetWordWrap(false)
     btn.Sub:ClearAllPoints()
     btn.Sub:SetPoint("TOPLEFT", btn.Title, "BOTTOMLEFT", 0, -2)
-    btn.Sub:SetPoint("RIGHT", btn, "RIGHT", -68, 0)
+    btn.Sub:SetPoint("RIGHT", btn, "RIGHT", -78, 0)
     btn.Sub:SetHeight(15)
     btn.Sub:SetJustifyH("LEFT")
     btn.Sub:SetWordWrap(false)
@@ -2499,7 +2746,14 @@ function FG:ConfigureRowButton(btn, match)
     end
     table.insert(parts, "|cff22c55eRec: Lvl " .. recLvl .. "|r")
     if d.zone and d.zone ~= "" then table.insert(parts, "|cff8ba5cc" .. d.zone .. "|r") end
-    if d.coords and d.coords ~= "" then table.insert(parts, "|cff94a3b8Entrance: " .. d.coords .. "|r") end
+    if d.coords and d.coords ~= "" then
+      local distPct, distYards, distStr = FG:GetDistanceAndBearing(d.coords)
+      if distStr then
+        table.insert(parts, "|cff94a3b8Entrance: " .. d.coords .. " (" .. distStr .. ")|r")
+      else
+        table.insert(parts, "|cff94a3b8Entrance: " .. d.coords .. "|r")
+      end
+    end
     btn.Sub:SetText(table.concat(parts, " |cff475569·|r "))
 
     btn:SetScript("OnEnter", function(self)
@@ -2510,13 +2764,17 @@ function FG:ConfigureRowButton(btn, match)
       GameTooltip:AddLine("Available: Level " .. (d.minLevel or "1") .. "+", 0.4, 0.8, 1.0)
       GameTooltip:AddLine("Recommended: Level " .. (d.recLevel or "?"), 0.2, 1.0, 0.4)
       GameTooltip:AddLine("Zone: " .. (d.zone or "Various"), 0.8, 0.8, 0.9)
-      if d.coords and d.coords ~= "" then GameTooltip:AddLine("Entrance: " .. d.coords, 0.2, 1, 0.2) end
+      if d.coords and d.coords ~= "" then
+        local _, _, distStr = FG:GetDistanceAndBearing(d.coords)
+        GameTooltip:AddLine("Entrance: " .. d.coords .. (distStr and (" (" .. distStr .. ")") or ""), 0.2, 1, 0.2)
+      end
       if d.strategy and d.strategy ~= "" then
         GameTooltip:AddLine(" ")
         GameTooltip:AddLine("Tactics: " .. d.strategy, 0.8, 0.8, 0.8, true)
       end
       GameTooltip:AddLine(" ")
-      GameTooltip:AddLine("|cffdf80ff<Left-Click>|r Inspect dungeon tactics, bosses & loot", 0.85, 0.85, 0.85)
+      GameTooltip:AddLine("|cffdf80ff<Click Row>|r Track entrance coordinates", 0.85, 0.85, 0.85)
+      GameTooltip:AddLine("|cffdf80ff<Inspect Button>|r View tactics, bosses & loot", 0.85, 0.85, 0.85)
       GameTooltip:AddLine("|cffdf80ff<Shift-Click>|r Share link to chat", 0.7, 0.7, 0.7)
       GameTooltip:Show()
     end)
@@ -2529,9 +2787,9 @@ function FG:ConfigureRowButton(btn, match)
       if IsShiftKeyDown() then
         FG:LinkEntityToChat("dungeon", d)
       else
-        FG:ShowDetailPanel("dungeon", d)
+        FG:TrackEntityCoords(d.name .. " Entrance", d.zone, d.coords)
+        FG:PlaySparkSound("shimmer")
       end
-      FG:PlaySparkSound("shimmer")
     end)
 
   elseif match.type == "vendor" then
@@ -2539,7 +2797,13 @@ function FG:ConfigureRowButton(btn, match)
     btn:SetHeight(50)
     btn:SetBackdropColor(0.10, 0.12, 0.16, 0.90)
     btn:SetBackdropBorderColor(0.18, 0.24, 0.33, 0.70)
-    btn.Hint:SetText("|cff9d8ec2Inspect >|r")
+    btn.Hint:SetText("|cffcf52ffInspect >|r")
+    if btn.InspectBtn then
+      btn.InspectBtn:Show()
+      btn.InspectBtn.onClick = nil
+      btn.InspectBtn.entityType = "vendor"
+      btn.InspectBtn.entityData = v
+    end
 
     if btn.IconFrame then
       btn.IconFrame:Show()
@@ -2548,21 +2812,32 @@ function FG:ConfigureRowButton(btn, match)
     end
     btn.Title:ClearAllPoints()
     btn.Title:SetPoint("TOPLEFT", btn, "TOPLEFT", 48, -6)
-    btn.Title:SetPoint("RIGHT", btn, "RIGHT", -68, 0)
+    btn.Title:SetPoint("RIGHT", btn, "RIGHT", -78, 0)
     btn.Title:SetJustifyH("LEFT")
     btn.Title:SetWordWrap(false)
     btn.Sub:ClearAllPoints()
     btn.Sub:SetPoint("TOPLEFT", btn.Title, "BOTTOMLEFT", 0, -2)
-    btn.Sub:SetPoint("RIGHT", btn, "RIGHT", -68, 0)
+    btn.Sub:SetPoint("RIGHT", btn, "RIGHT", -78, 0)
     btn.Sub:SetHeight(15)
     btn.Sub:SetJustifyH("LEFT")
     btn.Sub:SetWordWrap(false)
 
     btn.Title:SetText("|cffffd24d" .. v.name .. "|r |cff7e8c9e(Vendor)|r")
     local parts = {}
-    if v.zone and v.zone ~= "" then table.insert(parts, "|cff8ba5cc" .. v.zone .. "|r") end
-    if v.item and v.item ~= "" then table.insert(parts, "|cff94a3b8Sells: " .. v.item .. "|r") end
-    if v.coords and v.coords ~= "" then table.insert(parts, "|cff7e8c9e(" .. v.coords .. ")|r") end
+    if v.coords and v.coords ~= "" then
+      local distPct, distYards, distStr = FG:GetDistanceAndBearing(v.coords)
+      if distStr then
+        table.insert(parts, "|cff38bdf8[" .. v.coords .. "]|r |cff22c55e" .. distStr .. "|r")
+      else
+        table.insert(parts, "|cff38bdf8[" .. v.coords .. "]|r")
+      end
+    end
+    if not match.isNearby and v.zone and v.zone ~= "" then
+      table.insert(parts, "|cff8ba5cc" .. v.zone .. "|r")
+    end
+    if v.item and v.item ~= "" then
+      table.insert(parts, "|cff94a3b8Sells: " .. v.item .. "|r")
+    end
     btn.Sub:SetText(table.concat(parts, " |cff475569·|r "))
 
     btn:SetScript("OnEnter", function(self)
@@ -2572,13 +2847,17 @@ function FG:ConfigureRowButton(btn, match)
       GameTooltip:AddLine(v.name, 1, 0.85, 0.2)
       GameTooltip:AddLine("Sells: " .. (v.item or "Goods"), 1, 1, 1)
       if v.zone and v.zone ~= "" then GameTooltip:AddLine("Zone: " .. v.zone, 0.3, 0.8, 1.0) end
-      if v.coords and v.coords ~= "" then GameTooltip:AddLine("Coords: " .. v.coords, 0.2, 1, 0.2) end
+      if v.coords and v.coords ~= "" then
+        local _, _, distStr = FG:GetDistanceAndBearing(v.coords)
+        GameTooltip:AddLine("Coordinates: " .. v.coords .. (distStr and (" (" .. distStr .. ")") or ""), 0.2, 1, 0.2)
+      end
       if v.tip and v.tip ~= "" then
         GameTooltip:AddLine(" ")
         GameTooltip:AddLine("Note: " .. v.tip, 0.8, 0.8, 0.8, true)
       end
       GameTooltip:AddLine(" ")
-      GameTooltip:AddLine("|cffdf80ff<Left-Click>|r Inspect vendor wares & location", 0.85, 0.85, 0.85)
+      GameTooltip:AddLine("|cffdf80ff<Click Row>|r Set map pin & track coordinates", 0.85, 0.85, 0.85)
+      GameTooltip:AddLine("|cffdf80ff<Inspect Button>|r View vendor wares & inventory", 0.85, 0.85, 0.85)
       GameTooltip:AddLine("|cffdf80ff<Shift-Click>|r Share link to chat", 0.7, 0.7, 0.7)
       GameTooltip:Show()
     end)
@@ -2591,9 +2870,9 @@ function FG:ConfigureRowButton(btn, match)
       if IsShiftKeyDown() then
         FG:LinkEntityToChat("vendor", v)
       else
-        FG:ShowDetailPanel("vendor", v)
+        FG:TrackEntityCoords(v.name, v.zone, v.coords)
+        FG:PlaySparkSound("shimmer")
       end
-      FG:PlaySparkSound("shimmer")
     end)
   end
 end
@@ -3065,7 +3344,7 @@ function FG:CreateCodexWindow()
     else
       placeholder:Hide()
       clearBtn:Show()
-      if FG.activeCategory ~= "all" and not self.scopedSearchLock then
+      if FG.activeCategory ~= "all" and FG.activeCategory ~= "nearby" and not self.scopedSearchLock then
         FG:SetActiveCategory("all")
       else
         FG:PopulateCodexResults(query)
@@ -4049,12 +4328,35 @@ FG.FolderTree = {
     title = "Nearby Area Intel (Zone Radar)",
     parent = "root",
     folders = {
-      { path = "nearby/creatures", name = "Creatures & Mobs", desc = "Local beasts, humanoids, and monsters in immediate area", icon = "Interface\\Icons\\Ability_Hunter_Pet_Wolf" },
-      { path = "nearby/dungeons", name = "Dungeons & Raids", desc = "Instance entrances, meeting stones, and portals", icon = "Interface\\Icons\\Spell_Shadow_Teleport" },
-      { path = "nearby/loot", name = "Notable Loot & Drops", desc = "Valuable BoE items, world recipes, and prized drops", icon = "Interface\\Icons\\INV_Misc_Coin_02" },
+      { path = "nearby/closest", name = "Closest Nearby (Distance Radar)", desc = "All entities sorted by live proximity to your coordinates", icon = "Interface\\Icons\\Ability_Hunter_EagleEye" },
+      { path = "nearby/creatures", name = "Creatures & Mobs", desc = "Local beasts, humanoids, and monsters in immediate area", icon = "Interface\\Icons\\Ability_Hunter_Pet_TallStrider" },
       { path = "nearby/quests", name = "Quests", desc = "Active quests and storyline objectives in this zone", icon = "Interface\\Icons\\INV_Misc_Book_07" },
       { path = "nearby/rares", name = "Rares & Bosses", desc = "Silver-dragon rare spawns and world encounters", icon = "Interface\\Icons\\INV_Misc_Head_Dragon_Bronze" },
-      { path = "nearby/vendors", name = "Vendors & Flight Masters", desc = "Flight paths, repairs, reagents, and local trade", icon = "Interface\\Icons\\Ability_Hunter_EagleEye" },
+      { path = "nearby/vendors", name = "Vendors & Flight Masters", desc = "Flight paths, repairs, reagents, and local trade", icon = "Interface\\Icons\\INV_Misc_Coin_01" },
+      { path = "nearby/dungeons", name = "Dungeons & Raids", desc = "Instance entrances, meeting stones, and portals", icon = "Interface\\Icons\\Spell_Shadow_Teleport" },
+      { path = "nearby/loot", name = "Notable Loot & Drops", desc = "Valuable BoE items, world recipes, and prized drops", icon = "Interface\\Icons\\INV_Misc_Coin_02" },
+    },
+  },
+
+  ["nearby/creatures"] = {
+    title = "Nearby Creatures & Mobs",
+    parent = "nearby",
+    folders = {
+      { path = "nearby/creatures/beasts", name = "Beasts & Wildlife", desc = "Giraffes, Kodos, Plainstriders, Hyenas, Raptors & Animals", icon = "Interface\\Icons\\Ability_Hunter_Pet_TallStrider" },
+      { path = "nearby/creatures/humanoids", name = "Humanoids & NPCs", desc = "Centaurs, Quilboars, Pirates, Guards & Townsfolk", icon = "Interface\\Icons\\INV_Misc_Head_Centaur_01" },
+      { path = "nearby/creatures/rares", name = "Rares & Named Spawns", desc = "Rare elites and named monsters in the zone", icon = "Interface\\Icons\\INV_Misc_Head_Dragon_02" },
+      { path = "nearby/creatures/all", name = "[All Creatures (Full Zone List)]", desc = "Complete list of all creatures in the zone", icon = "Interface\\Icons\\Ability_Tracking", isAll = true },
+    },
+  },
+
+  ["nearby/vendors"] = {
+    title = "Nearby Vendors & Flight Masters",
+    parent = "nearby",
+    folders = {
+      { path = "nearby/vendors/flight", name = "Flight Masters", desc = "Flight points and wind rider / gryphon masters", icon = "Interface\\Icons\\Spell_Magic_FeatherFall" },
+      { path = "nearby/vendors/repairs", name = "Repairs & Armorers", desc = "Blacksmiths and equipment repairers", icon = "Interface\\Icons\\Trade_BlackSmithing" },
+      { path = "nearby/vendors/reagents", name = "Reagents & Trade Supplies", desc = "Herbs, potions, poisons and crafting goods", icon = "Interface\\Icons\\INV_Potion_33" },
+      { path = "nearby/vendors/all", name = "[All Vendors & Services]", desc = "All merchants and service providers in this zone", icon = "Interface\\Icons\\INV_Misc_Coin_01", isAll = true },
     },
   },
 
@@ -4875,35 +5177,38 @@ function FG:PopulateCodexResults(query)
 
     else
       -- Leaf category folder or searching in nearby
-      local showQuests = (cur == "nearby/quests") or (isNearbyRoot and q ~= "")
-      local showRares = (cur == "nearby/rares") or (isNearbyRoot and q ~= "")
-      local showCreatures = (cur == "nearby/creatures") or (isNearbyRoot and q ~= "")
-      local showVendors = (cur == "nearby/vendors") or (isNearbyRoot and q ~= "")
-      local showDungeons = (cur == "nearby/dungeons") or (isNearbyRoot and q ~= "")
+      local isClosest = (cur == "nearby/closest")
+      local showQuests = (cur == "nearby/quests") or isClosest or (isNearbyRoot and q ~= "")
+      local showRares = (cur == "nearby/rares") or (cur == "nearby/creatures/rares") or isClosest or (isNearbyRoot and q ~= "")
+      local showBeasts = (cur == "nearby/creatures/beasts")
+      local showHumanoids = (cur == "nearby/creatures/humanoids")
+      local showAllCreatures = (cur == "nearby/creatures/all") or (cur == "nearby/creatures" and q ~= "") or isClosest or (isNearbyRoot and q ~= "")
+      local showCreatures = showAllCreatures or showBeasts or showHumanoids or showRares
+      local showVendors = (cur:find("^nearby/vendors") ~= nil) or isClosest or (isNearbyRoot and q ~= "")
+      local showDungeons = (cur == "nearby/dungeons") or isClosest or (isNearbyRoot and q ~= "")
       local showLoot = (cur == "nearby/loot") or (isNearbyRoot and q ~= "")
+      local vendorSub = cur:match("^nearby/vendors/(.+)$")
 
-      -- 1. Nearby Bosses & Rares
-      if showRares and FG.Data.Creatures then
-        for _, c in pairs(FG.Data.Creatures) do
-          if not FG:IsInternalCreature(c.name, c.family) then
-            if c.classification == "Boss" or c.classification == "World Boss" or c.classification == "Rare" or c.classification == "Rare Elite" then
-              local inZone = c.zone and c.zone:lower() == pZoneLower
-              local inSub = pSubLower ~= "" and ((c.location and c.location:lower():find(pSubLower, 1, true)) or (c.zone and c.zone:lower():find(pSubLower, 1, true)))
-              if inZone or inSub then
-                if q == "" or (c.name and c.name:lower():find(q, 1, true)) then
-                  table.insert(matches, { type = "creature", data = c, isNearby = true })
-                end
-              end
-            end
-          end
-        end
-      end
-
-      -- 2. Nearby Creatures & Mobs
+      -- 1. Nearby Creatures & Mobs (with sub-grouping)
       if showCreatures and FG.Data.Creatures then
         for _, c in pairs(FG.Data.Creatures) do
           if not FG:IsInternalCreature(c.name, c.family) then
-            if not showRares or not (c.classification == "Boss" or c.classification == "World Boss" or c.classification == "Rare" or c.classification == "Rare Elite") then
+            local isRare = (c.classification == "Boss" or c.classification == "World Boss" or c.classification == "Rare" or c.classification == "Rare Elite")
+            local isBeast = (c.family and c.family:lower() == "beast")
+            local isHumanoid = (c.family and c.family:lower() == "humanoid")
+            
+            local passesSubFilter = true
+            if cur == "nearby/rares" or cur == "nearby/creatures/rares" then
+              passesSubFilter = isRare
+            elseif showBeasts then
+              passesSubFilter = isBeast and not isRare
+            elseif showHumanoids then
+              passesSubFilter = isHumanoid and not isRare
+            elseif isClosest then
+              passesSubFilter = (c.coords and c.coords ~= "")
+            end
+
+            if passesSubFilter then
               local inZone = c.zone and c.zone:lower() == pZoneLower
               local inSub = pSubLower ~= "" and ((c.location and c.location:lower():find(pSubLower, 1, true)) or (c.zone and c.zone:lower():find(pSubLower, 1, true)))
               if inZone or inSub then
@@ -4916,7 +5221,7 @@ function FG:PopulateCodexResults(query)
         end
       end
 
-      -- 3. Nearby Quests
+      -- 2. Nearby Quests
       if showQuests and FG.Data.Quests then
         for _, quest in pairs(FG.Data.Quests) do
           if not FG:IsInternalQuest(quest.title) then
@@ -4931,26 +5236,14 @@ function FG:PopulateCodexResults(query)
         end
       end
 
-      -- 4. Nearby Vendors & Flight Masters
+      -- 3. Nearby Vendors & Flight Masters
       if showVendors then
         local addedVendors = {}
-        if FG.Data.Vendors then
-          for _, v in pairs(FG.Data.Vendors) do
-            local vZone = v.zone
-            if (vZone == "Azeroth" or vZone == "Eastern Kingdoms" or vZone == "Kalimdor" or not vZone) and v.name then
-              local cObj = FG:FindCreatureByName(v.name)
-              if cObj and cObj.zone then vZone = cObj.zone end
-            end
-            local inZone = vZone and vZone:lower() == pZoneLower
-            if inZone then
-              if q == "" or (v.name and v.name:lower():find(q, 1, true)) or (v.item and v.item:lower():find(q, 1, true)) then
-                table.insert(matches, { type = "vendor", data = v, isNearby = true })
-                if v.name then addedVendors[v.name:lower()] = true end
-              end
-            end
-          end
-        end
-        if FG.Data.Flightpaths then
+        local wantFlight = (vendorSub == "flight")
+        local wantRepairs = (vendorSub == "repairs")
+        local wantReagents = (vendorSub == "reagents")
+
+        if (not wantRepairs and not wantReagents) and FG.Data.Flightpaths then
           for _, fp in pairs(FG.Data.Flightpaths) do
             local inZone = fp.zone and fp.zone:lower() == pZoneLower
             if inZone then
@@ -4962,6 +5255,31 @@ function FG:PopulateCodexResults(query)
             end
           end
         end
+
+        if not wantFlight and FG.Data.Vendors then
+          for _, v in pairs(FG.Data.Vendors) do
+            local vZone = v.zone
+            if (vZone == "Azeroth" or vZone == "Eastern Kingdoms" or vZone == "Kalimdor" or not vZone) and v.name then
+              local cObj = FG:FindCreatureByName(v.name)
+              if cObj and cObj.zone then vZone = cObj.zone end
+            end
+            local inZone = vZone and vZone:lower() == pZoneLower
+            if inZone then
+              local itemLower = (v.item or ""):lower()
+              local passSub = true
+              if wantRepairs then
+                passSub = itemLower:find("repair") or itemLower:find("blacksmith") or itemLower:find("weaponsmith") or itemLower:find("armorsmith")
+              elseif wantReagents then
+                passSub = itemLower:find("reagent") or itemLower:find("poison") or itemLower:find("potion") or itemLower:find("herb") or itemLower:find("alchemy")
+              end
+              if passSub and (q == "" or (v.name and v.name:lower():find(q, 1, true)) or (v.item and v.item:lower():find(q, 1, true))) then
+                table.insert(matches, { type = "vendor", data = v, isNearby = true })
+                if v.name then addedVendors[v.name:lower()] = true end
+              end
+            end
+          end
+        end
+
         if FG.Data.Creatures then
           for _, c in pairs(FG.Data.Creatures) do
             local inZone = c.zone and c.zone:lower() == pZoneLower
@@ -4969,7 +5287,16 @@ function FG:PopulateCodexResults(query)
             if (inZone or inSub) and not FG:IsInternalCreature(c.name, c.family) then
               local vTitle = FG:GetVendorTitle(c)
               if vTitle and c.name and not addedVendors[c.name:lower()] then
-                if q == "" or c.name:lower():find(q, 1, true) or vTitle:lower():find(q, 1, true) then
+                local vLower = vTitle:lower()
+                local passSub = true
+                if wantFlight then
+                  passSub = vLower:find("flight") or vLower:find("wind rider") or vLower:find("gryphon") or vLower:find("bat")
+                elseif wantRepairs then
+                  passSub = vLower:find("repair") or vLower:find("blacksmith") or vLower:find("weaponsmith") or vLower:find("armorsmith")
+                elseif wantReagents then
+                  passSub = vLower:find("reagent") or vLower:find("poison") or vLower:find("potion") or vLower:find("herb") or vLower:find("alchemy")
+                end
+                if passSub and (q == "" or c.name:lower():find(q, 1, true) or vTitle:lower():find(q, 1, true)) then
                   local vData = {
                     name = c.name,
                     zone = c.zone or pZone,
@@ -4986,7 +5313,7 @@ function FG:PopulateCodexResults(query)
         end
       end
 
-      -- 5. Nearby Dungeons
+      -- 4. Nearby Dungeons
       if showDungeons and FG.Data.Dungeons then
         for _, d in pairs(FG.Data.Dungeons) do
           local inZone = d.zone and d.zone:lower():find(pZoneLower, 1, true)
@@ -5769,6 +6096,21 @@ function FG:PopulateCodexResults(query)
       local ilvlB = tonumber(b.data and b.data.ilvl) or 0
       if ilvlA ~= ilvlB then
         return ilvlA < ilvlB
+      end
+    end
+
+    local isNearbyView = (cur:find("^nearby") ~= nil) or (cat == "nearby") or a.isNearby or b.isNearby
+    if isNearbyView then
+      local coordsA = (a.data and a.data.coords) or (a.type == "quest" and a.data and a.data.npc and FG:FindCreatureByName(a.data.npc) and FG:FindCreatureByName(a.data.npc).coords) or nil
+      local coordsB = (b.data and b.data.coords) or (b.type == "quest" and b.data and b.data.npc and FG:FindCreatureByName(b.data.npc) and FG:FindCreatureByName(b.data.npc).coords) or nil
+      local distA = coordsA and select(1, FG:GetDistanceAndBearing(coordsA)) or nil
+      local distB = coordsB and select(1, FG:GetDistanceAndBearing(coordsB)) or nil
+      if distA and distB and math.abs(distA - distB) > 0.05 then
+        return distA < distB
+      elseif distA and not distB then
+        return true
+      elseif distB and not distA then
+        return false
       end
     end
 
