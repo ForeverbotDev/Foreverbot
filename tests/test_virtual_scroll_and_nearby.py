@@ -282,6 +282,17 @@ class TestVirtualScrollAndNearby(unittest.TestCase):
         self.assertIn('icon = "Interface\\\\Icons\\\\INV_Shield_04"', self.lua_code)
         self.assertIn('icon = "Interface\\\\Icons\\\\INV_Misc_Cape_19"', self.lua_code)
 
+        # Verify authentic Blizzard creature and vendor icon resolution
+        self.assertIn('INV_Misc_Bomb_01', self.lua_code) # Mortar team bomb round
+        self.assertIn('Spell_Shadow_Haunting', self.lua_code) # Addled leper diseased icon
+        self.assertIn('INV_Misc_Coin_01', self.lua_code) # Vendor commerce gold coin (never brown bag)
+        self.assertIn('INV_Misc_Head_Dwarf_01', self.lua_code) # Authentic Dwarf race head
+        self.assertIn('INV_Misc_Head_Gnome_01', self.lua_code) # Authentic Gnome race head
+        self.assertIn('Ability_Mount_MechaStrider', self.lua_code) # Mechanostrider mount
+        self.assertIn('INV_Misc_MonsterClaw_02', self.lua_code) # Troggs & Rockjaw
+        self.assertIn('INV_Misc_Head_Troll_01', self.lua_code) # Trolls & Frostmane
+        self.assertIn('Ability_Racial_BearForm', self.lua_code) # Wendigo & Yeti
+
     def test_18_dropper_coords_clickable_and_exclusives(self):
         """Verify dropper coordinates, clickable dropper buttons, multiple sources, exclusives rename, and internal filtering."""
         # 1. 'Custom' replaced with 'Exclusives'

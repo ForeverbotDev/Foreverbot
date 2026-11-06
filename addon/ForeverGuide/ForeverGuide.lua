@@ -1497,18 +1497,33 @@ function FG:GetDungeonIcon(d)
 end
 
 function FG:GetVendorIcon(v)
-  if not v then return "Interface\\Icons\\INV_Misc_Bag_07" end
+  if not v then return "Interface\\Icons\\INV_Misc_Coin_01" end
   local item = (v.item or ""):lower()
   local name = (v.name or ""):lower()
-  if item:find("flight") or name:find("flight") then return "Interface\\Icons\\Spell_Magic_FeatherFall" end
-  if item:find("pvp") or item:find("honor") or item:find("arena") then return "Interface\\Icons\\INV_BannerPVP_02" end
-  if item:find("innkeeper") or name:find("innkeeper") then return "Interface\\Icons\\INV_Drink_05" end
-  if item:find("repair") or item:find("blacksmith") or item:find("anvil") then return "Interface\\Icons\\Trade_BlackSmithing" end
-  if item:find("weapon") or item:find("blade") or item:find("sword") or item:find("bow") or item:find("gun") then return "Interface\\Icons\\INV_Sword_04" end
-  if item:find("armor") or item:find("shield") or item:find("cloth") or item:find("leather") or item:find("plate") or item:find("mail") then return "Interface\\Icons\\INV_Chest_Cloth_23" end
-  if item:find("food") or item:find("drink") or item:find("meat") or item:find("bread") then return "Interface\\Icons\\INV_Misc_Food_15" end
-  if item:find("reagent") or item:find("poison") or item:find("potion") or item:find("alchemy") then return "Interface\\Icons\\INV_Potion_33" end
-  return "Interface\\Icons\\INV_Misc_Bag_07"
+  local cat = (v.category or ""):lower()
+  local desc = item .. " " .. name .. " " .. cat
+
+  if desc:find("flight") or desc:find("gryphon") or desc:find("wind rider") or desc:find("hippogryph") then return "Interface\\Icons\\Spell_Magic_FeatherFall" end
+  if desc:find("pvp") or desc:find("honor") or desc:find("arena") then return "Interface\\Icons\\INV_BannerPVP_02" end
+  if desc:find("innkeeper") then return "Interface\\Icons\\INV_Drink_05" end
+  if desc:find("repair") or desc:find("blacksmith") or desc:find("anvil") or desc:find("armorsmith") or desc:find("weaponsmith") then return "Interface\\Icons\\Trade_BlackSmithing" end
+  if desc:find("weapon") or desc:find("blade") or desc:find("sword") or desc:find("bow") or desc:find("gun") or desc:find("axe") or desc:find("mace") or desc:find("dagger") or desc:find("staff") then return "Interface\\Icons\\INV_Sword_04" end
+  if desc:find("armor") or desc:find("shield") or desc:find("cloth") or desc:find("leather") or desc:find("plate") or desc:find("mail") then return "Interface\\Icons\\INV_Chest_Cloth_23" end
+  if desc:find("food") or desc:find("drink") or desc:find("meat") or desc:find("bread") or desc:find("ale") or desc:find("wine") or desc:find("cheese") or desc:find("fish") or desc:find("ration") then return "Interface\\Icons\\INV_Misc_Food_15" end
+  if desc:find("reagent") or desc:find("poison") or desc:find("potion") or desc:find("alchemy") or desc:find("elixir") or desc:find("vial") then return "Interface\\Icons\\INV_Potion_33" end
+  if desc:find("recipe") or desc:find("pattern") or desc:find("schematic") or desc:find("formula") or desc:find("plans") or desc:find("manual") or desc:find("tome") or desc:find("book") then return "Interface\\Icons\\INV_Scroll_03" end
+  if desc:find("ammo") or desc:find("arrow") or desc:find("bullet") or desc:find("shot") then return "Interface\\Icons\\INV_Weapon_Bow_05" end
+  if desc:find("mechanostrider") then return "Interface\\Icons\\Ability_Mount_MechaStrider" end
+  if desc:find("mount") or desc:find("ram") or desc:find("horse") or desc:find("kodo") or desc:find("strider") or desc:find("saber") or desc:find("wolf") or desc:find("raptor") or desc:find("steed") then return "Interface\\Icons\\Ability_Mount_MountainRam" end
+  if desc:find("engineer") or desc:find("parts") or desc:find("tinkering") or desc:find("gizmo") then return "Interface\\Icons\\Trade_Engineering" end
+  if desc:find("tailor") or desc:find("thread") or desc:find("ribbon") then return "Interface\\Icons\\Trade_Tailoring" end
+  if desc:find("leather") or desc:find("hide") or desc:find("tanner") then return "Interface\\Icons\\Trade_LeatherWorking" end
+  if desc:find("mining") or desc:find("ore") or desc:find("smelt") then return "Interface\\Icons\\Trade_Mining" end
+  if desc:find("herbal") or desc:find("herb") then return "Interface\\Icons\\Trade_Herbalism" end
+  if desc:find("bag") or desc:find("container") or desc:find("pouch") or desc:find("sack") then return "Interface\\Icons\\INV_Misc_Bag_08" end
+
+  -- Default vendor icon: Authentic Blizzard gold coin commerce icon! NEVER empty brown backpack!
+  return "Interface\\Icons\\INV_Misc_Coin_01"
 end
 
 function FG:GetQuestIcon(qData)
@@ -1529,7 +1544,7 @@ function FG:GetQuestIcon(qData)
 end
 
 function FG:GetCreatureIcon(c)
-  if not c then return "Interface\\Icons\\INV_Helmet_01" end
+  if not c then return "Interface\\Icons\\INV_Misc_Head_Human_01" end
 
   local cl = (c.classification or ""):lower()
   if cl == "boss" or cl == "world boss" then
@@ -1542,22 +1557,52 @@ function FG:GetCreatureIcon(c)
   local loc = (c.location or ""):lower()
   local name = (c.name or ""):lower()
   local fam = (c.family or ""):lower()
+  local zone = (c.zone or ""):lower()
+  if zone == "" and FG.currentZone then
+    zone = FG.currentZone:lower()
+  end
 
-  -- 1. NPC Occupations & Roles (from title / location / name)
-  if loc:find("flight master") or loc:find("gryphon master") or loc:find("wind rider master") then return "Interface\\Icons\\Spell_Magic_FeatherFall" end
-  if loc:find("innkeeper") or name:find("innkeeper") then return "Interface\\Icons\\INV_Drink_05" end
-  if loc:find("banker") or loc:find("vault") then return "Interface\\Icons\\INV_Box_01" end
-  if loc:find("auctioneer") then return "Interface\\Icons\\INV_Misc_Coin_01" end
-  if loc:find("stable master") then return "Interface\\Icons\\Ability_Hunter_BeastCall" end
+  -- 1. High-priority role & combat specializations (Mortar, Bomb, Rifle, Flight, etc.)
+  if loc:find("mortar") or name:find("mortar") or loc:find("bomb") or loc:find("demolition") or loc:find("cannon") or loc:find("artillery") then
+    return "Interface\\Icons\\INV_Misc_Bomb_01"
+  end
+  if name:find("rifleman") or loc:find("rifleman") or loc:find("gunner") or name:find("marksman") or name:find("sniper") then
+    return "Interface\\Icons\\INV_Weapon_Rifle_01"
+  end
+  if loc:find("flight master") or loc:find("gryphon master") or loc:find("wind rider master") or loc:find("bat handler") then
+    return "Interface\\Icons\\Spell_Magic_FeatherFall"
+  end
+  if loc:find("innkeeper") or name:find("innkeeper") then
+    return "Interface\\Icons\\INV_Drink_05"
+  end
+  if loc:find("banker") or loc:find("vault") then
+    return "Interface\\Icons\\INV_Box_01"
+  end
+  if loc:find("auctioneer") then
+    return "Interface\\Icons\\INV_Misc_Coin_01"
+  end
+  if loc:find("stable master") or loc:find("pet trainer") then
+    return "Interface\\Icons\\Ability_Hunter_BeastCall"
+  end
+  if loc:find("mechanostrider merchant") or name:find("mechanostrider merchant") then
+    return "Interface\\Icons\\Ability_Mount_MechaStrider"
+  end
+  if loc:find("riding trainer") or loc:find("ram breeder") or loc:find("horse breeder") or loc:find("mount vendor") or loc:find("mount merchant") then
+    return "Interface\\Icons\\Ability_Mount_MountainRam"
+  end
+  if loc:find("explorer") or name:find("prospector") or loc:find("prospector") or loc:find("archaeolog") or name:find("surveyor") then
+    return "Interface\\Icons\\INV_Misc_Spyglass_02"
+  end
 
   -- Class Trainers
   if loc:find("warlock trainer") or loc:find("demonology") then return "Interface\\Icons\\Spell_Shadow_DeathCoil" end
+  if loc:find("demon trainer") then return "Interface\\Icons\\Spell_Shadow_SummonImp" end
   if loc:find("mage trainer") or loc:find("portal trainer") or loc:find("arcane") then return "Interface\\Icons\\Spell_Holy_MagicalSentry" end
   if loc:find("priest trainer") then return "Interface\\Icons\\Spell_Holy_Renew" end
   if loc:find("rogue trainer") or loc:find("assassin") then return "Interface\\Icons\\Ability_Backstab" end
   if loc:find("warrior trainer") or loc:find("battlemaster") then return "Interface\\Icons\\Ability_Warrior_OffensiveStance" end
   if loc:find("paladin trainer") then return "Interface\\Icons\\Spell_Holy_HolyBolt" end
-  if loc:find("hunter trainer") or loc:find("pet trainer") then return "Interface\\Icons\\Ability_Hunter_RunningShot" end
+  if loc:find("hunter trainer") then return "Interface\\Icons\\Ability_Hunter_RunningShot" end
   if loc:find("druid trainer") then return "Interface\\Icons\\Ability_Druid_TravelForm" end
   if loc:find("shaman trainer") then return "Interface\\Icons\\Spell_Nature_Lightning" end
 
@@ -1568,22 +1613,52 @@ function FG:GetCreatureIcon(c)
   if loc:find("engineer") or loc:find("tinkerer") or loc:find("machinist") then return "Interface\\Icons\\Trade_Engineering" end
   if loc:find("alchemist") or loc:find("alchemy") or loc:find("apothecary") or loc:find("potions") then return "Interface\\Icons\\Trade_Alchemy" end
   if loc:find("herbal") or loc:find("herbs") then return "Interface\\Icons\\Trade_Herbalism" end
-  if loc:find("miner") or loc:find("mining") or loc:find("smelter") then return "Interface\\Icons\\Trade_Mining" end
+  if loc:find("miner") or loc:find("mining") or loc:find("smelter") or name:find("miner ") or name:find(" miner") then return "Interface\\Icons\\Trade_Mining" end
   if loc:find("enchant") then return "Interface\\Icons\\Trade_Engraving" end
   if loc:find("cook") or loc:find("chef") or loc:find("baker") or loc:find("butcher") then return "Interface\\Icons\\INV_Misc_Food_15" end
   if loc:find("fish") or loc:find("angler") then return "Interface\\Icons\\Trade_Fishing" end
-  if loc:find("first aid") or loc:find("nurse") or loc:find("surgeon") or loc:find("medic") or loc:find("doctor") then return "Interface\\Icons\\Spell_Holy_SealOfSacrifice" end
+  if loc:find("first aid") or loc:find("nurse") or loc:find("surgeon") or loc:find("medic") or loc:find("doctor") or loc:find("physician") or loc:find("healer") then return "Interface\\Icons\\Spell_Holy_SealOfSacrifice" end
 
-  -- Vendors & Supplies
-  if loc:find("general supplies") or loc:find("trade supplies") or loc:find("goods") or loc:find("merchant") or loc:find("vendor") or loc:find("trader") then return "Interface\\Icons\\INV_Misc_Bag_07" end
+  -- Vendors & Supplies in Creature table (Gold coins, never brown backpacks!)
+  if loc:find("ale and wine") or loc:find("drink") or loc:find("bartender") or loc:find("alcohol") or loc:find("wine") then return "Interface\\Icons\\INV_Drink_05" end
+  if loc:find("general supplies") or loc:find("trade supplies") or loc:find("goods") or loc:find("merchant") or loc:find("vendor") or loc:find("trader") or loc:find("tradesman") or loc:find("supplies") then return "Interface\\Icons\\INV_Misc_Coin_01" end
   if loc:find("weapons") or loc:find("bowyer") or loc:find("gunsmith") or loc:find("swordsmith") then return "Interface\\Icons\\INV_Sword_04" end
   if loc:find("armor") or loc:find("shield") then return "Interface\\Icons\\INV_Shield_05" end
   if loc:find("reagent") or loc:find("poison") then return "Interface\\Icons\\INV_Potion_33" end
   if loc:find("tabard") or loc:find("guild") then return "Interface\\Icons\\INV_Shirt_GuildTabard_01" end
   if loc:find("commander") or loc:find("captain") or loc:find("marshal") or loc:find("general") or loc:find("sergeant") then return "Interface\\Icons\\INV_BannerPVP_02" end
-  if loc:find("guard") or loc:find("sentry") or loc:find("watchman") or loc:find("patrol") or loc:find("mortar") then return "Interface\\Icons\\INV_Helmet_01" end
 
-  -- 2. Species & Family Matching
+  -- 2. Mechanical Creatures & Mounts
+  if fam == "mechanical" or name:find("mechanostrider") or name:find("shredder") or name:find("harvest golem") or name:find("clockwork") then
+    if name:find("mechanostrider") or loc:find("mechanostrider") then return "Interface\\Icons\\Ability_Mount_MechaStrider" end
+    if name:find("shredder") then return "Interface\\Icons\\INV_Gizmo_01" end
+    if name:find("harvest") or name:find("reaper") then return "Interface\\Icons\\INV_Gizmo_02" end
+    return "Interface\\Icons\\INV_Misc_Gear_01"
+  end
+
+  -- 3. Critters
+  if fam == "critter" then
+    if name:find("chicken") then return "Interface\\Icons\\INV_Egg_02" end
+    if name:find("toad") or name:find("frog") then return "Interface\\Icons\\Spell_Nature_Polymorph" end
+    return "Interface\\Icons\\INV_Misc_MonsterTail_03"
+  end
+
+  -- 4. Lepers & Afflicted (Must precede Gnome check!)
+  if name:find("leper") or loc:find("leper") then
+    return "Interface\\Icons\\Spell_Shadow_Haunting"
+  end
+
+  -- 5. Undead & Ghosts
+  if fam == "undead" then
+    if name:find("skeleton") or name:find("skeletal") or name:find("bone") then return "Interface\\Icons\\Spell_DeathKnight_ArmyOfTheDead" end
+    if name:find("ghoul") or name:find("abomination") or name:find("flesh") then return "Interface\\Icons\\Spell_Shadow_AnimateDead" end
+    if name:find("ghost") or name:find("wraith") or name:find("specter") or name:find("spirit") or name:find("shade") or name:find("phantom") or name:find("banshee") or name:find("wisp") then return "Interface\\Icons\\Spell_Shadow_AntiShadow" end
+    if name:find("zombie") or name:find("corpse") or name:find("rotten") or name:find("decay") then return "Interface\\Icons\\Spell_Shadow_Haunting" end
+    if name:find("lich") or name:find("necromancer") then return "Interface\\Icons\\Spell_Shadow_RaiseDead" end
+    return "Interface\\Icons\\INV_Misc_Head_Undead_01"
+  end
+
+  -- 6. Beasts
   if fam == "beast" then
     if name:find("wolf") or name:find("worg") or name:find("coyote") or name:find("fox") then return "Interface\\Icons\\Ability_Hunter_Pet_Wolf" end
     if name:find("bear") or name:find("grizzly") or name:find("polar") then return "Interface\\Icons\\Ability_Hunter_Pet_Bear" end
@@ -1599,12 +1674,17 @@ function FG:GetCreatureIcon(c)
     if name:find("hyena") then return "Interface\\Icons\\Ability_Hunter_Pet_Hyena" end
     if name:find("snake") or name:find("cobra") or name:find("viper") or name:find("serpent") or name:find("adder") then return "Interface\\Icons\\Spell_Nature_GuardianWard" end
     if name:find("strider") then return "Interface\\Icons\\Ability_Hunter_Pet_TallStrider" end
-    if name:find("scorpid") or name:find("scorpion") then return "Interface\\Icons\\Ability_Hunter_Pet_Scorpid" end
+    if name:find("scorpid") or name:find("scorpion") or name:find("silithid") then return "Interface\\Icons\\Ability_Hunter_Pet_Scorpid" end
     if name:find("turtle") or name:find("tortoise") or name:find("snapper") then return "Interface\\Icons\\Ability_Hunter_Pet_Turtle" end
     if name:find("wasp") or name:find("stinger") or name:find("hornet") or name:find("bee") then return "Interface\\Icons\\Ability_Hunter_Pet_Wasp" end
-    return "Interface\\Icons\\Ability_Tracking"
+    if name:find("ram") or name:find("goat") then return "Interface\\Icons\\Ability_Mount_MountainRam" end
+    if name:find("kodo") then return "Interface\\Icons\\Ability_Mount_Kodo_01" end
+    if name:find("horse") or name:find("steed") or name:find("stallion") or name:find("mare") then return "Interface\\Icons\\Ability_Mount_RidingHorse" end
+    if name:find("frenzy") or name:find("fish") or name:find("piranha") then return "Interface\\Icons\\Trade_Fishing" end
+    return "Interface\\Icons\\Ability_Hunter_Pet_Wolf"
   end
 
+  -- 7. Elementals
   if fam == "elemental" then
     if name:find("fire") or name:find("ember") or name:find("flame") or name:find("lava") or name:find("magma") or name:find("cinder") or name:find("scorch") or name:find("blaze") then return "Interface\\Icons\\Spell_Fire_Fire" end
     if name:find("water") or name:find("sea") or name:find("aqua") or name:find("ice") or name:find("frost") or name:find("surge") or name:find("wave") or name:find("hydro") then return "Interface\\Icons\\Spell_Frost_Frost" end
@@ -1613,6 +1693,7 @@ function FG:GetCreatureIcon(c)
     return "Interface\\Icons\\Spell_Nature_WispSplode"
   end
 
+  -- 8. Demons
   if fam == "demon" then
     if name:find("imp") then return "Interface\\Icons\\Spell_Shadow_SummonImp" end
     if name:find("felhunter") or name:find("hound") or name:find("stalker") then return "Interface\\Icons\\Spell_Shadow_SummonFelHunter" end
@@ -1624,15 +1705,7 @@ function FG:GetCreatureIcon(c)
     return "Interface\\Icons\\Spell_Shadow_Metamorphosis"
   end
 
-  if fam == "undead" then
-    if name:find("skeleton") or name:find("skeletal") or name:find("bone") then return "Interface\\Icons\\Spell_DeathKnight_ArmyOfTheDead" end
-    if name:find("ghoul") or name:find("abomination") or name:find("flesh") then return "Interface\\Icons\\Spell_Shadow_AnimateDead" end
-    if name:find("ghost") or name:find("wraith") or name:find("specter") or name:find("spirit") or name:find("shade") or name:find("phantom") or name:find("banshee") or name:find("wisp") then return "Interface\\Icons\\Spell_Shadow_AntiShadow" end
-    if name:find("zombie") or name:find("corpse") or name:find("rotten") or name:find("decay") then return "Interface\\Icons\\Spell_Shadow_Haunting" end
-    if name:find("lich") or name:find("necromancer") then return "Interface\\Icons\\Spell_Shadow_RaiseDead" end
-    return "Interface\\Icons\\Spell_Shadow_DeathPact"
-  end
-
+  -- 9. Dragonkin
   if fam == "dragonkin" then
     if name:find("black") then return "Interface\\Icons\\INV_Misc_Head_Dragon_Black" end
     if name:find("red") then return "Interface\\Icons\\INV_Misc_Head_Dragon_Red" end
@@ -1642,31 +1715,102 @@ function FG:GetCreatureIcon(c)
     return "Interface\\Icons\\INV_Misc_Head_Dragon_01"
   end
 
-  if fam == "giant" then
-    if name:find("ogre") then return "Interface\\Icons\\INV_Mace_08" end
+  -- 10. Giants & Ogres
+  if fam == "giant" or name:find("ogre") or name:find("boulderfist") or name:find("bloodmaul") or name:find("dunemaul") or name:find("gordok") or name:find("mo'grosh") or name:find("spirestone") or name:find("crushridge") then
+    if name:find("ogre") or name:find("boulderfist") or name:find("bloodmaul") or name:find("dunemaul") or name:find("gordok") or name:find("mo'grosh") or name:find("spirestone") or name:find("crushridge") then
+      return "Interface\\Icons\\INV_Misc_MonsterHead_03"
+    end
     return "Interface\\Icons\\Ability_Racial_Avatar"
   end
 
-  -- Specific Humanoid Subtypes
-  if name:find("murloc") then return "Interface\\Icons\\INV_Misc_MonsterHead_01" end
-  if name:find("kobold") then return "Interface\\Icons\\INV_Misc_Candle_01" end
-  if name:find("gnoll") then return "Interface\\Icons\\INV_Misc_MonsterClaw_03" end
-  if name:find("trogg") then return "Interface\\Icons\\INV_Misc_MonsterClaw_02" end
-  if name:find("centaur") then return "Interface\\Icons\\INV_Spear_05" end
-  if name:find("furbolg") then return "Interface\\Icons\\INV_Misc_MonsterClaw_04" end
-  if name:find("naga") then return "Interface\\Icons\\INV_Sword_26" end
-  if name:find("pirate") or name:find("swashbuckler") or name:find("deckhand") or name:find("buccaneer") or name:find("corsair") then return "Interface\\Icons\\INV_Helmet_66" end
-  if name:find("bandit") or name:find("defias") or name:find("thief") or name:find("cutpurse") or name:find("brigand") or name:find("outlaw") then return "Interface\\Icons\\INV_Helmet_41" end
-  if name:find("cultist") or name:find("shadow") or name:find("dark strand") then return "Interface\\Icons\\Spell_Shadow_ShadowPact" end
-  if name:find("dwarf") or name:find("dwarven") or name:find("dark iron") or name:find("ironforge") or name:find("bronzebeard") or name:find("wildhammer") then return "Interface\\Icons\\INV_Helmet_04" end
-  if name:find("gnome") or name:find("gnomish") or name:find("leper") or name:find("fizzlebang") then return "Interface\\Icons\\INV_Gizmo_02" end
-  if name:find("orc") or name:find("grunt") or name:find("peon") or name:find("warsong") then return "Interface\\Icons\\INV_Helmet_24" end
-  if name:find("troll") or name:find("darkspear") then return "Interface\\Icons\\INV_Mask_02" end
-  if name:find("tauren") or name:find("brave") or name:find("bloodhoof") then return "Interface\\Icons\\INV_Misc_Horn_02" end
-  if name:find("elf") or name:find("sentinel") or name:find("kaldorei") then return "Interface\\Icons\\INV_Helmet_15" end
+  -- 11. Specific Humanoid Species & Tribes
+  if name:find("wendigo") or name:find("yeti") or name:find("vagash") or name:find("icebeard") or name:find("ferocitas") then
+    return "Interface\\Icons\\Ability_Racial_BearForm"
+  end
+  if name:find("trogg") or name:find("rockjaw") or name:find("stonevault") or name:find("grik'nir") then
+    return "Interface\\Icons\\INV_Misc_MonsterClaw_02"
+  end
+  if name:find("troll") or name:find("frostmane") or name:find("darkspear") or name:find("bloodscalp") or name:find("vilebranch") or name:find("witherbark") or name:find("sandfury") or name:find("atal'ai") or name:find("gurubashi") then
+    return "Interface\\Icons\\INV_Misc_Head_Troll_01"
+  end
+  if name:find("kobold") or name:find("tunnel rat") or name:find("drywhisker") or name:find("snobold") then
+    return "Interface\\Icons\\INV_Misc_Head_Kobold_01"
+  end
+  if name:find("gnoll") or name:find("riverpaw") or name:find("mudsnout") or name:find("mosshide") then
+    return "Interface\\Icons\\INV_Misc_Head_Gnoll_01"
+  end
+  if name:find("murloc") or name:find("greymurloc") or name:find("bluegill") or name:find("muckdweller") then
+    return "Interface\\Icons\\INV_Misc_Head_Murloc_01"
+  end
+  if name:find("centaur") or name:find("kolkar") or name:find("galak") or name:find("magram") or name:find("gelkis") then
+    return "Interface\\Icons\\INV_Misc_Head_Centaur_01"
+  end
+  if name:find("quillboar") or name:find("bristleback") or name:find("razormane") or name:find("death's head") or name:find("kraul") then
+    return "Interface\\Icons\\INV_Misc_Head_Quillboar_01"
+  end
+  if name:find("furbolg") or name:find("timbermaw") or name:find("deadwood") or name:find("bristlelimb") or name:find("blackwood") then
+    return "Interface\\Icons\\INV_Misc_MonsterClaw_04"
+  end
+  if name:find("naga") or name:find("hatecrest") or name:find("spitefin") then
+    return "Interface\\Icons\\INV_Sword_26"
+  end
+  if name:find("harpy") or name:find("witchwing") then
+    return "Interface\\Icons\\Ability_Hunter_Pet_Owl"
+  end
+  if name:find("pirate") or name:find("swashbuckler") or name:find("deckhand") or name:find("buccaneer") or name:find("corsair") or name:find("southsea") or name:find("bloodsail") then
+    return "Interface\\Icons\\INV_Helmet_66"
+  end
+  if name:find("bandit") or name:find("defias") or name:find("thief") or name:find("cutpurse") or name:find("brigand") or name:find("outlaw") then
+    return "Interface\\Icons\\INV_Helmet_41"
+  end
+  if name:find("cultist") or name:find("shadow council") or name:find("twilight") or name:find("dark strand") then
+    return "Interface\\Icons\\Spell_Shadow_ShadowPact"
+  end
 
-  -- Default fallback
-  return "Interface\\Icons\\INV_Helmet_01"
+  -- Playable Races / Named Races (Authentic Blizzard Race Head Icons)
+  if name:find("gnome") or name:find("gnomish") or name:find("tinkerer") or name:find("fizzlebang") or name:find("sprysprocket") or name:find("springsprocket") or name:find("rustsprocket") or name:find("togglevolt") or name:find("whindlebolt") or name:find("fizzwizzle") or name:find("featherwhistle") then
+    return "Interface\\Icons\\INV_Misc_Head_Gnome_01"
+  end
+  if name:find("dwarf") or name:find("dwarven") or name:find("dark iron") or name:find("ironforge") or name:find("bronzebeard") or name:find("wildhammer") or name:find("stormpike") or name:find("mountaineer") or name:find("thunderbrew") or name:find("forgestone") or name:find("stonehallow") or name:find("barleybrew") or name:find("amberstill") or name:find("frosthammer") or name:find("steelgrill") or name:find("whitebeard") or name:find("stoneflint") or name:find("flintfire") or name:find("stoutarm") or name:find("grimand") then
+    return "Interface\\Icons\\INV_Misc_Head_Dwarf_01"
+  end
+  if name:find("orc") or name:find("grunt") or name:find("peon") or name:find("warsong") or name:find("kor'kron") or name:find("blackrock") or name:find("dragonmaw") then
+    return "Interface\\Icons\\INV_Misc_Head_Orc_01"
+  end
+  if name:find("tauren") or name:find("bloodhoof") or name:find("grimtotem") or name:find("thunderhorn") or name:find("ragetotem") or name:find("wildmane") or name:find("runetotem") then
+    return "Interface\\Icons\\INV_Misc_Bone_TaurenSkull_01"
+  end
+  if name:find("elf") or name:find("sentinel") or name:find("kaldorei") or name:find("feathermoon") or name:find("starsong") then
+    return "Interface\\Icons\\INV_Misc_Head_Elf_01"
+  end
+  if name:find("undead") or name:find("forsaken") or name:find("scourge") or name:find("deathguard") then
+    return "Interface\\Icons\\INV_Misc_Head_Undead_01"
+  end
+  if name:find("human") or name:find("stormwind") or name:find("guard") or name:find("footman") or name:find("knight") then
+    return "Interface\\Icons\\INV_Misc_Head_Human_01"
+  end
+
+  -- Zone-aware racial humanoid fallback
+  if zone:find("dun morogh") or zone:find("ironforge") or zone:find("loch modan") then
+    return "Interface\\Icons\\INV_Misc_Head_Dwarf_01"
+  end
+  if zone:find("elwynn forest") or zone:find("stormwind") or zone:find("westfall") or zone:find("redridge") then
+    return "Interface\\Icons\\INV_Misc_Head_Human_01"
+  end
+  if zone:find("teldrassil") or zone:find("darnassus") or zone:find("darkshore") or zone:find("ashenvale") then
+    return "Interface\\Icons\\INV_Misc_Head_Elf_01"
+  end
+  if zone:find("durotar") or zone:find("orgrimmar") or zone:find("barrens") then
+    return "Interface\\Icons\\INV_Misc_Head_Orc_01"
+  end
+  if zone:find("mulgore") or zone:find("thunder bluff") then
+    return "Interface\\Icons\\INV_Misc_Bone_TaurenSkull_01"
+  end
+  if zone:find("tirisfal") or zone:find("undercity") or zone:find("silverpine") then
+    return "Interface\\Icons\\INV_Misc_Head_Undead_01"
+  end
+
+  return "Interface\\Icons\\INV_Misc_Head_Human_01"
 end
 
 --------------------------------------------------------------------------------
