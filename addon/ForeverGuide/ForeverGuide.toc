@@ -1,8 +1,8 @@
 ## Interface: 16001, 16000, 11505, 11404, 11506, 11507, 11508, 120105
-## Title: |cffcf52ffForever Guide|r |cffdf80ff(Sparky)|r |cffff8080[Pre-Alpha]|r
+## Title: |cffcf52ffForever Guide|r |cffdf80ff(Sparky)|r |cff00ff00[Alpha]|r
 ## Notes: An interactive cloud-like wisp companion named Sparky. Delivers instant in-game item codex, zone wayfarer, dungeon tactician, and gear guidance for Warcraft Forever.
 ## Author: Forever Community
-## Version: 0.1.0-pre-alpha
+## Version: 0.1.0-alpha
 ## SavedVariables: ForeverGuideDB
 ## SavedVariablesPerCharacter: ForeverGuideCharDB
 ## X-Category: Quests & Leveling, Map & Minimap, Miscellaneous

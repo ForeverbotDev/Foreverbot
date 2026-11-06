@@ -26,12 +26,12 @@ DIST_DIR = os.path.join(BASE_DIR, "dist")
 ADDON_DIR = os.path.join(BASE_DIR, "addon", "ForeverGuide")
 TOC_FILE = os.path.join(ADDON_DIR, "ForeverGuide.toc")
 
-CHANGELOG_TEXT = """# PRE-ALPHA RELEASE: ForeverGuide v0.1.0-pre-alpha
+CHANGELOG_TEXT = """# ALPHA RELEASE: ForeverGuide v0.1.0-alpha
 
-> **NOTICE**: This addon is currently in **PRE-ALPHA** development for **Warcraft Forever** and **Classic Era**.
+> **NOTICE**: This addon is currently in **ALPHA** development for **Warcraft Forever** and **Classic Era**.
 > Features, database schemas, and interface structures are undergoing active evolution. Feedback and bug reports are welcome!
 
-### Key Features in this Pre-Alpha Build:
+### Key Features in this Alpha Build:
 - **Autonomous Wisp Companion (Sparky)**:
   - Ambient flight mechanics with smooth wandering, boundary tethering, and resting states.
   - Dynamic game interactivity: dashes and bounces along screen borders upon player death; celebrates upon resurrection and level up.
@@ -84,17 +84,17 @@ def upload_to_curseforge(project_id: str, token: str, zip_path: str, dry_run: bo
     metadata = {
         "changelog": CHANGELOG_TEXT,
         "changelogType": "markdown",
-        "displayName": f"ForeverGuide [Pre-Alpha] - {zip_filename}",
+        "displayName": f"ForeverGuide [Alpha] - {zip_filename}",
         "parentFileID": None,
-        "releaseType": "alpha",  # CurseForge convention for Pre-Alpha / Alpha
+        "releaseType": "alpha",  # CurseForge convention for Alpha
     }
 
     print("=" * 70)
-    print("   CURSEFORGE PRE-ALPHA UPLOAD MANIFEST")
+    print("   CURSEFORGE ALPHA UPLOAD MANIFEST")
     print("=" * 70)
     print(f"Project ID    : {project_id or '(Not specified)'}")
     print(f"Release File  : {zip_path} ({file_size_mb:.2f} MB)")
-    print(f"Release Type  : {metadata['releaseType'].upper()} (Explicit Pre-Alpha)")
+    print(f"Release Type  : {metadata['releaseType'].upper()} (Official Alpha)")
     print(f"Display Name  : {metadata['displayName']}")
     print("-" * 70)
 
@@ -105,8 +105,8 @@ def upload_to_curseforge(project_id: str, token: str, zip_path: str, dry_run: bo
         print("2. Navigate to your project -> 'Files' -> 'Upload File'.")
         print(f"3. Upload the pre-packaged archive:\n   {zip_path}")
         print("4. Set 'Release Type' to 'Alpha'.")
-        print(f"5. Set 'Display Name' to 'ForeverGuide v0.1.0 [Pre-Alpha]'.")
-        print("6. Paste the Pre-Alpha Changelog (shown above) into the changelog box.")
+        print(f"5. Set 'Display Name' to 'ForeverGuide v0.1.0 [Alpha]'.")
+        print("6. Paste the Alpha Changelog (shown above) into the changelog box.")
         print("\nTo upload automatically via this CLI script:")
         print("   export CF_API_TOKEN=\"<your-api-token>\"")
         print("   export CF_PROJECT_ID=\"<your-project-id>\"")
