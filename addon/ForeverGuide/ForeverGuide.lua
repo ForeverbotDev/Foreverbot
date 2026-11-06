@@ -1448,6 +1448,227 @@ function FG:CreateCodexRowButton(parent, i)
   return btn
 end
 
+--------------------------------------------------------------------------------
+-- Dynamic Icon Resolvers
+--------------------------------------------------------------------------------
+local DUNGEON_ICONS = {
+  ["ragefire chasm"] = "Interface\\Icons\\Spell_Fire_Immolation",
+  ["the deadmines"] = "Interface\\Icons\\INV_Helmet_66",
+  ["deadmines"] = "Interface\\Icons\\INV_Helmet_66",
+  ["wailing caverns"] = "Interface\\Icons\\Spell_Nature_HealingTouch",
+  ["shadowfang keep"] = "Interface\\Icons\\Spell_Shadow_Haunting",
+  ["blackfathom deeps"] = "Interface\\Icons\\Spell_Frost_FrostArmor",
+  ["the stockade"] = "Interface\\Icons\\INV_Crate_01",
+  ["stockade"] = "Interface\\Icons\\INV_Crate_01",
+  ["gnomeregan"] = "Interface\\Icons\\INV_Gizmo_02",
+  ["scarlet monastery"] = "Interface\\Icons\\Spell_Holy_PrayerOfHealing",
+  ["razorfen kraul"] = "Interface\\Icons\\Ability_Hunter_Pet_Boar",
+  ["razorfen downs"] = "Interface\\Icons\\Spell_Shadow_RaiseDead",
+  ["uldaman"] = "Interface\\Icons\\INV_Misc_Statue_01",
+  ["zul'farrak"] = "Interface\\Icons\\INV_Mask_02",
+  ["maraudon"] = "Interface\\Icons\\Spell_Nature_Earthquake",
+  ["sunken temple"] = "Interface\\Icons\\INV_Misc_Head_Dragon_Green",
+  ["the temple of atal'hakkar"] = "Interface\\Icons\\INV_Misc_Head_Dragon_Green",
+  ["blackrock depths"] = "Interface\\Icons\\Spell_Fire_LavaSpawn",
+  ["lower blackrock spire"] = "Interface\\Icons\\INV_Misc_Head_Dragon_Black",
+  ["upper blackrock spire"] = "Interface\\Icons\\INV_Misc_Head_Dragon_Black",
+  ["stratholme"] = "Interface\\Icons\\Spell_Fire_SelfDestruct",
+  ["scholomance"] = "Interface\\Icons\\Spell_Shadow_ShadowPact",
+  ["dire maul"] = "Interface\\Icons\\Spell_Arcane_PortalDarnassus",
+  ["molten core"] = "Interface\\Icons\\Spell_Fire_Incinerate",
+  ["onyxia's lair"] = "Interface\\Icons\\INV_Misc_Head_Dragon_Black",
+  ["blackwing lair"] = "Interface\\Icons\\INV_Misc_Head_Dragon_Black",
+  ["zul'gurub"] = "Interface\\Icons\\INV_ZulGurubTrinket",
+  ["ruins of ahn'qiraj"] = "Interface\\Icons\\INV_Misc_AhnQirajTrinket_01",
+  ["temple of ahn'qiraj"] = "Interface\\Icons\\INV_Misc_AhnQirajTrinket_01",
+  ["naxxramas"] = "Interface\\Icons\\Spell_Shadow_Haunting",
+  ["hall of thanes"] = "Interface\\Icons\\INV_Mace_03",
+  ["ruins of lordaeron"] = "Interface\\Icons\\Spell_Shadow_Haunting",
+}
+
+function FG:GetDungeonIcon(d)
+  if not d then return "Interface\\Icons\\Spell_Holy_PrayerOfFortitude" end
+  local n = (d.name or ""):lower()
+  if DUNGEON_ICONS[n] then return DUNGEON_ICONS[n] end
+  for key, icon in pairs(DUNGEON_ICONS) do
+    if n:find(key, 1, true) then return icon end
+  end
+  return "Interface\\Icons\\Spell_Holy_PrayerOfFortitude"
+end
+
+function FG:GetVendorIcon(v)
+  if not v then return "Interface\\Icons\\INV_Misc_Bag_07" end
+  local item = (v.item or ""):lower()
+  local name = (v.name or ""):lower()
+  if item:find("flight") or name:find("flight") then return "Interface\\Icons\\Spell_Magic_FeatherFall" end
+  if item:find("pvp") or item:find("honor") or item:find("arena") then return "Interface\\Icons\\INV_BannerPVP_02" end
+  if item:find("innkeeper") or name:find("innkeeper") then return "Interface\\Icons\\INV_Drink_05" end
+  if item:find("repair") or item:find("blacksmith") or item:find("anvil") then return "Interface\\Icons\\Trade_BlackSmithing" end
+  if item:find("weapon") or item:find("blade") or item:find("sword") or item:find("bow") or item:find("gun") then return "Interface\\Icons\\INV_Sword_04" end
+  if item:find("armor") or item:find("shield") or item:find("cloth") or item:find("leather") or item:find("plate") or item:find("mail") then return "Interface\\Icons\\INV_Chest_Cloth_23" end
+  if item:find("food") or item:find("drink") or item:find("meat") or item:find("bread") then return "Interface\\Icons\\INV_Misc_Food_15" end
+  if item:find("reagent") or item:find("poison") or item:find("potion") or item:find("alchemy") then return "Interface\\Icons\\INV_Potion_33" end
+  return "Interface\\Icons\\INV_Misc_Bag_07"
+end
+
+function FG:GetQuestIcon(qData)
+  if not qData then return "Interface\\Icons\\inv_misc_book_07" end
+  if qData.isForever then return "Interface\\Icons\\INV_Misc_Book_09" end
+  local zone = (qData.zone or ""):lower()
+  local title = (qData.title or ""):lower()
+  if zone:find("dungeon") or zone:find("deadmines") or zone:find("wailing") or zone:find("shadowfang") or zone:find("blackfathom") or zone:find("gnomeregan") or zone:find("scarlet") or zone:find("razorfen") or zone:find("uldaman") or zone:find("zul'") or zone:find("maraudon") or zone:find("blackrock") or zone:find("stratholme") or zone:find("scholomance") or zone:find("dire maul") or zone:find("molten") or zone:find("ahn'qiraj") or zone:find("naxxramas") then
+    return "Interface\\Icons\\Spell_Holy_PrayerOfFortitude"
+  end
+  if title:find("wanted") or title:find("slay") or title:find("kill") or title:find("destroy") or title:find("death to") then
+    return "Interface\\Icons\\Ability_Hunter_Assassinate"
+  end
+  if title:find("delivery") or title:find("report to") or title:find("letter") or title:find("message") or title:find("dispatch") then
+    return "Interface\\Icons\\INV_Letter_15"
+  end
+  return "Interface\\Icons\\inv_misc_book_07"
+end
+
+function FG:GetCreatureIcon(c)
+  if not c then return "Interface\\Icons\\INV_Helmet_01" end
+
+  local cl = (c.classification or ""):lower()
+  if cl == "boss" or cl == "world boss" then
+    return "Interface\\Icons\\INV_Misc_Head_Dragon_01"
+  end
+  if cl == "rare" or cl == "rare elite" then
+    return "Interface\\Icons\\INV_Misc_Head_Dragon_02"
+  end
+
+  local loc = (c.location or ""):lower()
+  local name = (c.name or ""):lower()
+  local fam = (c.family or ""):lower()
+
+  -- 1. NPC Occupations & Roles (from title / location / name)
+  if loc:find("flight master") or loc:find("gryphon master") or loc:find("wind rider master") then return "Interface\\Icons\\Spell_Magic_FeatherFall" end
+  if loc:find("innkeeper") or name:find("innkeeper") then return "Interface\\Icons\\INV_Drink_05" end
+  if loc:find("banker") or loc:find("vault") then return "Interface\\Icons\\INV_Box_01" end
+  if loc:find("auctioneer") then return "Interface\\Icons\\INV_Misc_Coin_01" end
+  if loc:find("stable master") then return "Interface\\Icons\\Ability_Hunter_BeastCall" end
+
+  -- Class Trainers
+  if loc:find("warlock trainer") or loc:find("demonology") then return "Interface\\Icons\\Spell_Shadow_DeathCoil" end
+  if loc:find("mage trainer") or loc:find("portal trainer") or loc:find("arcane") then return "Interface\\Icons\\Spell_Holy_MagicalSentry" end
+  if loc:find("priest trainer") then return "Interface\\Icons\\Spell_Holy_Renew" end
+  if loc:find("rogue trainer") or loc:find("assassin") then return "Interface\\Icons\\Ability_Backstab" end
+  if loc:find("warrior trainer") or loc:find("battlemaster") then return "Interface\\Icons\\Ability_Warrior_OffensiveStance" end
+  if loc:find("paladin trainer") then return "Interface\\Icons\\Spell_Holy_HolyBolt" end
+  if loc:find("hunter trainer") or loc:find("pet trainer") then return "Interface\\Icons\\Ability_Hunter_RunningShot" end
+  if loc:find("druid trainer") then return "Interface\\Icons\\Ability_Druid_TravelForm" end
+  if loc:find("shaman trainer") then return "Interface\\Icons\\Spell_Nature_Lightning" end
+
+  -- Profession Trainers & Artisans
+  if loc:find("blacksmith") or loc:find("weaponsmith") or loc:find("armorsmith") or loc:find("anvil") or loc:find("repair") then return "Interface\\Icons\\Trade_BlackSmithing" end
+  if loc:find("tailor") or loc:find("clothier") then return "Interface\\Icons\\Trade_Tailoring" end
+  if loc:find("leatherwork") or loc:find("furrier") or loc:find("tanner") then return "Interface\\Icons\\Trade_LeatherWorking" end
+  if loc:find("engineer") or loc:find("tinkerer") or loc:find("machinist") then return "Interface\\Icons\\Trade_Engineering" end
+  if loc:find("alchemist") or loc:find("alchemy") or loc:find("apothecary") or loc:find("potions") then return "Interface\\Icons\\Trade_Alchemy" end
+  if loc:find("herbal") or loc:find("herbs") then return "Interface\\Icons\\Trade_Herbalism" end
+  if loc:find("miner") or loc:find("mining") or loc:find("smelter") then return "Interface\\Icons\\Trade_Mining" end
+  if loc:find("enchant") then return "Interface\\Icons\\Trade_Engraving" end
+  if loc:find("cook") or loc:find("chef") or loc:find("baker") or loc:find("butcher") then return "Interface\\Icons\\INV_Misc_Food_15" end
+  if loc:find("fish") or loc:find("angler") then return "Interface\\Icons\\Trade_Fishing" end
+  if loc:find("first aid") or loc:find("nurse") or loc:find("surgeon") or loc:find("medic") or loc:find("doctor") then return "Interface\\Icons\\Spell_Holy_SealOfSacrifice" end
+
+  -- Vendors & Supplies
+  if loc:find("general supplies") or loc:find("trade supplies") or loc:find("goods") or loc:find("merchant") or loc:find("vendor") or loc:find("trader") then return "Interface\\Icons\\INV_Misc_Bag_07" end
+  if loc:find("weapons") or loc:find("bowyer") or loc:find("gunsmith") or loc:find("swordsmith") then return "Interface\\Icons\\INV_Sword_04" end
+  if loc:find("armor") or loc:find("shield") then return "Interface\\Icons\\INV_Shield_05" end
+  if loc:find("reagent") or loc:find("poison") then return "Interface\\Icons\\INV_Potion_33" end
+  if loc:find("tabard") or loc:find("guild") then return "Interface\\Icons\\INV_Shirt_GuildTabard_01" end
+  if loc:find("commander") or loc:find("captain") or loc:find("marshal") or loc:find("general") or loc:find("sergeant") then return "Interface\\Icons\\INV_BannerPVP_02" end
+  if loc:find("guard") or loc:find("sentry") or loc:find("watchman") or loc:find("patrol") or loc:find("mortar") then return "Interface\\Icons\\INV_Helmet_01" end
+
+  -- 2. Species & Family Matching
+  if fam == "beast" then
+    if name:find("wolf") or name:find("worg") or name:find("coyote") or name:find("fox") then return "Interface\\Icons\\Ability_Hunter_Pet_Wolf" end
+    if name:find("bear") or name:find("grizzly") or name:find("polar") then return "Interface\\Icons\\Ability_Hunter_Pet_Bear" end
+    if name:find("cat") or name:find("lion") or name:find("tiger") or name:find("panther") or name:find("leopard") or name:find("lynx") or name:find("cougar") or name:find("saber") or name:find("stalker") then return "Interface\\Icons\\Ability_Hunter_Pet_Cat" end
+    if name:find("boar") or name:find("pig") or name:find("swine") then return "Interface\\Icons\\Ability_Hunter_Pet_Boar" end
+    if name:find("spider") or name:find("tarantula") or name:find("widow") or name:find("creeper") or name:find("weaver") then return "Interface\\Icons\\Ability_Hunter_Pet_Spider" end
+    if name:find("raptor") then return "Interface\\Icons\\Ability_Hunter_Pet_Raptor" end
+    if name:find("bat") then return "Interface\\Icons\\Ability_Hunter_Pet_Bat" end
+    if name:find("bird") or name:find("hawk") or name:find("eagle") or name:find("falcon") or name:find("owl") or name:find("buzzard") or name:find("vulture") or name:find("condor") then return "Interface\\Icons\\Ability_Hunter_Pet_Owl" end
+    if name:find("crab") or name:find("crawler") or name:find("pincer") or name:find("lobster") then return "Interface\\Icons\\Ability_Hunter_Pet_Crab" end
+    if name:find("croc") or name:find("alligator") then return "Interface\\Icons\\Ability_Hunter_Pet_Crocolisk" end
+    if name:find("gorilla") or name:find("ape") then return "Interface\\Icons\\Ability_Hunter_Pet_Gorilla" end
+    if name:find("hyena") then return "Interface\\Icons\\Ability_Hunter_Pet_Hyena" end
+    if name:find("snake") or name:find("cobra") or name:find("viper") or name:find("serpent") or name:find("adder") then return "Interface\\Icons\\Spell_Nature_GuardianWard" end
+    if name:find("strider") then return "Interface\\Icons\\Ability_Hunter_Pet_TallStrider" end
+    if name:find("scorpid") or name:find("scorpion") then return "Interface\\Icons\\Ability_Hunter_Pet_Scorpid" end
+    if name:find("turtle") or name:find("tortoise") or name:find("snapper") then return "Interface\\Icons\\Ability_Hunter_Pet_Turtle" end
+    if name:find("wasp") or name:find("stinger") or name:find("hornet") or name:find("bee") then return "Interface\\Icons\\Ability_Hunter_Pet_Wasp" end
+    return "Interface\\Icons\\Ability_Tracking"
+  end
+
+  if fam == "elemental" then
+    if name:find("fire") or name:find("ember") or name:find("flame") or name:find("lava") or name:find("magma") or name:find("cinder") or name:find("scorch") or name:find("blaze") then return "Interface\\Icons\\Spell_Fire_Fire" end
+    if name:find("water") or name:find("sea") or name:find("aqua") or name:find("ice") or name:find("frost") or name:find("surge") or name:find("wave") or name:find("hydro") then return "Interface\\Icons\\Spell_Frost_Frost" end
+    if name:find("earth") or name:find("rock") or name:find("stone") or name:find("clay") or name:find("mud") or name:find("mountain") or name:find("pebble") or name:find("boulder") then return "Interface\\Icons\\Spell_Nature_Earthquake" end
+    if name:find("air") or name:find("wind") or name:find("storm") or name:find("tempest") or name:find("dust") or name:find("tornado") or name:find("cyclone") or name:find("zephyr") then return "Interface\\Icons\\Spell_Nature_Cyclone" end
+    return "Interface\\Icons\\Spell_Nature_WispSplode"
+  end
+
+  if fam == "demon" then
+    if name:find("imp") then return "Interface\\Icons\\Spell_Shadow_SummonImp" end
+    if name:find("felhunter") or name:find("hound") or name:find("stalker") then return "Interface\\Icons\\Spell_Shadow_SummonFelHunter" end
+    if name:find("voidwalker") or name:find("void") then return "Interface\\Icons\\Spell_Shadow_SummonVoidWalker" end
+    if name:find("succubus") or name:find("siren") then return "Interface\\Icons\\Spell_Shadow_SummonSuccubus" end
+    if name:find("infernal") or name:find("abyssal") then return "Interface\\Icons\\Spell_Shadow_SummonInfernal" end
+    if name:find("doomguard") or name:find("dreadlord") or name:find("felguard") then return "Interface\\Icons\\Spell_Shadow_SummonDoomGuard" end
+    if name:find("satyr") then return "Interface\\Icons\\Ability_Racial_ShadowMeld" end
+    return "Interface\\Icons\\Spell_Shadow_Metamorphosis"
+  end
+
+  if fam == "undead" then
+    if name:find("skeleton") or name:find("skeletal") or name:find("bone") then return "Interface\\Icons\\Spell_DeathKnight_ArmyOfTheDead" end
+    if name:find("ghoul") or name:find("abomination") or name:find("flesh") then return "Interface\\Icons\\Spell_Shadow_AnimateDead" end
+    if name:find("ghost") or name:find("wraith") or name:find("specter") or name:find("spirit") or name:find("shade") or name:find("phantom") or name:find("banshee") or name:find("wisp") then return "Interface\\Icons\\Spell_Shadow_AntiShadow" end
+    if name:find("zombie") or name:find("corpse") or name:find("rotten") or name:find("decay") then return "Interface\\Icons\\Spell_Shadow_Haunting" end
+    if name:find("lich") or name:find("necromancer") then return "Interface\\Icons\\Spell_Shadow_RaiseDead" end
+    return "Interface\\Icons\\Spell_Shadow_DeathPact"
+  end
+
+  if fam == "dragonkin" then
+    if name:find("black") then return "Interface\\Icons\\INV_Misc_Head_Dragon_Black" end
+    if name:find("red") then return "Interface\\Icons\\INV_Misc_Head_Dragon_Red" end
+    if name:find("green") then return "Interface\\Icons\\INV_Misc_Head_Dragon_Green" end
+    if name:find("blue") then return "Interface\\Icons\\INV_Misc_Head_Dragon_Blue" end
+    if name:find("bronze") or name:find("time") then return "Interface\\Icons\\INV_Misc_Head_Dragon_Bronze" end
+    return "Interface\\Icons\\INV_Misc_Head_Dragon_01"
+  end
+
+  if fam == "giant" then
+    if name:find("ogre") then return "Interface\\Icons\\INV_Mace_08" end
+    return "Interface\\Icons\\Ability_Racial_Avatar"
+  end
+
+  -- Specific Humanoid Subtypes
+  if name:find("murloc") then return "Interface\\Icons\\INV_Misc_MonsterHead_01" end
+  if name:find("kobold") then return "Interface\\Icons\\INV_Misc_Candle_01" end
+  if name:find("gnoll") then return "Interface\\Icons\\INV_Misc_MonsterClaw_03" end
+  if name:find("trogg") then return "Interface\\Icons\\INV_Misc_MonsterClaw_02" end
+  if name:find("centaur") then return "Interface\\Icons\\INV_Spear_05" end
+  if name:find("furbolg") then return "Interface\\Icons\\INV_Misc_MonsterClaw_04" end
+  if name:find("naga") then return "Interface\\Icons\\INV_Sword_26" end
+  if name:find("pirate") or name:find("swashbuckler") or name:find("deckhand") or name:find("buccaneer") or name:find("corsair") then return "Interface\\Icons\\INV_Helmet_66" end
+  if name:find("bandit") or name:find("defias") or name:find("thief") or name:find("cutpurse") or name:find("brigand") or name:find("outlaw") then return "Interface\\Icons\\INV_Helmet_41" end
+  if name:find("cultist") or name:find("shadow") or name:find("dark strand") then return "Interface\\Icons\\Spell_Shadow_ShadowPact" end
+  if name:find("dwarf") or name:find("dwarven") or name:find("dark iron") or name:find("ironforge") or name:find("bronzebeard") or name:find("wildhammer") then return "Interface\\Icons\\INV_Helmet_04" end
+  if name:find("gnome") or name:find("gnomish") or name:find("leper") or name:find("fizzlebang") then return "Interface\\Icons\\INV_Gizmo_02" end
+  if name:find("orc") or name:find("grunt") or name:find("peon") or name:find("warsong") then return "Interface\\Icons\\INV_Helmet_24" end
+  if name:find("troll") or name:find("darkspear") then return "Interface\\Icons\\INV_Mask_02" end
+  if name:find("tauren") or name:find("brave") or name:find("bloodhoof") then return "Interface\\Icons\\INV_Misc_Horn_02" end
+  if name:find("elf") or name:find("sentinel") or name:find("kaldorei") then return "Interface\\Icons\\INV_Helmet_15" end
+
+  -- Default fallback
+  return "Interface\\Icons\\INV_Helmet_01"
+end
+
 function FG:ConfigureRowButton(btn, match)
   if not match then return end
   btn.match = match
@@ -1460,7 +1681,7 @@ function FG:ConfigureRowButton(btn, match)
 
     if btn.IconFrame then
       btn.IconFrame:Show()
-      btn.Icon:SetTexture("Interface\\Icons\\inv_misc_bag_08")
+      btn.Icon:SetTexture(folder.icon or "Interface\\Icons\\inv_misc_bag_08")
       btn.IconFrame:SetBackdropBorderColor(0.3, 0.6, 0.9, 0.8)
     end
     btn.Title:ClearAllPoints()
@@ -1587,7 +1808,7 @@ function FG:ConfigureRowButton(btn, match)
 
     if btn.IconFrame then
       btn.IconFrame:Show()
-      btn.Icon:SetTexture("Interface\\Icons\\inv_misc_book_07")
+      btn.Icon:SetTexture(FG:GetQuestIcon(qData))
       btn.IconFrame:SetBackdropBorderColor(0.9, 0.7, 0.2, 0.9)
     end
     btn.Title:ClearAllPoints()
@@ -1657,7 +1878,7 @@ function FG:ConfigureRowButton(btn, match)
 
     if btn.IconFrame then
       btn.IconFrame:Show()
-      local cTex = (c.classification == "Boss" or c.classification == "World Boss") and "Interface\\Icons\\inv_misc_head_dragon_01" or ((c.classification == "Elite" or c.classification == "Rare Elite") and "Interface\\Icons\\spell_shadow_summoninfernal" or "Interface\\Icons\\inv_misc_monsterhead_01")
+      local cTex = FG:GetCreatureIcon(c)
       btn.Icon:SetTexture(cTex)
       if c.classification == "Boss" or c.classification == "World Boss" then
         btn.IconFrame:SetBackdropBorderColor(1.0, 0.2, 0.2, 1.0)
@@ -1733,7 +1954,7 @@ function FG:ConfigureRowButton(btn, match)
 
     if btn.IconFrame then
       btn.IconFrame:Show()
-      btn.Icon:SetTexture("Interface\\Icons\\inv_helmet_08")
+      btn.Icon:SetTexture(FG:GetDungeonIcon(d))
       btn.IconFrame:SetBackdropBorderColor(0.7, 0.4, 0.9, 0.9)
     end
     btn.Title:ClearAllPoints()
@@ -1772,7 +1993,7 @@ function FG:ConfigureRowButton(btn, match)
       GameTooltip:AddLine("Available: Level " .. (d.minLevel or "1") .. "+", 0.4, 0.8, 1.0)
       GameTooltip:AddLine("Recommended: Level " .. (d.recLevel or "?"), 0.2, 1.0, 0.4)
       GameTooltip:AddLine("Zone: " .. (d.zone or "Various"), 0.8, 0.8, 0.9)
-      if d.coords and d.coords ~= "" then GameTooltip:AddLine("Coords: " .. d.coords, 0.2, 1, 0.2) end
+      if d.coords and d.coords ~= "" then GameTooltip:AddLine("Entrance: " .. d.coords, 0.2, 1, 0.2) end
       if d.strategy and d.strategy ~= "" then
         GameTooltip:AddLine(" ")
         GameTooltip:AddLine("Tactics: " .. d.strategy, 0.8, 0.8, 0.8, true)
@@ -1805,7 +2026,7 @@ function FG:ConfigureRowButton(btn, match)
 
     if btn.IconFrame then
       btn.IconFrame:Show()
-      btn.Icon:SetTexture("Interface\\Icons\\inv_misc_bag_07")
+      btn.Icon:SetTexture(FG:GetVendorIcon(v))
       btn.IconFrame:SetBackdropBorderColor(0.4, 0.8, 0.5, 0.9)
     end
     btn.Title:ClearAllPoints()
@@ -2903,7 +3124,7 @@ function FG:ShowDetailPanel(entityType, data)
 
   if entityType == "quest" then
     if p.HeaderIcon then
-      p.HeaderIcon:SetTexture("Interface\\Icons\\inv_misc_book_07")
+      p.HeaderIcon:SetTexture(FG:GetQuestIcon(data))
       p.HeaderIconFrame:SetBackdropBorderColor(0.9, 0.7, 0.2, 0.9)
     end
     p.Title:SetText("|cffcf52ffQuest Intel|r")
@@ -3029,9 +3250,15 @@ function FG:ShowDetailPanel(entityType, data)
 
   elseif entityType == "creature" then
     if p.HeaderIcon then
-      local cTex = (data.classification == "Boss" or data.classification == "World Boss") and "Interface\\Icons\\inv_misc_head_dragon_01" or ((data.classification == "Elite" or data.classification == "Rare Elite") and "Interface\\Icons\\spell_shadow_summoninfernal" or "Interface\\Icons\\inv_misc_monsterhead_01")
+      local cTex = FG:GetCreatureIcon(data)
       p.HeaderIcon:SetTexture(cTex)
-      p.HeaderIconFrame:SetBackdropBorderColor(1.0, 0.2, 0.2, 1.0)
+      if data.classification == "Boss" or data.classification == "World Boss" then
+        p.HeaderIconFrame:SetBackdropBorderColor(1.0, 0.2, 0.2, 1.0)
+      elseif data.classification == "Elite" or data.classification == "Rare Elite" then
+        p.HeaderIconFrame:SetBackdropBorderColor(1.0, 0.8, 0.2, 1.0)
+      else
+        p.HeaderIconFrame:SetBackdropBorderColor(0.3, 0.6, 0.9, 0.8)
+      end
     end
     p.Title:SetText("|cffcf52ffCreature Intel|r")
     local classColor = (data.classification == "Boss" or data.classification == "Rare Elite") and "ffff4040" or (data.classification == "Elite" and "ffffd24d" or "ff52b8ff")
@@ -3087,7 +3314,7 @@ function FG:ShowDetailPanel(entityType, data)
 
   elseif entityType == "dungeon" then
     if p.HeaderIcon then
-      p.HeaderIcon:SetTexture("Interface\\Icons\\inv_helmet_08")
+      p.HeaderIcon:SetTexture(FG:GetDungeonIcon(data))
       p.HeaderIconFrame:SetBackdropBorderColor(0.7, 0.4, 0.9, 0.9)
     end
     p.Title:SetText("|cffcf52ffDungeon Intel|r")
@@ -3131,7 +3358,7 @@ function FG:ShowDetailPanel(entityType, data)
 
   elseif entityType == "vendor" then
     if p.HeaderIcon then
-      p.HeaderIcon:SetTexture("Interface\\Icons\\inv_misc_bag_07")
+      p.HeaderIcon:SetTexture(FG:GetVendorIcon(data))
       p.HeaderIconFrame:SetBackdropBorderColor(0.4, 0.8, 0.5, 0.9)
     end
     p.Title:SetText("|cffcf52ffVendor Intel|r")

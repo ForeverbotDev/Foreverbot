@@ -244,6 +244,34 @@ class TestVirtualScrollAndNearby(unittest.TestCase):
         self.assertIn('Avail:', self.lua_code)
         self.assertIn('Rec:', self.lua_code)
 
+    def test_17_proper_dynamic_icons(self):
+        """Verify dynamic icon resolver functions and their usage in list rows and detail panel."""
+        self.assertIn('function FG:GetCreatureIcon(c)', self.lua_code)
+        self.assertIn('function FG:GetDungeonIcon(d)', self.lua_code)
+        self.assertIn('function FG:GetVendorIcon(v)', self.lua_code)
+        self.assertIn('function FG:GetQuestIcon(qData)', self.lua_code)
+
+        # Verify creatures use FG:GetCreatureIcon instead of hardcoded murloc head
+        self.assertIn('local cTex = FG:GetCreatureIcon(c)', self.lua_code)
+        self.assertIn('local cTex = FG:GetCreatureIcon(data)', self.lua_code)
+        self.assertIn('btn.Icon:SetTexture(cTex)', self.lua_code)
+
+        # Verify dungeons use FG:GetDungeonIcon
+        self.assertIn('btn.Icon:SetTexture(FG:GetDungeonIcon(d))', self.lua_code)
+        self.assertIn('p.HeaderIcon:SetTexture(FG:GetDungeonIcon(data))', self.lua_code)
+
+        # Verify vendors use FG:GetVendorIcon
+        self.assertIn('btn.Icon:SetTexture(FG:GetVendorIcon(v))', self.lua_code)
+        self.assertIn('p.HeaderIcon:SetTexture(FG:GetVendorIcon(data))', self.lua_code)
+
+        # Verify quests use FG:GetQuestIcon
+        self.assertIn('btn.Icon:SetTexture(FG:GetQuestIcon(qData))', self.lua_code)
+        self.assertIn('p.HeaderIcon:SetTexture(FG:GetQuestIcon(data))', self.lua_code)
+
+        # Verify folders use folder.icon
+        self.assertIn('btn.Icon:SetTexture(folder.icon or', self.lua_code)
+
 
 if __name__ == "__main__":
     unittest.main()
+
