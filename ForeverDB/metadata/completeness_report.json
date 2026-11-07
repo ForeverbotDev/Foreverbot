@@ -1,0 +1,145 @@
+{
+  "report_generated_at": "2026-11-07T15:41:23.821057+00:00",
+  "target_build": "WoW: Forever Beta 1.60.1.70532 (Build 70532)",
+  "overall_status": "COMPLETE (100.00% MATCH)",
+  "summary": {
+    "total_entities_expected": 84447,
+    "total_entities_extracted": 84447,
+    "match_rate_percent": 100.0,
+    "total_relationships_extracted": 558053,
+    "total_community_talents_isolated": 470
+  },
+  "category_details": {
+    "items": {
+      "table_name": "items",
+      "total_records": 19257,
+      "expected_records": 19257,
+      "public_entities": 17812,
+      "internal_entities": 1445,
+      "match_percentage": 100.0
+    },
+    "spells": {
+      "table_name": "spells",
+      "total_records": 31962,
+      "expected_records": 31962,
+      "public_entities": 31594,
+      "internal_entities": 368,
+      "match_percentage": 100.0
+    },
+    "talents": {
+      "table_name": "talents",
+      "total_records": 432,
+      "expected_records": 432,
+      "public_entities": 432,
+      "internal_entities": 0,
+      "match_percentage": 100.0
+    },
+    "itemsets": {
+      "table_name": "item_sets",
+      "total_records": 536,
+      "expected_records": 536,
+      "public_entities": 536,
+      "internal_entities": 0,
+      "match_percentage": 100.0
+    },
+    "enchantments": {
+      "table_name": "enchantments",
+      "total_records": 2217,
+      "expected_records": 2217,
+      "public_entities": 2216,
+      "internal_entities": 1,
+      "match_percentage": 100.0
+    },
+    "quests": {
+      "table_name": "quests",
+      "total_records": 7387,
+      "expected_records": 7387,
+      "public_entities": 6126,
+      "internal_entities": 1261,
+      "match_percentage": 100.0
+    },
+    "npcs": {
+      "table_name": "npcs",
+      "total_records": 10483,
+      "expected_records": 10483,
+      "public_entities": 10122,
+      "internal_entities": 361,
+      "match_percentage": 100.0
+    },
+    "objects": {
+      "table_name": "objects",
+      "total_records": 9869,
+      "expected_records": 9869,
+      "public_entities": 9822,
+      "internal_entities": 47,
+      "match_percentage": 100.0
+    },
+    "zones": {
+      "table_name": "zones",
+      "total_records": 1375,
+      "expected_records": 1375,
+      "public_entities": 1362,
+      "internal_entities": 13,
+      "match_percentage": 100.0
+    },
+    "dungeons": {
+      "table_name": "dungeons",
+      "total_records": 40,
+      "expected_records": 40,
+      "public_entities": 39,
+      "internal_entities": 1,
+      "match_percentage": 100.0
+    },
+    "factions": {
+      "table_name": "factions",
+      "total_records": 253,
+      "expected_records": 253,
+      "public_entities": 249,
+      "internal_entities": 4,
+      "match_percentage": 100.0
+    },
+    "achievements": {
+      "table_name": "achievements",
+      "total_records": 441,
+      "expected_records": 441,
+      "public_entities": 440,
+      "internal_entities": 1,
+      "match_percentage": 100.0
+    },
+    "classes": {
+      "table_name": "classes",
+      "total_records": 9,
+      "expected_records": 9,
+      "public_entities": 9,
+      "internal_entities": 0,
+      "match_percentage": 100.0
+    },
+    "races": {
+      "table_name": "races",
+      "total_records": 32,
+      "expected_records": 32,
+      "public_entities": 32,
+      "internal_entities": 0,
+      "match_percentage": 100.0
+    },
+    "skills": {
+      "table_name": "skills",
+      "total_records": 154,
+      "expected_records": 154,
+      "public_entities": 151,
+      "internal_entities": 3,
+      "match_percentage": 100.0
+    }
+  },
+  "withheld_data_metrics": {
+    "policy": "Strict fidelity to client database. Withheld fields kept as NULL; never converted to 0.",
+    "total_withheld_items": 7834,
+    "weapons_with_withheld_dps": 1777
+  },
+  "loot_semantic_metrics": {
+    "per_kill_drops": 237825,
+    "shared_table_drops": 151922,
+    "reference_loot": 0,
+    "contributed_sightings": 0
+  }
+}

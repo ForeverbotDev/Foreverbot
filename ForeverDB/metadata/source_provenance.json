@@ -1,0 +1,41 @@
+{
+  "dataset_name": "World of Warcraft: Forever Master Database",
+  "generated_at": "2026-11-07T15:41:23.872217+00:00",
+  "primary_target": {
+    "website": "https://foreverdiff.gg/",
+    "build_name": "wow_classic_beta",
+    "build_version": "1.60.1.70532",
+    "build_id": 70532,
+    "cdn_endpoint": "https://kabltd6cwecga8ve.public.blob.vercel-storage.com/builds/wow_classic_beta/1.60.1.70532/",
+    "master_metadata_url": "https://kabltd6cwecga8ve.public.blob.vercel-storage.com/builds/wow_classic_beta/1.60.1.70532/meta.json"
+  },
+  "layers": [
+    {
+      "layer_name": "Blizzard Client Database Tables",
+      "scope": "All items, spells, talents, itemsets, enchantments, achievements, classes, races, skills",
+      "authority": "Official Forever Beta client datamined build",
+      "proprietary_note": "Directly extracted from client tables. Withheld fields (DPS, durability) preserved as withheld."
+    },
+    {
+      "layer_name": "World Layer (pfQuest)",
+      "scope": "NPC locations, spawns, vendor inventories, quest objectives, gameobjects, zone coordinates",
+      "source_repository": "https://github.com/shagu/pfQuest",
+      "commit_hash": "104f35678ca39ab1fb78b655f815cc7016f5e0c8",
+      "licence": "MIT License",
+      "semantics": {
+        "plain_number": "Per-kill observed drop chance",
+        "share": "Share of shared loot table",
+        "ref": "Reference loot from database without drop rate data",
+        "seen": "Contributed sighting (<5 kills observed)"
+      }
+    },
+    {
+      "layer_name": "Community Talent Preview",
+      "scope": "Community preview talent trees for 9 classes (470 talents)",
+      "source": "https://wowforevertalents.com",
+      "curator": "Milenkas",
+      "basis": "BlizzCon show-floor gameplay footage",
+      "storage_policy": "Strictly segregated in metadata/community_preview/talents_community_preview.json; excluded from authoritative database tables."
+    }
+  ]
+}

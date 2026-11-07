@@ -1,0 +1,109 @@
+{
+  "manifest_version": "1.0",
+  "generated_at": "2026-11-07T15:41:22.848607+00:00",
+  "build_identifier": "wow_classic_beta-1.60.1.70532",
+  "build_id": 70532,
+  "database": {
+    "path": "database/forever_master.sqlite",
+    "size_bytes": 168165376,
+    "sha256": "3cb188685f47e33b9c26662a0b8ab178503b665c87522cfe365474f71e8be1d7",
+    "total_records": 84447,
+    "total_relationships": 558053,
+    "category_counts": {
+      "items": 19257,
+      "spells": 31962,
+      "talents": 432,
+      "itemsets": 536,
+      "enchantments": 2217,
+      "quests": 7387,
+      "npcs": 10483,
+      "objects": 9869,
+      "zones": 1375,
+      "dungeons": 40,
+      "factions": 253,
+      "achievements": 441,
+      "classes": 9,
+      "races": 32,
+      "skills": 154
+    },
+    "relationship_counts": {
+      "rel_npc_drops": 389747,
+      "rel_vendor_sells": 13839,
+      "rel_quest_items": 3896,
+      "rel_quest_npcs": 7975,
+      "rel_quest_objects": 556,
+      "rel_object_items": 5954,
+      "rel_quest_chains": 5170,
+      "rel_dungeon_bosses": 339,
+      "rel_dungeon_loot": 2744,
+      "rel_item_set_pieces": 3069,
+      "rel_zone_spawns": 124764
+    }
+  },
+  "exports": {
+    "items.json": {
+      "size_bytes": 50529816,
+      "sha256": "06aa72bbcaa18cdf070c7f26ac686796ec14058076b0ee3756af2ddf9f30757b"
+    },
+    "spells.json": {
+      "size_bytes": 44427540,
+      "sha256": "0bbe2185c3a1dd2a83e77bbd873f38ab08259e917f594bdfe5f0a3109bc2f9fc"
+    },
+    "talents.json": {
+      "size_bytes": 418155,
+      "sha256": "f8f36f9f82bbea135eb60ddf8bc220547c0ef895c52ddee5f18f7b1ad0f76ec1"
+    },
+    "item_sets.json": {
+      "size_bytes": 646471,
+      "sha256": "f45767a841b6c567245174fc4d3b21f7c77c054e46fb5c5fdd696e07a803653c"
+    },
+    "enchantments.json": {
+      "size_bytes": 1601033,
+      "sha256": "ad72c56ee6338d64106f4df36eda103cfab74098af1da02c24deb408630459b8"
+    },
+    "quests.json": {
+      "size_bytes": 14054229,
+      "sha256": "c6130843eef7f39c8bc21658408bab729f212ff9d1141d6fe008f29922b78991"
+    },
+    "npcs.json": {
+      "size_bytes": 58093372,
+      "sha256": "794701c3b5a03fc86ddc24fccbfaf330ddf4f98ae538c7593500b0b1252bf958"
+    },
+    "objects.json": {
+      "size_bytes": 11552392,
+      "sha256": "164fc126175da52ee4771bee0ce315feac02af43a16594a5f9c3e913782b2b26"
+    },
+    "zones.json": {
+      "size_bytes": 1128101,
+      "sha256": "8101d3d5b0a82fead7ee807680ed76c7fad54cf201cb2fb4189f8c3bd1bf865d"
+    },
+    "dungeons.json": {
+      "size_bytes": 426048,
+      "sha256": "d44884f08180960c223082f0db7dd37b42c4f700189e357de2dff80dcd0821d4"
+    },
+    "factions.json": {
+      "size_bytes": 117404,
+      "sha256": "2e21b72daed8cf01f6d4f5fd9233f93a5b89e5fda56bf4788157263288745cd7"
+    },
+    "achievements.json": {
+      "size_bytes": 239647,
+      "sha256": "7dce23c139e29f86d9f25946a03cd68d182050b635e538f49461aaa7aa52fcfd"
+    },
+    "classes.json": {
+      "size_bytes": 6195,
+      "sha256": "4ba23f62a264e3a2e392a968983fdb8ebf4d6b79f56bb8de0a279c036a107258"
+    },
+    "races.json": {
+      "size_bytes": 10086,
+      "sha256": "858e701e973f66fb1aecedb0c9de72eea26c7e84239a77ae7bacd494d75d40b9"
+    },
+    "skills.json": {
+      "size_bytes": 125106,
+      "sha256": "4a6760e4e80f44c1e2bd41b5c3daf3121f84009792dc5a0c183945851d94762f"
+    },
+    "relationships.json": {
+      "size_bytes": 113884055,
+      "sha256": "f98c940881469eedf0422eb66d06eea00c1554cf03eb5b6ee0820f44e5885ee2"
+    }
+  }
+}

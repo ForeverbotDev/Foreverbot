@@ -21,4 +21,6 @@ dist/
 *.zip
 scripts/raw_data/
 scripts/output/
-
+ForeverDB/database/*.sqlite
+ForeverDB/raw_shards/
+ForeverDB/exports/

@@ -1,0 +1,304 @@
+{
+  "product": "wow_classic_beta",
+  "version": "1.60.1.70532",
+  "key": "wow_classic_beta-1.60.1.70532",
+  "buildId": 70532,
+  "buildName": "WOW-70532patch1.60.1_Beta",
+  "buildConfig": "ad1802f4455e427ed8b7769aab25b0c0",
+  "cdnConfig": "ccc89ec4bcc03f6cc1cc1c7861d9ed0f",
+  "extractedAt": "2026-10-22T19:13:28.5359525Z",
+  "builtAt": "2026-10-22T19:14:55Z",
+  "tables": {
+    "requested": 122,
+    "ok": 119,
+    "failed": [
+      "ItemRandomProperties",
+      "ItemRandomSuffix",
+      "SpellDispelType"
+    ],
+    "absent": [],
+    "encrypted": [
+      {
+        "table": "Item",
+        "sections": 16,
+        "ids": 94
+      },
+      {
+        "table": "ItemSparse",
+        "sections": 15,
+        "ids": 89
+      },
+      {
+        "table": "ItemEffect",
+        "sections": 12,
+        "ids": 55
+      },
+      {
+        "table": "ItemDisplayInfo",
+        "sections": 7,
+        "ids": 19
+      },
+      {
+        "table": "ItemAppearance",
+        "sections": 7,
+        "ids": 17
+      },
+      {
+        "table": "ItemModifiedAppearance",
+        "sections": 7,
+        "ids": 19
+      },
+      {
+        "table": "ItemNameDescription",
+        "sections": 1,
+        "ids": 1
+      },
+      {
+        "table": "SpellItemEnchantment",
+        "sections": 1,
+        "ids": 1
+      },
+      {
+        "table": "Lock",
+        "sections": 1,
+        "ids": 3
+      },
+      {
+        "table": "TotemCategory",
+        "sections": 1,
+        "ids": 1
+      },
+      {
+        "table": "ItemSearchName",
+        "sections": 7,
+        "ids": 19
+      },
+      {
+        "table": "ItemXItemEffect",
+        "sections": 12,
+        "ids": 50
+      },
+      {
+        "table": "SpellName",
+        "sections": 14,
+        "ids": 971
+      },
+      {
+        "table": "Spell",
+        "sections": 14,
+        "ids": 971
+      },
+      {
+        "table": "SpellMisc",
+        "sections": 14,
+        "ids": 968
+      },
+      {
+        "table": "SpellEffect",
+        "sections": 14,
+        "ids": 1330
+      },
+      {
+        "table": "SpellCategories",
+        "sections": 12,
+        "ids": 352
+      },
+      {
+        "table": "SpellCooldowns",
+        "sections": 9,
+        "ids": 73
+      },
+      {
+        "table": "SpellPower",
+        "sections": 2,
+        "ids": 41
+      },
+      {
+        "table": "SpellLevels",
+        "sections": 6,
+        "ids": 164
+      },
+      {
+        "table": "SpellAuraOptions",
+        "sections": 6,
+        "ids": 68
+      },
+      {
+        "table": "SpellClassOptions",
+        "sections": 2,
+        "ids": 9
+      },
+      {
+        "table": "SpellShapeshift",
+        "sections": 1,
+        "ids": 1
+      },
+      {
+        "table": "SpellTargetRestrictions",
+        "sections": 5,
+        "ids": 139
+      },
+      {
+        "table": "SpellInterrupts",
+        "sections": 12,
+        "ids": 322
+      },
+      {
+        "table": "SpellEquippedItems",
+        "sections": 3,
+        "ids": 17
+      },
+      {
+        "table": "SpellReagents",
+        "sections": 4,
+        "ids": 38
+      },
+      {
+        "table": "SpellTotems",
+        "sections": 1,
+        "ids": 2
+      },
+      {
+        "table": "SpellLabel",
+        "sections": 4,
+        "ids": 38
+      },
+      {
+        "table": "SpellAuraRestrictions",
+        "sections": 4,
+        "ids": 17
+      },
+      {
+        "table": "SkillLineAbility",
+        "sections": 8,
+        "ids": 8
+      },
+      {
+        "table": "AreaTable",
+        "sections": 3,
+        "ids": 46
+      },
+      {
+        "table": "Map",
+        "sections": 3,
+        "ids": 8
+      },
+      {
+        "table": "Achievement",
+        "sections": 1,
+        "ids": 55
+      },
+      {
+        "table": "Criteria",
+        "sections": 1,
+        "ids": 66
+      },
+      {
+        "table": "QuestV2",
+        "sections": 5,
+        "ids": 92
+      },
+      {
+        "table": "Creature",
+        "sections": 6,
+        "ids": 10
+      },
+      {
+        "table": "CreatureDisplayInfo",
+        "sections": 10,
+        "ids": 25
+      },
+      {
+        "table": "GameObjectDisplayInfo",
+        "sections": 2,
+        "ids": 11
+      },
+      {
+        "table": "LFGDungeons",
+        "sections": 1,
+        "ids": 5
+      },
+      {
+        "table": "DungeonEncounter",
+        "sections": 3,
+        "ids": 57
+      },
+      {
+        "table": "MapDifficulty",
+        "sections": 1,
+        "ids": 4
+      },
+      {
+        "table": "PlayerCondition",
+        "sections": 3,
+        "ids": 59
+      },
+      {
+        "table": "GlobalStrings",
+        "sections": 1,
+        "ids": 1
+      },
+      {
+        "table": "Mount",
+        "sections": 3,
+        "ids": 3
+      }
+    ]
+  },
+  "degraded": [
+    "Quest text comes from the pfquest-vanilla world layer: 4433 of 7387 quests in this build carry a title and objectives; the rest are client ids with no text yet.",
+    "NPC names, levels, spawns and drops come from the pfquest-vanilla world layer: 10483 NPCs, 6713 of them placed on a map. The Classic client database ships 184 Creature row(s).",
+    "SpellDispelType"
+  ],
+  "internal": {
+    "items": 1445,
+    "spells": 368,
+    "enchantments": 1,
+    "zones": 13,
+    "factions": 4,
+    "achievements": 1,
+    "skills": 3,
+    "quests": 1261,
+    "npcs": 361,
+    "objects": 47,
+    "dungeons": 1
+  },
+  "world": {
+    "key": "pfquest-vanilla",
+    "source": "pfQuest",
+    "licence": "MIT",
+    "commit": "104f35678ca39ab1fb78b655f815cc7016f5e0c8"
+  },
+  "spellStats": {
+    "spells": 31962,
+    "withDescription": 17768,
+    "withUnresolvedTokens": 422,
+    "unresolvedRate": 0.0238
+  },
+  "icons": {
+    "converted": 0,
+    "cached": 4722,
+    "failed": 28
+  },
+  "buildSeconds": 86.2,
+  "schemaVersion": 2,
+  "counts": {
+    "items": 19257,
+    "spells": 31962,
+    "talents": 432,
+    "itemsets": 536,
+    "enchantments": 2217,
+    "zones": 1375,
+    "factions": 253,
+    "achievements": 441,
+    "classes": 9,
+    "races": 32,
+    "skills": 154,
+    "quests": 7387,
+    "npcs": 10483,
+    "objects": 9869,
+    "dungeons": 40
+  },
+  "shard": 250,
+  "searchUnshardable": 3
+}

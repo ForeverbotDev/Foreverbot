@@ -60,12 +60,29 @@ def package():
     print(f"  -> {zip_path} ({size_mb:.2f} MB)")
 
     # Build AlphaOpen distribution packages requested by user
-    alpha_open_path = os.path.join(DIST_DIR, "AlphaOpen.zip")
-    fg_alpha_open_path = os.path.join(DIST_DIR, "ForeverGuide-AlphaOpen.zip")
-    shutil.copy2(zip_path, alpha_open_path)
-    shutil.copy2(zip_path, fg_alpha_open_path)
-    print(f"  -> {alpha_open_path} ({size_mb:.2f} MB)")
-    print(f"  -> {fg_alpha_open_path} ({size_mb:.2f} MB)")
+    dist_aliases = [
+        "ForeverGuide.zip",
+        "ForeverGuide-latest.zip",
+        "AlphaOpen.zip",
+        "ForeverGuide-AlphaOpen.zip",
+    ]
+    for alias in dist_aliases:
+        dest = os.path.join(DIST_DIR, alias)
+        shutil.copy2(zip_path, dest)
+        print(f"  -> {dest} ({size_mb:.2f} MB)")
+
+    # User download folders
+    user_dirs = [
+        "/home/s1l3nt/Desktop",
+        "/home/s1l3nt/Downloads",
+        "/home/s1l3nt/Public",
+    ]
+    for udir in user_dirs:
+        if os.path.exists(udir):
+            for fname in [f"ForeverGuide-v{version}.zip", "ForeverGuide.zip", "AlphaOpen.zip", "ForeverGuide-AlphaOpen.zip"]:
+                target_file = os.path.join(udir, fname)
+                shutil.copy2(zip_path, target_file)
+                print(f"  [Deployed to user folder] -> {target_file}")
 
 
 if __name__ == "__main__":
