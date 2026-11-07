@@ -63,10 +63,10 @@ class TestAlphabeticalAndZoneMenus(unittest.TestCase):
 
     def test_06_folder_tree_alphabetical_order(self):
         """Verify root, items/weapons, creatures, and dungeons folders are declared in alphabetical order."""
-        # In root: Creatures, Dungeons, Items, Nearby, Quests, Vendors, [Forever]
+        # In root: Creatures, Dungeons, Items, Nearby, Quests, Spells, Vendors, [Forever]
         root_block = self.lua_code[self.lua_code.find('["root"] = {'):self.lua_code.find('["nearby"] = {')]
         names = re.findall(r'name = "([^"]+)"', root_block)
-        expected = ["Creatures & Bosses", "Dungeons & Raids", "Items & Equipment", "Nearby Area Intel (Zone Radar)", "Quests", "Vendors & Flight Paths", "[Forever] Warcraft Forever Exclusives"]
+        expected = ["Creatures & Bosses", "Dungeons & Raids", "Items & Equipment", "Nearby Area Intel (Zone Radar)", "Quests", "Spells & Abilities", "Vendors & Flight Paths", "[Forever] Warcraft Forever Exclusives"]
         self.assertEqual(names, expected)
 
 

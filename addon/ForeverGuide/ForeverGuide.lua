@@ -215,6 +215,15 @@ SlashCmdList["FOREVERGUIDE"] = function(msg)
   elseif cmd == "raid" then
     FG:CmdRaid(rest)
 
+  -- Spells & Abilities (/spark spell <query> or /spark spells <query>)
+  elseif cmd == "spell" or cmd == "spells" or cmd == "ability" or cmd == "abilities" then
+    if not FG.CodexWindow then FG:CreateCodexWindow() end
+    FG.CodexWindow:Show()
+    FG:SetActiveCategory("spells")
+    if rest ~= "" and ForeverGuideSearchBox then
+      ForeverGuideSearchBox:SetText(rest)
+    end
+
   -- 6. Attunements (/spark attunement <raid>)
   elseif cmd == "attunement" or cmd == "attune" then
     FG:CmdAttunement(rest)
@@ -2336,6 +2345,20 @@ function FG:GetFolderIcon(folder)
   if path == "items/armor" or name == "armor" then return "Interface\\Icons\\INV_Chest_Plate03" end
   if path == "items" or name:find("item") then return "Interface\\Icons\\INV_Sword_04" end
 
+  -- 12. Spells & Class Abilities
+  if path:find("spells/druid") then return "Interface\\Icons\\Ability_Druid_Maul" end
+  if path:find("spells/hunter") then return "Interface\\Icons\\INV_Weapon_Bow_07" end
+  if path:find("spells/mage") then return "Interface\\Icons\\Spell_Fire_FlameBolt" end
+  if path:find("spells/paladin") then return "Interface\\Icons\\Spell_Holy_HolyBolt" end
+  if path:find("spells/priest") then return "Interface\\Icons\\Spell_Holy_PowerWordShield" end
+  if path:find("spells/rogue") then return "Interface\\Icons\\Ability_Stealth" end
+  if path:find("spells/shaman") then return "Interface\\Icons\\Spell_Nature_Lightning" end
+  if path:find("spells/warlock") then return "Interface\\Icons\\Spell_Shadow_CurseOfTounges" end
+  if path:find("spells/warrior") then return "Interface\\Icons\\Ability_Warrior_OffensiveStance" end
+  if path:find("spells/racials") then return "Interface\\Icons\\Spell_Nature_Windfury" end
+  if path:find("spells/forever") then return "Interface\\Icons\\Spell_Holy_MagicalSentry" end
+  if path:find("spell") or name:find("spell") or name:find("ability") then return "Interface\\Icons\\Spell_Holy_MagicalSentry" end
+
   return "Interface\\Icons\\INV_Misc_Bag_08"
 end
 
@@ -2790,6 +2813,83 @@ function FG:ConfigureRowButton(btn, match)
         FG:PlaySparkSound("shimmer")
       end
     end)
+
+  elseif match.type == "spell" then
+    local s = match.data
+    btn:SetHeight(50)
+    btn:SetBackdropColor(0.10, 0.12, 0.16, 0.90)
+    btn:SetBackdropBorderColor(0.18, 0.24, 0.33, 0.70)
+    btn.Hint:SetText("|cffcf52ffInspect >|r")
+    if btn.InspectBtn then
+      btn.InspectBtn:Show()
+      btn.InspectBtn.onClick = nil
+      btn.InspectBtn.entityType = "spell"
+      btn.InspectBtn.entityData = s
+    end
+
+    if btn.IconFrame then
+      btn.IconFrame:Show()
+      local sIcon = s.icon
+      if not sIcon or sIcon == "" then
+        if C_Spell and C_Spell.GetSpellInfo then
+          local info = C_Spell.GetSpellInfo(s.id)
+          if info and info.iconID then sIcon = info.iconID end
+        elseif GetSpellInfo then
+          local _, _, icon = GetSpellInfo(s.id)
+          if icon then sIcon = icon end
+        end
+      end
+      btn.Icon:SetTexture(sIcon or "Interface\\Icons\\INV_Misc_Book_09")
+      btn.IconFrame:SetBackdropBorderColor(0.55, 0.22, 0.85, 0.9)
+    end
+    btn.Title:ClearAllPoints()
+    btn.Title:SetPoint("TOPLEFT", btn, "TOPLEFT", 48, -6)
+    btn.Title:SetPoint("RIGHT", btn, "RIGHT", -78, 0)
+    btn.Title:SetJustifyH("LEFT")
+    btn.Title:SetWordWrap(false)
+    btn.Sub:ClearAllPoints()
+    btn.Sub:SetPoint("TOPLEFT", btn.Title, "BOTTOMLEFT", 0, -2)
+    btn.Sub:SetPoint("RIGHT", btn, "RIGHT", -78, 0)
+    btn.Sub:SetHeight(15)
+    btn.Sub:SetJustifyH("LEFT")
+    btn.Sub:SetWordWrap(false)
+
+    local rankStr = (s.rank and s.rank ~= "") and (" |cff7e8c9e(" .. s.rank .. ")|r") or ""
+    local foreverTag = s.isForever and " |cffe6cc80[Forever]|r" or ""
+    btn.Title:SetText("|cffc084fc" .. (s.name or "Spell") .. "|r" .. rankStr .. foreverTag)
+
+    local parts = {}
+    if s.class and s.class ~= "" then
+      table.insert(parts, "|cff38bdf8" .. s.class .. "|r")
+    end
+    if s.reqLevel and s.reqLevel > 0 then
+      table.insert(parts, "|cff22c55eLevel " .. s.reqLevel .. "|r")
+    end
+    if s.cost and s.cost ~= "" then
+      table.insert(parts, "|cff94a3b8" .. s.cost .. "|r")
+    end
+    if s.castTime and s.castTime ~= "" then
+      table.insert(parts, "|cff8ba5cc" .. s.castTime .. "|r")
+    end
+    btn.Sub:SetText(table.concat(parts, " |cff475569·|r "))
+
+    btn:SetScript("OnEnter", function(self)
+      self:SetBackdropColor(0.14, 0.18, 0.26, 0.95)
+      self:SetBackdropBorderColor(0.55, 0.25, 0.90, 0.90)
+    end)
+    btn:SetScript("OnLeave", function(self)
+      self:SetBackdropColor(0.10, 0.12, 0.16, 0.90)
+      self:SetBackdropBorderColor(0.18, 0.24, 0.33, 0.70)
+      GameTooltip:Hide()
+    end)
+    btn:SetScript("OnClick", function()
+      if IsShiftKeyDown() then
+        FG:LinkEntityToChat("spell", s)
+      else
+        FG:ShowDetailPanel("spell", s)
+        FG:PlaySparkSound("shimmer")
+      end
+    end)
   end
 end
 
@@ -3215,7 +3315,7 @@ function FG:CreateCodexWindow()
   closeBtn:SetScript("OnClick", function() f:Hide() end)
 
   local searchBox = CreateFrame("EditBox", "ForeverGuideSearchBox", f, "InputBoxTemplate")
-  searchBox:SetSize(190, 24)
+  searchBox:SetSize(145, 24)
   searchBox:SetPoint("TOPLEFT", divider, "BOTTOMLEFT", 6, -10)
   searchBox:SetAutoFocus(false)
   searchBox:SetFontObject("ChatFontNormal")
@@ -3327,13 +3427,14 @@ function FG:CreateCodexWindow()
     return btn
   end
 
-  local allBtn    = CreateCategoryPill("all", "All", 36, 8, searchBox)
+  local allBtn    = CreateCategoryPill("all", "All", 32, 6, searchBox)
   local nearbyBtn = CreateCategoryPill("nearby", "Nearby", 52, 4, allBtn)
-  local itemsBtn  = CreateCategoryPill("items", "Items", 42, 4, nearbyBtn)
-  local questBtn  = CreateCategoryPill("quests", "Quests", 50, 4, itemsBtn)
-  local mobBtn    = CreateCategoryPill("creatures", "Mobs", 42, 4, questBtn)
-  local dungBtn   = CreateCategoryPill("dungeons", "Dungeons", 62, 4, mobBtn)
-  local npcBtn    = CreateCategoryPill("vendors", "NPCs", 44, 4, dungBtn)
+  local itemsBtn  = CreateCategoryPill("items", "Items", 38, 3, nearbyBtn)
+  local questBtn  = CreateCategoryPill("quests", "Quests", 46, 3, itemsBtn)
+  local mobBtn    = CreateCategoryPill("creatures", "Mobs", 38, 3, questBtn)
+  local dungBtn   = CreateCategoryPill("dungeons", "Dungeons", 58, 3, mobBtn)
+  local npcBtn    = CreateCategoryPill("vendors", "NPCs", 40, 3, dungBtn)
+  local spellBtn  = CreateCategoryPill("spells", "Spells", 42, 3, npcBtn)
 
   -- Bottom status bar / footer
   local botDivider = f:CreateTexture(nil, "ARTWORK")
@@ -3581,6 +3682,7 @@ function FG:SetActiveCategory(cat)
     ["creatures"] = "creatures",
     ["dungeons"] = "dungeons",
     ["vendors"] = "vendors",
+    ["spells"] = "spells",
   }
   local q = ForeverGuideSearchBox and ForeverGuideSearchBox:GetText():trim() or ""
   if q == "" then
@@ -3710,6 +3812,9 @@ function FG:LinkEntityToChat(entityType, data)
     text = "[Dungeon: " .. (data.name or "") .. " (Lvl " .. (data.recLevel or "?") .. ", " .. (data.zone or "") .. ")]"
   elseif entityType == "vendor" then
     text = "[Vendor: " .. (data.name or "") .. " (" .. (data.zone or "") .. " sells " .. (data.item or "") .. ")]"
+  elseif entityType == "spell" then
+    local rankStr = (data.rank and data.rank ~= "") and (" (" .. data.rank .. ")") or ""
+    text = "[Spell: " .. (data.name or "Ability") .. rankStr .. " (Lvl " .. (data.reqLevel or "?") .. " " .. (data.class or "") .. ")]"
   end
 
   if ChatEdit_InsertLink and ChatEdit_InsertLink(text) then
@@ -4228,6 +4333,58 @@ function FG:ShowDetailPanel(entityType, data)
       AddSection("VENDOR NOTES")
       AddLine(data.tip, 11, 0.85, 0.85, 0.85, 6)
     end
+
+  elseif entityType == "spell" then
+    local sIcon = data.icon
+    if not sIcon or sIcon == "" then
+      if C_Spell and C_Spell.GetSpellInfo then
+        local info = C_Spell.GetSpellInfo(data.id)
+        if info and info.iconID then sIcon = info.iconID end
+      elseif GetSpellInfo then
+        local _, _, icon = GetSpellInfo(data.id)
+        if icon then sIcon = icon end
+      end
+    end
+    if p.HeaderIcon then
+      p.HeaderIcon:SetTexture(sIcon or "Interface\\Icons\\INV_Misc_Book_09")
+      p.HeaderIconFrame:SetBackdropBorderColor(0.65, 0.35, 1.0, 0.9)
+    end
+    p.Title:SetText("|cffcf52ffSpell & Ability Intel|r")
+    local rankStr = (data.rank and data.rank ~= "") and (" |cff7e8c9e(" .. data.rank .. ")|r") or ""
+    local foreverTag = data.isForever and " |cffe6cc80[Forever Alpha]|r" or ""
+    AddLine("|cffc084fc" .. (data.name or "Spell") .. "|r" .. rankStr .. foreverTag, 15, nil, nil, nil, 6)
+
+    AddLine("Class: |cff38bdf8" .. (data.class or "All") .. "|r  ·  Required: |cff22c55eLevel " .. (data.reqLevel or 1) .. "|r", 12)
+    if data.id and data.id > 0 then
+      AddLine("Spell ID: |cff94a3b8" .. data.id .. "|r", 11)
+    end
+
+    AddSection("CASTING & RESOURCE")
+    local costStr = (data.cost and data.cost ~= "") and data.cost or "None / Passive"
+    local castStr = (data.castTime and data.castTime ~= "") and data.castTime or "Instant"
+    local rangeStr = (data.range and data.range ~= "") and data.range or "Melee / Self"
+    AddLine("Cost: |cffffffff" .. costStr .. "|r", 12)
+    AddLine("Cast Time: |cff8ba5cc" .. castStr .. "|r  ·  Range: |cff38bdf8" .. rangeStr .. "|r", 12)
+    if data.cooldown and data.cooldown ~= "" then
+      AddLine("Cooldown: |cffffd100" .. data.cooldown .. "|r", 12)
+    end
+
+    AddSection("EFFECT & TOOLTIP")
+    local descText = data.desc
+    if (not descText or descText == "") and C_Spell and C_Spell.GetSpellDescription then
+      descText = C_Spell.GetSpellDescription(data.id)
+    elseif (not descText or descText == "") and GetSpellDescription then
+      descText = GetSpellDescription(data.id)
+    end
+    if not descText or descText == "" then
+      descText = (data.class or "") .. " ability learned at level " .. (data.reqLevel or 1) .. "."
+    end
+    AddLine(descText, 11, 0.85, 0.90, 0.95, 6)
+
+    if data.isForever then
+      AddSection("WARCRAFT FOREVER ALPHA NOTES")
+      AddLine("This ability or talent is custom created or reworked specifically for Warcraft Forever Alpha. Verified from client build data and patch notes.", 11, 1.0, 0.85, 0.40, 6)
+    end
   end
 
   p.Body:SetHeight(math.max(420, math.abs(yOffset) + 20))
@@ -4279,6 +4436,7 @@ FG.FolderTree = {
       { path = "items", name = "Items & Equipment", desc = "Weapons, Armor, Reagents, Recipes & Server Gear", icon = "Interface\\Icons\\INV_Sword_04" },
       { path = "nearby", name = "Nearby Area Intel (Zone Radar)", desc = "Live radar: local mobs, quests, vendors & loot in current zone", icon = "Interface\\Icons\\Ability_Tracking" },
       { path = "quests", name = "Quests", desc = "By Continent, Zone, Class, & Dungeon", icon = "Interface\\Icons\\INV_Misc_Book_07" },
+      { path = "spells", name = "Spells & Abilities", desc = "Class abilities, ranks, Alpha talents & racial traits", icon = "Interface\\Icons\\Spell_Holy_MagicalSentry" },
       { path = "vendors", name = "Vendors & Flight Paths", desc = "Flight Masters, PvP Quartermasters & Reagents", icon = "Interface\\Icons\\Ability_Hunter_EagleEye" },
       { path = "forever", name = "[Forever] Warcraft Forever Exclusives", desc = "Exclusive items, quests, NPCs & dungeons", icon = "Interface\\Icons\\Spell_Holy_MagicalSentry" },
     },
@@ -4627,6 +4785,26 @@ FG.FolderTree = {
     },
   },
 
+  -- SPELLS & ABILITIES HIERARCHY
+  ["spells"] = {
+    title = "Spells & Abilities",
+    parent = "root",
+    folders = {
+      { path = "spells/druid", name = "Druid", desc = "Druid class spells, forms & talents", icon = "Interface\\Icons\\Ability_Druid_Maul" },
+      { path = "spells/hunter", name = "Hunter", desc = "Hunter shots, traps, aspects & pets", icon = "Interface\\Icons\\INV_Weapon_Bow_07" },
+      { path = "spells/mage", name = "Mage", desc = "Arcane, Fire, and Frost spells", icon = "Interface\\Icons\\Spell_Fire_FlameBolt" },
+      { path = "spells/paladin", name = "Paladin", desc = "Holy, Protection & Retribution seals", icon = "Interface\\Icons\\Spell_Holy_HolyBolt" },
+      { path = "spells/priest", name = "Priest", desc = "Discipline, Holy & Shadow prayers", icon = "Interface\\Icons\\Spell_Holy_PowerWordShield" },
+      { path = "spells/rogue", name = "Rogue", desc = "Stealth, finishing moves, poisons & Shank", icon = "Interface\\Icons\\Ability_Stealth" },
+      { path = "spells/shaman", name = "Shaman", desc = "Totems, shocks & elemental fury", icon = "Interface\\Icons\\Spell_Nature_Lightning" },
+      { path = "spells/warlock", name = "Warlock", desc = "Curses, demons, afflictions & destruction", icon = "Interface\\Icons\\Spell_Shadow_CurseOfTounges" },
+      { path = "spells/warrior", name = "Warrior", desc = "Stances, shouts, strikes & rage abilities", icon = "Interface\\Icons\\Ability_Warrior_OffensiveStance" },
+      { path = "spells/racials", name = "Racial Traits & Passives", desc = "Skyborne, Dwarf, Human, Orc, Tauren, Undead, Gnome, Troll", icon = "Interface\\Icons\\Spell_Nature_Windfury" },
+      { path = "spells/forever", name = "[Forever] Custom & Reworked Spells", desc = "50 custom Alpha abilities, passives & reworks", icon = "Interface\\Icons\\Spell_Holy_MagicalSentry" },
+      { path = "spells/all", name = "[All Spells & Abilities]", desc = "Complete catalog of spells across all classes", icon = "Interface\\Icons\\INV_Misc_Book_09", isAll = true },
+    },
+  },
+
   -- FOREVER EXCLUSIVE CONTENT
   ["forever"] = {
     title = "[Forever] Warcraft Forever Exclusives",
@@ -4636,6 +4814,7 @@ FG.FolderTree = {
       { path = "forever/quests", name = "Forever Quests & Storylines", desc = "Exclusive narrative and story quests", icon = "Interface\\Icons\\INV_Misc_Book_07" },
       { path = "forever/creatures", name = "Forever NPCs & Bosses", desc = "Exclusive encounters and rare mobs", icon = "Interface\\Icons\\INV_Misc_Head_Dragon_01" },
       { path = "forever/dungeons", name = "Forever Dungeons & Raids", desc = "Exclusive instances & progressive raids", icon = "Interface\\Icons\\Spell_Shadow_Teleport" },
+      { path = "forever/spells", name = "Forever Spells & Talents", desc = "50 custom Alpha abilities, racials & reworks", icon = "Interface\\Icons\\Spell_Holy_MagicalSentry" },
     },
   },
 }
@@ -5849,11 +6028,46 @@ function FG:PopulateCodexResults(query)
         for _, d in pairs(FG.Data.Dungeons) do
           if d.isForever then table.insert(matches, { type = "dungeon", data = d }) end
         end
+      elseif sub == "spells" and FG.Data.Spells then
+        for _, s in pairs(FG.Data.Spells) do
+          if s.isForever then table.insert(matches, { type = "spell", data = s }) end
+        end
+      end
+    elseif cur == "spells/all" and FG.Data.Spells then
+      for _, s in pairs(FG.Data.Spells) do
+        table.insert(matches, { type = "spell", data = s })
+      end
+    elseif cur == "spells/forever" and FG.Data.Spells then
+      for _, s in pairs(FG.Data.Spells) do
+        if s.isForever then table.insert(matches, { type = "spell", data = s }) end
+      end
+    elseif cur == "spells/racials" and FG.Data.Spells then
+      for _, s in pairs(FG.Data.Spells) do
+        if s.class == "Racial" then table.insert(matches, { type = "spell", data = s }) end
+      end
+    elseif cur:find("^spells/([^/]+)$") and FG.Data.Spells then
+      local cls = cur:match("^spells/([^/]+)$"):lower()
+      for _, s in pairs(FG.Data.Spells) do
+        if s.class and s.class:lower() == cls then
+          table.insert(matches, { type = "spell", data = s })
+        end
       end
     end
 
   else
     -- Active search query filtered by category
+    if (cat == "all" or cat == "spells") and FG.Data.Spells then
+      for _, s in pairs(FG.Data.Spells) do
+        local matchName = s.name and s.name:lower():find(q, 1, true)
+        local matchClass = s.class and s.class:lower():find(q, 1, true)
+        local matchRank = s.rank and s.rank:lower():find(q, 1, true)
+        local matchDesc = s.desc and s.desc:lower():find(q, 1, true)
+        if matchName or matchClass or matchRank or matchDesc then
+          table.insert(matches, { type = "spell", data = s })
+        end
+      end
+    end
+
     if (cat == "all" or cat == "items") and FG.Data.Items then
       for _, item in pairs(FG.Data.Items) do
         if not FG:IsInternalItem(item.name) and item.name and (item.name:lower():find(q, 1, true) or (item.source and item.source:lower():find(q, 1, true))) then
@@ -5998,8 +6212,8 @@ function FG:PopulateCodexResults(query)
 
     if q ~= "" then
       -- User mandate: All items should be matched first at top!
-      local typeRankA = (a.type == "item" and 1) or (a.type == "quest" and 2) or (a.type == "creature" and 3) or (a.type == "dungeon" and 4) or 5
-      local typeRankB = (b.type == "item" and 1) or (b.type == "quest" and 2) or (b.type == "creature" and 3) or (b.type == "dungeon" and 4) or 5
+      local typeRankA = (a.type == "item" and 1) or (a.type == "spell" and 2) or (a.type == "quest" and 3) or (a.type == "creature" and 4) or (a.type == "dungeon" and 5) or 6
+      local typeRankB = (b.type == "item" and 1) or (b.type == "spell" and 2) or (b.type == "quest" and 3) or (b.type == "creature" and 4) or (b.type == "dungeon" and 5) or 6
       if typeRankA ~= typeRankB then
         return typeRankA < typeRankB
       end
@@ -6021,6 +6235,15 @@ function FG:PopulateCodexResults(query)
         local ilvlA = tonumber(a.data and a.data.ilvl) or 0
         local ilvlB = tonumber(b.data and b.data.ilvl) or 0
         if ilvlA ~= ilvlB then return ilvlA < ilvlB end
+      elseif a.type == "spell" and b.type == "spell" then
+        local nameA = (a.data and a.data.name) or ""
+        local nameB = (b.data and b.data.name) or ""
+        if nameA:lower() ~= nameB:lower() then
+          return nameA:lower() < nameB:lower()
+        end
+        local lvlA = tonumber(a.data and a.data.reqLevel) or 0
+        local lvlB = tonumber(b.data and b.data.reqLevel) or 0
+        if lvlA ~= lvlB then return lvlA < lvlB end
       end
 
       local nameA = (a.data and (a.data.title or a.data.name or "")) or ""
@@ -6034,6 +6257,14 @@ function FG:PopulateCodexResults(query)
       local ilvlB = tonumber(b.data and b.data.ilvl) or 0
       if ilvlA ~= ilvlB then
         return ilvlA < ilvlB
+      end
+    end
+
+    if a.type == "spell" and b.type == "spell" then
+      local lvlA = tonumber(a.data and a.data.reqLevel) or 0
+      local lvlB = tonumber(b.data and b.data.reqLevel) or 0
+      if lvlA ~= lvlB then
+        return lvlA < lvlB
       end
     end
 
