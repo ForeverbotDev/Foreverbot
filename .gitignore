@@ -19,4 +19,6 @@ user_data.db*
 bot_storage.db*
 dist/
 *.zip
+scripts/raw_data/
+scripts/output/
 

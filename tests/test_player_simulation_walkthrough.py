@@ -54,7 +54,7 @@ class TestPlayerSimulationWalkthrough(unittest.TestCase):
         self.assertIn('ForeverGuideDB = ForeverGuideDB or {}', self.lua_code)
         self.assertIn('FG:CreateSparkFrame()', self.lua_code)
         self.assertIn('FG:CreateMinimapButton()', self.lua_code)
-        self.assertIn('radius = 102', self.lua_code)
+        self.assertIn('radius = 80', self.lua_code)
         self.assertIn('btn.UpdatePosition = UpdatePosition', self.lua_code)
         self.assertIn('cmd == "minimap"', self.lua_code)
 

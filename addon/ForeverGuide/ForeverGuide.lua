@@ -28,7 +28,7 @@ local DEFAULT_CONFIG = {
   minimap = {
     hide = false,
     minimapPos = 215,
-    radius = 102,
+    radius = 80,
   },
   sparkPosition = {
     point = "CENTER",
@@ -165,13 +165,13 @@ SlashCmdList["FOREVERGUIDE"] = function(msg)
   -- Minimap Button Placement & Visibility (/spark minimap [outside|reset|hide|show])
   elseif cmd == "minimap" or cmd == "mapbtn" or cmd == "icon" then
     local subCmd = rest:lower()
-    if subCmd == "reset" or subCmd == "outside" or subCmd == "rim" or subCmd == "fix" then
+    if subCmd == "reset" or subCmd == "outside" or subCmd == "rim" or subCmd == "fix" or subCmd == "inline" then
       ForeverGuideDB.minimap = ForeverGuideDB.minimap or {}
-      ForeverGuideDB.minimap.radius = 102
+      ForeverGuideDB.minimap.radius = 80
       if FG.MinimapButton and FG.MinimapButton.UpdatePosition then
         FG.MinimapButton.UpdatePosition(ForeverGuideDB.minimap.minimapPos or 215)
       end
-      print("|cffdf80ff[Sparky]|r Minimap button snapped to outer rim.")
+      print("|cffdf80ff[Sparky]|r Minimap button snapped inline with minimap border (radius 80).")
     elseif subCmd == "hide" or subCmd == "off" then
       if FG.MinimapButton then FG.MinimapButton:Hide() end
       ForeverGuideDB.minimap.hide = true
@@ -6437,9 +6437,9 @@ function FG:CreateMinimapButton()
 
   local function UpdatePosition(angle)
     local rad = math.rad(angle)
-    local defaultRadius = math.max(102, ((Minimap:GetWidth() or 140) / 2) + 32)
+    local defaultRadius = 80
     local radius = (ForeverGuideDB and ForeverGuideDB.minimap and ForeverGuideDB.minimap.radius) or defaultRadius
-    if radius and radius < 95 then
+    if not radius or radius > 90 or radius < 70 then
       radius = defaultRadius
       if ForeverGuideDB and ForeverGuideDB.minimap then
         ForeverGuideDB.minimap.radius = radius
@@ -6550,6 +6550,9 @@ EventFrame:SetScript("OnEvent", function(self, event, arg1, ...)
     end
     ForeverGuideDB.sparkLocked = false
     ForeverGuideDB.sparkClickThrough = false
+    if ForeverGuideDB.minimap and (not ForeverGuideDB.minimap.radius or ForeverGuideDB.minimap.radius > 90 or ForeverGuideDB.minimap.radius < 70) then
+      ForeverGuideDB.minimap.radius = 80
+    end
 
     FG:CreateSparkFrame()
     FG:CreateMinimapButton()
