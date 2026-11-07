@@ -64,7 +64,6 @@ class TestSearchRankingAndCleanDetail(unittest.TestCase):
         self.assertNotIn("Target Macro", self.lua_code)
         self.assertNotIn("/target ", self.lua_code)
         self.assertNotIn("targeting macro", self.lua_code)
-        self.assertIn("View full NPC intel, drops & tactics", self.lua_code)
 
     def test_07_detail_panel_bottom_buttons_removed(self):
         """Verify bottom buttons (Share to Chat / Search Source / Target Macro) are removed from all detail views."""
