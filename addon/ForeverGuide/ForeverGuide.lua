@@ -205,8 +205,8 @@ SlashCmdList["FOREVERGUIDE"] = function(msg)
   elseif cmd == "quest" or cmd == "q" then
     FG:CmdQuest(rest)
 
-  -- 4. NPCs & Bosses (/spark mob <query> or /spark npc <query>)
-  elseif cmd == "mob" or cmd == "npc" or cmd == "boss" then
+  -- 4. Mobs & Bosses (/spark mob <query> or /spark creature <query>)
+  elseif cmd == "mob" or cmd == "mobs" or cmd == "creature" or cmd == "boss" then
     FG:CmdCreature(rest)
 
   -- 5. Dungeons & Raids (/spark dungeon <query> or /spark raid <query>)
@@ -235,8 +235,8 @@ SlashCmdList["FOREVERGUIDE"] = function(msg)
   elseif cmd == "keys" or cmd == "key" then
     FG:CmdKeys(rest)
 
-  -- 11. Vendors (/spark vendor <item>)
-  elseif cmd == "vendor" or cmd == "merchant" then
+  -- 11. NPCs & Vendors (/spark npc <name> or /spark vendor <item>)
+  elseif cmd == "npc" or cmd == "npcs" or cmd == "vendor" or cmd == "merchant" then
     FG:CmdVendor(rest)
 
   -- 12. Flight Paths (/spark flight <zone>)
@@ -3431,9 +3431,9 @@ function FG:CreateCodexWindow()
   local nearbyBtn = CreateCategoryPill("nearby", "Nearby", 52, 4, allBtn)
   local itemsBtn  = CreateCategoryPill("items", "Items", 42, 4, nearbyBtn)
   local questBtn  = CreateCategoryPill("quests", "Quests", 50, 4, itemsBtn)
-  local npcBtn    = CreateCategoryPill("creatures", "NPCs", 42, 4, questBtn)
-  local dungBtn   = CreateCategoryPill("dungeons", "Dungeons", 62, 4, npcBtn)
-  local vendBtn   = CreateCategoryPill("vendors", "Vendors", 54, 4, dungBtn)
+  local mobBtn    = CreateCategoryPill("creatures", "Mobs", 42, 4, questBtn)
+  local dungBtn   = CreateCategoryPill("dungeons", "Dungeons", 62, 4, mobBtn)
+  local npcBtn    = CreateCategoryPill("vendors", "NPCs", 44, 4, dungBtn)
 
   -- Bottom status bar / footer
   local botDivider = f:CreateTexture(nil, "ARTWORK")
