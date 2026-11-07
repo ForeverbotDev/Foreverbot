@@ -74,6 +74,47 @@ class TestSpellsAndDatamine(unittest.TestCase):
         self.assertIn('name = "Wind-Blessed"', self.data_tail)
         self.assertIn('name = "Plainsrunning"', self.data_tail)
 
+    def test_09_aspect_of_the_monkey_official_blizzard_intel(self):
+        """Verify Aspect of the Monkey (13163) has 100% official Blizzard tooltip, cost, icon and mechanics."""
+        with open(DATA_LUA, "r", encoding="utf-8") as f:
+            text = f.read()
+        spells_idx = text.find("ForeverGuide_Data.Spells")
+        self.assertGreater(spells_idx, 0, "Spells table not found")
+        spells_text = text[spells_idx:]
+
+        m = re.search(r"t\[13163\]\s*=\s*\{([\s\S]*?)\}", spells_text)
+        self.assertIsNotNone(m, "Spell 13163 not found in Spells table")
+        block = m.group(1)
+        self.assertIn('name = "Aspect of the Monkey"', block)
+        self.assertIn('class = "Hunter"', block)
+        self.assertIn('cost = "20 Mana"', block)
+        self.assertIn('castTime = "Instant"', block)
+        self.assertIn('range = "100 yd range"', block)
+        self.assertIn('icon = "Interface\\\\Icons\\\\ability_hunter_aspectofthemonkey"', block)
+        self.assertIn('desc = "The hunter takes on the aspects of a monkey, increasing chance to dodge by 8%.  Only one Aspect can be active at a time."', block)
+
+    def test_10_zero_placeholder_spell_descriptions(self):
+        """Verify no dummy 'class ability trained at level' placeholder descriptions exist in data."""
+        with open(DATA_LUA, "r", encoding="utf-8") as f:
+            text = f.read()
+        spells_idx = text.find("ForeverGuide_Data.Spells")
+        spells_text = text[spells_idx:]
+        self.assertEqual(spells_text.count("class ability trained at level"), 0, "Found placeholder spell descriptions in ForeverGuide_Data.Spells")
+
+    def test_11_zero_quadruple_backslashes_in_data(self):
+        """Verify no quadruple backslash texture paths exist in data (would break WoW texture engine)."""
+        with open(DATA_LUA, "r", encoding="utf-8") as f:
+            text = f.read()
+        self.assertEqual(text.count("\\\\\\\\"), 0, "Found double-escaped quadruple backslashes in ForeverGuide_Data.lua")
+
+    def test_12_spell_runtime_helpers_in_addon(self):
+        """Verify FG:GetSpellIcon, FG:GetSpellDescription, and FG:GetSpellCastingInfo exist in ForeverGuide.lua."""
+        self.assertIn("function FG:GetSpellIcon(s)", self.addon_lua)
+        self.assertIn("function FG:GetSpellDescription(s)", self.addon_lua)
+        self.assertIn("function FG:GetSpellCastingInfo(s)", self.addon_lua)
+        self.assertIn("local sIcon = FG:GetSpellIcon(data)", self.addon_lua)
+        self.assertIn("local descText = FG:GetSpellDescription(data)", self.addon_lua)
+
 
 if __name__ == "__main__":
     unittest.main()

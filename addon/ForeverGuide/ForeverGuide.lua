@@ -1748,6 +1748,88 @@ function FG:GetQuestStatus(questID, questTitle)
   return "uncompleted"
 end
 
+function FG:GetSpellIcon(s)
+  if not s then return "Interface\\Icons\\INV_Misc_Book_09" end
+  local sid = s.id
+  if sid and sid > 0 then
+    if C_Spell and C_Spell.GetSpellInfo then
+      local info = C_Spell.GetSpellInfo(sid)
+      if info and info.iconID and info.iconID > 0 then
+        return info.iconID
+      end
+    elseif GetSpellInfo then
+      local _, _, icon = GetSpellInfo(sid)
+      if icon and icon ~= "" then
+        return icon
+      end
+    end
+  end
+  local sIcon = s.icon
+  if sIcon and sIcon ~= "" then
+    sIcon = string.gsub(sIcon, "\\\\+", "\\")
+    if not string.find(sIcon, "[/\\]") then
+      sIcon = "Interface\\Icons\\" .. sIcon
+    end
+    return sIcon
+  end
+  return "Interface\\Icons\\INV_Misc_Book_09"
+end
+
+function FG:GetSpellDescription(s)
+  if not s then return "" end
+  local sid = s.id
+  if sid and sid > 0 then
+    if C_Spell and C_Spell.GetSpellDescription then
+      local d = C_Spell.GetSpellDescription(sid)
+      if d and d ~= "" then return d end
+    elseif GetSpellDescription then
+      local d = GetSpellDescription(sid)
+      if d and d ~= "" then return d end
+    end
+  end
+  local desc = s.desc
+  if desc and desc ~= "" and not string.find(desc, "class ability trained at level") then
+    return desc
+  end
+  return (s.class or "") .. " ability learned at level " .. (s.reqLevel or 1) .. "."
+end
+
+function FG:GetSpellCastingInfo(s)
+  if not s then return "None / Passive", "Instant", "Melee / Self", "" end
+  local cost = (s.cost and s.cost ~= "") and s.cost or nil
+  local cast = (s.castTime and s.castTime ~= "") and s.castTime or nil
+  local range = (s.range and s.range ~= "") and s.range or nil
+  local cd = (s.cooldown and s.cooldown ~= "") and s.cooldown or ""
+
+  local sid = s.id
+  if sid and sid > 0 and (not cast or not range or not cost) then
+    if C_Spell and C_Spell.GetSpellInfo then
+      local info = C_Spell.GetSpellInfo(sid)
+      if info then
+        if not cast and info.castTime then
+          cast = (info.castTime == 0) and "Instant" or string.format("%.1f sec cast", info.castTime / 1000)
+        end
+        if not range and info.maxRange then
+          range = (info.maxRange == 0) and "Melee / Self" or string.format("%d yd range", info.maxRange)
+        end
+      end
+    elseif GetSpellInfo then
+      local _, _, _, cTime, minR, maxR = GetSpellInfo(sid)
+      if not cast and cTime then
+        cast = (cTime == 0) and "Instant" or string.format("%.1f sec cast", cTime / 1000)
+      end
+      if not range and maxR then
+        range = (maxR == 0) and "Melee / Self" or string.format("%d yd range", maxR)
+      end
+    end
+  end
+
+  cost = cost or "None / Passive"
+  cast = cast or "Instant"
+  range = range or "Melee / Self"
+  return cost, cast, range, cd
+end
+
 function FG:GetCreatureIcon(c)
   if not c then return "Interface\\Icons\\INV_Misc_Head_Human_01" end
 
@@ -2844,17 +2926,8 @@ function FG:ConfigureRowButton(btn, match)
 
     if btn.IconFrame then
       btn.IconFrame:Show()
-      local sIcon = s.icon
-      if not sIcon or sIcon == "" then
-        if C_Spell and C_Spell.GetSpellInfo then
-          local info = C_Spell.GetSpellInfo(s.id)
-          if info and info.iconID then sIcon = info.iconID end
-        elseif GetSpellInfo then
-          local _, _, icon = GetSpellInfo(s.id)
-          if icon then sIcon = icon end
-        end
-      end
-      btn.Icon:SetTexture(sIcon or "Interface\\Icons\\INV_Misc_Book_09")
+      local sIcon = FG:GetSpellIcon(s)
+      btn.Icon:SetTexture(sIcon)
       btn.IconFrame:SetBackdropBorderColor(0.55, 0.22, 0.85, 0.9)
     end
     btn.Title:ClearAllPoints()
@@ -2880,11 +2953,12 @@ function FG:ConfigureRowButton(btn, match)
     if s.reqLevel and s.reqLevel > 0 then
       table.insert(parts, "|cff22c55eLevel " .. s.reqLevel .. "|r")
     end
-    if s.cost and s.cost ~= "" then
-      table.insert(parts, "|cff94a3b8" .. s.cost .. "|r")
+    local costStr, castStr = FG:GetSpellCastingInfo(s)
+    if costStr and costStr ~= "" and costStr ~= "None / Passive" then
+      table.insert(parts, "|cff94a3b8" .. costStr .. "|r")
     end
-    if s.castTime and s.castTime ~= "" then
-      table.insert(parts, "|cff8ba5cc" .. s.castTime .. "|r")
+    if castStr and castStr ~= "" then
+      table.insert(parts, "|cff8ba5cc" .. castStr .. "|r")
     end
     btn.Sub:SetText(table.concat(parts, " |cff475569·|r "))
 
@@ -4402,18 +4476,9 @@ function FG:ShowDetailPanel(entityType, data)
     end
 
   elseif entityType == "spell" then
-    local sIcon = data.icon
-    if not sIcon or sIcon == "" then
-      if C_Spell and C_Spell.GetSpellInfo then
-        local info = C_Spell.GetSpellInfo(data.id)
-        if info and info.iconID then sIcon = info.iconID end
-      elseif GetSpellInfo then
-        local _, _, icon = GetSpellInfo(data.id)
-        if icon then sIcon = icon end
-      end
-    end
+    local sIcon = FG:GetSpellIcon(data)
     if p.HeaderIcon then
-      p.HeaderIcon:SetTexture(sIcon or "Interface\\Icons\\INV_Misc_Book_09")
+      p.HeaderIcon:SetTexture(sIcon)
       p.HeaderIconFrame:SetBackdropBorderColor(0.65, 0.35, 1.0, 0.9)
     end
     p.Title:SetText("|cffcf52ffSpell & Ability Intel|r")
@@ -4427,25 +4492,15 @@ function FG:ShowDetailPanel(entityType, data)
     end
 
     AddSection("CASTING & RESOURCE")
-    local costStr = (data.cost and data.cost ~= "") and data.cost or "None / Passive"
-    local castStr = (data.castTime and data.castTime ~= "") and data.castTime or "Instant"
-    local rangeStr = (data.range and data.range ~= "") and data.range or "Melee / Self"
+    local costStr, castStr, rangeStr, cdStr = FG:GetSpellCastingInfo(data)
     AddLine("Cost: |cffffffff" .. costStr .. "|r", 12)
     AddLine("Cast Time: |cff8ba5cc" .. castStr .. "|r  ·  Range: |cff38bdf8" .. rangeStr .. "|r", 12)
-    if data.cooldown and data.cooldown ~= "" then
-      AddLine("Cooldown: |cffffd100" .. data.cooldown .. "|r", 12)
+    if cdStr and cdStr ~= "" then
+      AddLine("Cooldown: |cffffd100" .. cdStr .. "|r", 12)
     end
 
     AddSection("EFFECT & TOOLTIP")
-    local descText = data.desc
-    if (not descText or descText == "") and C_Spell and C_Spell.GetSpellDescription then
-      descText = C_Spell.GetSpellDescription(data.id)
-    elseif (not descText or descText == "") and GetSpellDescription then
-      descText = GetSpellDescription(data.id)
-    end
-    if not descText or descText == "" then
-      descText = (data.class or "") .. " ability learned at level " .. (data.reqLevel or 1) .. "."
-    end
+    local descText = FG:GetSpellDescription(data)
     AddLine(descText, 11, 0.85, 0.90, 0.95, 6)
 
     if data.isForever then
