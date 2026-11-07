@@ -83,6 +83,26 @@ class TestSearchRankingAndCleanDetail(unittest.TestCase):
         self.assertIn("[Active]", self.lua_code)
         self.assertIn("[Available]", self.lua_code)
 
+    def test_09_search_debounce_and_memoization(self):
+        """Verify search debounce timer (150ms), Enter key immediate execution, and memoization."""
+        # 1. Debounce and OnUpdate script
+        self.assertIn("searchBox.searchDelay = 0", self.lua_code)
+        self.assertIn("searchBox.pendingQuery = nil", self.lua_code)
+        self.assertIn('searchBox:SetScript("OnUpdate"', self.lua_code)
+        self.assertIn("self.searchDelay = 0.15", self.lua_code)
+        self.assertIn('searchBox:SetScript("OnEnterPressed"', self.lua_code)
+
+        # 2. Lazy memoization on entity tables
+        self.assertIn("item._nl = item._nl or item.name:lower()", self.lua_code)
+        self.assertIn("item._isInternal = FG:IsInternalItem(item.name)", self.lua_code)
+        self.assertIn("c._isInternal = FG:IsInternalCreature(c.name, c.family)", self.lua_code)
+        self.assertIn("quest._isInternal = FG:IsInternalQuest(quest.title)", self.lua_code)
+
+        # 3. Precomputed match score and result caps
+        self.assertIn("maxItems = (cat == \"all\") and 120 or 300", self.lua_code)
+        self.assertIn("local scoreA = a.score or GetSearchMatchScore(a, q)", self.lua_code)
+        self.assertIn("local scoreB = b.score or GetSearchMatchScore(b, q)", self.lua_code)
+
 
 if __name__ == "__main__":
     unittest.main()

@@ -3341,7 +3341,12 @@ function FG:CreateCodexWindow()
   clearBtn:Hide()
   searchBox.ClearBtn = clearBtn
 
+  searchBox.searchDelay = 0
+  searchBox.pendingQuery = nil
+
   clearBtn:SetScript("OnClick", function()
+    searchBox.searchDelay = 0
+    searchBox.pendingQuery = nil
     searchBox.scopedSearchLock = nil
     searchBox:SetText("")
     searchBox:ClearFocus()
@@ -3350,8 +3355,55 @@ function FG:CreateCodexWindow()
     FG:SetActiveCategory("all")
   end)
 
+  searchBox:SetScript("OnUpdate", function(self, elapsed)
+    if self.searchDelay and self.searchDelay > 0 then
+      self.searchDelay = self.searchDelay - elapsed
+      if self.searchDelay <= 0 then
+        self.searchDelay = 0
+        local query = self.pendingQuery
+        self.pendingQuery = nil
+        if query ~= nil then
+          if query == "" then
+            self.scopedSearchLock = nil
+            placeholder:Show()
+            clearBtn:Hide()
+            FG:PopulateCodexResults("")
+          else
+            placeholder:Hide()
+            clearBtn:Show()
+            if FG.activeCategory ~= "all" and FG.activeCategory ~= "nearby" and not self.scopedSearchLock then
+              FG:SetActiveCategory("all")
+            else
+              FG:PopulateCodexResults(query)
+            end
+          end
+        end
+      end
+    end
+  end)
+
   searchBox:SetScript("OnTextChanged", function(self)
     local query = self:GetText():trim()
+    if query == "" then
+      self.searchDelay = 0
+      self.pendingQuery = nil
+      self.scopedSearchLock = nil
+      placeholder:Show()
+      clearBtn:Hide()
+      FG:PopulateCodexResults("")
+    else
+      placeholder:Hide()
+      clearBtn:Show()
+      self.pendingQuery = query
+      self.searchDelay = 0.15 -- 150ms debounce for butter-smooth 60fps typing
+    end
+  end)
+
+  searchBox:SetScript("OnEnterPressed", function(self)
+    self:ClearFocus()
+    local query = self:GetText():trim()
+    self.searchDelay = 0
+    self.pendingQuery = nil
     if query == "" then
       self.scopedSearchLock = nil
       placeholder:Show()
@@ -6056,73 +6108,165 @@ function FG:PopulateCodexResults(query)
 
   else
     -- Active search query filtered by category
+    local maxItems = (cat == "all") and 120 or 300
+    local maxSpells = (cat == "all") and 100 or 250
+    local maxQuests = (cat == "all") and 100 or 250
+    local maxCreatures = (cat == "all") and 100 or 250
+    local maxVendors = (cat == "all") and 100 or 250
+    local maxDungeons = 50
+
     if (cat == "all" or cat == "spells") and FG.Data.Spells then
+      local count = 0
       for _, s in pairs(FG.Data.Spells) do
-        local matchName = s.name and s.name:lower():find(q, 1, true)
-        local matchClass = s.class and s.class:lower():find(q, 1, true)
-        local matchRank = s.rank and s.rank:lower():find(q, 1, true)
-        local matchDesc = s.desc and s.desc:lower():find(q, 1, true)
+        s._nl = s._nl or (s.name and s.name:lower() or "")
+        s._cl = s._cl or (s.class and s.class:lower() or "")
+        s._rl = s._rl or (s.rank and s.rank:lower() or "")
+        s._dl = s._dl or (s.desc and s.desc:lower() or "")
+        local matchName = s._nl ~= "" and s._nl:find(q, 1, true)
+        local matchClass = s._cl ~= "" and s._cl:find(q, 1, true)
+        local matchRank = s._rl ~= "" and s._rl:find(q, 1, true)
+        local matchDesc = s._dl ~= "" and s._dl:find(q, 1, true)
         if matchName or matchClass or matchRank or matchDesc then
-          table.insert(matches, { type = "spell", data = s })
+          local score = 5
+          if s._nl == q then score = 1
+          elseif s._nl:sub(1, #q) == q then score = 2
+          elseif matchName then
+            local pos = s._nl:find(q, 1, true)
+            local prevChar = (pos and pos > 1) and s._nl:sub(pos - 1, pos - 1) or " "
+            score = (prevChar:match("%s") or prevChar:match("[^%a%d]")) and 3 or 4
+          end
+          table.insert(matches, { type = "spell", data = s, score = score, nl = s._nl })
+          count = count + 1
+          if count >= maxSpells then break end
         end
       end
     end
 
     if (cat == "all" or cat == "items") and FG.Data.Items then
+      local count = 0
       for _, item in pairs(FG.Data.Items) do
-        if not FG:IsInternalItem(item.name) and item.name and (item.name:lower():find(q, 1, true) or (item.source and item.source:lower():find(q, 1, true))) then
-          table.insert(matches, { type = "item", data = item })
+        if item._isInternal == nil then item._isInternal = FG:IsInternalItem(item.name) end
+        if not item._isInternal and item.name then
+          item._nl = item._nl or item.name:lower()
+          item._sl = item._sl or (item.source and item.source:lower() or "")
+          local matchName = item._nl:find(q, 1, true)
+          local matchSource = item._sl ~= "" and item._sl:find(q, 1, true)
+          if matchName or matchSource then
+            local score = 5
+            if item._nl == q then score = 1
+            elseif item._nl:sub(1, #q) == q then score = 2
+            elseif matchName then
+              local pos = item._nl:find(q, 1, true)
+              local prevChar = (pos and pos > 1) and item._nl:sub(pos - 1, pos - 1) or " "
+              score = (prevChar:match("%s") or prevChar:match("[^%a%d]")) and 3 or 4
+            end
+            table.insert(matches, { type = "item", data = item, score = score, nl = item._nl })
+            count = count + 1
+            if count >= maxItems then break end
+          end
         end
       end
     end
 
     if (cat == "all" or cat == "quests") and FG.Data.Quests then
+      local count = 0
+      local isSpecialStatus = (q == "completed" or q == "done" or q == "uncompleted" or q == "incomplete" or q == "active" or q == "in progress")
       for _, quest in pairs(FG.Data.Quests) do
-        if not FG:IsInternalQuest(quest.title) then
-          local matchTitle = quest.title and quest.title:lower():find(q, 1, true)
-          local matchNpc = quest.npc and quest.npc:lower():find(q, 1, true)
-          local matchZone = quest.zone and quest.zone:lower():find(q, 1, true)
-          local matchObj = quest.objectives and quest.objectives:lower():find(q, 1, true)
-          local matchTip = quest.tip and quest.tip:lower():find(q, 1, true)
+        if quest._isInternal == nil then quest._isInternal = FG:IsInternalQuest(quest.title) end
+        if not quest._isInternal then
+          quest._tl = quest._tl or (quest.title and quest.title:lower() or "")
+          quest._nl = quest._nl or (quest.npc and quest.npc:lower() or "")
+          quest._zl = quest._zl or (quest.zone and quest.zone:lower() or "")
+          quest._ol = quest._ol or (quest.objectives and quest.objectives:lower() or "")
+          quest._tpl = quest._tpl or (quest.tip and quest.tip:lower() or "")
+
+          local matchTitle = quest._tl ~= "" and quest._tl:find(q, 1, true)
+          local matchNpc = quest._nl ~= "" and quest._nl:find(q, 1, true)
+          local matchZone = quest._zl ~= "" and quest._zl:find(q, 1, true)
+          local matchObj = quest._ol ~= "" and quest._ol:find(q, 1, true)
+          local matchTip = quest._tpl ~= "" and quest._tpl:find(q, 1, true)
           local matchStatus = false
-          if q == "completed" or q == "done" then
-            matchStatus = (FG:GetQuestStatus(quest.id, quest.title) == "completed")
-          elseif q == "uncompleted" or q == "incomplete" then
-            matchStatus = (FG:GetQuestStatus(quest.id, quest.title) == "uncompleted")
-          elseif q == "active" or q == "in progress" then
-            local st = FG:GetQuestStatus(quest.id, quest.title)
-            matchStatus = (st == "active" or st == "ready_to_turn_in")
+          if isSpecialStatus then
+            if q == "completed" or q == "done" then
+              matchStatus = (FG:GetQuestStatus(quest.id, quest.title) == "completed")
+            elseif q == "uncompleted" or q == "incomplete" then
+              matchStatus = (FG:GetQuestStatus(quest.id, quest.title) == "uncompleted")
+            elseif q == "active" or q == "in progress" then
+              local st = FG:GetQuestStatus(quest.id, quest.title)
+              matchStatus = (st == "active" or st == "ready_to_turn_in")
+            end
           end
           if matchTitle or matchNpc or matchZone or matchObj or matchTip or matchStatus then
-            table.insert(matches, { type = "quest", data = quest })
+            local score = 5
+            if quest._tl == q then score = 1
+            elseif quest._tl:sub(1, #q) == q then score = 2
+            elseif matchTitle then
+              local pos = quest._tl:find(q, 1, true)
+              local prevChar = (pos and pos > 1) and quest._tl:sub(pos - 1, pos - 1) or " "
+              score = (prevChar:match("%s") or prevChar:match("[^%a%d]")) and 3 or 4
+            end
+            table.insert(matches, { type = "quest", data = quest, score = score, nl = quest._tl })
+            count = count + 1
+            if count >= maxQuests then break end
           end
         end
       end
     end
 
     if (cat == "all" or cat == "creatures") and FG.Data.Creatures then
+      local count = 0
       for _, c in pairs(FG.Data.Creatures) do
-        if not FG:IsInternalCreature(c.name, c.family) then
-          local matchName = c.name and c.name:lower():find(q, 1, true)
-          local matchZone = c.zone and c.zone:lower():find(q, 1, true)
-          local matchLoc = c.location and c.location:lower():find(q, 1, true)
+        if c._isInternal == nil then c._isInternal = FG:IsInternalCreature(c.name, c.family) end
+        if not c._isInternal then
+          c._nl = c._nl or (c.name and c.name:lower() or "")
+          c._zl = c._zl or (c.zone and c.zone:lower() or "")
+          c._ll = c._ll or (c.location and c.location:lower() or "")
+          local matchName = c._nl ~= "" and c._nl:find(q, 1, true)
+          local matchZone = c._zl ~= "" and c._zl:find(q, 1, true)
+          local matchLoc = c._ll ~= "" and c._ll:find(q, 1, true)
           if matchName or matchZone or matchLoc then
-            table.insert(matches, { type = "creature", data = c })
+            local score = 5
+            if c._nl == q then score = 1
+            elseif c._nl:sub(1, #q) == q then score = 2
+            elseif matchName then
+              local pos = c._nl:find(q, 1, true)
+              local prevChar = (pos and pos > 1) and c._nl:sub(pos - 1, pos - 1) or " "
+              score = (prevChar:match("%s") or prevChar:match("[^%a%d]")) and 3 or 4
+            end
+            table.insert(matches, { type = "creature", data = c, score = score, nl = c._nl })
+            count = count + 1
+            if count >= maxCreatures then break end
           end
         end
       end
     end
 
     if (cat == "all" or cat == "dungeons") and FG.Data.Dungeons then
+      local count = 0
       for _, d in pairs(FG.Data.Dungeons) do
-        if d.name and (d.name:lower():find(q, 1, true) or (d.zone and d.zone:lower():find(q, 1, true))) then
-          table.insert(matches, { type = "dungeon", data = d })
+        d._nl = d._nl or (d.name and d.name:lower() or "")
+        d._zl = d._zl or (d.zone and d.zone:lower() or "")
+        local matchName = d._nl ~= "" and d._nl:find(q, 1, true)
+        local matchZone = d._zl ~= "" and d._zl:find(q, 1, true)
+        if matchName or matchZone then
+          local score = 5
+          if d._nl == q then score = 1
+          elseif d._nl:sub(1, #q) == q then score = 2
+          elseif matchName then
+            local pos = d._nl:find(q, 1, true)
+            local prevChar = (pos and pos > 1) and d._nl:sub(pos - 1, pos - 1) or " "
+            score = (prevChar:match("%s") or prevChar:match("[^%a%d]")) and 3 or 4
+          end
+          table.insert(matches, { type = "dungeon", data = d, score = score, nl = d._nl })
+          count = count + 1
+          if count >= maxDungeons then break end
         end
       end
     end
 
     if (cat == "all" or cat == "vendors") then
       local addedGlobalVendors = {}
+      local count = 0
       if FG.Data.Vendors then
         for _, v in pairs(FG.Data.Vendors) do
           local vZone = v.zone
@@ -6130,34 +6274,66 @@ function FG:PopulateCodexResults(query)
             local cObj = FG:FindCreatureByName(v.name)
             if cObj and cObj.zone then vZone = cObj.zone end
           end
-          local matchName = v.name and v.name:lower():find(q, 1, true)
-          local matchItem = v.item and v.item:lower():find(q, 1, true)
-          local matchZone = vZone and vZone:lower():find(q, 1, true)
+          v._nl = v._nl or (v.name and v.name:lower() or "")
+          v._il = v._il or (v.item and v.item:lower() or "")
+          v._zl = v._zl or (vZone and vZone:lower() or "")
+          local matchName = v._nl ~= "" and v._nl:find(q, 1, true)
+          local matchItem = v._il ~= "" and v._il:find(q, 1, true)
+          local matchZone = v._zl ~= "" and v._zl:find(q, 1, true)
           if matchName or matchItem or matchZone then
-            table.insert(matches, { type = "vendor", data = v })
-            if v.name then addedGlobalVendors[v.name:lower()] = true end
+            local score = 5
+            if v._nl == q then score = 1
+            elseif v._nl:sub(1, #q) == q then score = 2
+            elseif matchName then
+              local pos = v._nl:find(q, 1, true)
+              local prevChar = (pos and pos > 1) and v._nl:sub(pos - 1, pos - 1) or " "
+              score = (prevChar:match("%s") or prevChar:match("[^%a%d]")) and 3 or 4
+            end
+            table.insert(matches, { type = "vendor", data = v, score = score, nl = v._nl })
+            if v._nl ~= "" then addedGlobalVendors[v._nl] = true end
+            count = count + 1
+            if count >= maxVendors then break end
           end
         end
       end
-      if FG.Data.Flightpaths then
+      if FG.Data.Flightpaths and count < maxVendors then
         for _, fp in pairs(FG.Data.Flightpaths) do
-          local matchName = fp.name and fp.name:lower():find(q, 1, true)
-          local matchZone = fp.zone and fp.zone:lower():find(q, 1, true)
+          fp._nl = fp._nl or (fp.name and fp.name:lower() or "")
+          fp._zl = fp._zl or (fp.zone and fp.zone:lower() or "")
+          local matchName = fp._nl ~= "" and fp._nl:find(q, 1, true)
+          local matchZone = fp._zl ~= "" and fp._zl:find(q, 1, true)
           if matchName or matchZone then
             local vData = { name = fp.name, zone = fp.zone, coords = fp.coords, item = fp.faction .. " Flight Master", tip = fp.notes or fp.connections }
-            table.insert(matches, { type = "vendor", data = vData })
-            if fp.name then addedGlobalVendors[fp.name:lower()] = true end
+            local score = 5
+            if fp._nl == q then score = 1
+            elseif fp._nl:sub(1, #q) == q then score = 2
+            elseif matchName then
+              local pos = fp._nl:find(q, 1, true)
+              local prevChar = (pos and pos > 1) and fp._nl:sub(pos - 1, pos - 1) or " "
+              score = (prevChar:match("%s") or prevChar:match("[^%a%d]")) and 3 or 4
+            end
+            table.insert(matches, { type = "vendor", data = vData, score = score, nl = fp._nl })
+            if fp._nl ~= "" then addedGlobalVendors[fp._nl] = true end
+            count = count + 1
+            if count >= maxVendors then break end
           end
         end
       end
-      if FG.Data.Creatures then
+      if cat == "vendors" and FG.Data.Creatures and count < maxVendors then
         for _, c in pairs(FG.Data.Creatures) do
-          if not FG:IsInternalCreature(c.name, c.family) then
-            local vTitle = FG:GetVendorTitle(c)
-            if vTitle and c.name and not addedGlobalVendors[c.name:lower()] then
-              local matchName = c.name and c.name:lower():find(q, 1, true)
-              local matchTitle = vTitle and vTitle:lower():find(q, 1, true)
-              local matchZone = c.zone and c.zone:lower():find(q, 1, true)
+          if c._isInternal == nil then c._isInternal = FG:IsInternalCreature(c.name, c.family) end
+          if not c._isInternal then
+            c._nl = c._nl or (c.name and c.name:lower() or "")
+            if c._vTitle == nil then
+              c._vTitle = FG:GetVendorTitle(c) or false
+            end
+            local vTitle = c._vTitle
+            if vTitle and c._nl ~= "" and not addedGlobalVendors[c._nl] then
+              c._vtl = c._vtl or vTitle:lower()
+              c._zl = c._zl or (c.zone and c.zone:lower() or "")
+              local matchName = c._nl:find(q, 1, true)
+              local matchTitle = c._vtl:find(q, 1, true)
+              local matchZone = c._zl:find(q, 1, true)
               if matchName or matchTitle or matchZone then
                 local vData = {
                   name = c.name,
@@ -6166,8 +6342,18 @@ function FG:PopulateCodexResults(query)
                   item = vTitle,
                   tip = "<" .. vTitle .. ">" .. ((c.minLevel and c.minLevel > 0) and (" • Level " .. c.minLevel) or ""),
                 }
-                table.insert(matches, { type = "vendor", data = vData })
-                addedGlobalVendors[c.name:lower()] = true
+                local score = 5
+                if c._nl == q then score = 1
+                elseif c._nl:sub(1, #q) == q then score = 2
+                elseif matchName then
+                  local pos = c._nl:find(q, 1, true)
+                  local prevChar = (pos and pos > 1) and c._nl:sub(pos - 1, pos - 1) or " "
+                  score = (prevChar:match("%s") or prevChar:match("[^%a%d]")) and 3 or 4
+                end
+                table.insert(matches, { type = "vendor", data = vData, score = score, nl = c._nl })
+                addedGlobalVendors[c._nl] = true
+                count = count + 1
+                if count >= maxVendors then break end
               end
             end
           end
@@ -6219,36 +6405,36 @@ function FG:PopulateCodexResults(query)
       end
 
       -- Within the same type, best match relevance tier comes first
-      local scoreA = GetSearchMatchScore(a, q)
-      local scoreB = GetSearchMatchScore(b, q)
+      local scoreA = a.score or GetSearchMatchScore(a, q)
+      local scoreB = b.score or GetSearchMatchScore(b, q)
       if scoreA ~= scoreB then
         return scoreA < scoreB
       end
 
       -- Within same type & score tier:
       if a.type == "item" and b.type == "item" then
-        local nameA = (a.data and (a.data.name or a.data.title or "")) or ""
-        local nameB = (b.data and (b.data.name or b.data.title or "")) or ""
-        if nameA:lower() ~= nameB:lower() then
-          return nameA:lower() < nameB:lower()
+        local nlA = a.nl or ((a.data and (a.data.name or a.data.title or "")) or ""):lower()
+        local nlB = b.nl or ((b.data and (b.data.name or b.data.title or "")) or ""):lower()
+        if nlA ~= nlB then
+          return nlA < nlB
         end
         local ilvlA = tonumber(a.data and a.data.ilvl) or 0
         local ilvlB = tonumber(b.data and b.data.ilvl) or 0
         if ilvlA ~= ilvlB then return ilvlA < ilvlB end
       elseif a.type == "spell" and b.type == "spell" then
-        local nameA = (a.data and a.data.name) or ""
-        local nameB = (b.data and b.data.name) or ""
-        if nameA:lower() ~= nameB:lower() then
-          return nameA:lower() < nameB:lower()
+        local nlA = a.nl or ((a.data and a.data.name) or ""):lower()
+        local nlB = b.nl or ((b.data and b.data.name) or ""):lower()
+        if nlA ~= nlB then
+          return nlA < nlB
         end
         local lvlA = tonumber(a.data and a.data.reqLevel) or 0
         local lvlB = tonumber(b.data and b.data.reqLevel) or 0
         if lvlA ~= lvlB then return lvlA < lvlB end
       end
 
-      local nameA = (a.data and (a.data.title or a.data.name or "")) or ""
-      local nameB = (b.data and (b.data.title or b.data.name or "")) or ""
-      return nameA:lower() < nameB:lower()
+      local nlA = a.nl or ((a.data and (a.data.title or a.data.name or "")) or ""):lower()
+      local nlB = b.nl or ((b.data and (b.data.title or b.data.name or "")) or ""):lower()
+      return nlA < nlB
     end
 
     -- Folder browsing (q == ""):
