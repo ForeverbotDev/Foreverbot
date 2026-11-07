@@ -54,6 +54,9 @@ class TestPlayerSimulationWalkthrough(unittest.TestCase):
         self.assertIn('ForeverGuideDB = ForeverGuideDB or {}', self.lua_code)
         self.assertIn('FG:CreateSparkFrame()', self.lua_code)
         self.assertIn('FG:CreateMinimapButton()', self.lua_code)
+        self.assertIn('radius = 102', self.lua_code)
+        self.assertIn('btn.UpdatePosition = UpdatePosition', self.lua_code)
+        self.assertIn('cmd == "minimap"', self.lua_code)
 
         # 3. Autonomous companion state machine: constrained local wandering & death bounce
         self.assertIn('DEATH_BOUNCE', self.lua_code)

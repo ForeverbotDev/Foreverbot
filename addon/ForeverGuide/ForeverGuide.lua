@@ -28,6 +28,7 @@ local DEFAULT_CONFIG = {
   minimap = {
     hide = false,
     minimapPos = 215,
+    radius = 102,
   },
   sparkPosition = {
     point = "CENTER",
@@ -159,6 +160,28 @@ SlashCmdList["FOREVERGUIDE"] = function(msg)
     print("|cffdf80ff[Sparky]|r High-Density Sharp Text is now " .. state)
     if FG.ApplyTextSharpening then
       FG:ApplyTextSharpening()
+    end
+
+  -- Minimap Button Placement & Visibility (/spark minimap [outside|reset|hide|show])
+  elseif cmd == "minimap" or cmd == "mapbtn" or cmd == "icon" then
+    local subCmd = rest:lower()
+    if subCmd == "reset" or subCmd == "outside" or subCmd == "rim" or subCmd == "fix" then
+      ForeverGuideDB.minimap = ForeverGuideDB.minimap or {}
+      ForeverGuideDB.minimap.radius = 102
+      if FG.MinimapButton and FG.MinimapButton.UpdatePosition then
+        FG.MinimapButton.UpdatePosition(ForeverGuideDB.minimap.minimapPos or 215)
+      end
+      print("|cffdf80ff[Sparky]|r Minimap button snapped to outer rim.")
+    elseif subCmd == "hide" or subCmd == "off" then
+      if FG.MinimapButton then FG.MinimapButton:Hide() end
+      ForeverGuideDB.minimap.hide = true
+      print("|cffdf80ff[Sparky]|r Minimap button hidden. Type |cffcf52ff/spark minimap show|r to restore.")
+    elseif subCmd == "show" or subCmd == "on" then
+      if FG.MinimapButton then FG.MinimapButton:Show() end
+      ForeverGuideDB.minimap.hide = false
+      print("|cffdf80ff[Sparky]|r Minimap button shown.")
+    else
+      print("|cffdf80ff[Sparky]|r Minimap usage: |cffcf52ff/spark minimap [outside|reset|show|hide]|r")
     end
 
   -- Nearby Area Intel Radar (/spark nearby)
@@ -6283,10 +6306,26 @@ function FG:CreateMinimapButton()
 
   local function UpdatePosition(angle)
     local rad = math.rad(angle)
-    local x = math.cos(rad) * 80
-    local y = math.sin(rad) * 80
-    btn:SetPoint("CENTER", Minimap, "CENTER", x, y)
+    local defaultRadius = math.max(102, ((Minimap:GetWidth() or 140) / 2) + 32)
+    local radius = (ForeverGuideDB and ForeverGuideDB.minimap and ForeverGuideDB.minimap.radius) or defaultRadius
+    if radius and radius < 95 then
+      radius = defaultRadius
+      if ForeverGuideDB and ForeverGuideDB.minimap then
+        ForeverGuideDB.minimap.radius = radius
+      end
+    end
+    local minimapShape = GetMinimapShape and GetMinimapShape() or "ROUND"
+    local cosA, sinA = math.cos(rad), math.sin(rad)
+    if minimapShape == "ROUND" then
+      btn:SetPoint("CENTER", Minimap, "CENTER", cosA * radius, sinA * radius)
+    else
+      local diagRadius = radius * 1.289
+      local sx = math.max(-radius, math.min(cosA * diagRadius, radius))
+      local sy = math.max(-radius, math.min(sinA * diagRadius, radius))
+      btn:SetPoint("CENTER", Minimap, "CENTER", sx, sy)
+    end
   end
+  btn.UpdatePosition = UpdatePosition
 
   local function OnMinimapUpdate(self)
     if self.isDragging then
