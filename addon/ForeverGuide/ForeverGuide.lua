@@ -4869,6 +4869,36 @@ FG.FolderTree = {
       { path = "forever/spells", name = "Forever Spells & Talents", desc = "50 custom Alpha abilities, racials & reworks", icon = "Interface\\Icons\\Spell_Holy_MagicalSentry" },
     },
   },
+
+  ["forever/items"] = {
+    title = "[Forever] Gear by Type",
+    parent = "forever",
+    folders = {
+      { path = "forever/items/weapons", name = "Weapons", desc = "Forever swords, axes, bows, staves...", icon = "Interface\\Icons\\INV_Sword_04" },
+      { path = "forever/items/armor", name = "Armor & Shields", desc = "Cloth, Leather, Mail, Plate & Shields", icon = "Interface\\Icons\\INV_Chest_Plate03" },
+      { path = "forever/items/accessories", name = "Jewelry & Accessories", desc = "Rings, Trinkets, Necklaces & Cloaks", icon = "Interface\\Icons\\INV_Jewelry_Necklace_07" },
+      { path = "forever/items/consumables", name = "Consumables", desc = "Potions, Elixirs, Food & Bandages", icon = "Interface\\Icons\\INV_Potion_51" },
+      { path = "forever/items/trade_goods", name = "Trade Goods & Reagents", desc = "Herbs, Ores, Gems & Materials", icon = "Interface\\Icons\\INV_Ore_Iron_01" },
+      { path = "forever/items/recipes", name = "Recipes & Plans", desc = "Crafting Recipes, Formulas & Manuals", icon = "Interface\\Icons\\INV_Scroll_03" },
+      { path = "forever/items/quest", name = "Quest Items", desc = "Exclusive quest items & artifacts", icon = "Interface\\Icons\\INV_Misc_Book_07" },
+      { path = "forever/items/all", name = "[All Forever Gear (Full List)]", desc = "Complete catalog of all Forever items (sorted by Type)", icon = "Interface\\Icons\\Spell_Holy_MagicalSentry", isAll = true },
+    },
+  },
+
+  ["items/forever"] = {
+    title = "[Forever] Exclusive Gear by Type",
+    parent = "items",
+    folders = {
+      { path = "items/forever/weapons", name = "Weapons", desc = "Forever swords, axes, bows, staves...", icon = "Interface\\Icons\\INV_Sword_04" },
+      { path = "items/forever/armor", name = "Armor & Shields", desc = "Cloth, Leather, Mail, Plate & Shields", icon = "Interface\\Icons\\INV_Chest_Plate03" },
+      { path = "items/forever/accessories", name = "Jewelry & Accessories", desc = "Rings, Trinkets, Necklaces & Cloaks", icon = "Interface\\Icons\\INV_Jewelry_Necklace_07" },
+      { path = "items/forever/consumables", name = "Consumables", desc = "Potions, Elixirs, Food & Bandages", icon = "Interface\\Icons\\INV_Potion_51" },
+      { path = "items/forever/trade_goods", name = "Trade Goods & Reagents", desc = "Herbs, Ores, Gems & Materials", icon = "Interface\\Icons\\INV_Ore_Iron_01" },
+      { path = "items/forever/recipes", name = "Recipes & Plans", desc = "Crafting Recipes, Formulas & Manuals", icon = "Interface\\Icons\\INV_Scroll_03" },
+      { path = "items/forever/quest", name = "Quest Items", desc = "Exclusive quest items & artifacts", icon = "Interface\\Icons\\INV_Misc_Book_07" },
+      { path = "items/forever/all", name = "[All Forever Gear (Full List)]", desc = "Complete catalog of all Forever items (sorted by Type)", icon = "Interface\\Icons\\Spell_Holy_MagicalSentry", isAll = true },
+    },
+  },
 }
 
 function FG:NavigateToFolder(path)
@@ -4909,6 +4939,14 @@ function FG:NavigateUpFolder()
       parent = "items/armor/" .. armorType
     elseif cur:find("^items/armor/[^/]+$") then
       parent = "items/armor"
+    elseif cur:find("^forever/items/") then
+      parent = "forever/items"
+    elseif cur == "forever/items" then
+      parent = "forever"
+    elseif cur:find("^items/forever/") then
+      parent = "items/forever"
+    elseif cur == "items/forever" then
+      parent = "items"
     elseif cur:find("^items/sub/") then
       local sub = cur:sub(11)
       if sub:find("Armor$") or sub == "Shields" or sub == "Cloaks" then
@@ -5056,7 +5094,16 @@ function FG:UpdateDolphinBreadcrumbs(query, matchCount)
     elseif cur == "items/consumables" then table.insert(trail, "|cffffffffConsumables|r")
     elseif cur == "items/trade_goods" then table.insert(trail, "|cffffffffTrade Goods|r")
     elseif cur == "items/recipes" then table.insert(trail, "|cffffffffRecipes|r")
-    elseif cur == "items/forever" then table.insert(trail, "|cffe6cc80[Forever] Gear|r")
+    elseif cur == "items/forever" then
+      table.insert(trail, "|cffe6cc80[Forever] Gear (By Type)|r")
+    elseif cur:find("^items/forever/(.+)$") then
+      local subType = cur:match("^items/forever/(.+)$")
+      local typeName = subType:gsub("^%l", string.upper)
+      if subType == "trade_goods" then typeName = "Trade Goods"
+      elseif subType == "all" then typeName = "All Gear"
+      end
+      table.insert(trail, "|cffe6cc80[Forever] Gear|r")
+      table.insert(trail, "|cffffd24d" .. typeName .. "|r")
     elseif cur:find("^items/sub/") then
       table.insert(trail, "|cffffd24d" .. cur:sub(11) .. "|r")
     end
@@ -5113,10 +5160,20 @@ function FG:UpdateDolphinBreadcrumbs(query, matchCount)
     end
   elseif cur:find("^forever") then
     table.insert(trail, "|cffe6cc80[Forever] Content|r")
-    if cur == "forever/items" then table.insert(trail, "|cffffffffGear|r")
+    if cur == "forever/items" then
+      table.insert(trail, "|cffffffffGear (By Type)|r")
+    elseif cur:find("^forever/items/(.+)$") then
+      local subType = cur:match("^forever/items/(.+)$")
+      local typeName = subType:gsub("^%l", string.upper)
+      if subType == "trade_goods" then typeName = "Trade Goods"
+      elseif subType == "all" then typeName = "All Gear"
+      end
+      table.insert(trail, "|cffffffffGear|r")
+      table.insert(trail, "|cffffd24d" .. typeName .. "|r")
     elseif cur == "forever/quests" then table.insert(trail, "|cffffffffQuests|r")
     elseif cur == "forever/creatures" then table.insert(trail, "|cffffffffNPCs|r")
     elseif cur == "forever/dungeons" then table.insert(trail, "|cffffffffDungeons|r")
+    elseif cur == "forever/spells" then table.insert(trail, "|cffffffffSpells|r")
     end
   end
 
@@ -5161,6 +5218,77 @@ function FG:IsInternalQuest(title)
     return true
   end
   return false
+end
+
+function FG:GetItemTypeSortKey(item)
+  if not item then return 99, "Other" end
+  local slot = (item.slot and item.slot ~= "" and item.slot ~= "Non-equippable") and item.slot or nil
+  local iType = (item.itemType and item.itemType ~= "") and item.itemType or nil
+  local name = item.name or ""
+  local displayType = slot or iType or "Other"
+
+  -- Determine high-level group rank:
+  -- 1: Weapons
+  -- 2: Armor & Shields
+  -- 3: Jewelry & Accessories
+  -- 4: Consumables
+  -- 5: Bags & Containers
+  -- 6: Trade Goods & Reagents
+  -- 7: Recipes & Plans
+  -- 8: Quest Items
+  -- 9: Junk & Misc
+  local group = 9
+
+  -- Check recipe name prefixes first
+  if name:find("^Recipe:") or name:find("^Pattern:") or name:find("^Plans:") or name:find("^Schematic:") or name:find("^Formula:") or name:find("^Manual:") or name:find("^Book:") then
+    group = 7
+    displayType = "Recipe"
+  elseif slot then
+    if slot == "Shield" or slot == "Held In Off-hand" or slot == "Head" or slot == "Shoulder" or slot == "Chest" or slot == "Waist" or slot == "Legs" or slot == "Feet" or slot == "Wrist" or slot == "Hands" or slot == "Back" or slot == "Shirt" or slot == "Tabard" then
+      group = 2
+    elseif slot == "One-Hand" or slot == "Two-Hand" or slot == "Main Hand" or slot == "Ranged" or slot == "Thrown" then
+      group = 1
+    elseif slot == "Off Hand" then
+      if iType and (iType:lower():find("shield") or iType:lower():find("armor")) then
+        group = 2
+      else
+        group = 1
+      end
+    elseif slot == "Neck" or slot == "Finger" or slot == "Trinket" or slot == "Relic" then
+      group = 3
+    elseif slot == "Bag" then
+      group = 5
+    end
+  end
+
+  if group == 9 and iType then
+    local itLower = iType:lower()
+    if itLower:find("weapon") or itLower:find("sword") or itLower:find("axe") or itLower:find("mace") or itLower:find("dagger") or itLower:find("bow") or itLower:find("gun") or itLower:find("crossbow") or itLower:find("staff") or itLower:find("polearm") or itLower:find("wand") or itLower:find("fist") then
+      group = 1
+    elseif itLower:find("armor") or itLower:find("cloth") or itLower:find("leather") or itLower:find("mail") or itLower:find("plate") or itLower:find("shield") then
+      group = 2
+    elseif itLower:find("ring") or itLower:find("neck") or itLower:find("trinket") or itLower:find("amulet") then
+      group = 3
+    elseif itLower:find("potion") or itLower:find("elixir") or itLower:find("flask") or itLower:find("food") or itLower:find("bandage") or itLower:find("scroll") or itLower:find("consumable") then
+      group = 4
+    elseif itLower:find("bag") or itLower:find("container") or itLower:find("quiver") or itLower:find("pouch") then
+      group = 5
+    elseif itLower:find("herb") or itLower:find("metal") or itLower:find("stone") or itLower:find("ore") or itLower:find("parts") or itLower:find("reagent") or itLower:find("trade") or itLower:find("elemental") or itLower:find("gem") or itLower:find("materials") then
+      group = 6
+    elseif itLower:find("recipe") or itLower:find("book") or itLower:find("plans") or itLower:find("pattern") or itLower:find("schematic") then
+      group = 7
+    elseif itLower:find("quest") or item.bind == "Quest Item" then
+      group = 8
+    elseif itLower:find("junk") or itLower:find("money") or name == "Gold" or name == "Silver" or name == "Copper" then
+      group = 9
+    end
+  end
+
+  if group == 9 and (name:find("Quest") or item.bind == "Quest Item") then
+    group = 8
+  end
+
+  return group, displayType
 end
 
 local function CreatureMatchesFamily(c, targetFam)
@@ -5528,6 +5656,25 @@ function FG:PopulateCodexResults(query)
         end
       end
 
+      local foreverCounts = nil
+      if (cur == "forever/items" or cur == "items/forever") and FG.Data.Items then
+        foreverCounts = { weapons = 0, armor = 0, accessories = 0, consumables = 0, trade_goods = 0, recipes = 0, quest = 0, all = 0 }
+        for _, item in pairs(FG.Data.Items) do
+          if item.isForever and not FG:IsInternalItem(item.name) then
+            foreverCounts.all = foreverCounts.all + 1
+            local grp = FG:GetItemTypeSortKey(item)
+            if grp == 1 then foreverCounts.weapons = foreverCounts.weapons + 1
+            elseif grp == 2 then foreverCounts.armor = foreverCounts.armor + 1
+            elseif grp == 3 then foreverCounts.accessories = foreverCounts.accessories + 1
+            elseif grp == 4 then foreverCounts.consumables = foreverCounts.consumables + 1
+            elseif grp == 6 then foreverCounts.trade_goods = foreverCounts.trade_goods + 1
+            elseif grp == 7 then foreverCounts.recipes = foreverCounts.recipes + 1
+            elseif grp == 8 or grp == 9 then foreverCounts.quest = foreverCounts.quest + 1
+            end
+          end
+        end
+      end
+
       for _, f in ipairs(folderDef.folders) do
         local fCopy = f
         if slotCounts and f.path then
@@ -5541,6 +5688,19 @@ function FG:PopulateCodexResults(query)
               desc = string.format("%d %s %s items (iLvl Low to High)", count, armorCap, f.name or slot),
               count = count,
               icon = f.icon,
+            }
+          end
+        elseif foreverCounts and f.path then
+          local key = f.path:match("([^/]+)$")
+          if key and foreverCounts[key] then
+            local count = foreverCounts[key]
+            fCopy = {
+              name = f.name,
+              path = f.path,
+              desc = string.format("%d Forever %s", count, f.name),
+              count = count,
+              icon = f.icon,
+              isAll = f.isAll,
             }
           end
         end
@@ -6062,9 +6222,39 @@ function FG:PopulateCodexResults(query)
       for _, v in pairs(FG.Data.Vendors) do
         table.insert(matches, { type = "vendor", data = v })
       end
+    elseif cur:find("^forever/items/") or cur:find("^items/forever/") then
+      local subType = cur:match("^forever/items/([^/]+)$") or cur:match("^items/forever/([^/]+)$")
+      if subType and FG.Data.Items then
+        for _, item in pairs(FG.Data.Items) do
+          if item.isForever and not FG:IsInternalItem(item.name) then
+            local grp, dType = FG:GetItemTypeSortKey(item)
+            local pass = false
+            if subType == "all" then
+              pass = true
+            elseif subType == "weapons" and grp == 1 then
+              pass = true
+            elseif subType == "armor" and grp == 2 then
+              pass = true
+            elseif subType == "accessories" and grp == 3 then
+              pass = true
+            elseif subType == "consumables" and grp == 4 then
+              pass = true
+            elseif subType == "trade_goods" and grp == 6 then
+              pass = true
+            elseif subType == "recipes" and grp == 7 then
+              pass = true
+            elseif subType == "quest" and (grp == 8 or grp == 9) then
+              pass = true
+            end
+            if pass then
+              table.insert(matches, { type = "item", data = item })
+            end
+          end
+        end
+      end
     elseif cur:find("^forever/") then
       local sub = cur:sub(9)
-      if sub == "items" and FG.Data.Items then
+      if sub == "items" and FG.Data.Items and not (FG.FolderTree[cur] and FG.FolderTree[cur].folders) then
         for _, item in pairs(FG.Data.Items) do
           if item.isForever and not FG:IsInternalItem(item.name) then table.insert(matches, { type = "item", data = item }) end
         end
@@ -6413,6 +6603,14 @@ function FG:PopulateCodexResults(query)
 
       -- Within same type & score tier:
       if a.type == "item" and b.type == "item" then
+        local groupA, typeA = FG:GetItemTypeSortKey(a.data)
+        local groupB, typeB = FG:GetItemTypeSortKey(b.data)
+        if groupA ~= groupB then
+          return groupA < groupB
+        end
+        if typeA ~= typeB then
+          return typeA < typeB
+        end
         local nlA = a.nl or ((a.data and (a.data.name or a.data.title or "")) or ""):lower()
         local nlB = b.nl or ((b.data and (b.data.name or b.data.title or "")) or ""):lower()
         if nlA ~= nlB then
@@ -6438,20 +6636,120 @@ function FG:PopulateCodexResults(query)
     end
 
     -- Folder browsing (q == ""):
-    if isItemView and a.type == "item" and b.type == "item" then
+    if a.type == "item" and b.type == "item" then
+      local groupA, typeA = FG:GetItemTypeSortKey(a.data)
+      local groupB, typeB = FG:GetItemTypeSortKey(b.data)
+      if groupA ~= groupB then
+        return groupA < groupB
+      end
+      if typeA ~= typeB then
+        return typeA < typeB
+      end
       local ilvlA = tonumber(a.data and a.data.ilvl) or 0
       local ilvlB = tonumber(b.data and b.data.ilvl) or 0
       if ilvlA ~= ilvlB then
         return ilvlA < ilvlB
       end
+      local nameA = (a.data and (a.data.name or a.data.title or "")) or ""
+      local nameB = (b.data and (b.data.name or b.data.title or "")) or ""
+      return nameA:lower() < nameB:lower()
+    end
+
+    if a.type == "creature" and b.type == "creature" then
+      local classRankA = (a.data and (a.data.classification == "Boss" or a.data.classification == "World Boss") and 1)
+        or (a.data and (a.data.classification == "Rare Elite") and 2)
+        or (a.data and (a.data.classification == "Rare") and 3)
+        or (a.data and (a.data.classification == "Elite") and 4) or 5
+      local classRankB = (b.data and (b.data.classification == "Boss" or b.data.classification == "World Boss") and 1)
+        or (b.data and (b.data.classification == "Rare Elite") and 2)
+        or (b.data and (b.data.classification == "Rare") and 3)
+        or (b.data and (b.data.classification == "Elite") and 4) or 5
+      if classRankA ~= classRankB then
+        return classRankA < classRankB
+      end
+      local famA = (a.data and a.data.family or ""):lower()
+      local famB = (b.data and b.data.family or ""):lower()
+      if famA ~= famB then
+        return famA < famB
+      end
+      local lvlA = tonumber(a.data and (a.data.maxLevel or a.data.minLevel)) or 0
+      local lvlB = tonumber(b.data and (b.data.maxLevel or b.data.minLevel)) or 0
+      if lvlA ~= lvlB then
+        return lvlA < lvlB
+      end
+      local nameA = (a.data and a.data.name or ""):lower()
+      local nameB = (b.data and b.data.name or ""):lower()
+      return nameA < nameB
+    end
+
+    if a.type == "quest" and b.type == "quest" then
+      local znA = (a.data and (a.data.zone or a.data.category or "")) or ""
+      local znB = (b.data and (b.data.zone or b.data.category or "")) or ""
+      if znA:lower() ~= znB:lower() then
+        return znA:lower() < znB:lower()
+      end
+      local lvlA = tonumber(a.data and (a.data.reqLevel or a.data.questLevel)) or 0
+      local lvlB = tonumber(b.data and (b.data.reqLevel or b.data.questLevel)) or 0
+      if lvlA ~= lvlB then
+        return lvlA < lvlB
+      end
+      local tA = (a.data and a.data.title or ""):lower()
+      local tB = (b.data and b.data.title or ""):lower()
+      return tA < tB
     end
 
     if a.type == "spell" and b.type == "spell" then
+      local clsA = (a.data and a.data.class or ""):lower()
+      local clsB = (b.data and b.data.class or ""):lower()
+      if clsA ~= clsB then
+        return clsA < clsB
+      end
       local lvlA = tonumber(a.data and a.data.reqLevel) or 0
       local lvlB = tonumber(b.data and b.data.reqLevel) or 0
       if lvlA ~= lvlB then
         return lvlA < lvlB
       end
+      local nameA = (a.data and a.data.name or ""):lower()
+      local nameB = (b.data and b.data.name or ""):lower()
+      return nameA < nameB
+    end
+
+    if a.type == "dungeon" and b.type == "dungeon" then
+      local tierA = (a.data and a.data.isForever and 5)
+        or (a.data and a.data.minLevel == 60 and 4)
+        or (a.data and a.data.minLevel and a.data.minLevel > 45 and 3)
+        or (a.data and a.data.minLevel and a.data.minLevel > 25 and 2) or 1
+      local tierB = (b.data and b.data.isForever and 5)
+        or (b.data and b.data.minLevel == 60 and 4)
+        or (b.data and b.data.minLevel and b.data.minLevel > 45 and 3)
+        or (b.data and b.data.minLevel and b.data.minLevel > 25 and 2) or 1
+      if tierA ~= tierB then
+        return tierA < tierB
+      end
+      local minA = tonumber(a.data and a.data.minLevel) or 0
+      local minB = tonumber(b.data and b.data.minLevel) or 0
+      if minA ~= minB then
+        return minA < minB
+      end
+      local nameA = (a.data and a.data.name or ""):lower()
+      local nameB = (b.data and b.data.name or ""):lower()
+      return nameA < nameB
+    end
+
+    if a.type == "vendor" and b.type == "vendor" then
+      local itemA = (a.data and (a.data.item or "") or ""):lower()
+      local itemB = (b.data and (b.data.item or "") or ""):lower()
+      if itemA ~= itemB then
+        return itemA < itemB
+      end
+      local znA = (a.data and (a.data.zone or "") or ""):lower()
+      local znB = (b.data and (b.data.zone or "") or ""):lower()
+      if znA ~= znB then
+        return znA < znB
+      end
+      local nameA = (a.data and (a.data.name or "") or ""):lower()
+      local nameB = (b.data and (b.data.name or "") or ""):lower()
+      return nameA < nameB
     end
 
     local isNearbyView = (cur:find("^nearby") ~= nil) or (cat == "nearby") or a.isNearby or b.isNearby
