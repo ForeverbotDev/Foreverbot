@@ -2459,10 +2459,25 @@ function FG:ConfigureRowButton(btn, match)
     btn.Title:SetText("|c" .. qColor .. item.name .. "|r" .. foreverTag .. ilvlStr)
 
     local parts = {}
-    if item.slot and item.slot ~= "" and item.slot ~= "Non-equippable" then
-      table.insert(parts, "|cff8ba5cc" .. item.slot .. "|r")
-    elseif item.itemType and item.itemType ~= "" then
-      table.insert(parts, "|cff8ba5cc" .. item.itemType .. "|r")
+    local displaySlot = nil
+    local itemName = item.name or ""
+    if item.slot and item.slot ~= "" and item.slot ~= "Non-equippable" and item.slot ~= "Consumable" then
+      displaySlot = item.slot
+    elseif item.itemType and item.itemType ~= "" and item.itemType ~= "Consumable" and item.itemType ~= "Miscellaneous" then
+      displaySlot = item.itemType
+    else
+      -- Infer specific subtype from item name if slot/itemType was generic
+      if itemName:find("Potion") or itemName:find("Draft") or itemName:find("Brew") or itemName:find("Tears") then displaySlot = "Potion"
+      elseif itemName:find("Elixir") then displaySlot = "Elixir"
+      elseif itemName:find("Flask") then displaySlot = "Flask"
+      elseif itemName:find("Scroll") then displaySlot = "Scroll"
+      elseif itemName:find("Bandage") or itemName:find("Anti%-Venom") then displaySlot = "Bandage"
+      elseif itemName:find(" Oil") or itemName:find("Sharpening") or itemName:find("Weightstone") then displaySlot = "Oil / Buff"
+      elseif item.itemType and item.itemType ~= "" then displaySlot = item.itemType
+      end
+    end
+    if displaySlot then
+      table.insert(parts, "|cff8ba5cc" .. displaySlot .. "|r")
     end
 
     local srcText = FG:GetItemRowSourceText(item)
@@ -4646,13 +4661,14 @@ FG.FolderTree = {
     title = "Items & Equipment",
     parent = "root",
     folders = {
-      { path = "items/armor", name = "Armor", desc = "Cloth, Leather, Mail, Plate, Shields", icon = "Interface\\Icons\\INV_Chest_Plate03" },
-      { path = "items/consumables", name = "Consumables", desc = "Potions, Food, Bandages, Scrolls", icon = "Interface\\Icons\\INV_Potion_51" },
-      { path = "items/accessories", name = "Jewelry & Accessories", desc = "Rings, Trinkets, Necklaces, Cloaks", icon = "Interface\\Icons\\INV_Jewelry_Necklace_07" },
-      { path = "items/recipes", name = "Recipes & Plans", desc = "Crafting Recipes & Manuals", icon = "Interface\\Icons\\INV_Scroll_03" },
-      { path = "items/trade_goods", name = "Trade Goods", desc = "Herbs, Ore, Leather, Cloth, Reagents", icon = "Interface\\Icons\\INV_Ore_Iron_01" },
-      { path = "items/weapons", name = "Weapons", desc = "Swords, Axes, Maces, Staves, Bows...", icon = "Interface\\Icons\\INV_Sword_04" },
-      { path = "items/forever", name = "[Forever] Forever Exclusive Gear", desc = "Exclusive Warcraft Forever items", icon = "Interface\\Icons\\Spell_Holy_MagicalSentry" },
+      { path = "items/armor", name = "Armor", desc = "Cloth, Leather, Mail, Plate, Shields & Cloaks", icon = "Interface\\Icons\\INV_Chest_Plate03" },
+      { path = "items/weapons", name = "Weapons", desc = "Swords, Axes, Maces, Staves, Bows, Daggers...", icon = "Interface\\Icons\\INV_Sword_04" },
+      { path = "items/accessories", name = "Jewelry & Accessories", desc = "Rings, Trinkets, Necklaces & Cloaks", icon = "Interface\\Icons\\INV_Jewelry_Necklace_07" },
+      { path = "items/consumables", name = "Consumables", desc = "Potions, Elixirs, Flasks, Food, Bandages, Scrolls", icon = "Interface\\Icons\\INV_Potion_51" },
+      { path = "items/trade_goods", name = "Trade Goods", desc = "Herbs, Metal & Stone, Cloth, Leather, Gems, Reagents", icon = "Interface\\Icons\\INV_Ore_Iron_01" },
+      { path = "items/recipes", name = "Recipes & Plans", desc = "Alchemy, Blacksmithing, Tailoring, Enchanting...", icon = "Interface\\Icons\\INV_Scroll_03" },
+      { path = "items/containers", name = "Bags & Containers", desc = "Bags, Quivers, Ammo Pouches & Specialty bags", icon = "Interface\\Icons\\INV_Misc_Bag_08" },
+      { path = "forever/items", name = "[Forever] Forever Exclusive Gear", desc = "Exclusive Warcraft Forever items (By Type)", icon = "Interface\\Icons\\Spell_Holy_MagicalSentry" },
     },
   },
 
@@ -4764,10 +4780,14 @@ FG.FolderTree = {
     title = "Consumables",
     parent = "items",
     folders = {
-      { path = "items/sub/Bandages", name = "Bandages", desc = "First aid bandages", icon = "Interface\\Icons\\INV_Misc_Bandage_08", filter = { itemType = "Bandage" } },
-      { path = "items/sub/Food", name = "Food & Drink", desc = "Food, drinks & provisions", icon = "Interface\\Icons\\INV_Misc_Food_14", filter = { itemType = "Food & Drink" } },
-      { path = "items/sub/Potions", name = "Potions & Elixirs", desc = "Potions, elixirs & flasks", icon = "Interface\\Icons\\INV_Potion_51", filter = { itemType = "Potion" } },
-      { path = "items/sub/Scrolls", name = "Scrolls", desc = "Buff scrolls & enchant scrolls", icon = "Interface\\Icons\\INV_Scroll_02", filter = { itemType = "Scroll" } },
+      { path = "items/sub/Potions", name = "Potions", desc = "Healing, Mana, Rage, Free Action & Protection potions", icon = "Interface\\Icons\\INV_Potion_51", filter = { itemType = "Potion" } },
+      { path = "items/sub/Elixirs", name = "Elixirs", desc = "Defense, Agility, Strength & Intellect stat elixirs", icon = "Interface\\Icons\\INV_Potion_63", filter = { itemType = "Elixir" } },
+      { path = "items/sub/Flasks", name = "Flasks", desc = "Flask of the Titans, Supreme Power, Distilled Wisdom", icon = "Interface\\Icons\\INV_Potion_62", filter = { itemType = "Flask" } },
+      { path = "items/sub/Food", name = "Food & Drink", desc = "Food, water, alcoholic beverages & stat provisions", icon = "Interface\\Icons\\INV_Misc_Food_14", filter = { itemType = "Food & Drink" } },
+      { path = "items/sub/Bandages", name = "Bandages", desc = "Linen, Silk, Mageweave & Runecloth bandages", icon = "Interface\\Icons\\INV_Misc_Bandage_08", filter = { itemType = "Bandage" } },
+      { path = "items/sub/Scrolls", name = "Scrolls", desc = "Agility, Strength, Intellect & Stamina scrolls", icon = "Interface\\Icons\\INV_Scroll_02", filter = { itemType = "Scroll" } },
+      { path = "items/sub/Oils", name = "Weapon Buffs & Oils", desc = "Mana oils, Wizard oils & Sharpening stones", icon = "Interface\\Icons\\INV_Potion_99", filter = { itemType = "Buff" } },
+      { path = "items/sub/All Consumables", name = "[All Consumables (Full List)]", desc = "Complete catalog of all consumables (sorted by Type)", icon = "Interface\\Icons\\INV_Potion_54", isAll = true },
     },
   },
 
@@ -4775,10 +4795,15 @@ FG.FolderTree = {
     title = "Trade Goods",
     parent = "items",
     folders = {
-      { path = "items/sub/Herbs", name = "Herbs", desc = "Gathered herbs & plants", icon = "Interface\\Icons\\INV_Misc_Herb_07", filter = { itemType = "Herb" } },
-      { path = "items/sub/Ore", name = "Metal & Stone", desc = "Ores, bars & stones", icon = "Interface\\Icons\\INV_Ore_Iron_01", filter = { itemType = "Metal & Stone" } },
-      { path = "items/sub/Parts", name = "Parts & Devices", desc = "Engineering parts & tools", icon = "Interface\\Icons\\INV_Misc_Gear_01", filter = { itemType = "Parts" } },
-      { path = "items/sub/Reagents", name = "Reagents & Materials", desc = "Class & crafting reagents", icon = "Interface\\Icons\\INV_Misc_Dust_01", filter = { itemType = "Reagent" } },
+      { path = "items/sub/Cloth", name = "Cloth & Bolts", desc = "Linen, Wool, Silk, Mageweave, Runecloth & Mooncloth", icon = "Interface\\Icons\\INV_Fabric_Silk_02", filter = { itemType = "Cloth" } },
+      { path = "items/sub/Elemental", name = "Elemental & Essences", desc = "Elemental Earth, Fire, Water, Air, Essences & Cores", icon = "Interface\\Icons\\Spell_Fire_Volcano", filter = { itemType = "Elemental" } },
+      { path = "items/sub/Gems", name = "Gems & Jewels", desc = "Malachite, Tigerseye, Shadowgem, Ruby, Diamond, Sapphire", icon = "Interface\\Icons\\INV_Misc_Gem_Ruby_01", filter = { itemType = "Gem" } },
+      { path = "items/sub/Herbs", name = "Herbs", desc = "Peacebloom, Silverleaf, Kingsblood, Black Lotus...", icon = "Interface\\Icons\\INV_Misc_Herb_07", filter = { itemType = "Herb" } },
+      { path = "items/sub/Leather", name = "Leather & Hides", desc = "Light, Medium, Heavy, Thick, Rugged leather & hides", icon = "Interface\\Icons\\INV_Misc_Pelt_Wolf_01", filter = { itemType = "Leather" } },
+      { path = "items/sub/Ore", name = "Metal & Stone", desc = "Copper, Tin, Iron, Mithril, Thorium & Dark Iron bars", icon = "Interface\\Icons\\INV_Ore_Iron_01", filter = { itemType = "Metal & Stone" } },
+      { path = "items/sub/Parts", name = "Parts & Devices", desc = "Gears, tubes, fuses & engineering components", icon = "Interface\\Icons\\INV_Misc_Gear_01", filter = { itemType = "Parts" } },
+      { path = "items/sub/Reagents", name = "Reagents & Materials", desc = "Dusts, shards, vials, threads, dyes & oils", icon = "Interface\\Icons\\INV_Misc_Dust_01", filter = { itemType = "Reagent" } },
+      { path = "items/sub/All Trade Goods", name = "[All Trade Goods (Full List)]", desc = "Complete catalog of all trade goods & materials", icon = "Interface\\Icons\\INV_Misc_Coin_01", isAll = true },
     },
   },
 
@@ -4786,7 +4811,25 @@ FG.FolderTree = {
     title = "Recipes & Plans",
     parent = "items",
     folders = {
-      { path = "items/sub/All Recipes", name = "All Recipes & Plans", desc = "Crafting Recipes & Manuals", icon = "Interface\\Icons\\INV_Scroll_03", filter = { itemType = "Recipe" } },
+      { path = "items/recipes/alchemy", name = "Alchemy Recipes", desc = "Potions, elixirs, flasks & transmutation recipes", icon = "Interface\\Icons\\Trade_Alchemy" },
+      { path = "items/recipes/blacksmithing", name = "Blacksmithing Plans", desc = "Mail, plate, weapons & sharpening stones", icon = "Interface\\Icons\\Trade_BlackSmithing" },
+      { path = "items/recipes/cooking", name = "Cooking Recipes", desc = "Food and beverage culinary recipes", icon = "Interface\\Icons\\INV_Misc_Food_15" },
+      { path = "items/recipes/enchanting", name = "Enchanting Formulas", desc = "Weapon, chest, bracer, boot & oil enchant formulas", icon = "Interface\\Icons\\Trade_Engraving" },
+      { path = "items/recipes/engineering", name = "Engineering Schematics", desc = "Explosives, guns, devices & gadget schematics", icon = "Interface\\Icons\\Trade_Engineering" },
+      { path = "items/recipes/first_aid", name = "First Aid Manuals", desc = "Bandage, anti-venom & survival medicine manuals", icon = "Interface\\Icons\\Spell_Holy_SealOfSacrifice" },
+      { path = "items/recipes/leatherworking", name = "Leatherworking Patterns", desc = "Leather & mail armor, cloaks and patch patterns", icon = "Interface\\Icons\\Trade_LeatherWorking" },
+      { path = "items/recipes/tailoring", name = "Tailoring Patterns", desc = "Cloth armor, robes, shirts & bag patterns", icon = "Interface\\Icons\\Trade_Tailoring" },
+      { path = "items/recipes/all", name = "[All Recipes & Plans (Full List)]", desc = "Complete catalog of all crafting recipes", icon = "Interface\\Icons\\INV_Scroll_03", isAll = true },
+    },
+  },
+
+  ["items/containers"] = {
+    title = "Bags & Containers",
+    parent = "items",
+    folders = {
+      { path = "items/sub/Bags", name = "Bags (General)", desc = "6-slot to 18-slot inventory containers", icon = "Interface\\Icons\\INV_Misc_Bag_08" },
+      { path = "items/sub/Quivers", name = "Quivers & Ammo Pouches", desc = "Hunter bow quivers and gun ammo pouches", icon = "Interface\\Icons\\INV_Misc_Quiver_01" },
+      { path = "items/sub/Specialty_Bags", name = "Profession & Specialty Bags", desc = "Soul pouches, Herb bags, Enchanting pouches", icon = "Interface\\Icons\\INV_Misc_Bag_14" },
     },
   },
 
@@ -4830,10 +4873,14 @@ FG.FolderTree = {
     title = "Vendors & Flight Paths",
     parent = "root",
     folders = {
-      { path = "vendors/all", name = "All World Vendors", desc = "Complete alphabetical catalog of all merchants", icon = "Interface\\Icons\\INV_Misc_Coin_01" },
       { path = "vendors/flightpaths", name = "Flight Masters", desc = "Alliance & Horde Flight Masters", icon = "Interface\\Icons\\Ability_Hunter_EagleEye" },
+      { path = "vendors/repairs", name = "Repairs & Armorers", desc = "Blacksmiths and equipment repairers", icon = "Interface\\Icons\\Trade_BlackSmithing" },
+      { path = "vendors/reagents", name = "Reagents & Alchemy Supplies", desc = "Herbs, potions, poisons and crafting goods", icon = "Interface\\Icons\\INV_Potion_33" },
+      { path = "vendors/food", name = "Food & Drink Merchants", desc = "Innkeepers, barkeepers, butchers & bakers", icon = "Interface\\Icons\\INV_Misc_Food_14" },
+      { path = "vendors/weapons_armor", name = "Weapons & Armor Vendors", desc = "Weaponsmiths, leatherworkers, tailors & armorers", icon = "Interface\\Icons\\INV_Sword_04" },
       { path = "vendors/pvp", name = "PvP Quartermasters", desc = "Battlegrounds & Honor Vendors", icon = "Interface\\Icons\\INV_BannerPVP_02" },
       { path = "vendors/specialty", name = "Specialty & Rare Goods", desc = "Limited Recipes, Pets & Unique items", icon = "Interface\\Icons\\INV_Misc_Bag_07" },
+      { path = "vendors/all", name = "[All World Vendors (Full List)]", desc = "Complete alphabetical catalog of all merchants", icon = "Interface\\Icons\\INV_Misc_Coin_01", isAll = true },
     },
   },
 
@@ -4947,10 +4994,22 @@ function FG:NavigateUpFolder()
       parent = "items/forever"
     elseif cur == "items/forever" then
       parent = "items"
+    elseif cur:find("^items/recipes/") then
+      parent = "items/recipes"
+    elseif cur:find("^items/containers") or cur:find("^items/sub/Bags") or cur:find("^items/sub/Quivers") or cur:find("^items/sub/Specialty_Bags") then
+      parent = (cur == "items/containers") and "items" or "items/containers"
     elseif cur:find("^items/sub/") then
       local sub = cur:sub(11)
       if sub:find("Armor$") or sub == "Shields" or sub == "Cloaks" then
         parent = "items/armor"
+      elseif sub == "Potions" or sub == "Elixirs" or sub == "Flasks" or sub == "Food" or sub == "Bandages" or sub == "Scrolls" or sub == "Oils" or sub == "All Consumables" then
+        parent = "items/consumables"
+      elseif sub == "Herbs" or sub == "Ore" or sub == "Cloth" or sub == "Leather" or sub == "Gems" or sub == "Elemental" or sub == "Parts" or sub == "Reagents" or sub == "All Trade Goods" then
+        parent = "items/trade_goods"
+      elseif sub:find("Axe") or sub:find("Sword") or sub:find("Mace") or sub == "Daggers" or sub == "Polearms" or sub == "Staves" or sub == "Bows" or sub == "Guns" or sub == "Wands" or sub == "Fist Weapons" then
+        parent = "items/weapons"
+      elseif sub == "Amulets" or sub == "Rings" or sub == "Trinkets" then
+        parent = "items/accessories"
       else
         parent = "items"
       end
@@ -5094,6 +5153,22 @@ function FG:UpdateDolphinBreadcrumbs(query, matchCount)
     elseif cur == "items/consumables" then table.insert(trail, "|cffffffffConsumables|r")
     elseif cur == "items/trade_goods" then table.insert(trail, "|cffffffffTrade Goods|r")
     elseif cur == "items/recipes" then table.insert(trail, "|cffffffffRecipes|r")
+    elseif cur == "items/containers" then table.insert(trail, "|cffffffffBags & Containers|r")
+    elseif cur:find("^items/recipes/(.+)$") then
+      local rec = cur:match("^items/recipes/(.+)$")
+      local recNames = {
+        alchemy = "Alchemy Recipes",
+        blacksmithing = "Blacksmithing Plans",
+        cooking = "Cooking Recipes",
+        enchanting = "Enchanting Formulas",
+        engineering = "Engineering Schematics",
+        first_aid = "First Aid Manuals",
+        leatherworking = "Leatherworking Patterns",
+        tailoring = "Tailoring Patterns",
+        all = "All Recipes",
+      }
+      table.insert(trail, "|cffffffffRecipes|r")
+      table.insert(trail, "|cffffd24d" .. (recNames[rec] or rec) .. "|r")
     elseif cur == "items/forever" then
       table.insert(trail, "|cffe6cc80[Forever] Gear (By Type)|r")
     elseif cur:find("^items/forever/(.+)$") then
@@ -5105,7 +5180,19 @@ function FG:UpdateDolphinBreadcrumbs(query, matchCount)
       table.insert(trail, "|cffe6cc80[Forever] Gear|r")
       table.insert(trail, "|cffffd24d" .. typeName .. "|r")
     elseif cur:find("^items/sub/") then
-      table.insert(trail, "|cffffd24d" .. cur:sub(11) .. "|r")
+      local sub = cur:sub(11)
+      if sub == "Potions" or sub == "Elixirs" or sub == "Flasks" or sub == "Food" or sub == "Bandages" or sub == "Scrolls" or sub == "Oils" or sub == "All Consumables" then
+        table.insert(trail, "|cffffffffConsumables|r")
+      elseif sub == "Herbs" or sub == "Ore" or sub == "Cloth" or sub == "Leather" or sub == "Gems" or sub == "Elemental" or sub == "Parts" or sub == "Reagents" or sub == "All Trade Goods" then
+        table.insert(trail, "|cffffffffTrade Goods|r")
+      elseif sub == "Bags" or sub == "Quivers" or sub == "Specialty_Bags" then
+        table.insert(trail, "|cffffffffBags|r")
+      elseif sub:find("Axe") or sub:find("Sword") or sub:find("Mace") or sub == "Daggers" or sub == "Polearms" or sub == "Staves" or sub == "Bows" or sub == "Guns" or sub == "Wands" or sub == "Fist Weapons" then
+        table.insert(trail, "|cffffffffWeapons|r")
+      elseif sub == "Amulets" or sub == "Rings" or sub == "Trinkets" or sub == "Cloaks" then
+        table.insert(trail, "|cffffffffAccessories|r")
+      end
+      table.insert(trail, "|cffffd24d" .. (sub:gsub("_", " ")) .. "|r")
     end
   elseif cur:find("^creatures") then
     table.insert(trail, "|cff88aaccCreatures|r")
@@ -5155,6 +5242,10 @@ function FG:UpdateDolphinBreadcrumbs(query, matchCount)
     table.insert(trail, "|cff88aaccVendors|r")
     if cur == "vendors/all" then table.insert(trail, "|cffffffffAll Vendors|r")
     elseif cur == "vendors/flightpaths" then table.insert(trail, "|cffffffffFlight Masters|r")
+    elseif cur == "vendors/repairs" then table.insert(trail, "|cffffffffRepairs & Armorers|r")
+    elseif cur == "vendors/reagents" then table.insert(trail, "|cffffffffReagents & Alchemy|r")
+    elseif cur == "vendors/food" then table.insert(trail, "|cffffffffFood & Drink|r")
+    elseif cur == "vendors/weapons_armor" then table.insert(trail, "|cffffffffWeapons & Armor|r")
     elseif cur == "vendors/pvp" then table.insert(trail, "|cffffffffPvP Vendors|r")
     elseif cur == "vendors/specialty" then table.insert(trail, "|cffffffffSpecialty Goods|r")
     end
@@ -5222,10 +5313,20 @@ end
 
 function FG:GetItemTypeSortKey(item)
   if not item then return 99, "Other" end
-  local slot = (item.slot and item.slot ~= "" and item.slot ~= "Non-equippable") and item.slot or nil
+  local slot = (item.slot and item.slot ~= "" and item.slot ~= "Non-equippable" and item.slot ~= "Consumable") and item.slot or nil
   local iType = (item.itemType and item.itemType ~= "") and item.itemType or nil
   local name = item.name or ""
   local displayType = slot or iType or "Other"
+  if not slot then
+    if (iType and iType:find("Potion")) or name:find("Potion") or name:find("Draft") or name:find("Brew") or name:find("Tears") then displayType = "Potion"
+    elseif (iType and iType:find("Elixir")) or name:find("Elixir") then displayType = "Elixir"
+    elseif (iType and iType:find("Flask")) or name:find("^Flask of") or name:find(" Flask") then displayType = "Flask"
+    elseif (iType and iType:find("Scroll")) or name:find("^Scroll of") or name:find("Scroll") then displayType = "Scroll"
+    elseif (iType and iType:find("Bandage")) or name:find("Bandage") or name:find("Anti%-Venom") then displayType = "Bandage"
+    elseif name:find(" Oil") or name:find("Sharpening") or name:find("Weightstone") then displayType = "Oil"
+    elseif (iType and iType:find("Food")) or name:find("Meat") or name:find("Bread") or name:find("Fish") or name:find("Stew") or name:find("Soup") or name:find("Water") or name:find("Juice") or name:find("Milk") or name:find("Ale") or name:find("Beer") or name:find("Wine") or name:find("Pie") or name:find("Roast") or name:find("Ribs") or name:find("Cheese") or name:find("Apple") or name:find("Fruit") or name:find("Ration") or name:find("Melon") or name:find("Tea") or name:find("Bisque") or name:find("Sausage") or name:find("Chop") or name:find("Steak") then displayType = "Food & Drink"
+    end
+  end
 
   -- Determine high-level group rank:
   -- 1: Weapons
@@ -6030,27 +6131,121 @@ function FG:PopulateCodexResults(query)
             elseif subName == "Guns" and not isRecipe and item.itemType and item.itemType:find("Gun") then matchesFilter = true
             elseif subName == "Wands" and not isRecipe and item.itemType and item.itemType:find("Wand") then matchesFilter = true
             elseif subName == "Fist Weapons" and not isRecipe and item.itemType and item.itemType:find("Fist") then matchesFilter = true
-            elseif subName == "Cloth Armor" and not isRecipe and item.itemType and item.itemType:find("Cloth") then matchesFilter = true
-            elseif subName == "Leather Armor" and not isRecipe and item.itemType and item.itemType:find("Leather") then matchesFilter = true
-            elseif subName == "Mail Armor" and not isRecipe and item.itemType and item.itemType:find("Mail") then matchesFilter = true
-            elseif subName == "Plate Armor" and not isRecipe and item.itemType and item.itemType:find("Plate") then matchesFilter = true
+            elseif subName == "Cloth Armor" and not isRecipe and item.itemType and item.itemType:find("Cloth") and item.slot and item.slot ~= "Non-equippable" then matchesFilter = true
+            elseif subName == "Leather Armor" and not isRecipe and item.itemType and item.itemType:find("Leather") and item.slot and item.slot ~= "Non-equippable" then matchesFilter = true
+            elseif subName == "Mail Armor" and not isRecipe and item.itemType and item.itemType:find("Mail") and item.slot and item.slot ~= "Non-equippable" then matchesFilter = true
+            elseif subName == "Plate Armor" and not isRecipe and item.itemType and item.itemType:find("Plate") and item.slot and item.slot ~= "Non-equippable" then matchesFilter = true
             elseif subName == "Shields" and not isRecipe and item.slot and item.slot:find("Shield") then matchesFilter = true
             elseif subName == "Amulets" and not isRecipe and item.slot and item.slot:find("Neck") then matchesFilter = true
             elseif subName == "Rings" and not isRecipe and item.slot and item.slot:find("Finger") then matchesFilter = true
             elseif subName == "Trinkets" and not isRecipe and item.slot and item.slot:find("Trinket") then matchesFilter = true
             elseif subName == "Cloaks" and not isRecipe and item.slot and item.slot:find("Back") then matchesFilter = true
-            elseif subName == "Potions" and item.itemType and (item.itemType:find("Potion") or item.itemType:find("Elixir") or item.itemType:find("Flask")) then matchesFilter = true
-            elseif subName == "Food" and item.itemType and item.itemType:find("Food") then matchesFilter = true
-            elseif subName == "Bandages" and item.itemType and item.itemType:find("Bandage") then matchesFilter = true
-            elseif subName == "Scrolls" and item.itemType and item.itemType:find("Scroll") then matchesFilter = true
-            elseif subName == "Herbs" and item.itemType and item.itemType:find("Herb") then matchesFilter = true
-            elseif subName == "Ore" and item.itemType and (item.itemType:find("Metal") or item.itemType:find("Stone")) then matchesFilter = true
-            elseif subName == "Parts" and item.itemType and (item.itemType:find("Parts") or item.itemType:find("Device")) then matchesFilter = true
-            elseif subName == "Reagents" and item.itemType and item.itemType:find("Reagent") then matchesFilter = true
+            elseif subName == "Potions" and not isRecipe then
+              if item.itemType == "Potion" then matchesFilter = true
+              elseif (not item.itemType or item.itemType == "Consumable" or item.itemType == "Miscellaneous") and (name:find("Potion") or name:find("Draft") or name:find("Brew") or name:find("Tears")) and not name:find("Elixir") and not name:find("Flask") then
+                matchesFilter = true
+              end
+            elseif subName == "Elixirs" and not isRecipe then
+              if item.itemType == "Elixir" or (name:find("Elixir") and not name:find("Flask")) then matchesFilter = true end
+            elseif subName == "Flasks" and not isRecipe then
+              if item.itemType == "Flask" or name:find("^Flask of") or name:find(" Flask") then matchesFilter = true end
+            elseif subName == "Food" and not isRecipe then
+              if (item.itemType and item.itemType:find("Food")) or ((item.itemType == "Consumable" or item.itemType == "Miscellaneous") and (name:find("Meat") or name:find("Bread") or name:find("Fish") or name:find("Stew") or name:find("Soup") or name:find("Water") or name:find("Juice") or name:find("Milk") or name:find("Ale") or name:find("Beer") or name:find("Wine") or name:find("Pie") or name:find("Roast") or name:find("Ribs") or name:find("Cheese") or name:find("Apple") or name:find("Fruit") or name:find("Ration") or name:find("Melon") or name:find("Tea") or name:find("Bisque") or name:find("Sausage") or name:find("Chop") or name:find("Steak"))) then
+                matchesFilter = true
+              end
+            elseif subName == "Bandages" and not isRecipe then
+              if (item.itemType and item.itemType:find("Bandage")) or name:find("Bandage") or name:find("Anti%-Venom") then matchesFilter = true end
+            elseif subName == "Scrolls" and not isRecipe then
+              if (item.itemType and item.itemType:find("Scroll")) or name:find("^Scroll of") then matchesFilter = true end
+            elseif subName == "Oils" and not isRecipe then
+              if name:find(" Oil") or name:find("Sharpening Stone") or name:find("Weightstone") or name:find("Wizard Oil") or name:find("Mana Oil") then matchesFilter = true end
+            elseif subName == "All Consumables" and not isRecipe then
+              local grp = FG:GetItemTypeSortKey(item)
+              if grp == 4 then matchesFilter = true end
+            elseif subName == "Cloth" and not isRecipe then
+              if (item.slot == "Non-equippable" or not item.slot or item.slot == "") and ((item.itemType and item.itemType:find("Cloth")) or name:find("Cloth") or name:find("Bolt of") or name:find("Linen") or name:find("Wool") or name:find("Silk") or name:find("Mageweave") or name:find("Runecloth") or name:find("Mooncloth")) then
+                matchesFilter = true
+              end
+            elseif subName == "Elemental" and not isRecipe then
+              if (item.itemType and item.itemType:find("Elemental")) or name:find("Elemental ") or name:find("Essence of") or name:find("Core of") or name:find("Breath of") or name:find("Globe of") or name:find("Heart of") or name:find("Ichor of") or name:find("Living Essence") then matchesFilter = true end
+            elseif subName == "Gems" and not isRecipe then
+              if (item.itemType and item.itemType:find("Gem")) or name:find("Malachite") or name:find("Tigerseye") or name:find("Shadowgem") or name:find("Ruby") or name:find("Sapphire") or name:find("Diamond") or name:find("Emerald") or name:find("Topaz") or name:find("Pearl") or name:find("Agate") or name:find("Citrine") or name:find("Aquamarine") or name:find("Opal") then matchesFilter = true end
+            elseif subName == "Herbs" and not isRecipe then
+              if (item.itemType and item.itemType:find("Herb")) or name:find("Peacebloom") or name:find("Silverleaf") or name:find("Earthroot") or name:find("Mageroyal") or name:find("Briarthorn") or name:find("Stranglekelp") or name:find("Bruiseweed") or name:find("Wild Steelbloom") or name:find("Grave Moss") or name:find("Kingsblood") or name:find("Liferoot") or name:find("Fadeleaf") or name:find("Goldthorn") or name:find("Khadgar") or name:find("Wintersbite") or name:find("Firebloom") or name:find("Purple Lotus") or name:find("Arthas") or name:find("Sungrass") or name:find("Blindweed") or name:find("Ghost Mushroom") or name:find("Gromsblood") or name:find("Golden Sansam") or name:find("Dreamfoil") or name:find("Mountain Silversage") or name:find("Plaguebloom") or name:find("Icecap") or name:find("Black Lotus") then matchesFilter = true end
+            elseif subName == "Leather" and not isRecipe then
+              if (item.slot == "Non-equippable" or not item.slot or item.slot == "") and ((item.itemType and item.itemType:find("Leather")) or name:find("Leather") or name:find("Hide") or name:find("Scale") or name:find("Pelt")) then
+                matchesFilter = true
+              end
+            elseif subName == "Ore" and not isRecipe then
+              if (item.itemType and (item.itemType:find("Metal") or item.itemType:find("Stone") or item.itemType:find("Ore"))) or name:find("Ore") or name:find(" Bar") or (name:find("Stone") and not name:find("Sharpening") and not name:find("Weightstone")) or name:find("Flux") then matchesFilter = true end
+            elseif subName == "Parts" and not isRecipe then
+              if (item.itemType and (item.itemType:find("Parts") or item.itemType:find("Device"))) or name:find("Tube") or name:find("Fuse") or name:find("Gear") or name:find("Trigger") or name:find("Casing") or name:find("Dynamite") or name:find("Bomb") or name:find("Wire") or name:find("Blasting Powder") then matchesFilter = true end
+            elseif subName == "Reagents" and not isRecipe then
+              if (item.itemType and item.itemType:find("Reagent")) or name:find("Dust") or name:find("Essence") or name:find("Shard") or name:find("Crystal") or name:find("Thread") or name:find("Dye") or name:find("Vial") or name:find("Potion Vial") or name:find("Ankh") or name:find("Rune of") or name:find("Flash Powder") or name:find("Wild Berries") or name:find("Wild Thornroot") or name:find("Sacred Candle") then matchesFilter = true end
+            elseif subName == "All Trade Goods" and not isRecipe then
+              local grp = FG:GetItemTypeSortKey(item)
+              if grp == 6 then matchesFilter = true end
+            elseif subName == "Bags" and not isRecipe then
+              if (item.slot == "Bag" or (item.itemType and item.itemType == "Bag")) and not (name:find("Quiver") or name:find("Ammo") or name:find("Shot") or name:find("Herb") or name:find("Enchant") or name:find("Soul")) then matchesFilter = true end
+            elseif subName == "Quivers" and not isRecipe then
+              if (item.itemType and (item.itemType:find("Quiver") or item.itemType:find("Ammo"))) or name:find("Quiver") or name:find("Ammo Pouch") or name:find("Bandolier") or name:find("Shot Pouch") then matchesFilter = true end
+            elseif subName == "Specialty_Bags" and not isRecipe then
+              if name:find("Soul Pouch") or name:find("Box of Souls") or name:find("Herb Pouch") or name:find("Herb Bag") or name:find("Cenarion Herb Bag") or name:find("Enchanter's") or name:find("Big Bag of Enchantment") then matchesFilter = true end
             elseif subName == "All Recipes" and (isRecipe or (item.itemType and item.itemType:find("Recipe"))) then matchesFilter = true
             end
 
             if matchesFilter then
+              local key = item.id or (name .. ":" .. (item.ilvl or 0))
+              if not seen[key] then
+                seen[key] = true
+                table.insert(matches, { type = "item", data = item })
+              end
+            end
+          end
+        end
+      end
+    elseif cur:find("^items/recipes/") and FG.Data.Items then
+      local prof = cur:match("^items/recipes/([^/]+)$")
+      local seen = {}
+      for _, item in pairs(FG.Data.Items) do
+        local name = item.name or ""
+        if not FG:IsInternalItem(name) then
+          local isRecipe = name:find("^Plans:") or name:find("^Pattern:") or name:find("^Schematic:") or name:find("^Formula:") or name:find("^Recipe:") or name:find("^Manual:") or (item.itemType and item.itemType:find("Recipe"))
+          if isRecipe then
+            local eff = (item.effects or ""):lower()
+            local itype = item.itemType or ""
+            local pass = false
+            if prof == "all" then
+              pass = true
+            elseif prof == "blacksmithing" then
+              pass = (name:find("^Plans:") ~= nil)
+            elseif prof == "enchanting" then
+              pass = (name:find("^Formula:") ~= nil)
+            elseif prof == "engineering" then
+              pass = (name:find("^Schematic:") ~= nil)
+            elseif prof == "first_aid" then
+              pass = (name:find("^Manual:") ~= nil or name:find("First Aid") ~= nil)
+            elseif prof == "alchemy" then
+              if name:find("^Recipe:") then
+                pass = name:find("Potion") or name:find("Elixir") or name:find("Flask") or name:find("Transmute") or name:find("Oil") or name:find("Firewater") or name:find("Philosopher") or name:find("Gniodine") or name:find("Rejuvenation") or name:find("Spellblasting") or name:find("Frenzy Potion") or eff:find("brew") or eff:find("distill") or eff:find("transmute") or eff:find("make a") or eff:find("make an")
+              end
+            elseif prof == "cooking" then
+              if name:find("^Recipe:") then
+                local isAlch = name:find("Potion") or name:find("Elixir") or name:find("Flask") or name:find("Transmute") or name:find("Oil") or name:find("Firewater") or name:find("Philosopher") or name:find("Gniodine") or name:find("Rejuvenation") or name:find("Spellblasting") or name:find("Frenzy Potion") or eff:find("brew") or eff:find("distill") or eff:find("transmute") or eff:find("make a") or eff:find("make an")
+                pass = not isAlch
+              end
+            elseif prof == "tailoring" then
+              if name:find("^Pattern:") then
+                pass = (itype == "Cloth") or name:find("Cloth") or name:find("Robe") or name:find("Shirt") or name:find("Bag") or name:find("Pouch") or name:find("Mooncloth") or name:find("Silk") or name:find("Linen") or name:find("Wool") or name:find("Mageweave") or name:find("Runecloth") or name:find("Shadoweave") or name:find("Felcloth") or name:find("Ghostweave") or name:find("Dress") or name:find("Pantaloons")
+              end
+            elseif prof == "leatherworking" then
+              if name:find("^Pattern:") then
+                local isTailoring = (itype == "Cloth") or name:find("Cloth") or name:find("Robe") or name:find("Shirt") or name:find("Bag") or name:find("Pouch") or name:find("Mooncloth") or name:find("Silk") or name:find("Linen") or name:find("Wool") or name:find("Mageweave") or name:find("Runecloth") or name:find("Shadoweave") or name:find("Felcloth") or name:find("Ghostweave") or name:find("Dress") or name:find("Pantaloons")
+                pass = not isTailoring
+              end
+            end
+
+            if pass then
               local key = item.id or (name .. ":" .. (item.ilvl or 0))
               if not seen[key] then
                 seen[key] = true
@@ -6214,13 +6409,87 @@ function FG:PopulateCodexResults(query)
           table.insert(matches, { type = "dungeon", data = d })
         end
       end
-    elseif cur == "vendors/flightpaths" and FG.Data.Flightpaths then
-      for _, fp in pairs(FG.Data.Flightpaths) do
-        table.insert(matches, { type = "vendor", data = { name = fp.name, zone = fp.zone, coords = fp.coords, item = fp.faction .. " Flight Master", tip = fp.notes or fp.connections } })
-      end
-    elseif cur:find("^vendors/") and FG.Data.Vendors then
-      for _, v in pairs(FG.Data.Vendors) do
-        table.insert(matches, { type = "vendor", data = v })
+    elseif cur:find("^vendors/") and (FG.Data.Vendors or FG.Data.Flightpaths or FG.Data.Creatures) then
+      local vSub = cur:match("^vendors/([^/]+)$")
+      if vSub == "flightpaths" and FG.Data.Flightpaths then
+        for _, fp in pairs(FG.Data.Flightpaths) do
+          table.insert(matches, { type = "vendor", data = { name = fp.name, zone = fp.zone, coords = fp.coords, item = fp.faction .. " Flight Master", tip = fp.notes or fp.connections } })
+        end
+      else
+        local added = {}
+        if FG.Data.Vendors then
+          for _, v in pairs(FG.Data.Vendors) do
+            local tip = (v.tip or ""):lower()
+            local item = (v.item or ""):lower()
+            local lim = v.limitedStock or ""
+            local pass = false
+            if vSub == "all" then
+              pass = true
+            elseif vSub == "repairs" then
+              pass = tip:find("blacksmith") or tip:find("armorer") or tip:find("weaponsmith") or tip:find("repair") or tip:find("shield")
+            elseif vSub == "reagents" then
+              pass = tip:find("reagent") or tip:find("alchemy") or tip:find("herbalism") or tip:find("poison") or tip:find("trade supplies") or item:find("thread") or item:find("vial") or item:find("dye") or item:find("flux")
+            elseif vSub == "food" then
+              pass = tip:find("food") or tip:find("drink") or tip:find("innkeeper") or tip:find("bartender") or tip:find("baker") or tip:find("butcher") or tip:find("cook") or item:find("water") or item:find("bread") or item:find("meat")
+            elseif vSub == "weapons_armor" then
+              pass = tip:find("weapon") or tip:find("armor") or tip:find("bowyer") or tip:find("gunsmith") or tip:find("cloth") or tip:find("leather") or tip:find("mail") or tip:find("plate") or tip:find("tailor") or tip:find("leatherwork")
+            elseif vSub == "pvp" then
+              pass = tip:find("quartermaster") or tip:find("officer") or tip:find("battleground") or tip:find("honor") or tip:find("pvp") or tip:find("sergeant") or tip:find("commander")
+            elseif vSub == "specialty" then
+              pass = (lim ~= "") or tip:find("specialty") or tip:find("rare") or tip:find("exotic") or tip:find("pet") or tip:find("mount")
+            end
+            if pass then
+              local key = (v.name or "") .. ":" .. (v.zone or "")
+              if not added[key] then
+                added[key] = true
+                table.insert(matches, { type = "vendor", data = v })
+              end
+            end
+          end
+        end
+
+        if FG.Data.Creatures then
+          for _, c in pairs(FG.Data.Creatures) do
+            if not FG:IsInternalCreature(c.name, c.family) then
+              local vTitle = FG:GetVendorTitle(c)
+              if vTitle then
+                local tip = vTitle:lower()
+                local pass = false
+                if vSub == "all" then
+                  pass = true
+                elseif vSub == "repairs" then
+                  pass = tip:find("blacksmith") or tip:find("armorer") or tip:find("weaponsmith") or tip:find("repair") or tip:find("shield")
+                elseif vSub == "reagents" then
+                  pass = tip:find("reagent") or tip:find("alchemy") or tip:find("herbalism") or tip:find("poison") or tip:find("trade") or tip:find("supplies")
+                elseif vSub == "food" then
+                  pass = tip:find("food") or tip:find("drink") or tip:find("innkeeper") or tip:find("bartender") or tip:find("baker") or tip:find("butcher") or tip:find("cook") or tip:find("ale") or tip:find("wine")
+                elseif vSub == "weapons_armor" then
+                  pass = tip:find("weapon") or tip:find("armor") or tip:find("bowyer") or tip:find("gunsmith") or tip:find("cloth") or tip:find("leather") or tip:find("mail") or tip:find("plate") or tip:find("tailor") or tip:find("leatherwork")
+                elseif vSub == "pvp" then
+                  pass = tip:find("quartermaster") or tip:find("officer") or tip:find("battleground") or tip:find("honor") or tip:find("pvp") or tip:find("sergeant") or tip:find("commander")
+                elseif vSub == "specialty" then
+                  pass = tip:find("specialty") or tip:find("rare") or tip:find("exotic") or tip:find("pet") or tip:find("mount")
+                end
+                if pass then
+                  local key = (c.name or "") .. ":" .. (c.zone or "")
+                  if not added[key] then
+                    added[key] = true
+                    table.insert(matches, {
+                      type = "vendor",
+                      data = {
+                        name = c.name,
+                        zone = c.zone,
+                        coords = c.coords,
+                        item = vTitle,
+                        tip = "<" .. vTitle .. ">" .. ((c.minLevel and c.minLevel > 0) and (" • Level " .. c.minLevel) or ""),
+                      }
+                    })
+                  end
+                end
+              end
+            end
+          end
+        end
       end
     elseif cur:find("^forever/items/") or cur:find("^items/forever/") then
       local subType = cur:match("^forever/items/([^/]+)$") or cur:match("^items/forever/([^/]+)$")
@@ -6637,22 +6906,39 @@ function FG:PopulateCodexResults(query)
 
     -- Folder browsing (q == ""):
     if a.type == "item" and b.type == "item" then
-      local groupA, typeA = FG:GetItemTypeSortKey(a.data)
-      local groupB, typeB = FG:GetItemTypeSortKey(b.data)
-      if groupA ~= groupB then
-        return groupA < groupB
+      local isLeafItemFolder = cur:find("^items/sub/")
+        or cur:find("^items/armor/[^/]+/[^/]+$")
+        or (cur:find("^items/recipes/") and cur ~= "items/recipes/all")
+        or (cur:find("^forever/items/") and cur ~= "forever/items/all" and cur ~= "forever/items")
+        or (cur:find("^items/forever/") and cur ~= "items/forever/all" and cur ~= "items/forever")
+
+      if isLeafItemFolder and cur ~= "items/sub/All Consumables" and cur ~= "items/sub/All Trade Goods" then
+        local ilvlA = tonumber(a.data and a.data.ilvl) or 0
+        local ilvlB = tonumber(b.data and b.data.ilvl) or 0
+        if ilvlA ~= ilvlB then
+          return ilvlA < ilvlB
+        end
+        local nameA = (a.data and (a.data.name or a.data.title or "")) or ""
+        local nameB = (b.data and (b.data.name or b.data.title or "")) or ""
+        return nameA:lower() < nameB:lower()
+      else
+        local groupA, typeA = FG:GetItemTypeSortKey(a.data)
+        local groupB, typeB = FG:GetItemTypeSortKey(b.data)
+        if groupA ~= groupB then
+          return groupA < groupB
+        end
+        if typeA ~= typeB then
+          return typeA < typeB
+        end
+        local ilvlA = tonumber(a.data and a.data.ilvl) or 0
+        local ilvlB = tonumber(b.data and b.data.ilvl) or 0
+        if ilvlA ~= ilvlB then
+          return ilvlA < ilvlB
+        end
+        local nameA = (a.data and (a.data.name or a.data.title or "")) or ""
+        local nameB = (b.data and (b.data.name or b.data.title or "")) or ""
+        return nameA:lower() < nameB:lower()
       end
-      if typeA ~= typeB then
-        return typeA < typeB
-      end
-      local ilvlA = tonumber(a.data and a.data.ilvl) or 0
-      local ilvlB = tonumber(b.data and b.data.ilvl) or 0
-      if ilvlA ~= ilvlB then
-        return ilvlA < ilvlB
-      end
-      local nameA = (a.data and (a.data.name or a.data.title or "")) or ""
-      local nameB = (b.data and (b.data.name or b.data.title or "")) or ""
-      return nameA:lower() < nameB:lower()
     end
 
     if a.type == "creature" and b.type == "creature" then
