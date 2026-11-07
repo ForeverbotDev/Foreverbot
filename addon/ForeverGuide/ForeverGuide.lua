@@ -5013,6 +5013,10 @@ function FG:NavigateUpFolder()
       else
         parent = "items"
       end
+    elseif cur:find("^nearby/creatures/") then
+      parent = "nearby/creatures"
+    elseif cur:find("^nearby/vendors/") then
+      parent = "nearby/vendors"
     elseif cur:find("^nearby/") then
       parent = "nearby"
     elseif cur == "nearby" then
@@ -5081,9 +5085,34 @@ function FG:UpdateDolphinBreadcrumbs(query, matchCount)
     if cur == "nearby/quests" then table.insert(trail, "|cffffd24dQuests|r")
     elseif cur == "nearby/rares" then table.insert(trail, "|cffffd24dRares & Bosses|r")
     elseif cur == "nearby/creatures" then table.insert(trail, "|cffffd24dCreatures|r")
+    elseif cur == "nearby/creatures/beasts" then
+      table.insert(trail, "|cff88aaccCreatures|r")
+      table.insert(trail, "|cffffd24dBeasts|r")
+    elseif cur == "nearby/creatures/humanoids" then
+      table.insert(trail, "|cff88aaccCreatures|r")
+      table.insert(trail, "|cffffd24dHumanoids|r")
+    elseif cur == "nearby/creatures/rares" then
+      table.insert(trail, "|cff88aaccCreatures|r")
+      table.insert(trail, "|cffffd24dRares|r")
+    elseif cur == "nearby/creatures/all" then
+      table.insert(trail, "|cff88aaccCreatures|r")
+      table.insert(trail, "|cffffd24dAll Creatures|r")
     elseif cur == "nearby/vendors" then table.insert(trail, "|cffffd24dVendors & Flight|r")
+    elseif cur == "nearby/vendors/flight" then
+      table.insert(trail, "|cff88aaccVendors|r")
+      table.insert(trail, "|cffffd24dFlight Masters|r")
+    elseif cur == "nearby/vendors/repairs" then
+      table.insert(trail, "|cff88aaccVendors|r")
+      table.insert(trail, "|cffffd24dRepairs|r")
+    elseif cur == "nearby/vendors/reagents" then
+      table.insert(trail, "|cff88aaccVendors|r")
+      table.insert(trail, "|cffffd24dReagents|r")
+    elseif cur == "nearby/vendors/all" then
+      table.insert(trail, "|cff88aaccVendors|r")
+      table.insert(trail, "|cffffd24dAll Vendors|r")
     elseif cur == "nearby/dungeons" then table.insert(trail, "|cffffd24dDungeons|r")
     elseif cur == "nearby/loot" then table.insert(trail, "|cffffd24dNotable Loot|r")
+    elseif cur == "nearby/closest" then table.insert(trail, "|cffffd24dClosest Radar|r")
     end
   elseif cur:find("^quests") then
     table.insert(trail, "|cff88aaccQuests|r")
@@ -5580,12 +5609,147 @@ function FG:PopulateCodexResults(query)
       local showRares = (cur == "nearby/rares") or (cur == "nearby/creatures/rares") or isClosest or (isNearbyRoot and q ~= "")
       local showBeasts = (cur == "nearby/creatures/beasts")
       local showHumanoids = (cur == "nearby/creatures/humanoids")
-      local showAllCreatures = (cur == "nearby/creatures/all") or (cur == "nearby/creatures" and q ~= "") or isClosest or (isNearbyRoot and q ~= "")
+      local showAllCreatures = (cur == "nearby/creatures") or (cur == "nearby/creatures/all") or isClosest or (isNearbyRoot and q ~= "")
       local showCreatures = showAllCreatures or showBeasts or showHumanoids or showRares
       local showVendors = (cur:find("^nearby/vendors") ~= nil) or isClosest or (isNearbyRoot and q ~= "")
       local showDungeons = (cur == "nearby/dungeons") or isClosest or (isNearbyRoot and q ~= "")
       local showLoot = (cur == "nearby/loot") or (isNearbyRoot and q ~= "")
       local vendorSub = cur:match("^nearby/vendors/(.+)$")
+
+      -- Category subfolders when browsing nearby/creatures with no query
+      if cur == "nearby/creatures" and q == "" then
+        local bCount, hCount, rCount, allCount = 0, 0, 0, 0
+        if FG.Data.Creatures then
+          for _, c in pairs(FG.Data.Creatures) do
+            if not FG:IsInternalCreature(c.name, c.family) then
+              local inZone = (c.zone and c.zone:lower() == pZoneLower) or (c.location and c.location:lower():find(pZoneLower, 1, true))
+              local inSub = pSubLower ~= "" and ((c.location and c.location:lower():find(pSubLower, 1, true)) or (c.zone and c.zone:lower():find(pSubLower, 1, true)))
+              if inZone or inSub then
+                allCount = allCount + 1
+                local isRare = (c.classification == "Boss" or c.classification == "World Boss" or c.classification == "Rare" or c.classification == "Rare Elite")
+                if isRare then rCount = rCount + 1 end
+                if c.family and c.family:lower() == "beast" and not isRare then bCount = bCount + 1 end
+                if c.family and c.family:lower() == "humanoid" and not isRare then hCount = hCount + 1 end
+              end
+            end
+          end
+        end
+        table.insert(matches, {
+          type = "folder",
+          data = {
+            name = "Beasts & Wildlife",
+            path = "nearby/creatures/beasts",
+            desc = string.format("%d beasts in %s", bCount, pZone),
+            count = bCount,
+            icon = "Interface\\Icons\\Ability_Hunter_Pet_TallStrider",
+          }
+        })
+        table.insert(matches, {
+          type = "folder",
+          data = {
+            name = "Humanoids & NPCs",
+            path = "nearby/creatures/humanoids",
+            desc = string.format("%d humanoids in %s", hCount, pZone),
+            count = hCount,
+            icon = "Interface\\Icons\\INV_Misc_Head_Centaur_01",
+          }
+        })
+        table.insert(matches, {
+          type = "folder",
+          data = {
+            name = "Rares & Named Spawns",
+            path = "nearby/creatures/rares",
+            desc = string.format("%d rare spawns & bosses in %s", rCount, pZone),
+            count = rCount,
+            icon = "Interface\\Icons\\INV_Misc_Head_Dragon_02",
+          }
+        })
+        table.insert(matches, {
+          type = "folder",
+          data = {
+            name = "[All Creatures (Full Zone List)]",
+            path = "nearby/creatures/all",
+            desc = string.format("All %d creatures in %s", allCount, pZone),
+            count = allCount,
+            icon = "Interface\\Icons\\Ability_Tracking",
+            isAll = true,
+          }
+        })
+      end
+
+      -- Category subfolders when browsing nearby/vendors with no query
+      if cur == "nearby/vendors" and q == "" then
+        local fpCount, repCount, reagCount, vAllCount = 0, 0, 0, 0
+        if FG.Data.Flightpaths then
+          for _, fp in pairs(FG.Data.Flightpaths) do
+            if fp.zone and fp.zone:lower() == pZoneLower then
+              fpCount = fpCount + 1
+              vAllCount = vAllCount + 1
+            end
+          end
+        end
+        if FG.Data.Vendors then
+          for _, v in pairs(FG.Data.Vendors) do
+            local vZone = v.zone
+            if (vZone == "Azeroth" or vZone == "Eastern Kingdoms" or vZone == "Kalimdor" or not vZone) and v.name then
+              local cObj = FG:FindCreatureByName(v.name)
+              if cObj and cObj.zone then vZone = cObj.zone end
+            end
+            if vZone and vZone:lower() == pZoneLower then
+              vAllCount = vAllCount + 1
+              local itemLower = (v.item or ""):lower()
+              local tipLower = (v.tip or ""):lower()
+              if tipLower:find("repair") or tipLower:find("blacksmith") or tipLower:find("weaponsmith") or tipLower:find("armorsmith") or itemLower:find("repair") or itemLower:find("blacksmith") or itemLower:find("weaponsmith") or itemLower:find("armorsmith") then
+                repCount = repCount + 1
+              end
+              if tipLower:find("reagent") or tipLower:find("poison") or tipLower:find("potion") or tipLower:find("herb") or tipLower:find("alchemy") or itemLower:find("reagent") or itemLower:find("poison") or itemLower:find("potion") or itemLower:find("herb") or itemLower:find("alchemy") then
+                reagCount = reagCount + 1
+              end
+            end
+          end
+        end
+        table.insert(matches, {
+          type = "folder",
+          data = {
+            name = "Flight Masters",
+            path = "nearby/vendors/flight",
+            desc = string.format("%d flight masters in %s", fpCount, pZone),
+            count = fpCount,
+            icon = "Interface\\Icons\\Spell_Magic_FeatherFall",
+          }
+        })
+        table.insert(matches, {
+          type = "folder",
+          data = {
+            name = "Repairs & Armorers",
+            path = "nearby/vendors/repairs",
+            desc = string.format("%d repair merchants in %s", repCount, pZone),
+            count = repCount,
+            icon = "Interface\\Icons\\Trade_BlackSmithing",
+          }
+        })
+        table.insert(matches, {
+          type = "folder",
+          data = {
+            name = "Reagents & Trade Supplies",
+            path = "nearby/vendors/reagents",
+            desc = string.format("%d reagent vendors in %s", reagCount, pZone),
+            count = reagCount,
+            icon = "Interface\\Icons\\INV_Potion_33",
+          }
+        })
+        table.insert(matches, {
+          type = "folder",
+          data = {
+            name = "[All Vendors & Services]",
+            path = "nearby/vendors/all",
+            desc = string.format("All %d merchants in %s", vAllCount, pZone),
+            count = vAllCount,
+            icon = "Interface\\Icons\\INV_Misc_Coin_01",
+            isAll = true,
+          }
+        })
+      end
 
       -- 1. Nearby Creatures & Mobs (with sub-grouping)
       if showCreatures and FG.Data.Creatures then
@@ -5607,11 +5771,11 @@ function FG:PopulateCodexResults(query)
             end
 
             if passesSubFilter then
-              local inZone = c.zone and c.zone:lower() == pZoneLower
+              local inZone = (c.zone and c.zone:lower() == pZoneLower) or (c.location and c.location:lower():find(pZoneLower, 1, true))
               local inSub = pSubLower ~= "" and ((c.location and c.location:lower():find(pSubLower, 1, true)) or (c.zone and c.zone:lower():find(pSubLower, 1, true)))
               if inZone or inSub then
                 if q == "" or (c.name and c.name:lower():find(q, 1, true)) then
-                  table.insert(matches, { type = "creature", data = c, isNearby = true })
+                  table.insert(matches, { type = "creature", data = c, isNearby = true, inSub = inSub })
                 end
               end
             end
@@ -7040,6 +7204,9 @@ function FG:PopulateCodexResults(query)
 
     local isNearbyView = (cur:find("^nearby") ~= nil) or (cat == "nearby") or a.isNearby or b.isNearby
     if isNearbyView then
+      if a.inSub and not b.inSub then return true end
+      if b.inSub and not a.inSub then return false end
+
       local coordsA = (a.data and a.data.coords) or (a.type == "quest" and a.data and a.data.npc and FG:FindCreatureByName(a.data.npc) and FG:FindCreatureByName(a.data.npc).coords) or nil
       local coordsB = (b.data and b.data.coords) or (b.type == "quest" and b.data and b.data.npc and FG:FindCreatureByName(b.data.npc) and FG:FindCreatureByName(b.data.npc).coords) or nil
       local distA = coordsA and select(1, FG:GetDistanceAndBearing(coordsA)) or nil
@@ -7072,9 +7239,13 @@ function FG:PopulateCodexResults(query)
     if content.NoResultsState then
       content.NoResultsState:Show()
       if content.NoResultsState.Title then
-        if cur == "nearby" or cat == "nearby" then
+        if cur == "nearby" or cat == "nearby" or cur:find("^nearby") then
           local pZone = FG:GetPlayerZoneInfo()
-          content.NoResultsState.Title:SetText("|cffff8080No nearby intel found in " .. pZone .. "|r")
+          if q ~= "" then
+            content.NoResultsState.Title:SetText("|cffff8080No nearby intel matching \"|r|cffffffff" .. (query or "") .. "|r|cffff8080\" in " .. pZone .. "|r")
+          else
+            content.NoResultsState.Title:SetText("|cffff8080No nearby intel found in " .. pZone .. "|r")
+          end
         else
           content.NoResultsState.Title:SetText("|cffff8080No results found for \"|r|cffffffff" .. (query or "") .. "|r|cffff8080\"|r")
         end
@@ -7107,7 +7278,7 @@ function FG:PopulateCodexResults(query)
         end
       end
 
-      if cur == "nearby" or cat == "nearby" then
+      if cur == "nearby" or cat == "nearby" or cur:find("^nearby") then
         cw.StatusText:SetText("|cff20ff20" .. countStr .. " nearby points of interest (" .. (FG.lastKnownZone or "Local Area") .. ")|r")
       elseif folderCount == #matches then
         cw.StatusText:SetText("|cffdf80ff" .. countStr .. " categories in view|r")
