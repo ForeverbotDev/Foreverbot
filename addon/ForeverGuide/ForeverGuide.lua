@@ -201,6 +201,15 @@ SlashCmdList["FOREVERGUIDE"] = function(msg)
       FG:CmdItem(rest)
     end
 
+  -- Armor Upgrades (/spark upgrade <query> or /spark upgrades or /spark gear or /spark armor)
+  elseif cmd == "upgrade" or cmd == "upgrades" or cmd == "gear" or cmd == "armor" then
+    if not FG.CodexWindow then FG:CreateCodexWindow() end
+    FG.CodexWindow:Show()
+    FG:SetActiveCategory("upgrades")
+    if rest ~= "" and ForeverGuideSearchBox then
+      ForeverGuideSearchBox:SetText(rest)
+    end
+
   -- 3. Quests (/spark quest <query>)
   elseif cmd == "quest" or cmd == "q" then
     FG:CmdQuest(rest)
@@ -2257,6 +2266,15 @@ function FG:GetItemRowSourceText(item)
     end
   end
   if item.source and item.source ~= "" then
+    -- Check if numeric quest ID
+    local qId = item.source:match("Quest Reward:%s*(%d+)") or item.source:match("Quest:%s*(%d+)")
+    if qId and FG.Data and FG.Data.Quests then
+      local q = FG.Data.Quests[tonumber(qId)]
+      if q and q.title then
+        local zStr = (q.zone and q.zone ~= "") and (" (" .. q.zone .. ")") or ""
+        return "Quest: " .. q.title .. zStr
+      end
+    end
     local mobName = item.source:match("Dropped by:%s*([^(]+)")
     if mobName then
       local trimmed = mobName:gsub("%s+$", "")
@@ -2268,9 +2286,28 @@ function FG:GetItemRowSourceText(item)
         return "Dropped by: " .. c.name .. " (" .. zoneStr .. " " .. c.coords .. ")" .. pctStr
       end
     end
-    return item.source:gsub("^Quest:%s*", "")
+    if item.source:find("^Quest Reward:%s*") then
+      return "Quest: " .. item.source:gsub("^Quest Reward:%s*", "")
+    end
+    return item.source
   end
   return "World Drop"
+end
+
+function FG:IsArmorOrUpgradeItem(item)
+  if not item then return false end
+  local name = item.name or ""
+  local isRecipe = name:find("^Plans:") or name:find("^Pattern:") or name:find("^Schematic:") or name:find("^Formula:") or name:find("^Recipe:")
+  if isRecipe then return false end
+  local aType = item.itemType and item.itemType:lower() or ""
+  if aType:find("cloth") or aType:find("leather") or aType:find("mail") or aType:find("plate") or aType:find("shield") then
+    return true
+  end
+  local slot = item.slot or ""
+  if slot == "Back" or slot == "Finger" or slot == "Trinket" or slot == "Neck" or slot == "Held In Off-hand" or slot == "Shield" then
+    return true
+  end
+  return false
 end
 
 function FG:GetFolderIcon(folder)
@@ -2423,7 +2460,18 @@ function FG:GetFolderIcon(folder)
   if path:find("nearby/loot") or name:find("loot") then return "Interface\\Icons\\INV_Misc_Coin_02" end
   if path:find("nearby") or name:find("nearby") then return "Interface\\Icons\\Ability_Tracking" end
 
-  -- 11. Top Level Armor / Items
+  -- 11. Top Level Armor / Items / Upgrades
+  if path:find("upgrade") or name:find("upgrade") then
+    if path:find("recommended") or name:find("recommended") then return "Interface\\Icons\\Spell_Holy_MindVision" end
+    if path:find("cloth") then return "Interface\\Icons\\INV_Chest_Cloth_23" end
+    if path:find("leather") then return "Interface\\Icons\\INV_Chest_Leather_08" end
+    if path:find("mail") then return "Interface\\Icons\\INV_Chest_Chain_15" end
+    if path:find("plate") then return "Interface\\Icons\\INV_Chest_Plate03" end
+    if path:find("accessories") then return "Interface\\Icons\\INV_Jewelry_Necklace_07" end
+    if path:find("dungeon") then return "Interface\\Icons\\Spell_Shadow_Teleport" end
+    if path:find("quest") then return "Interface\\Icons\\INV_Misc_Book_07" end
+    return "Interface\\Icons\\INV_Chest_Plate03"
+  end
   if path == "items/armor" or name == "armor" then return "Interface\\Icons\\INV_Chest_Plate03" end
   if path == "items" or name:find("item") then return "Interface\\Icons\\INV_Sword_04" end
 
@@ -2561,10 +2609,13 @@ function FG:ConfigureRowButton(btn, match)
     if displaySlot then
       table.insert(parts, "|cff8ba5cc" .. displaySlot .. "|r")
     end
+    if item.reqLvl and item.reqLvl > 0 then
+      table.insert(parts, "|cff22c55eReq Lvl " .. item.reqLvl .. "|r")
+    end
 
     local srcText = FG:GetItemRowSourceText(item)
     if srcText and srcText ~= "" and srcText ~= "World Drop" then
-      table.insert(parts, "|cff94a3b8" .. srcText .. "|r")
+      table.insert(parts, "|cff38bdf8" .. srcText .. "|r")
     elseif item.bonding and item.bonding ~= "" then
       table.insert(parts, "|cff7e8c9e" .. item.bonding .. "|r")
     else
@@ -2572,6 +2623,14 @@ function FG:ConfigureRowButton(btn, match)
     end
 
     btn.Sub:SetText(table.concat(parts, " |cff475569·|r "))
+
+    btn.Hint:SetText("|cffcf52ffInspect >|r")
+    if btn.InspectBtn then
+      btn.InspectBtn:Show()
+      btn.InspectBtn.onClick = nil
+      btn.InspectBtn.entityType = "item"
+      btn.InspectBtn.entityData = item
+    end
 
     btn:SetScript("OnEnter", function(self)
       self:SetBackdropColor(0.14, 0.18, 0.26, 0.95)
@@ -2586,6 +2645,7 @@ function FG:ConfigureRowButton(btn, match)
       if IsShiftKeyDown() then
         FG:LinkEntityToChat("item", item)
       else
+        FG:ShowDetailPanel("item", item)
         FG:PlaySparkSound("shimmer")
       end
     end)
@@ -3460,7 +3520,7 @@ function FG:CreateCodexWindow()
           else
             placeholder:Hide()
             clearBtn:Show()
-            if FG.activeCategory ~= "all" and FG.activeCategory ~= "nearby" and not self.scopedSearchLock then
+            if FG.activeCategory ~= "all" and FG.activeCategory ~= "nearby" and FG.activeCategory ~= "upgrades" and not self.scopedSearchLock then
               FG:SetActiveCategory("all")
             else
               FG:PopulateCodexResults(query)
@@ -3501,7 +3561,7 @@ function FG:CreateCodexWindow()
     else
       placeholder:Hide()
       clearBtn:Show()
-      if FG.activeCategory ~= "all" and FG.activeCategory ~= "nearby" and not self.scopedSearchLock then
+      if FG.activeCategory ~= "all" and FG.activeCategory ~= "nearby" and FG.activeCategory ~= "upgrades" and not self.scopedSearchLock then
         FG:SetActiveCategory("all")
       else
         FG:PopulateCodexResults(query)
@@ -3568,10 +3628,11 @@ function FG:CreateCodexWindow()
     return btn
   end
 
-  local allBtn    = CreateCategoryPill("all", "All", 32, 6, searchBox)
-  local nearbyBtn = CreateCategoryPill("nearby", "Nearby", 52, 4, allBtn)
+  local allBtn    = CreateCategoryPill("all", "All", 30, 5, searchBox)
+  local nearbyBtn = CreateCategoryPill("nearby", "Nearby", 50, 3, allBtn)
   local itemsBtn  = CreateCategoryPill("items", "Items", 38, 3, nearbyBtn)
-  local questBtn  = CreateCategoryPill("quests", "Quests", 46, 3, itemsBtn)
+  local upgBtn    = CreateCategoryPill("upgrades", "Upgrades", 60, 3, itemsBtn)
+  local questBtn  = CreateCategoryPill("quests", "Quests", 46, 3, upgBtn)
   local mobBtn    = CreateCategoryPill("creatures", "Mobs", 38, 3, questBtn)
   local dungBtn   = CreateCategoryPill("dungeons", "Dungeons", 58, 3, mobBtn)
   local npcBtn    = CreateCategoryPill("vendors", "NPCs", 40, 3, dungBtn)
@@ -3819,6 +3880,7 @@ function FG:SetActiveCategory(cat)
     ["all"] = "root",
     ["nearby"] = "nearby",
     ["items"] = "items",
+    ["upgrades"] = "upgrades",
     ["quests"] = "quests",
     ["creatures"] = "creatures",
     ["dungeons"] = "dungeons",
@@ -4556,11 +4618,102 @@ FG.FolderTree = {
       { path = "creatures", name = "Creatures & Bosses", desc = "Dungeon/Raid Bosses, Rares & NPC Families", icon = "Interface\\Icons\\INV_Misc_Head_Dragon_01" },
       { path = "dungeons", name = "Dungeons & Raids", desc = "Starter, Mid, Endgame, Raids & Forever Instances", icon = "Interface\\Icons\\Spell_Shadow_Teleport" },
       { path = "items", name = "Items & Equipment", desc = "Weapons, Armor, Reagents, Recipes & Server Gear", icon = "Interface\\Icons\\INV_Sword_04" },
+      { path = "upgrades", name = "Armor Upgrades (By Type)", desc = "Cloth, Leather, Mail, Plate, Accessories & Where to obtain them", icon = "Interface\\Icons\\INV_Chest_Plate03" },
       { path = "nearby", name = "Nearby Area Intel (Zone Radar)", desc = "Live radar: local mobs, quests, vendors & loot in current zone", icon = "Interface\\Icons\\Ability_Tracking" },
       { path = "quests", name = "Quests", desc = "By Continent, Zone, Class, & Dungeon", icon = "Interface\\Icons\\INV_Misc_Book_07" },
       { path = "spells", name = "Spells & Abilities", desc = "Class abilities, ranks, Alpha talents & racial traits", icon = "Interface\\Icons\\Spell_Holy_MagicalSentry" },
       { path = "vendors", name = "Vendors & Flight Paths", desc = "Flight Masters, PvP Quartermasters & Reagents", icon = "Interface\\Icons\\Ability_Hunter_EagleEye" },
       { path = "forever", name = "[Forever] Warcraft Forever Exclusives", desc = "Exclusive items, quests, NPCs & dungeons", icon = "Interface\\Icons\\Spell_Holy_MagicalSentry" },
+    },
+  },
+
+  -- ARMOR UPGRADES HIERARCHY (Sorted by Type)
+  ["upgrades"] = {
+    title = "Armor Upgrades (Sorted by Type)",
+    parent = "root",
+    folders = {
+      { path = "upgrades/recommended", name = "★ Recommended Upgrades (My Class)", desc = "Armor upgrades matching your current class and level", icon = "Interface\\Icons\\Spell_Holy_MindVision" },
+      { path = "upgrades/cloth", name = "Cloth Armor Upgrades", desc = "Mage, Priest & Warlock (Head, Shoulders, Chest, Legs, Boots...)", icon = "Interface\\Icons\\INV_Chest_Cloth_23" },
+      { path = "upgrades/leather", name = "Leather Armor Upgrades", desc = "Rogue, Druid, Hunter & Shaman (Head, Shoulders, Chest, Legs...)", icon = "Interface\\Icons\\INV_Chest_Leather_08" },
+      { path = "upgrades/mail", name = "Mail Armor Upgrades", desc = "Hunter, Shaman, Warrior & Paladin (Head, Shoulders, Chest, Legs...)", icon = "Interface\\Icons\\INV_Chest_Chain_15" },
+      { path = "upgrades/plate", name = "Plate Armor Upgrades", desc = "Warrior & Paladin Level 40+ (Head, Shoulders, Chest, Legs...)", icon = "Interface\\Icons\\INV_Chest_Plate03" },
+      { path = "upgrades/accessories", name = "Jewelry, Cloaks & Shields", desc = "Cloaks, Rings, Trinkets, Necklaces & Off-Hand Shields", icon = "Interface\\Icons\\INV_Jewelry_Necklace_07" },
+      { path = "upgrades/dungeons", name = "Dungeon & Raid Armor Drops", desc = "Armor pieces dropped by dungeon and raid bosses", icon = "Interface\\Icons\\Spell_Shadow_Teleport" },
+      { path = "upgrades/quests", name = "Quest Reward Armor", desc = "High-stat armor guaranteed from storyline & dungeon quests", icon = "Interface\\Icons\\INV_Misc_Book_07" },
+      { path = "upgrades/all", name = "[All Armor Upgrades (Full Catalog)]", desc = "Complete armor catalog sorted by Type, Slot, and Item Level", icon = "Interface\\Icons\\INV_Chest_Chain_05", isAll = true },
+    },
+  },
+
+  ["upgrades/cloth"] = {
+    title = "Cloth Armor Upgrades",
+    parent = "upgrades",
+    folders = {
+      { path = "upgrades/cloth/Head", name = "Head (Circlets & Hoods)", desc = "Cloth headgear (iLvl Low to High) & Drop Sources", icon = "Interface\\Icons\\INV_Helmet_08" },
+      { path = "upgrades/cloth/Shoulder", name = "Shoulders (Mantles)", desc = "Cloth shoulderpads (iLvl Low to High) & Drop Sources", icon = "Interface\\Icons\\INV_Shoulder_02" },
+      { path = "upgrades/cloth/Chest", name = "Chest (Robes & Tunics)", desc = "Cloth robes and vests (iLvl Low to High) & Drop Sources", icon = "Interface\\Icons\\INV_Chest_Cloth_23" },
+      { path = "upgrades/cloth/Wrist", name = "Wrist (Bracers)", desc = "Cloth bracers & cuffs (iLvl Low to High) & Drop Sources", icon = "Interface\\Icons\\INV_Bracer_07" },
+      { path = "upgrades/cloth/Hands", name = "Hands (Gloves)", desc = "Cloth gloves & mitts (iLvl Low to High) & Drop Sources", icon = "Interface\\Icons\\INV_Gauntlets_14" },
+      { path = "upgrades/cloth/Waist", name = "Waist (Belts & Sashes)", desc = "Cloth belts & sashes (iLvl Low to High) & Drop Sources", icon = "Interface\\Icons\\INV_Belt_03" },
+      { path = "upgrades/cloth/Legs", name = "Legs (Pants & Robes)", desc = "Cloth pants & leggings (iLvl Low to High) & Drop Sources", icon = "Interface\\Icons\\INV_Pants_08" },
+      { path = "upgrades/cloth/Feet", name = "Feet (Boots & Slippers)", desc = "Cloth footwear (iLvl Low to High) & Drop Sources", icon = "Interface\\Icons\\INV_Boots_05" },
+    },
+  },
+
+  ["upgrades/leather"] = {
+    title = "Leather Armor Upgrades",
+    parent = "upgrades",
+    folders = {
+      { path = "upgrades/leather/Head", name = "Head (Helms & Caps)", desc = "Leather headgear (iLvl Low to High) & Drop Sources", icon = "Interface\\Icons\\INV_Helmet_04" },
+      { path = "upgrades/leather/Shoulder", name = "Shoulders (Spaulders)", desc = "Leather shoulder armor (iLvl Low to High) & Drop Sources", icon = "Interface\\Icons\\INV_Shoulder_01" },
+      { path = "upgrades/leather/Chest", name = "Chest (Jerkins & Vests)", desc = "Leather chestpieces (iLvl Low to High) & Drop Sources", icon = "Interface\\Icons\\INV_Chest_Leather_08" },
+      { path = "upgrades/leather/Wrist", name = "Wrist (Bracers)", desc = "Leather wristguards (iLvl Low to High) & Drop Sources", icon = "Interface\\Icons\\INV_Bracer_06" },
+      { path = "upgrades/leather/Hands", name = "Hands (Gloves & Grips)", desc = "Leather gloves (iLvl Low to High) & Drop Sources", icon = "Interface\\Icons\\INV_Gauntlets_04" },
+      { path = "upgrades/leather/Waist", name = "Waist (Belts & Girdles)", desc = "Leather belts (iLvl Low to High) & Drop Sources", icon = "Interface\\Icons\\INV_Belt_02" },
+      { path = "upgrades/leather/Legs", name = "Legs (Pants & Breeches)", desc = "Leather pants (iLvl Low to High) & Drop Sources", icon = "Interface\\Icons\\INV_Pants_06" },
+      { path = "upgrades/leather/Feet", name = "Feet (Boots)", desc = "Leather boots (iLvl Low to High) & Drop Sources", icon = "Interface\\Icons\\INV_Boots_08" },
+    },
+  },
+
+  ["upgrades/mail"] = {
+    title = "Mail Armor Upgrades",
+    parent = "upgrades",
+    folders = {
+      { path = "upgrades/mail/Head", name = "Head (Helms & Coifs)", desc = "Mail headgear (iLvl Low to High) & Drop Sources", icon = "Interface\\Icons\\INV_Helmet_03" },
+      { path = "upgrades/mail/Shoulder", name = "Shoulders (Pauldrons)", desc = "Mail pauldrons (iLvl Low to High) & Drop Sources", icon = "Interface\\Icons\\INV_Shoulder_10" },
+      { path = "upgrades/mail/Chest", name = "Chest (Hauberks & Mail)", desc = "Mail chest armor (iLvl Low to High) & Drop Sources", icon = "Interface\\Icons\\INV_Chest_Chain_15" },
+      { path = "upgrades/mail/Wrist", name = "Wrist (Bracers)", desc = "Mail bracers (iLvl Low to High) & Drop Sources", icon = "Interface\\Icons\\INV_Bracer_16" },
+      { path = "upgrades/mail/Hands", name = "Hands (Gauntlets)", desc = "Mail gauntlets (iLvl Low to High) & Drop Sources", icon = "Interface\\Icons\\INV_Gauntlets_17" },
+      { path = "upgrades/mail/Waist", name = "Waist (Belts & Girdles)", desc = "Mail belts (iLvl Low to High) & Drop Sources", icon = "Interface\\Icons\\INV_Belt_12" },
+      { path = "upgrades/mail/Legs", name = "Legs (Legguards)", desc = "Mail legplates (iLvl Low to High) & Drop Sources", icon = "Interface\\Icons\\INV_Pants_03" },
+      { path = "upgrades/mail/Feet", name = "Feet (Boots & Sabatons)", desc = "Mail footwear (iLvl Low to High) & Drop Sources", icon = "Interface\\Icons\\INV_Boots_Plate_01" },
+    },
+  },
+
+  ["upgrades/plate"] = {
+    title = "Plate Armor Upgrades",
+    parent = "upgrades",
+    folders = {
+      { path = "upgrades/plate/Head", name = "Head (Helms & Visors)", desc = "Plate helms (iLvl Low to High) & Drop Sources", icon = "Interface\\Icons\\INV_Helmet_01" },
+      { path = "upgrades/plate/Shoulder", name = "Shoulders (Pauldrons)", desc = "Plate pauldrons (iLvl Low to High) & Drop Sources", icon = "Interface\\Icons\\INV_Shoulder_19" },
+      { path = "upgrades/plate/Chest", name = "Chest (Breastplates)", desc = "Plate breastplates (iLvl Low to High) & Drop Sources", icon = "Interface\\Icons\\INV_Chest_Plate03" },
+      { path = "upgrades/plate/Wrist", name = "Wrist (Bracers)", desc = "Plate bracers (iLvl Low to High) & Drop Sources", icon = "Interface\\Icons\\INV_Bracer_19" },
+      { path = "upgrades/plate/Hands", name = "Hands (Gauntlets)", desc = "Plate gauntlets (iLvl Low to High) & Drop Sources", icon = "Interface\\Icons\\INV_Gauntlets_10" },
+      { path = "upgrades/plate/Waist", name = "Waist (Belts & Girdles)", desc = "Plate belts (iLvl Low to High) & Drop Sources", icon = "Interface\\Icons\\INV_Belt_15" },
+      { path = "upgrades/plate/Legs", name = "Legs (Legplates)", desc = "Plate legplates (iLvl Low to High) & Drop Sources", icon = "Interface\\Icons\\INV_Pants_04" },
+      { path = "upgrades/plate/Feet", name = "Feet (Boots & Sabatons)", desc = "Plate sabatons (iLvl Low to High) & Drop Sources", icon = "Interface\\Icons\\INV_Boots_Plate_01" },
+    },
+  },
+
+  ["upgrades/accessories"] = {
+    title = "Jewelry, Cloaks & Shields",
+    parent = "upgrades",
+    folders = {
+      { path = "upgrades/acc/Cloaks", name = "Cloaks & Capes", desc = "Back slot cloaks (iLvl Low to High) & Drop Sources", icon = "Interface\\Icons\\INV_Misc_Cape_19", filter = { slot = "Back" } },
+      { path = "upgrades/acc/Amulets", name = "Amulets & Necklaces", desc = "Necklaces and pendants (iLvl Low to High) & Sources", icon = "Interface\\Icons\\INV_Jewelry_Necklace_07", filter = { slot = "Neck" } },
+      { path = "upgrades/acc/Rings", name = "Rings & Bands", desc = "Finger slot rings (iLvl Low to High) & Drop Sources", icon = "Interface\\Icons\\INV_Jewelry_Ring_03", filter = { slot = "Finger" } },
+      { path = "upgrades/acc/Trinkets", name = "Trinkets & Talismans", desc = "Trinket charms (iLvl Low to High) & Drop Sources", icon = "Interface\\Icons\\INV_Jewelry_Talisman_07", filter = { slot = "Trinket" } },
+      { path = "upgrades/acc/Shields", name = "Shields", desc = "Off-Hand Shields (iLvl Low to High) & Drop Sources", icon = "Interface\\Icons\\INV_Shield_04", filter = { itemType = "Shield" } },
+      { path = "upgrades/acc/Off-hand", name = "Held In Off-hand", desc = "Caster off-hands and tomes (iLvl Low to High)", icon = "Interface\\Icons\\INV_Misc_Book_06", filter = { slot = "Held In Off-hand" } },
     },
   },
 
@@ -5041,6 +5194,13 @@ function FG:NavigateUpFolder()
       parent = "items/armor/" .. armorType
     elseif cur:find("^items/armor/[^/]+$") then
       parent = "items/armor"
+    elseif cur:find("^upgrades/[^/]+/[^/]+$") then
+      local uType = cur:match("^upgrades/([^/]+)/[^/]+$")
+      parent = "upgrades/" .. uType
+    elseif cur:find("^upgrades/[^/]+$") then
+      parent = "upgrades"
+    elseif cur == "upgrades" then
+      parent = "root"
     elseif cur:find("^forever/items/") then
       parent = "forever/items"
     elseif cur == "forever/items" then
@@ -5277,6 +5437,39 @@ function FG:UpdateDolphinBreadcrumbs(query, matchCount)
         table.insert(trail, "|cffffffffAccessories|r")
       end
       table.insert(trail, "|cffffd24d" .. (sub:gsub("_", " ")) .. "|r")
+    end
+  elseif cur:find("^upgrades") then
+    table.insert(trail, "|cff88aaccUpgrades|r")
+    if cur == "upgrades/recommended" then
+      local _, pClass = UnitClass("player")
+      local pLevel = (UnitLevel and UnitLevel("player")) or 1
+      table.insert(trail, "|cffffd24d★ " .. (pClass and (pClass:sub(1,1):upper() .. pClass:sub(2):lower()) or "My Class") .. " Upgrades (Lvl " .. pLevel .. ")|r")
+    elseif cur == "upgrades/dungeons" then
+      table.insert(trail, "|cffffd24dDungeon & Raid Drops|r")
+    elseif cur == "upgrades/quests" then
+      table.insert(trail, "|cffffd24dQuest Rewards|r")
+    elseif cur == "upgrades/all" then
+      table.insert(trail, "|cffffd24dAll Armor Upgrades|r")
+    elseif cur == "upgrades/accessories" then
+      table.insert(trail, "|cffffd24dJewelry, Cloaks & Shields|r")
+    elseif cur:find("^upgrades/acc/([^/]+)$") then
+      local slot = cur:match("^upgrades/acc/([^/]+)$")
+      table.insert(trail, "|cffffffffJewelry & Shields|r")
+      table.insert(trail, "|cffffd24d" .. slot .. "|r")
+    elseif cur:find("^upgrades/[^/]+/[^/]+$") then
+      local armorType, slot = cur:match("^upgrades/([^/]+)/([^/]+)$")
+      local slotDisplay = slot
+      if slot == "Waist" then slotDisplay = "Waist (Belts)"
+      elseif slot == "Wrist" then slotDisplay = "Wrist (Bracers)"
+      elseif slot == "Hands" then slotDisplay = "Hands (Gauntlets)"
+      elseif slot == "Feet" then slotDisplay = "Feet (Boots)"
+      elseif slot == "Shoulder" then slotDisplay = "Shoulders"
+      end
+      table.insert(trail, "|cffffffff" .. armorType:gsub("^%l", string.upper) .. " Armor|r")
+      table.insert(trail, "|cffffd24d" .. slotDisplay .. "|r")
+    elseif cur:find("^upgrades/[^/]+$") then
+      local armorType = cur:match("^upgrades/([^/]+)$")
+      table.insert(trail, "|cffffd24d" .. armorType:gsub("^%l", string.upper) .. " Armor|r")
     end
   elseif cur:find("^creatures") then
     table.insert(trail, "|cff88aaccCreatures|r")
@@ -5962,8 +6155,8 @@ function FG:PopulateCodexResults(query)
     local folderDef = FG.FolderTree[cur]
     if folderDef and folderDef.folders then
       local slotCounts = nil
-      local armorType = cur:match("^items/armor/([^/]+)$")
-      if armorType and FG.Data.Items then
+      local armorType = cur:match("^items/armor/([^/]+)$") or cur:match("^upgrades/([^/]+)$")
+      if armorType and (armorType == "cloth" or armorType == "leather" or armorType == "mail" or armorType == "plate") and FG.Data.Items then
         slotCounts = {}
         for _, item in pairs(FG.Data.Items) do
           local name = item.name or ""
@@ -5998,14 +6191,14 @@ function FG:PopulateCodexResults(query)
       for _, f in ipairs(folderDef.folders) do
         local fCopy = f
         if slotCounts and f.path then
-          local slot = f.path:match("^items/armor/[^/]+/([^/]+)$")
+          local slot = f.path:match("^upgrades/[^/]+/([^/]+)$") or f.path:match("^items/armor/[^/]+/([^/]+)$")
           if slot and slotCounts[slot] then
             local count = slotCounts[slot]
             local armorCap = armorType:gsub("^%l", string.upper)
             fCopy = {
               name = f.name,
               path = f.path,
-              desc = string.format("%d %s %s items (iLvl Low to High)", count, armorCap, f.name or slot),
+              desc = string.format("%d %s %s upgrades & drop sources (iLvl Low to High)", count, armorCap, f.name or slot),
               count = count,
               icon = f.icon,
             }
@@ -6259,6 +6452,167 @@ function FG:PopulateCodexResults(query)
           if not seen[key] then
             seen[key] = true
             table.insert(matches, { type = "item", data = item })
+          end
+        end
+      end
+    elseif cur:find("^upgrades/([^/]+)/([^/]+)$") and FG.Data.Items then
+      local armorType, slotName = cur:match("^upgrades/([^/]+)/([^/]+)$")
+      local seen = {}
+      for _, item in pairs(FG.Data.Items) do
+        local name = item.name or ""
+        local isRecipe = name:find("^Plans:") or name:find("^Pattern:") or name:find("^Schematic:") or name:find("^Formula:") or name:find("^Recipe:")
+        if not FG:IsInternalItem(name) and not isRecipe then
+          local pass = false
+          if armorType == "acc" or armorType == "accessories" then
+            if slotName == "Shields" and (item.itemType == "Shield" or item.slot == "Shield") then pass = true
+            elseif slotName == "Cloaks" and item.slot == "Back" then pass = true
+            elseif slotName == "Amulets" and item.slot == "Neck" then pass = true
+            elseif slotName == "Rings" and item.slot == "Finger" then pass = true
+            elseif slotName == "Trinkets" and item.slot == "Trinket" then pass = true
+            elseif slotName == "Off-hand" and item.slot == "Held In Off-hand" then pass = true
+            elseif item.slot == slotName then pass = true
+            end
+          elseif item.itemType and item.itemType:lower():find(armorType) then
+            if item.slot and item.slot == slotName then pass = true end
+          end
+          if pass then
+            local key = item.id or (name .. ":" .. (item.ilvl or 0))
+            if not seen[key] then
+              seen[key] = true
+              table.insert(matches, { type = "item", data = item })
+            end
+          end
+        end
+      end
+    elseif cur == "upgrades/recommended" and FG.Data.Items then
+      local _, pClass = UnitClass("player")
+      pClass = (pClass or "WARRIOR"):upper()
+      local pLevel = (UnitLevel and UnitLevel("player")) or 1
+      if pLevel == 0 then pLevel = 1 end
+
+      local minLvl = math.max(1, pLevel - 8)
+      local maxLvl = pLevel + 4
+
+      local allowedArmor = {}
+      local wantsShield = false
+      if pClass == "WARRIOR" or pClass == "PALADIN" then
+        if pLevel >= 40 then
+          allowedArmor["plate"] = true
+          allowedArmor["mail"] = true
+        else
+          allowedArmor["mail"] = true
+          allowedArmor["leather"] = true
+        end
+        wantsShield = true
+      elseif pClass == "HUNTER" then
+        if pLevel >= 40 then
+          allowedArmor["mail"] = true
+          allowedArmor["leather"] = true
+        else
+          allowedArmor["leather"] = true
+        end
+      elseif pClass == "SHAMAN" then
+        if pLevel >= 40 then
+          allowedArmor["mail"] = true
+          allowedArmor["leather"] = true
+        else
+          allowedArmor["leather"] = true
+        end
+        wantsShield = true
+      elseif pClass == "ROGUE" or pClass == "DRUID" then
+        allowedArmor["leather"] = true
+      elseif pClass == "MAGE" or pClass == "PRIEST" or pClass == "WARLOCK" then
+        allowedArmor["cloth"] = true
+      else
+        allowedArmor["cloth"] = true
+        allowedArmor["leather"] = true
+      end
+
+      local seen = {}
+      for _, item in pairs(FG.Data.Items) do
+        local name = item.name or ""
+        local isRecipe = name:find("^Plans:") or name:find("^Pattern:") or name:find("^Schematic:") or name:find("^Formula:") or name:find("^Recipe:")
+        if not FG:IsInternalItem(name) and not isRecipe then
+          local iReq = tonumber(item.reqLvl) or 0
+          local iLvl = tonumber(item.ilvl) or 0
+          local isLevelEligible = (iReq <= maxLvl) and (iReq >= minLvl or (pLevel <= 10 and iReq <= maxLvl))
+          if isLevelEligible then
+            local aType = item.itemType and item.itemType:lower() or ""
+            local isArmorMatch = allowedArmor[aType]
+            local isAccessory = (item.slot == "Back" or item.slot == "Finger" or item.slot == "Trinket" or item.slot == "Neck")
+            local isShieldMatch = wantsShield and (item.itemType == "Shield" or item.slot == "Shield")
+            if isArmorMatch or isAccessory or isShieldMatch then
+              local key = item.id or (name .. ":" .. iLvl)
+              if not seen[key] then
+                seen[key] = true
+                table.insert(matches, { type = "item", data = item })
+              end
+            end
+          end
+        end
+      end
+    elseif cur == "upgrades/dungeons" and FG.Data.Items then
+      local seen = {}
+      for _, item in pairs(FG.Data.Items) do
+        local name = item.name or ""
+        local isRecipe = name:find("^Plans:") or name:find("^Pattern:") or name:find("^Schematic:") or name:find("^Formula:") or name:find("^Recipe:")
+        if not FG:IsInternalItem(name) and not isRecipe then
+          local s = (item.source or ""):lower()
+          local hasDungeonSource = s:find("deadmines") or s:find("wailing caverns") or s:find("shadowfang") or s:find("blackfathom")
+            or s:find("gnomeregan") or s:find("razorfen") or s:find("scarlet") or s:find("monastery") or s:find("uldaman")
+            or s:find("zul'farrak") or s:find("maraudon") or s:find("sunken temple") or s:find("blackrock") or s:find("scholomance")
+            or s:find("stratholme") or s:find("dire maul") or s:find("onyxia") or s:find("molten core") or s:find("blackwing")
+            or s:find("crypts") or s:find("karazhan") or s:find("dungeon") or s:find("raid")
+          local droppers = FG:GetItemDroppers(item.id)
+          local hasDungeonBoss = false
+          if droppers and #droppers > 0 then
+            for _, drop in ipairs(droppers) do
+              if drop.creature and (drop.creature.classification == "Boss" or drop.creature.classification == "World Boss") then
+                hasDungeonBoss = true
+                break
+              end
+            end
+          end
+          if (hasDungeonSource or hasDungeonBoss) and (item.slot and item.slot ~= "" and item.slot ~= "Non-equippable") then
+            local key = item.id or (name .. ":" .. (item.ilvl or 0))
+            if not seen[key] then
+              seen[key] = true
+              table.insert(matches, { type = "item", data = item })
+            end
+          end
+        end
+      end
+    elseif cur == "upgrades/quests" and FG.Data.Items then
+      local seen = {}
+      for _, item in pairs(FG.Data.Items) do
+        local name = item.name or ""
+        local isRecipe = name:find("^Plans:") or name:find("^Pattern:") or name:find("^Schematic:") or name:find("^Formula:") or name:find("^Recipe:")
+        if not FG:IsInternalItem(name) and not isRecipe then
+          local s = (item.source or ""):lower()
+          if s:find("quest") and (item.slot and item.slot ~= "" and item.slot ~= "Non-equippable") then
+            local key = item.id or (name .. ":" .. (item.ilvl or 0))
+            if not seen[key] then
+              seen[key] = true
+              table.insert(matches, { type = "item", data = item })
+            end
+          end
+        end
+      end
+    elseif cur == "upgrades/all" and FG.Data.Items then
+      local seen = {}
+      for _, item in pairs(FG.Data.Items) do
+        local name = item.name or ""
+        local isRecipe = name:find("^Plans:") or name:find("^Pattern:") or name:find("^Schematic:") or name:find("^Formula:") or name:find("^Recipe:")
+        if not FG:IsInternalItem(name) and not isRecipe then
+          local aType = item.itemType and item.itemType:lower() or ""
+          local isArmor = aType:find("cloth") or aType:find("leather") or aType:find("mail") or aType:find("plate") or aType:find("shield")
+          local isAcc = item.slot == "Back" or item.slot == "Finger" or item.slot == "Trinket" or item.slot == "Neck" or item.slot == "Held In Off-hand"
+          if (isArmor or isAcc) and (item.slot and item.slot ~= "" and item.slot ~= "Non-equippable") then
+            local key = item.id or (name .. ":" .. (item.ilvl or 0))
+            if not seen[key] then
+              seen[key] = true
+              table.insert(matches, { type = "item", data = item })
+            end
           end
         end
       end
@@ -7125,8 +7479,21 @@ function FG:PopulateCodexResults(query)
 
     -- Folder browsing (q == ""):
     if a.type == "item" and b.type == "item" then
+      if cur == "upgrades/recommended" then
+        local qRank = { ["Legendary"] = 1, ["Epic"] = 2, ["Rare"] = 3, ["Uncommon"] = 4, ["Common"] = 5, ["Poor"] = 6 }
+        local rA = qRank[a.data and a.data.quality or "Common"] or 5
+        local rB = qRank[b.data and b.data.quality or "Common"] or 5
+        if rA ~= rB then return rA < rB end
+        local ilvlA = tonumber(a.data and a.data.ilvl) or 0
+        local ilvlB = tonumber(b.data and b.data.ilvl) or 0
+        if ilvlA ~= ilvlB then return ilvlA > ilvlB end
+        return ((a.data and a.data.name) or "") < ((b.data and b.data.name) or "")
+      end
+
       local isLeafItemFolder = cur:find("^items/sub/")
         or cur:find("^items/armor/[^/]+/[^/]+$")
+        or cur:find("^upgrades/[^/]+/[^/]+$")
+        or cur:find("^upgrades/acc/")
         or (cur:find("^items/recipes/") and cur ~= "items/recipes/all")
         or (cur:find("^forever/items/") and cur ~= "forever/items/all" and cur ~= "forever/items")
         or (cur:find("^items/forever/") and cur ~= "items/forever/all" and cur ~= "items/forever")
@@ -7338,7 +7705,9 @@ function FG:PopulateCodexResults(query)
       elseif folderCount == #matches then
         cw.StatusText:SetText("|cffdf80ff" .. countStr .. " categories in view|r")
       elseif itemCount == #matches then
-        if isItemView or cat == "items" then
+        if cat == "upgrades" or cur:find("^upgrades") then
+          cw.StatusText:SetText("|cff38bdf8" .. countStr .. " armor upgrades in view (sorted by type & source)|r")
+        elseif isItemView or cat == "items" then
           cw.StatusText:SetText("|cffdf80ff" .. countStr .. " items in view (iLvl: Lowest to Highest)|r")
         else
           cw.StatusText:SetText("|cffdf80ff" .. countStr .. " items in view|r")
@@ -7618,6 +7987,9 @@ EventFrame:SetScript("OnEvent", function(self, event, arg1, ...)
   elseif event == "PLAYER_LEVEL_UP" then
     if FG.SparkFrame and FG.SparkFrame.TransitionTo then
       FG.SparkFrame:TransitionTo("CELEBRATE")
+    end
+    if FG.CodexWindow and FG.CodexWindow:IsShown() and FG.activeCategory == "upgrades" then
+      FG:PopulateCodexResults(ForeverGuideSearchBox and ForeverGuideSearchBox:GetText():trim() or "")
     end
 
   elseif event == "QUEST_LOG_UPDATE" or event == "QUEST_TURNED_IN" or event == "QUEST_FINISHED" or event == "QUEST_WATCH_UPDATE" then

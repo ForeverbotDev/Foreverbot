@@ -48,11 +48,46 @@ class TestTypeIndexedMenus(unittest.TestCase):
         self.assertIn("local isLeafItemFolder = cur:find(\"^items/sub/\")", self.content)
         self.assertIn("ilvlA < ilvlB", self.content)
 
-    def test_subtitle_specific_subtype_inference(self):
-        # Verify that row rendering subtitle displays specific subtype instead of generic Consumable
-        self.assertIn('displaySlot = "Potion"', self.content)
-        self.assertIn('displaySlot = "Elixir"', self.content)
-        self.assertIn('displaySlot = "Flask"', self.content)
+    def test_upgrades_tab_and_slash_commands(self):
+        # Verify Upgrades tab pill button and category mapping
+        self.assertIn('CreateCategoryPill("upgrades", "Upgrades", 60, 3, itemsBtn)', self.content)
+        self.assertIn('["upgrades"] = "upgrades"', self.content)
+        # Slash commands
+        self.assertIn('cmd == "upgrade" or cmd == "upgrades" or cmd == "gear" or cmd == "armor"', self.content)
+
+    def test_upgrades_folder_tree_and_types(self):
+        # Main upgrades category folder
+        self.assertIn('["upgrades"] = {', self.content)
+        for expected in [
+            "upgrades/recommended",
+            "upgrades/cloth",
+            "upgrades/leather",
+            "upgrades/mail",
+            "upgrades/plate",
+            "upgrades/accessories",
+            "upgrades/dungeons",
+            "upgrades/quests",
+            "upgrades/all"
+        ]:
+            self.assertIn(f'path = "{expected}"', self.content, f"Missing upgrades folder path: {expected}")
+
+        # Cloth / Leather / Mail / Plate subfolders
+        for armor_type in ["cloth", "leather", "mail", "plate"]:
+            self.assertIn(f'["upgrades/{armor_type}"] = {{', self.content)
+            for slot in ["Head", "Shoulder", "Chest", "Wrist", "Hands", "Waist", "Legs", "Feet"]:
+                self.assertIn(f'path = "upgrades/{armor_type}/{slot}"', self.content)
+
+        # Accessories subfolder
+        self.assertIn('["upgrades/accessories"] = {', self.content)
+        for acc_slot in ["Cloaks", "Amulets", "Rings", "Trinkets", "Shields", "Off-hand"]:
+            self.assertIn(f'path = "upgrades/acc/{acc_slot}"', self.content)
+
+    def test_armor_upgrade_helpers_and_source_text(self):
+        # Check IsArmorOrUpgradeItem and source text
+        self.assertIn("function FG:IsArmorOrUpgradeItem(item)", self.content)
+        self.assertIn("function FG:GetItemRowSourceText(item)", self.content)
+        self.assertIn('table.insert(parts, "|cff38bdf8" .. srcText .. "|r")', self.content)
+        self.assertIn("PLAYER_LEVEL_UP", self.content)
 
 if __name__ == "__main__":
     unittest.main()

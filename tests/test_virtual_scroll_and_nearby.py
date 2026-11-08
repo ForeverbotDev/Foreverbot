@@ -69,7 +69,7 @@ class TestVirtualScrollAndNearby(unittest.TestCase):
     def test_05_nearby_tab_and_zone_radar(self):
         """Verify [Nearby] pill, GetPlayerZoneInfo, and live radar event hooks."""
         # Nearby category pill
-        self.assertIn('CreateCategoryPill("nearby", "Nearby", 52, 4, allBtn)', self.lua_code)
+        self.assertIn('CreateCategoryPill("nearby", "Nearby", 50, 3, allBtn)', self.lua_code)
         self.assertIn('["nearby"] = "nearby"', self.lua_code)
 
         # GetPlayerZoneInfo implementation

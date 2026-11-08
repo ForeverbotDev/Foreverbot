@@ -131,6 +131,10 @@ def export_vendors(cursor) -> str:
 
 
 def export_items(cursor) -> str:
+    # Build quest title lookup map to enrich numeric Quest Reward IDs
+    cursor.execute("SELECT id, title, zone FROM quests")
+    quests_map = {row[0]: (row[1], row[2]) for row in cursor.fetchall()}
+
     cursor.execute("""
         SELECT id, name, quality, item_level, req_level, slot, item_type, stats, description, source, pro_tip, is_forever_content, bonding, sell_price, icon, effects, item_set
         FROM items
@@ -156,6 +160,12 @@ def export_items(cursor) -> str:
             clean_source = source or ""
             clean_tip = tip or ""
             clean_source = clean_source.replace("WoW: Forever Open Alpha (Blizzard Build 1.60.1 / Wowhead Datamine)", "World Drop: Creatures and encounters across Azeroth")
+            m_quest = re.match(r"^Quest Reward:\s*(\d+)$", clean_source)
+            if m_quest:
+                qid = int(m_quest.group(1))
+                if qid in quests_map:
+                    q_title, q_zone = quests_map[qid]
+                    clean_source = f"Quest: {q_title} ({q_zone})" if q_zone else f"Quest: {q_title}"
             clean_tip = clean_tip.replace("Official Blizzard WoW: Forever content • Documented in Alpha patch notes & client datamine.", f"Official WoW: Forever {quality} {slot or itype}.")
             lua.append(f"  t[{i_id}] = {{")
             lua.append(f"    id = {i_id},")
