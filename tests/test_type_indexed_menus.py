@@ -32,8 +32,73 @@ class TestTypeIndexedMenus(unittest.TestCase):
 
     def test_vendors_subfolders_defined(self):
         self.assertIn('["vendors"] = {', self.content)
-        for expected in ["vendors/flightpaths", "vendors/repairs", "vendors/reagents", "vendors/food", "vendors/weapons_armor", "vendors/pvp", "vendors/specialty", "vendors/all"]:
+        for expected in ["vendors/flightpaths", "vendors/repairs", "vendors/reagents", "vendors/food", "vendors/weapons_armor", "vendors/tradesupplies", "vendors/trainers", "vendors/pvp", "vendors/specialty", "vendors/all"]:
             self.assertIn(f'path = "{expected}"', self.content, f"Missing vendor folder path: {expected}")
+
+    def test_nearby_type_indexed_subfolders(self):
+        # Nearby creatures subfolders
+        self.assertIn('["nearby/creatures"] = {', self.content)
+        for expected in ["nearby/creatures/beasts", "nearby/creatures/humanoids", "nearby/creatures/undead", "nearby/creatures/elementals", "nearby/creatures/demons", "nearby/creatures/dragonkin", "nearby/creatures/giants", "nearby/creatures/rares", "nearby/creatures/all"]:
+            self.assertIn(f'path = "{expected}"', self.content, f"Missing nearby creature subfolder: {expected}")
+
+        # Nearby vendors subfolders
+        self.assertIn('["nearby/vendors"] = {', self.content)
+        for expected in ["nearby/vendors/flight", "nearby/vendors/repairs", "nearby/vendors/reagents", "nearby/vendors/food", "nearby/vendors/weapons_armor", "nearby/vendors/tradesupplies", "nearby/vendors/trainers", "nearby/vendors/pvp", "nearby/vendors/specialty", "nearby/vendors/all"]:
+            self.assertIn(f'path = "{expected}"', self.content, f"Missing nearby vendor subfolder: {expected}")
+
+        # Nearby loot subfolders
+        self.assertIn('["nearby/loot"] = {', self.content)
+        for expected in ["nearby/loot/armor", "nearby/loot/weapons", "nearby/loot/recipes", "nearby/loot/accessories", "nearby/loot/all"]:
+            self.assertIn(f'path = "{expected}"', self.content, f"Missing nearby loot subfolder: {expected}")
+
+        # Nearby quests subfolders
+        self.assertIn('["nearby/quests"] = {', self.content)
+        for expected in ["nearby/quests/recommended", "nearby/quests/story", "nearby/quests/dungeons", "nearby/quests/all"]:
+            self.assertIn(f'path = "{expected}"', self.content, f"Missing nearby quest subfolder: {expected}")
+
+    def test_dungeon_quests_type_indexed_instances(self):
+        self.assertIn('["quests/dungeons"] = {', self.content)
+        dungeon_samples = [
+            "quests/dungeons/The Deadmines",
+            "quests/dungeons/Wailing Caverns",
+            "quests/dungeons/Shadowfang Keep",
+            "quests/dungeons/Blackfathom Deeps",
+            "quests/dungeons/The Stockade",
+            "quests/dungeons/Gnomeregan",
+            "quests/dungeons/Scarlet Monastery",
+            "quests/dungeons/Razorfen Kraul",
+            "quests/dungeons/Razorfen Downs",
+            "quests/dungeons/Uldaman",
+            "quests/dungeons/Zul'Farrak",
+            "quests/dungeons/Maraudon",
+            "quests/dungeons/Sunken Temple",
+            "quests/dungeons/Blackrock Depths",
+            "quests/dungeons/Blackrock Spire",
+            "quests/dungeons/Stratholme",
+            "quests/dungeons/Scholomance",
+            "quests/dungeons/Dire Maul",
+            "quests/dungeons/Molten Core",
+            "quests/dungeons/Blackwing Lair",
+            "quests/dungeons/Zul'Gurub",
+            "quests/dungeons/Ahn'Qiraj",
+            "quests/dungeons/Naxxramas",
+            "quests/dungeons/all"
+        ]
+        for path in dungeon_samples:
+            self.assertIn(f'path = "{path}"', self.content, f"Missing dungeon quest folder: {path}")
+
+    def test_vendor_subtype_matching_helper(self):
+        self.assertIn("function FG:MatchesVendorSubtype(v, subType)", self.content)
+        self.assertIn('subType == "tradesupplies"', self.content)
+        self.assertIn('subType == "trainers"', self.content)
+        self.assertIn('subType == "weapons_armor"', self.content)
+        self.assertIn('subType == "repairs"', self.content)
+
+    def test_accessories_and_containers_have_all_and_shields(self):
+        self.assertIn('path = "items/sub/Shields"', self.content)
+        self.assertIn('path = "items/sub/Off-hand"', self.content)
+        self.assertIn('path = "items/sub/All Accessories"', self.content)
+        self.assertIn('path = "items/sub/All Containers"', self.content)
 
     def test_potions_strictly_excludes_elixirs_and_flasks(self):
         # Verify that subName == "Potions" condition does NOT pool Elixirs and Flasks
@@ -91,3 +156,4 @@ class TestTypeIndexedMenus(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+

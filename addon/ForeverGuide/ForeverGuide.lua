@@ -1698,6 +1698,31 @@ function FG:GetVendorTitle(c)
   return nil
 end
 
+function FG:MatchesVendorSubtype(v, subType)
+  if not v or not subType or subType == "all" then return true end
+  local tip = (((v.tip or "") .. " " .. (v.item or ""))):lower()
+  if subType == "flight" or subType == "flightpaths" then
+    return tip:find("flight") or tip:find("gryphon") or tip:find("wind rider") or tip:find("bat handler")
+  elseif subType == "repairs" then
+    return tip:find("repair") or tip:find("blacksmith") or tip:find("weaponsmith") or tip:find("armorsmith") or tip:find("armorer") or tip:find("metalsmith") or tip:find("macecrafter") or tip:find("shield")
+  elseif subType == "reagents" then
+    return tip:find("reagent") or tip:find("alchemy") or tip:find("herbalism") or tip:find("poison") or tip:find("potion") or tip:find("herb")
+  elseif subType == "food" then
+    return tip:find("food") or tip:find("drink") or tip:find("innkeeper") or tip:find("bartender") or tip:find("baker") or tip:find("butcher") or tip:find("cook") or tip:find("ale") or tip:find("wine") or tip:find("vintner") or tip:find("fruit") or tip:find("fish") or tip:find("bread") or tip:find("meat") or tip:find("water")
+  elseif subType == "weapons_armor" then
+    return tip:find("weapon") or tip:find("armor") or tip:find("bowyer") or tip:find("gunsmith") or tip:find("blade") or tip:find("sword") or tip:find("axe") or tip:find("mace") or tip:find("cloth") or tip:find("leather") or tip:find("mail") or tip:find("plate") or tip:find("tailor") or tip:find("leatherwork")
+  elseif subType == "tradesupplies" then
+    return tip:find("trade supplies") or tip:find("general supplies") or tip:find("trade") or tip:find("supplies") or tip:find("tailor") or tip:find("leatherwork") or tip:find("engineer") or tip:find("mining") or tip:find("thread") or tip:find("dye") or tip:find("flux") or tip:find("bleach") or tip:find("spices")
+  elseif subType == "trainers" then
+    return tip:find("trainer") or tip:find("weapon master") or tip:find("riding instructor") or tip:find("pet trainer")
+  elseif subType == "pvp" then
+    return tip:find("quartermaster") or tip:find("officer") or tip:find("battleground") or tip:find("honor") or tip:find("pvp") or tip:find("sergeant") or tip:find("commander")
+  elseif subType == "specialty" then
+    return (v.limitedStock and v.limitedStock ~= "") or tip:find("specialty") or tip:find("rare") or tip:find("exotic") or tip:find("pet") or tip:find("mount")
+  end
+  return false
+end
+
 function FG:GetQuestIcon(qData)
   if not qData then return "Interface\\Icons\\inv_misc_book_07" end
   if qData.isForever then return "Interface\\Icons\\INV_Misc_Book_09" end
@@ -4736,9 +4761,14 @@ FG.FolderTree = {
     title = "Nearby Creatures & Mobs",
     parent = "nearby",
     folders = {
-      { path = "nearby/creatures/beasts", name = "Beasts & Wildlife", desc = "Giraffes, Kodos, Plainstriders, Hyenas, Raptors & Animals", icon = "Interface\\Icons\\Ability_Hunter_Pet_TallStrider" },
-      { path = "nearby/creatures/humanoids", name = "Humanoids & NPCs", desc = "Centaurs, Quilboars, Pirates, Guards & Townsfolk", icon = "Interface\\Icons\\INV_Misc_Head_Centaur_01" },
-      { path = "nearby/creatures/rares", name = "Rares & Named Spawns", desc = "Rare elites and named monsters in the zone", icon = "Interface\\Icons\\INV_Misc_Head_Dragon_02" },
+      { path = "nearby/creatures/beasts", name = "Beasts & Wildlife", desc = "Animals, predators, critters & wild creatures", icon = "Interface\\Icons\\Ability_Hunter_Pet_TallStrider" },
+      { path = "nearby/creatures/humanoids", name = "Humanoids & NPCs", desc = "Townsfolk, guards, outlaws & mortal factions", icon = "Interface\\Icons\\INV_Misc_Head_Centaur_01" },
+      { path = "nearby/creatures/undead", name = "Undead & Scourge", desc = "Skeletons, ghouls, ghosts & walking dead", icon = "Interface\\Icons\\Spell_DeathKnight_ArmyOfTheDead" },
+      { path = "nearby/creatures/elementals", name = "Elementals", desc = "Earth, Fire, Water & Air elementals", icon = "Interface\\Icons\\Spell_Fire_Fire" },
+      { path = "nearby/creatures/demons", name = "Demons & Infernals", desc = "Burning Legion demons, felbeasts & imps", icon = "Interface\\Icons\\Spell_Shadow_SummonFelHunter" },
+      { path = "nearby/creatures/dragonkin", name = "Dragonkin", desc = "Whelps, drakes, dragonspawn & wyrms", icon = "Interface\\Icons\\INV_Misc_Head_Dragon_Red" },
+      { path = "nearby/creatures/giants", name = "Giants & Ogres", desc = "Colossi, ogres, ettins & mountain giants", icon = "Interface\\Icons\\Ability_Racial_Avatar" },
+      { path = "nearby/creatures/rares", name = "Rares & Named Spawns", desc = "Rare elites and unique monsters in the zone", icon = "Interface\\Icons\\INV_Misc_Head_Dragon_02" },
       { path = "nearby/creatures/all", name = "[All Creatures (Full Zone List)]", desc = "Complete list of all creatures in the zone", icon = "Interface\\Icons\\Ability_Tracking", isAll = true },
     },
   },
@@ -4749,8 +4779,37 @@ FG.FolderTree = {
     folders = {
       { path = "nearby/vendors/flight", name = "Flight Masters", desc = "Flight points and wind rider / gryphon masters", icon = "Interface\\Icons\\Spell_Magic_FeatherFall" },
       { path = "nearby/vendors/repairs", name = "Repairs & Armorers", desc = "Blacksmiths and equipment repairers", icon = "Interface\\Icons\\Trade_BlackSmithing" },
-      { path = "nearby/vendors/reagents", name = "Reagents & Trade Supplies", desc = "Herbs, potions, poisons and crafting goods", icon = "Interface\\Icons\\INV_Potion_33" },
+      { path = "nearby/vendors/reagents", name = "Reagents & Alchemy Supplies", desc = "Herbs, potions, poisons and crafting goods", icon = "Interface\\Icons\\INV_Potion_33" },
+      { path = "nearby/vendors/food", name = "Food & Drink Merchants", desc = "Innkeepers, barkeepers, butchers & bakers", icon = "Interface\\Icons\\INV_Misc_Food_14" },
+      { path = "nearby/vendors/weapons_armor", name = "Weapons & Armor Vendors", desc = "Weaponsmiths, leatherworkers, tailors & armorers", icon = "Interface\\Icons\\INV_Sword_04" },
+      { path = "nearby/vendors/tradesupplies", name = "Trade Supplies & Materials", desc = "Tailoring, leather, mining, thread & materials", icon = "Interface\\Icons\\INV_Fabric_Silk_02" },
+      { path = "nearby/vendors/trainers", name = "Class & Profession Trainers", desc = "Class, trade skill, weapon & riding trainers", icon = "Interface\\Icons\\Spell_Holy_MagicalSentry" },
+      { path = "nearby/vendors/pvp", name = "PvP Quartermasters", desc = "Battlegrounds & Honor Vendors", icon = "Interface\\Icons\\INV_BannerPVP_02" },
+      { path = "nearby/vendors/specialty", name = "Specialty & Rare Goods", desc = "Limited Recipes, Pets & Unique items", icon = "Interface\\Icons\\INV_Misc_Bag_07" },
       { path = "nearby/vendors/all", name = "[All Vendors & Services]", desc = "All merchants and service providers in this zone", icon = "Interface\\Icons\\INV_Misc_Coin_01", isAll = true },
+    },
+  },
+
+  ["nearby/loot"] = {
+    title = "Nearby Notable Loot & Drops",
+    parent = "nearby",
+    folders = {
+      { path = "nearby/loot/armor", name = "Armor & Shields", desc = "Valuable BoE armor drops in this zone", icon = "Interface\\Icons\\INV_Chest_Chain_15" },
+      { path = "nearby/loot/weapons", name = "Weapons", desc = "Prized world weapon drops in this zone", icon = "Interface\\Icons\\INV_Sword_04" },
+      { path = "nearby/loot/recipes", name = "World Recipes & Plans", desc = "Crafting plans, patterns and formulas", icon = "Interface\\Icons\\INV_Scroll_03" },
+      { path = "nearby/loot/accessories", name = "Jewelry & Accessories", desc = "Rings, trinkets, amulets and cloaks", icon = "Interface\\Icons\\INV_Jewelry_Necklace_07" },
+      { path = "nearby/loot/all", name = "[All Notable Zone Drops]", desc = "Complete catalog of notable loot in this zone", icon = "Interface\\Icons\\INV_Misc_Coin_02", isAll = true },
+    },
+  },
+
+  ["nearby/quests"] = {
+    title = "Nearby Quests",
+    parent = "nearby",
+    folders = {
+      { path = "nearby/quests/recommended", name = "Recommended Quests", desc = "Level-appropriate quests in this zone", icon = "Interface\\Icons\\Spell_Holy_MindVision" },
+      { path = "nearby/quests/story", name = "Storyline & Zone Quests", desc = "Main storyline and side quests in this zone", icon = "Interface\\Icons\\INV_Misc_Book_07" },
+      { path = "nearby/quests/dungeons", name = "Dungeon Quests (Local)", desc = "Quests tied to instances in or near this zone", icon = "Interface\\Icons\\Spell_Shadow_Teleport" },
+      { path = "nearby/quests/all", name = "[All Quests in Zone]", desc = "All available quests in this zone", icon = "Interface\\Icons\\INV_Misc_QuestionMark", isAll = true },
     },
   },
 
@@ -4861,6 +4920,37 @@ FG.FolderTree = {
       { path = "quests/prof/Leatherworking", name = "Leatherworking", desc = "Dragonscale, Elemental, Tribal" },
       { path = "quests/prof/Mining", name = "Mining", desc = "Smelting & dark iron quests" },
       { path = "quests/prof/Tailoring", name = "Tailoring", desc = "Mooncloth & specialized weaves" },
+    },
+  },
+
+  ["quests/dungeons"] = {
+    title = "Dungeon & Raid Quests",
+    parent = "quests",
+    folders = {
+      { path = "quests/dungeons/The Deadmines", name = "The Deadmines", desc = "Westfall instance quests (Edwin VanCleef, Defias)", icon = "Interface\\Icons\\INV_Misc_Key_03" },
+      { path = "quests/dungeons/Wailing Caverns", name = "Wailing Caverns", desc = "Barrens druid quests (Leaders of the Fang)", icon = "Interface\\Icons\\Spell_Nature_NatureTouchGrow" },
+      { path = "quests/dungeons/Shadowfang Keep", name = "Shadowfang Keep", desc = "Silverpine worgen fortress (Arugal)", icon = "Interface\\Icons\\Spell_Shadow_Charm" },
+      { path = "quests/dungeons/Blackfathom Deeps", name = "Blackfathom Deeps", desc = "Ashenvale twilight shrine (Aku'mai)", icon = "Interface\\Icons\\Spell_Shadow_DemonBreath" },
+      { path = "quests/dungeons/The Stockade", name = "The Stockade", desc = "Stormwind prison riot quests (Bazil Thredd)", icon = "Interface\\Icons\\INV_Cask_01" },
+      { path = "quests/dungeons/Gnomeregan", name = "Gnomeregan", desc = "Gnomish irradiated capital (Thermaplugg)", icon = "Interface\\Icons\\Trade_Engineering" },
+      { path = "quests/dungeons/Scarlet Monastery", name = "Scarlet Monastery", desc = "Graveyard, Library, Armory & Cathedral quests", icon = "Interface\\Icons\\Spell_Holy_PrayerOfFortitude" },
+      { path = "quests/dungeons/Razorfen Kraul", name = "Razorfen Kraul", desc = "Quilboar thorned bastion quests (Charlga Razorflank)", icon = "Interface\\Icons\\Ability_Hunter_Pet_Boar" },
+      { path = "quests/dungeons/Razorfen Downs", name = "Razorfen Downs", desc = "Undead quilboar barrow quests (Amnennar)", icon = "Interface\\Icons\\Spell_DeathKnight_ArmyOfTheDead" },
+      { path = "quests/dungeons/Uldaman", name = "Uldaman", desc = "Titan excavation quests (Ironaya, Archaedas)", icon = "Interface\\Icons\\INV_Stone_02" },
+      { path = "quests/dungeons/Zul'Farrak", name = "Zul'Farrak", desc = "Tanaris sandfury troll empire (Ghaz'rilla)", icon = "Interface\\Icons\\Ability_Racial_ShadowMeld" },
+      { path = "quests/dungeons/Maraudon", name = "Maraudon", desc = "Desolace centaur ancestral tombs (Princess Theradras)", icon = "Interface\\Icons\\Spell_Nature_Earthquake" },
+      { path = "quests/dungeons/Sunken Temple", name = "Sunken Temple", desc = "Swamp of Sorrows Atal'ai temple (Eranikus)", icon = "Interface\\Icons\\INV_Misc_Head_Dragon_Green" },
+      { path = "quests/dungeons/Blackrock Depths", name = "Blackrock Depths", desc = "Dark iron dwarven capital & prison (Emperor Dagran)", icon = "Interface\\Icons\\INV_Hammer_05" },
+      { path = "quests/dungeons/Blackrock Spire", name = "Blackrock Spire (LBRS/UBRS)", desc = "Orcish war fortress (Warmaster Voone, Rend, Drakkisath)", icon = "Interface\\Icons\\INV_Misc_Head_Dragon_Black" },
+      { path = "quests/dungeons/Stratholme", name = "Stratholme", desc = "Living Scarlet & Undead Baron Rivendare quests", icon = "Interface\\Icons\\Spell_Fire_Fireball02" },
+      { path = "quests/dungeons/Scholomance", name = "Scholomance", desc = "Necromantic crypts & Darkmaster Gandling", icon = "Interface\\Icons\\Spell_Shadow_Haunting" },
+      { path = "quests/dungeons/Dire Maul", name = "Dire Maul", desc = "East, West & North highborne ruins (Tribute run)", icon = "Interface\\Icons\\INV_Misc_Bone_08" },
+      { path = "quests/dungeons/Molten Core", name = "Molten Core & Onyxia", desc = "Ragnaros & Broodmother Onyxia raid questlines", icon = "Interface\\Icons\\Spell_Fire_Volcano" },
+      { path = "quests/dungeons/Blackwing Lair", name = "Blackwing Lair", desc = "Nefarian & draconic experiments", icon = "Interface\\Icons\\INV_Misc_Head_Dragon_Red" },
+      { path = "quests/dungeons/Zul'Gurub", name = "Zul'Gurub", desc = "Stranglethorn blood god Hakkar raid quests", icon = "Interface\\Icons\\Ability_Hunter_Pet_Bat" },
+      { path = "quests/dungeons/Ahn'Qiraj", name = "Ruins & Temple of Ahn'Qiraj", desc = "Silithid qiraji war quests (Ossirian, C'Thun)", icon = "Interface\\Icons\\INV_Misc_AhnQirajTrinket_01" },
+      { path = "quests/dungeons/Naxxramas", name = "Naxxramas", desc = "Dread citadel floating above Eastern Plaguelands (Kel'Thuzad)", icon = "Interface\\Icons\\Spell_Shadow_DeathScream" },
+      { path = "quests/dungeons/all", name = "[All Dungeon Quests (Full List)]", desc = "Complete catalog of all instance & raid quests", icon = "Interface\\Icons\\Spell_Shadow_Teleport", isAll = true },
     },
   },
 
@@ -4981,6 +5071,9 @@ FG.FolderTree = {
       { path = "items/sub/Cloaks", name = "Cloaks & Capes", desc = "Back slot cloaks", icon = "Interface\\Icons\\INV_Misc_Cape_19", filter = { slot = "Back" } },
       { path = "items/sub/Rings", name = "Rings & Bands", desc = "Rings and bands", icon = "Interface\\Icons\\INV_Jewelry_Ring_03", filter = { slot = "Finger" } },
       { path = "items/sub/Trinkets", name = "Trinkets", desc = "Trinkets and charms", icon = "Interface\\Icons\\INV_Jewelry_Talisman_07", filter = { slot = "Trinket" } },
+      { path = "items/sub/Shields", name = "Shields", desc = "Off-Hand Shields (iLvl Low to High)", icon = "Interface\\Icons\\INV_Shield_04" },
+      { path = "items/sub/Off-hand", name = "Held In Off-hand", desc = "Tomes, lanterns, orbs & off-hands", icon = "Interface\\Icons\\INV_Misc_Book_06" },
+      { path = "items/sub/All Accessories", name = "[All Accessories (Full List)]", desc = "Complete catalog of rings, trinkets, necks, cloaks & shields", icon = "Interface\\Icons\\INV_Jewelry_Ring_03", isAll = true },
     },
   },
 
@@ -5038,6 +5131,7 @@ FG.FolderTree = {
       { path = "items/sub/Bags", name = "Bags (General)", desc = "6-slot to 18-slot inventory containers", icon = "Interface\\Icons\\INV_Misc_Bag_08" },
       { path = "items/sub/Quivers", name = "Quivers & Ammo Pouches", desc = "Hunter bow quivers and gun ammo pouches", icon = "Interface\\Icons\\INV_Misc_Quiver_01" },
       { path = "items/sub/Specialty_Bags", name = "Profession & Specialty Bags", desc = "Soul pouches, Herb bags, Enchanting pouches", icon = "Interface\\Icons\\INV_Misc_Bag_14" },
+      { path = "items/sub/All Containers", name = "[All Bags & Containers (Full List)]", desc = "Complete catalog of all bags, pouches & quivers", icon = "Interface\\Icons\\INV_Misc_Bag_08", isAll = true },
     },
   },
 
@@ -5086,6 +5180,8 @@ FG.FolderTree = {
       { path = "vendors/reagents", name = "Reagents & Alchemy Supplies", desc = "Herbs, potions, poisons and crafting goods", icon = "Interface\\Icons\\INV_Potion_33" },
       { path = "vendors/food", name = "Food & Drink Merchants", desc = "Innkeepers, barkeepers, butchers & bakers", icon = "Interface\\Icons\\INV_Misc_Food_14" },
       { path = "vendors/weapons_armor", name = "Weapons & Armor Vendors", desc = "Weaponsmiths, leatherworkers, tailors & armorers", icon = "Interface\\Icons\\INV_Sword_04" },
+      { path = "vendors/tradesupplies", name = "Trade Supplies & Materials", desc = "Tailoring, leather, engineering & crafting materials", icon = "Interface\\Icons\\INV_Fabric_Silk_02" },
+      { path = "vendors/trainers", name = "Class & Profession Trainers", desc = "Class, profession, riding & weapon trainers", icon = "Interface\\Icons\\Spell_Holy_MagicalSentry" },
       { path = "vendors/pvp", name = "PvP Quartermasters", desc = "Battlegrounds & Honor Vendors", icon = "Interface\\Icons\\INV_BannerPVP_02" },
       { path = "vendors/specialty", name = "Specialty & Rare Goods", desc = "Limited Recipes, Pets & Unique items", icon = "Interface\\Icons\\INV_Misc_Bag_07" },
       { path = "vendors/all", name = "[All World Vendors (Full List)]", desc = "Complete alphabetical catalog of all merchants", icon = "Interface\\Icons\\INV_Misc_Coin_01", isAll = true },
@@ -5211,7 +5307,7 @@ function FG:NavigateUpFolder()
       parent = "items"
     elseif cur:find("^items/recipes/") then
       parent = "items/recipes"
-    elseif cur:find("^items/containers") or cur:find("^items/sub/Bags") or cur:find("^items/sub/Quivers") or cur:find("^items/sub/Specialty_Bags") then
+    elseif cur:find("^items/containers") or cur:find("^items/sub/Bags") or cur:find("^items/sub/Quivers") or cur:find("^items/sub/Specialty_Bags") or cur == "items/sub/All Containers" then
       parent = (cur == "items/containers") and "items" or "items/containers"
     elseif cur:find("^items/sub/") then
       local sub = cur:sub(11)
@@ -5223,15 +5319,23 @@ function FG:NavigateUpFolder()
         parent = "items/trade_goods"
       elseif sub:find("Axe") or sub:find("Sword") or sub:find("Mace") or sub == "Daggers" or sub == "Polearms" or sub == "Staves" or sub == "Bows" or sub == "Guns" or sub == "Wands" or sub == "Fist Weapons" then
         parent = "items/weapons"
-      elseif sub == "Amulets" or sub == "Rings" or sub == "Trinkets" then
+      elseif sub == "Amulets" or sub == "Rings" or sub == "Trinkets" or sub == "Off-hand" or sub == "All Accessories" then
         parent = "items/accessories"
       else
         parent = "items"
       end
+    elseif cur:find("^quests/dungeons/") then
+      parent = "quests/dungeons"
+    elseif cur == "quests/dungeons" then
+      parent = "quests"
     elseif cur:find("^nearby/creatures/") then
       parent = "nearby/creatures"
     elseif cur:find("^nearby/vendors/") then
       parent = "nearby/vendors"
+    elseif cur:find("^nearby/loot/") then
+      parent = "nearby/loot"
+    elseif cur:find("^nearby/quests/") then
+      parent = "nearby/quests"
     elseif cur:find("^nearby/") then
       parent = "nearby"
     elseif cur == "nearby" then
@@ -5298,35 +5402,52 @@ function FG:UpdateDolphinBreadcrumbs(query, matchCount)
     if pSub and pSub ~= "" then zoneDisplay = zoneDisplay .. " (" .. pSub .. ")" end
     table.insert(trail, "|cff20ff20Nearby (" .. zoneDisplay .. ")|r")
     if cur == "nearby/quests" then table.insert(trail, "|cffffd24dQuests|r")
+    elseif cur:find("^nearby/quests/(.+)$") then
+      local qSub = cur:match("^nearby/quests/(.+)$")
+      local qNames = { recommended = "Recommended", story = "Storyline", dungeons = "Dungeons", all = "All Quests" }
+      table.insert(trail, "|cff88aaccQuests|r")
+      table.insert(trail, "|cffffd24d" .. (qNames[qSub] or qSub) .. "|r")
     elseif cur == "nearby/rares" then table.insert(trail, "|cffffd24dRares & Bosses|r")
     elseif cur == "nearby/creatures" then table.insert(trail, "|cffffd24dCreatures|r")
-    elseif cur == "nearby/creatures/beasts" then
+    elseif cur:find("^nearby/creatures/(.+)$") then
+      local cSub = cur:match("^nearby/creatures/(.+)$")
+      local cNames = {
+        beasts = "Beasts",
+        humanoids = "Humanoids",
+        undead = "Undead",
+        elementals = "Elementals",
+        demons = "Demons",
+        dragonkin = "Dragonkin",
+        giants = "Giants",
+        rares = "Rares",
+        all = "All Creatures",
+      }
       table.insert(trail, "|cff88aaccCreatures|r")
-      table.insert(trail, "|cffffd24dBeasts|r")
-    elseif cur == "nearby/creatures/humanoids" then
-      table.insert(trail, "|cff88aaccCreatures|r")
-      table.insert(trail, "|cffffd24dHumanoids|r")
-    elseif cur == "nearby/creatures/rares" then
-      table.insert(trail, "|cff88aaccCreatures|r")
-      table.insert(trail, "|cffffd24dRares|r")
-    elseif cur == "nearby/creatures/all" then
-      table.insert(trail, "|cff88aaccCreatures|r")
-      table.insert(trail, "|cffffd24dAll Creatures|r")
-    elseif cur == "nearby/vendors" then table.insert(trail, "|cffffd24dVendors & Flight|r")
-    elseif cur == "nearby/vendors/flight" then
+      table.insert(trail, "|cffffd24d" .. (cNames[cSub] or cSub:gsub("^%l", string.upper)) .. "|r")
+    elseif cur == "nearby/vendors" then table.insert(trail, "|cffffd24dVendors & Services|r")
+    elseif cur:find("^nearby/vendors/(.+)$") then
+      local vSub = cur:match("^nearby/vendors/(.+)$")
+      local vNames = {
+        flight = "Flight Masters",
+        repairs = "Repairs & Armorers",
+        reagents = "Reagents & Alchemy",
+        food = "Food & Drink",
+        weapons_armor = "Weapons & Armor",
+        tradesupplies = "Trade Supplies",
+        trainers = "Trainers",
+        pvp = "PvP Quartermasters",
+        specialty = "Specialty Goods",
+        all = "All Vendors",
+      }
       table.insert(trail, "|cff88aaccVendors|r")
-      table.insert(trail, "|cffffd24dFlight Masters|r")
-    elseif cur == "nearby/vendors/repairs" then
-      table.insert(trail, "|cff88aaccVendors|r")
-      table.insert(trail, "|cffffd24dRepairs|r")
-    elseif cur == "nearby/vendors/reagents" then
-      table.insert(trail, "|cff88aaccVendors|r")
-      table.insert(trail, "|cffffd24dReagents|r")
-    elseif cur == "nearby/vendors/all" then
-      table.insert(trail, "|cff88aaccVendors|r")
-      table.insert(trail, "|cffffd24dAll Vendors|r")
+      table.insert(trail, "|cffffd24d" .. (vNames[vSub] or vSub) .. "|r")
     elseif cur == "nearby/dungeons" then table.insert(trail, "|cffffd24dDungeons|r")
     elseif cur == "nearby/loot" then table.insert(trail, "|cffffd24dNotable Loot|r")
+    elseif cur:find("^nearby/loot/(.+)$") then
+      local lSub = cur:match("^nearby/loot/(.+)$")
+      local lNames = { armor = "Armor & Shields", weapons = "Weapons", recipes = "Recipes & Plans", accessories = "Jewelry & Accessories", all = "All Loot" }
+      table.insert(trail, "|cff88aaccNotable Loot|r")
+      table.insert(trail, "|cffffd24d" .. (lNames[lSub] or lSub) .. "|r")
     elseif cur == "nearby/closest" then table.insert(trail, "|cffffd24dClosest Radar|r")
     end
   elseif cur:find("^quests") then
@@ -5359,6 +5480,10 @@ function FG:UpdateDolphinBreadcrumbs(query, matchCount)
       table.insert(trail, "|cffffffffProfessions|r")
     elseif cur == "quests/dungeons" then
       table.insert(trail, "|cffffffffDungeon Quests|r")
+    elseif cur:find("^quests/dungeons/(.+)$") then
+      local dKey = cur:match("^quests/dungeons/(.+)$")
+      table.insert(trail, "|cff88aaccDungeon Quests|r")
+      table.insert(trail, "|cffffd24d" .. dKey .. "|r")
     elseif cur == "quests/forever" then
       table.insert(trail, "|cffe6cc80[Forever] Quests|r")
     elseif cur:find("^quests/zone/") then
@@ -5523,6 +5648,8 @@ function FG:UpdateDolphinBreadcrumbs(query, matchCount)
     elseif cur == "vendors/reagents" then table.insert(trail, "|cffffffffReagents & Alchemy|r")
     elseif cur == "vendors/food" then table.insert(trail, "|cffffffffFood & Drink|r")
     elseif cur == "vendors/weapons_armor" then table.insert(trail, "|cffffffffWeapons & Armor|r")
+    elseif cur == "vendors/tradesupplies" then table.insert(trail, "|cffffffffTrade Supplies|r")
+    elseif cur == "vendors/trainers" then table.insert(trail, "|cffffffffTrainers|r")
     elseif cur == "vendors/pvp" then table.insert(trail, "|cffffffffPvP Vendors|r")
     elseif cur == "vendors/specialty" then table.insert(trail, "|cffffffffSpecialty Goods|r")
     end
@@ -5853,89 +5980,74 @@ function FG:PopulateCodexResults(query)
     else
       -- Leaf category folder or searching in nearby
       local isClosest = (cur == "nearby/closest")
-      local showQuests = (cur == "nearby/quests") or isClosest or (isNearbyRoot and q ~= "")
-      local showRares = (cur == "nearby/rares") or (cur == "nearby/creatures/rares") or isClosest or (isNearbyRoot and q ~= "")
-      local showBeasts = (cur == "nearby/creatures/beasts")
-      local showHumanoids = (cur == "nearby/creatures/humanoids")
-      local showAllCreatures = (cur == "nearby/creatures") or (cur == "nearby/creatures/all") or isClosest or (isNearbyRoot and q ~= "")
-      local showCreatures = showAllCreatures or showBeasts or showHumanoids or showRares
-      local showVendors = (cur:find("^nearby/vendors") ~= nil) or isClosest or (isNearbyRoot and q ~= "")
-      local showDungeons = (cur == "nearby/dungeons") or isClosest or (isNearbyRoot and q ~= "")
-      local showLoot = (cur == "nearby/loot") or (isNearbyRoot and q ~= "")
+      local creatureSub = cur:match("^nearby/creatures/(.+)$")
       local vendorSub = cur:match("^nearby/vendors/(.+)$")
+      local lootSub = cur:match("^nearby/loot/(.+)$")
+      local questSub = cur:match("^nearby/quests/(.+)$")
 
-      -- Category subfolders when browsing nearby/creatures with no query
+      local showCreatures = (creatureSub ~= nil) or (cur == "nearby/rares") or isClosest or (isNearbyRoot and q ~= "") or (cur == "nearby/creatures" and q ~= "")
+      local showVendors = (vendorSub ~= nil) or isClosest or (isNearbyRoot and q ~= "") or (cur == "nearby/vendors" and q ~= "")
+      local showQuests = (questSub ~= nil) or isClosest or (isNearbyRoot and q ~= "") or (cur == "nearby/quests" and q ~= "")
+      local showDungeons = (cur == "nearby/dungeons") or isClosest or (isNearbyRoot and q ~= "")
+      local showLoot = (lootSub ~= nil) or (cur == "nearby/loot" and q ~= "") or (isNearbyRoot and q ~= "")
+
+      -- 1. Category subfolders when browsing nearby/creatures with no query
       if cur == "nearby/creatures" and q == "" then
-        local bCount, hCount, rCount, allCount = 0, 0, 0, 0
+        local cCounts = { beasts = 0, humanoids = 0, undead = 0, elementals = 0, demons = 0, dragonkin = 0, giants = 0, rares = 0, all = 0 }
         if FG.Data.Creatures then
           for _, c in pairs(FG.Data.Creatures) do
             if not FG:IsInternalCreature(c.name, c.family) then
               local inZone = (c.zone and c.zone:lower() == pZoneLower) or (c.location and c.location:lower():find(pZoneLower, 1, true))
               local inSub = pSubLower ~= "" and ((c.location and c.location:lower():find(pSubLower, 1, true)) or (c.zone and c.zone:lower():find(pSubLower, 1, true)))
               if inZone or inSub then
-                allCount = allCount + 1
+                cCounts.all = cCounts.all + 1
                 local isRare = (c.classification == "Boss" or c.classification == "World Boss" or c.classification == "Rare" or c.classification == "Rare Elite")
-                if isRare then rCount = rCount + 1 end
-                if c.family and c.family:lower() == "beast" and not isRare then bCount = bCount + 1 end
-                if c.family and c.family:lower() == "humanoid" and not isRare then hCount = hCount + 1 end
+                if isRare then cCounts.rares = cCounts.rares + 1 end
+                if c.family then
+                  local fam = c.family:lower()
+                  if fam == "beast" then cCounts.beasts = cCounts.beasts + 1
+                  elseif fam == "humanoid" then cCounts.humanoids = cCounts.humanoids + 1
+                  elseif fam == "undead" then cCounts.undead = cCounts.undead + 1
+                  elseif fam == "elemental" then cCounts.elementals = cCounts.elementals + 1
+                  elseif fam == "demon" then cCounts.demons = cCounts.demons + 1
+                  elseif fam == "dragonkin" then cCounts.dragonkin = cCounts.dragonkin + 1
+                  elseif fam == "giant" then cCounts.giants = cCounts.giants + 1
+                  end
+                end
               end
             end
           end
         end
-        table.insert(matches, {
-          type = "folder",
-          data = {
-            name = "Beasts & Wildlife",
-            path = "nearby/creatures/beasts",
-            desc = string.format("%d beasts in %s", bCount, pZone),
-            count = bCount,
-            icon = "Interface\\Icons\\Ability_Hunter_Pet_TallStrider",
-          }
-        })
-        table.insert(matches, {
-          type = "folder",
-          data = {
-            name = "Humanoids & NPCs",
-            path = "nearby/creatures/humanoids",
-            desc = string.format("%d humanoids in %s", hCount, pZone),
-            count = hCount,
-            icon = "Interface\\Icons\\INV_Misc_Head_Centaur_01",
-          }
-        })
-        table.insert(matches, {
-          type = "folder",
-          data = {
-            name = "Rares & Named Spawns",
-            path = "nearby/creatures/rares",
-            desc = string.format("%d rare spawns & bosses in %s", rCount, pZone),
-            count = rCount,
-            icon = "Interface\\Icons\\INV_Misc_Head_Dragon_02",
-          }
-        })
-        table.insert(matches, {
-          type = "folder",
-          data = {
-            name = "[All Creatures (Full Zone List)]",
-            path = "nearby/creatures/all",
-            desc = string.format("All %d creatures in %s", allCount, pZone),
-            count = allCount,
-            icon = "Interface\\Icons\\Ability_Tracking",
-            isAll = true,
-          }
-        })
+        local cFolders = (FG.FolderTree["nearby/creatures"] and FG.FolderTree["nearby/creatures"].folders) or {}
+        for _, f in ipairs(cFolders) do
+          local subKey = f.path:match("^nearby/creatures/(.+)$")
+          local count = (subKey and cCounts[subKey]) or 0
+          table.insert(matches, {
+            type = "folder",
+            data = {
+              name = f.name,
+              path = f.path,
+              desc = string.format("%d %s in %s", count, f.name, pZone),
+              count = count,
+              icon = f.icon,
+              isAll = f.isAll,
+            }
+          })
+        end
       end
 
-      -- Category subfolders when browsing nearby/vendors with no query
+      -- 2. Category subfolders when browsing nearby/vendors with no query
       if cur == "nearby/vendors" and q == "" then
-        local fpCount, repCount, reagCount, vAllCount = 0, 0, 0, 0
+        local vCounts = { flight = 0, repairs = 0, reagents = 0, food = 0, weapons_armor = 0, tradesupplies = 0, trainers = 0, pvp = 0, specialty = 0, all = 0 }
         if FG.Data.Flightpaths then
           for _, fp in pairs(FG.Data.Flightpaths) do
             if fp.zone and fp.zone:lower() == pZoneLower then
-              fpCount = fpCount + 1
-              vAllCount = vAllCount + 1
+              vCounts.flight = vCounts.flight + 1
+              vCounts.all = vCounts.all + 1
             end
           end
         end
+        local addedVendorsCount = {}
         if FG.Data.Vendors then
           for _, v in pairs(FG.Data.Vendors) do
             local vZone = v.zone
@@ -5944,59 +6056,135 @@ function FG:PopulateCodexResults(query)
               if cObj and cObj.zone then vZone = cObj.zone end
             end
             if vZone and vZone:lower() == pZoneLower then
-              vAllCount = vAllCount + 1
-              local itemLower = (v.item or ""):lower()
-              local tipLower = (v.tip or ""):lower()
-              if tipLower:find("repair") or tipLower:find("blacksmith") or tipLower:find("weaponsmith") or tipLower:find("armorsmith") or itemLower:find("repair") or itemLower:find("blacksmith") or itemLower:find("weaponsmith") or itemLower:find("armorsmith") then
-                repCount = repCount + 1
-              end
-              if tipLower:find("reagent") or tipLower:find("poison") or tipLower:find("potion") or tipLower:find("herb") or tipLower:find("alchemy") or itemLower:find("reagent") or itemLower:find("poison") or itemLower:find("potion") or itemLower:find("herb") or itemLower:find("alchemy") then
-                reagCount = reagCount + 1
+              local key = (v.name or "") .. ":" .. (v.zone or "")
+              if not addedVendorsCount[key] then
+                addedVendorsCount[key] = true
+                vCounts.all = vCounts.all + 1
+                for subKey, _ in pairs(vCounts) do
+                  if subKey ~= "all" and subKey ~= "flight" and FG:MatchesVendorSubtype(v, subKey) then
+                    vCounts[subKey] = vCounts[subKey] + 1
+                  end
+                end
               end
             end
           end
         end
-        table.insert(matches, {
-          type = "folder",
-          data = {
-            name = "Flight Masters",
-            path = "nearby/vendors/flight",
-            desc = string.format("%d flight masters in %s", fpCount, pZone),
-            count = fpCount,
-            icon = "Interface\\Icons\\Spell_Magic_FeatherFall",
-          }
-        })
-        table.insert(matches, {
-          type = "folder",
-          data = {
-            name = "Repairs & Armorers",
-            path = "nearby/vendors/repairs",
-            desc = string.format("%d repair merchants in %s", repCount, pZone),
-            count = repCount,
-            icon = "Interface\\Icons\\Trade_BlackSmithing",
-          }
-        })
-        table.insert(matches, {
-          type = "folder",
-          data = {
-            name = "Reagents & Trade Supplies",
-            path = "nearby/vendors/reagents",
-            desc = string.format("%d reagent vendors in %s", reagCount, pZone),
-            count = reagCount,
-            icon = "Interface\\Icons\\INV_Potion_33",
-          }
-        })
-        table.insert(matches, {
-          type = "folder",
-          data = {
-            name = "[All Vendors & Services]",
-            path = "nearby/vendors/all",
-            desc = string.format("All %d merchants in %s", vAllCount, pZone),
-            count = vAllCount,
-            icon = "Interface\\Icons\\INV_Misc_Coin_01",
-            isAll = true,
-          }
-        })
+        if FG.Data.Creatures then
+          for _, c in pairs(FG.Data.Creatures) do
+            local inZone = (c.zone and c.zone:lower() == pZoneLower) or (c.location and c.location:lower():find(pZoneLower, 1, true))
+            if inZone and not FG:IsInternalCreature(c.name, c.family) then
+              local vTitle = FG:GetVendorTitle(c)
+              if vTitle then
+                local key = (c.name or "") .. ":" .. (c.zone or "")
+                if not addedVendorsCount[key] then
+                  addedVendorsCount[key] = true
+                  local vData = { name = c.name, zone = c.zone or pZone, coords = c.coords, item = vTitle, tip = "<" .. vTitle .. ">" }
+                  vCounts.all = vCounts.all + 1
+                  for subKey, _ in pairs(vCounts) do
+                    if subKey ~= "all" and FG:MatchesVendorSubtype(vData, subKey) then
+                      vCounts[subKey] = vCounts[subKey] + 1
+                    end
+                  end
+                end
+              end
+            end
+          end
+        end
+        local vFolders = (FG.FolderTree["nearby/vendors"] and FG.FolderTree["nearby/vendors"].folders) or {}
+        for _, f in ipairs(vFolders) do
+          local subKey = f.path:match("^nearby/vendors/(.+)$")
+          local count = (subKey and vCounts[subKey]) or 0
+          table.insert(matches, {
+            type = "folder",
+            data = {
+              name = f.name,
+              path = f.path,
+              desc = string.format("%d %s in %s", count, f.name, pZone),
+              count = count,
+              icon = f.icon,
+              isAll = f.isAll,
+            }
+          })
+        end
+      end
+
+      -- 3. Category subfolders when browsing nearby/loot with no query
+      if cur == "nearby/loot" and q == "" then
+        local lCounts = { armor = 0, weapons = 0, recipes = 0, accessories = 0, all = 0 }
+        if FG.Data.Items then
+          for _, item in pairs(FG.Data.Items) do
+            if not FG:IsInternalItem(item.name) and item.source and item.source:lower():find(pZoneLower, 1, true) then
+              lCounts.all = lCounts.all + 1
+              local grp = FG:GetItemTypeSortKey(item)
+              if grp == 1 then lCounts.weapons = lCounts.weapons + 1
+              elseif grp == 2 then lCounts.armor = lCounts.armor + 1
+              elseif grp == 3 then lCounts.accessories = lCounts.accessories + 1
+              elseif grp == 7 then lCounts.recipes = lCounts.recipes + 1
+              end
+            end
+          end
+        end
+        local lFolders = (FG.FolderTree["nearby/loot"] and FG.FolderTree["nearby/loot"].folders) or {}
+        for _, f in ipairs(lFolders) do
+          local subKey = f.path:match("^nearby/loot/(.+)$")
+          local count = (subKey and lCounts[subKey]) or 0
+          table.insert(matches, {
+            type = "folder",
+            data = {
+              name = f.name,
+              path = f.path,
+              desc = string.format("%d %s in %s", count, f.name, pZone),
+              count = count,
+              icon = f.icon,
+              isAll = f.isAll,
+            }
+          })
+        end
+      end
+
+      -- 4. Category subfolders when browsing nearby/quests with no query
+      if cur == "nearby/quests" and q == "" then
+        local qCounts = { recommended = 0, story = 0, dungeons = 0, all = 0 }
+        local pLvl = (UnitLevel and UnitLevel("player")) or 0
+        if FG.Data.Quests then
+          for _, quest in pairs(FG.Data.Quests) do
+            if not FG:IsInternalQuest(quest.title) then
+              local inZone = quest.zone and quest.zone:lower() == pZoneLower
+              local inSub = pSubLower ~= "" and ((quest.zone and quest.zone:lower():find(pSubLower, 1, true)) or (quest.npc and quest.npc:lower():find(pSubLower, 1, true)))
+              if inZone or inSub then
+                qCounts.all = qCounts.all + 1
+                local qz = (quest.zone or ""):lower()
+                local isDungeonQuest = qz:find("deadmines") or qz:find("wailing") or qz:find("shadowfang") or qz:find("blackfathom") or qz:find("gnomeregan") or qz:find("scarlet") or qz:find("razorfen") or qz:find("uldaman") or qz:find("zul'") or qz:find("maraudon") or qz:find("blackrock") or qz:find("stratholme") or qz:find("scholomance") or qz:find("dire maul") or qz:find("molten") or qz:find("ahn'qiraj") or qz:find("naxxramas")
+                if isDungeonQuest then
+                  qCounts.dungeons = qCounts.dungeons + 1
+                else
+                  qCounts.story = qCounts.story + 1
+                end
+                local req = quest.reqLevel or 0
+                local ql = quest.questLevel or req
+                if pLvl == 0 or (pLvl >= req and pLvl <= ql + 3 and pLvl >= ql - 4) then
+                  qCounts.recommended = qCounts.recommended + 1
+                end
+              end
+            end
+          end
+        end
+        local qFolders = (FG.FolderTree["nearby/quests"] and FG.FolderTree["nearby/quests"].folders) or {}
+        for _, f in ipairs(qFolders) do
+          local subKey = f.path:match("^nearby/quests/(.+)$")
+          local count = (subKey and qCounts[subKey]) or 0
+          table.insert(matches, {
+            type = "folder",
+            data = {
+              name = f.name,
+              path = f.path,
+              desc = string.format("%d %s in %s", count, f.name, pZone),
+              count = count,
+              icon = f.icon,
+              isAll = f.isAll,
+            }
+          })
+        end
       end
 
       -- 1. Nearby Creatures & Mobs (with sub-grouping)
@@ -6004,16 +6192,11 @@ function FG:PopulateCodexResults(query)
         for _, c in pairs(FG.Data.Creatures) do
           if not FG:IsInternalCreature(c.name, c.family) then
             local isRare = (c.classification == "Boss" or c.classification == "World Boss" or c.classification == "Rare" or c.classification == "Rare Elite")
-            local isBeast = (c.family and c.family:lower() == "beast")
-            local isHumanoid = (c.family and c.family:lower() == "humanoid")
-            
             local passesSubFilter = true
-            if cur == "nearby/rares" or cur == "nearby/creatures/rares" then
+            if cur == "nearby/rares" or creatureSub == "rares" then
               passesSubFilter = isRare
-            elseif showBeasts then
-              passesSubFilter = isBeast and not isRare
-            elseif showHumanoids then
-              passesSubFilter = isHumanoid and not isRare
+            elseif creatureSub and creatureSub ~= "all" then
+              passesSubFilter = CreatureMatchesFamily(c, creatureSub) and not isRare
             elseif isClosest then
               passesSubFilter = (c.coords and c.coords ~= "")
             end
@@ -6033,12 +6216,28 @@ function FG:PopulateCodexResults(query)
 
       -- 2. Nearby Quests
       if showQuests and FG.Data.Quests then
+        local qFilter = questSub or "all"
+        local pLvl = (UnitLevel and UnitLevel("player")) or 0
         for _, quest in pairs(FG.Data.Quests) do
           if not FG:IsInternalQuest(quest.title) then
             local inZone = quest.zone and quest.zone:lower() == pZoneLower
             local inSub = pSubLower ~= "" and ((quest.zone and quest.zone:lower():find(pSubLower, 1, true)) or (quest.npc and quest.npc:lower():find(pSubLower, 1, true)))
             if inZone or inSub then
-              if q == "" or (quest.title and quest.title:lower():find(q, 1, true)) then
+              local pass = false
+              local qz = (quest.zone or ""):lower()
+              local isDungeonQuest = qz:find("deadmines") or qz:find("wailing") or qz:find("shadowfang") or qz:find("blackfathom") or qz:find("gnomeregan") or qz:find("scarlet") or qz:find("razorfen") or qz:find("uldaman") or qz:find("zul'") or qz:find("maraudon") or qz:find("blackrock") or qz:find("stratholme") or qz:find("scholomance") or qz:find("dire maul") or qz:find("molten") or qz:find("ahn'qiraj") or qz:find("naxxramas")
+              if qFilter == "all" then
+                pass = true
+              elseif qFilter == "recommended" then
+                local req = quest.reqLevel or 0
+                local ql = quest.questLevel or req
+                pass = (pLvl == 0 or (pLvl >= req and pLvl <= ql + 3 and pLvl >= ql - 4))
+              elseif qFilter == "story" then
+                pass = not isDungeonQuest
+              elseif qFilter == "dungeons" then
+                pass = isDungeonQuest
+              end
+              if pass and (q == "" or (quest.title and quest.title:lower():find(q, 1, true))) then
                 table.insert(matches, { type = "quest", data = quest, isNearby = true })
               end
             end
@@ -6049,11 +6248,9 @@ function FG:PopulateCodexResults(query)
       -- 3. Nearby Vendors & Flight Masters
       if showVendors then
         local addedVendors = {}
-        local wantFlight = (vendorSub == "flight")
-        local wantRepairs = (vendorSub == "repairs")
-        local wantReagents = (vendorSub == "reagents")
+        local vFilter = vendorSub or "all"
 
-        if (not wantRepairs and not wantReagents) and FG.Data.Flightpaths then
+        if (vFilter == "all" or vFilter == "flight" or vFilter == "flightpaths") and FG.Data.Flightpaths then
           for _, fp in pairs(FG.Data.Flightpaths) do
             local inZone = fp.zone and fp.zone:lower() == pZoneLower
             if inZone then
@@ -6066,7 +6263,7 @@ function FG:PopulateCodexResults(query)
           end
         end
 
-        if not wantFlight and FG.Data.Vendors then
+        if FG.Data.Vendors then
           for _, v in pairs(FG.Data.Vendors) do
             local vZone = v.zone
             if (vZone == "Azeroth" or vZone == "Eastern Kingdoms" or vZone == "Kalimdor" or not vZone) and v.name then
@@ -6075,16 +6272,11 @@ function FG:PopulateCodexResults(query)
             end
             local inZone = vZone and vZone:lower() == pZoneLower
             if inZone then
-              local itemLower = (v.item or ""):lower()
-              local passSub = true
-              if wantRepairs then
-                passSub = itemLower:find("repair") or itemLower:find("blacksmith") or itemLower:find("weaponsmith") or itemLower:find("armorsmith")
-              elseif wantReagents then
-                passSub = itemLower:find("reagent") or itemLower:find("poison") or itemLower:find("potion") or itemLower:find("herb") or itemLower:find("alchemy")
-              end
-              if passSub and (q == "" or (v.name and v.name:lower():find(q, 1, true)) or (v.item and v.item:lower():find(q, 1, true))) then
-                table.insert(matches, { type = "vendor", data = v, isNearby = true })
-                if v.name then addedVendors[v.name:lower()] = true end
+              if FG:MatchesVendorSubtype(v, vFilter) then
+                if q == "" or (v.name and v.name:lower():find(q, 1, true)) or (v.item and v.item:lower():find(q, 1, true)) or (v.tip and v.tip:lower():find(q, 1, true)) then
+                  table.insert(matches, { type = "vendor", data = v, isNearby = true })
+                  if v.name then addedVendors[v.name:lower()] = true end
+                end
               end
             end
           end
@@ -6097,25 +6289,18 @@ function FG:PopulateCodexResults(query)
             if (inZone or inSub) and not FG:IsInternalCreature(c.name, c.family) then
               local vTitle = FG:GetVendorTitle(c)
               if vTitle and c.name and not addedVendors[c.name:lower()] then
-                local vLower = vTitle:lower()
-                local passSub = true
-                if wantFlight then
-                  passSub = vLower:find("flight") or vLower:find("wind rider") or vLower:find("gryphon") or vLower:find("bat")
-                elseif wantRepairs then
-                  passSub = vLower:find("repair") or vLower:find("blacksmith") or vLower:find("weaponsmith") or vLower:find("armorsmith")
-                elseif wantReagents then
-                  passSub = vLower:find("reagent") or vLower:find("poison") or vLower:find("potion") or vLower:find("herb") or vLower:find("alchemy")
-                end
-                if passSub and (q == "" or c.name:lower():find(q, 1, true) or vTitle:lower():find(q, 1, true)) then
-                  local vData = {
-                    name = c.name,
-                    zone = c.zone or pZone,
-                    coords = c.coords,
-                    item = vTitle,
-                    tip = "<" .. vTitle .. ">" .. ((c.minLevel and c.minLevel > 0) and (" • Level " .. c.minLevel) or ""),
-                  }
-                  table.insert(matches, { type = "vendor", data = vData, isNearby = true })
-                  addedVendors[c.name:lower()] = true
+                local vData = {
+                  name = c.name,
+                  zone = c.zone or pZone,
+                  coords = c.coords,
+                  item = vTitle,
+                  tip = "<" .. vTitle .. ">" .. ((c.minLevel and c.minLevel > 0) and (" • Level " .. c.minLevel) or ""),
+                }
+                if FG:MatchesVendorSubtype(vData, vFilter) then
+                  if q == "" or c.name:lower():find(q, 1, true) or vTitle:lower():find(q, 1, true) then
+                    table.insert(matches, { type = "vendor", data = vData, isNearby = true })
+                    addedVendors[c.name:lower()] = true
+                  end
                 end
               end
             end
@@ -6137,11 +6322,25 @@ function FG:PopulateCodexResults(query)
 
       -- 6. Nearby Notable Loot
       if showLoot and FG.Data.Items and #matches < 300 then
+        local lFilter = lootSub or "all"
         for _, item in pairs(FG.Data.Items) do
           if not FG:IsInternalItem(item.name) then
             local inSource = item.source and item.source:lower():find(pZoneLower, 1, true)
             if inSource then
-              if q == "" or (item.name and item.name:lower():find(q, 1, true)) then
+              local pass = false
+              local grp = FG:GetItemTypeSortKey(item)
+              if lFilter == "all" then
+                pass = true
+              elseif lFilter == "armor" then
+                pass = (grp == 2)
+              elseif lFilter == "weapons" then
+                pass = (grp == 1)
+              elseif lFilter == "recipes" then
+                pass = (grp == 7)
+              elseif lFilter == "accessories" then
+                pass = (grp == 3)
+              end
+              if pass and (q == "" or (item.name and item.name:lower():find(q, 1, true))) then
                 table.insert(matches, { type = "item", data = item, isNearby = true })
               end
             end
@@ -6428,14 +6627,70 @@ function FG:PopulateCodexResults(query)
         end
       end
     elseif cur == "quests/dungeons" and FG.Data.Quests then
+      local dFolders = (FG.FolderTree["quests/dungeons"] and FG.FolderTree["quests/dungeons"].folders) or {}
+      local dCounts = {}
+      local allDCount = 0
       for _, quest in pairs(FG.Data.Quests) do
-        if not FG:IsInternalQuest(quest.title) and quest.zone and (quest.zone:find("Deadmines") or quest.zone:find("Wailing") or quest.zone:find("Shadowfang") or
-                           quest.zone:find("Blackfathom") or quest.zone:find("Gnomeregan") or quest.zone:find("Scarlet") or
-                           quest.zone:find("Razorfen") or quest.zone:find("Uldaman") or quest.zone:find("Zul'") or
-                           quest.zone:find("Maraudon") or quest.zone:find("Blackrock") or quest.zone:find("Stratholme") or
-                           quest.zone:find("Scholomance") or quest.zone:find("Dire Maul") or quest.zone:find("Molten") or
-                           quest.zone:find("Ahn'Qiraj") or quest.zone:find("Naxxramas")) then
-          table.insert(matches, { type = "quest", data = quest })
+        if not FG:IsInternalQuest(quest.title) and quest.zone then
+          local qz = quest.zone:lower()
+          local isDung = false
+          for _, f in ipairs(dFolders) do
+            if not f.isAll then
+              local targetName = f.name:lower()
+              local matched = false
+              if targetName == "the deadmines" then matched = qz:find("deadmines")
+              elseif targetName == "the stockade" then matched = qz:find("stockade")
+              elseif targetName:find("molten core") then matched = qz:find("molten core") or qz:find("onyxia")
+              elseif targetName:find("ahn'qiraj") then matched = qz:find("ahn'qiraj")
+              elseif targetName:find("blackrock spire") then matched = qz:find("blackrock spire")
+              else matched = qz:find(targetName, 1, true)
+              end
+              if matched then
+                dCounts[f.path] = (dCounts[f.path] or 0) + 1
+                isDung = true
+              end
+            end
+          end
+          if isDung or qz:find("dungeon") or qz:find("deadmines") or qz:find("wailing") or qz:find("shadowfang") or qz:find("blackfathom") or qz:find("gnomeregan") or qz:find("scarlet") or qz:find("razorfen") or qz:find("uldaman") or qz:find("zul'") or qz:find("maraudon") or qz:find("blackrock") or qz:find("stratholme") or qz:find("scholomance") or qz:find("dire maul") or qz:find("molten") or qz:find("ahn'qiraj") or qz:find("naxxramas") then
+            allDCount = allDCount + 1
+          end
+        end
+      end
+      for _, f in ipairs(dFolders) do
+        local count = f.isAll and allDCount or (dCounts[f.path] or 0)
+        table.insert(matches, {
+          type = "folder",
+          data = {
+            name = f.name,
+            path = f.path,
+            desc = f.desc,
+            count = count,
+            icon = f.icon,
+            isAll = f.isAll,
+          }
+        })
+      end
+    elseif cur:find("^quests/dungeons/(.+)$") and FG.Data.Quests then
+      local dKey = cur:match("^quests/dungeons/(.+)$")
+      for _, quest in pairs(FG.Data.Quests) do
+        if not FG:IsInternalQuest(quest.title) and quest.zone then
+          local qz = quest.zone:lower()
+          local pass = false
+          if dKey == "all" then
+            pass = qz:find("deadmines") or qz:find("wailing") or qz:find("shadowfang") or qz:find("blackfathom") or qz:find("gnomeregan") or qz:find("scarlet") or qz:find("razorfen") or qz:find("uldaman") or qz:find("zul'") or qz:find("maraudon") or qz:find("blackrock") or qz:find("stratholme") or qz:find("scholomance") or qz:find("dire maul") or qz:find("molten") or qz:find("onyxia") or qz:find("blackwing") or qz:find("ahn'qiraj") or qz:find("naxxramas") or qz:find("dungeon")
+          else
+            local targetName = dKey:lower()
+            if targetName == "the deadmines" then pass = qz:find("deadmines")
+            elseif targetName == "the stockade" then pass = qz:find("stockade")
+            elseif targetName:find("molten core") then pass = qz:find("molten core") or qz:find("onyxia")
+            elseif targetName:find("ahn'qiraj") then pass = qz:find("ahn'qiraj")
+            elseif targetName:find("blackrock spire") then pass = qz:find("blackrock spire")
+            else pass = qz:find(targetName, 1, true)
+            end
+          end
+          if pass then
+            table.insert(matches, { type = "quest", data = quest })
+          end
         end
       end
     elseif cur == "quests/forever" and FG.Data.Quests then
@@ -6713,6 +6968,10 @@ function FG:PopulateCodexResults(query)
             elseif subName == "Rings" and not isRecipe and item.slot and item.slot:find("Finger") then matchesFilter = true
             elseif subName == "Trinkets" and not isRecipe and item.slot and item.slot:find("Trinket") then matchesFilter = true
             elseif subName == "Cloaks" and not isRecipe and item.slot and item.slot:find("Back") then matchesFilter = true
+            elseif subName == "Off-hand" and not isRecipe and item.slot and (item.slot:find("Off%-hand") or item.slot:find("Off%-Hand") or item.slot == "Held in Off-hand") then matchesFilter = true
+            elseif subName == "All Accessories" and not isRecipe then
+              local grp = FG:GetItemTypeSortKey(item)
+              if grp == 3 or (item.slot and item.slot:find("Shield")) then matchesFilter = true end
             elseif subName == "Potions" and not isRecipe then
               if item.itemType == "Potion" then matchesFilter = true
               elseif (not item.itemType or item.itemType == "Consumable" or item.itemType == "Miscellaneous") and (name:find("Potion") or name:find("Draft") or name:find("Brew") or name:find("Tears")) and not name:find("Elixir") and not name:find("Flask") then
@@ -6764,6 +7023,8 @@ function FG:PopulateCodexResults(query)
               if (item.itemType and (item.itemType:find("Quiver") or item.itemType:find("Ammo"))) or name:find("Quiver") or name:find("Ammo Pouch") or name:find("Bandolier") or name:find("Shot Pouch") then matchesFilter = true end
             elseif subName == "Specialty_Bags" and not isRecipe then
               if name:find("Soul Pouch") or name:find("Box of Souls") or name:find("Herb Pouch") or name:find("Herb Bag") or name:find("Cenarion Herb Bag") or name:find("Enchanter's") or name:find("Big Bag of Enchantment") then matchesFilter = true end
+            elseif subName == "All Containers" and not isRecipe then
+              if (item.slot == "Bag" or (item.itemType and item.itemType == "Bag") or name:find("Quiver") or name:find("Ammo") or name:find("Shot") or name:find("Herb") or name:find("Enchant") or name:find("Soul") or name:find("Pouch") or name:find("Bag")) then matchesFilter = true end
             elseif subName == "All Recipes" and (isRecipe or (item.itemType and item.itemType:find("Recipe"))) then matchesFilter = true
             end
 
@@ -6956,9 +7217,23 @@ function FG:PopulateCodexResults(query)
           icon = "Interface\\Icons\\INV_Misc_Map02",
         }
       })
-      for _, c in pairs(FG.Data.Creatures) do
-        if not FG:IsInternalCreature(c.name, c.family) and CreatureMatchesFamily(c, sub) then
-          table.insert(matches, { type = "creature", data = c })
+      table.insert(matches, {
+        type = "folder",
+        data = {
+          name = string.format("[All %s (Full List)]", famCap),
+          path = "creatures/" .. sub .. "/all",
+          desc = string.format("All %s across Azeroth", famCap),
+          icon = "Interface\\Icons\\Ability_Tracking",
+          isAll = true,
+        }
+      })
+      if q ~= "" then
+        for _, c in pairs(FG.Data.Creatures) do
+          if not FG:IsInternalCreature(c.name, c.family) and CreatureMatchesFamily(c, sub) then
+            if c.name and c.name:lower():find(q, 1, true) then
+              table.insert(matches, { type = "creature", data = c })
+            end
+          end
         end
       end
     elseif cur:find("^dungeons/") and FG.Data.Dungeons then
@@ -6984,34 +7259,21 @@ function FG:PopulateCodexResults(query)
       end
     elseif cur:find("^vendors/") and (FG.Data.Vendors or FG.Data.Flightpaths or FG.Data.Creatures) then
       local vSub = cur:match("^vendors/([^/]+)$")
-      if vSub == "flightpaths" and FG.Data.Flightpaths then
+      local added = {}
+      if (vSub == "flightpaths" or vSub == "all") and FG.Data.Flightpaths then
         for _, fp in pairs(FG.Data.Flightpaths) do
-          table.insert(matches, { type = "vendor", data = { name = fp.name, zone = fp.zone, coords = fp.coords, item = fp.faction .. " Flight Master", tip = fp.notes or fp.connections } })
+          local key = (fp.name or "") .. ":" .. (fp.zone or "")
+          if not added[key] then
+            added[key] = true
+            table.insert(matches, { type = "vendor", data = { name = fp.name, zone = fp.zone, coords = fp.coords, item = fp.faction .. " Flight Master", tip = fp.notes or fp.connections } })
+          end
         end
-      else
-        local added = {}
+      end
+
+      if vSub ~= "flightpaths" then
         if FG.Data.Vendors then
           for _, v in pairs(FG.Data.Vendors) do
-            local tip = (v.tip or ""):lower()
-            local item = (v.item or ""):lower()
-            local lim = v.limitedStock or ""
-            local pass = false
-            if vSub == "all" then
-              pass = true
-            elseif vSub == "repairs" then
-              pass = tip:find("blacksmith") or tip:find("armorer") or tip:find("weaponsmith") or tip:find("repair") or tip:find("shield")
-            elseif vSub == "reagents" then
-              pass = tip:find("reagent") or tip:find("alchemy") or tip:find("herbalism") or tip:find("poison") or tip:find("trade supplies") or item:find("thread") or item:find("vial") or item:find("dye") or item:find("flux")
-            elseif vSub == "food" then
-              pass = tip:find("food") or tip:find("drink") or tip:find("innkeeper") or tip:find("bartender") or tip:find("baker") or tip:find("butcher") or tip:find("cook") or item:find("water") or item:find("bread") or item:find("meat")
-            elseif vSub == "weapons_armor" then
-              pass = tip:find("weapon") or tip:find("armor") or tip:find("bowyer") or tip:find("gunsmith") or tip:find("cloth") or tip:find("leather") or tip:find("mail") or tip:find("plate") or tip:find("tailor") or tip:find("leatherwork")
-            elseif vSub == "pvp" then
-              pass = tip:find("quartermaster") or tip:find("officer") or tip:find("battleground") or tip:find("honor") or tip:find("pvp") or tip:find("sergeant") or tip:find("commander")
-            elseif vSub == "specialty" then
-              pass = (lim ~= "") or tip:find("specialty") or tip:find("rare") or tip:find("exotic") or tip:find("pet") or tip:find("mount")
-            end
-            if pass then
+            if FG:MatchesVendorSubtype(v, vSub) then
               local key = (v.name or "") .. ":" .. (v.zone or "")
               if not added[key] then
                 added[key] = true
@@ -7026,37 +7288,18 @@ function FG:PopulateCodexResults(query)
             if not FG:IsInternalCreature(c.name, c.family) then
               local vTitle = FG:GetVendorTitle(c)
               if vTitle then
-                local tip = vTitle:lower()
-                local pass = false
-                if vSub == "all" then
-                  pass = true
-                elseif vSub == "repairs" then
-                  pass = tip:find("blacksmith") or tip:find("armorer") or tip:find("weaponsmith") or tip:find("repair") or tip:find("shield")
-                elseif vSub == "reagents" then
-                  pass = tip:find("reagent") or tip:find("alchemy") or tip:find("herbalism") or tip:find("poison") or tip:find("trade") or tip:find("supplies")
-                elseif vSub == "food" then
-                  pass = tip:find("food") or tip:find("drink") or tip:find("innkeeper") or tip:find("bartender") or tip:find("baker") or tip:find("butcher") or tip:find("cook") or tip:find("ale") or tip:find("wine")
-                elseif vSub == "weapons_armor" then
-                  pass = tip:find("weapon") or tip:find("armor") or tip:find("bowyer") or tip:find("gunsmith") or tip:find("cloth") or tip:find("leather") or tip:find("mail") or tip:find("plate") or tip:find("tailor") or tip:find("leatherwork")
-                elseif vSub == "pvp" then
-                  pass = tip:find("quartermaster") or tip:find("officer") or tip:find("battleground") or tip:find("honor") or tip:find("pvp") or tip:find("sergeant") or tip:find("commander")
-                elseif vSub == "specialty" then
-                  pass = tip:find("specialty") or tip:find("rare") or tip:find("exotic") or tip:find("pet") or tip:find("mount")
-                end
-                if pass then
+                local vObj = {
+                  name = c.name,
+                  zone = c.zone,
+                  coords = c.coords,
+                  item = vTitle,
+                  tip = "<" .. vTitle .. ">" .. ((c.minLevel and c.minLevel > 0) and (" • Level " .. c.minLevel) or ""),
+                }
+                if FG:MatchesVendorSubtype(vObj, vSub) then
                   local key = (c.name or "") .. ":" .. (c.zone or "")
                   if not added[key] then
                     added[key] = true
-                    table.insert(matches, {
-                      type = "vendor",
-                      data = {
-                        name = c.name,
-                        zone = c.zone,
-                        coords = c.coords,
-                        item = vTitle,
-                        tip = "<" .. vTitle .. ">" .. ((c.minLevel and c.minLevel > 0) and (" • Level " .. c.minLevel) or ""),
-                      }
-                    })
+                    table.insert(matches, { type = "vendor", data = vObj })
                   end
                 end
               end

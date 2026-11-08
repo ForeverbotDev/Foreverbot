@@ -27,12 +27,9 @@ class TestNearbyRadarQuality(unittest.TestCase):
         self.assertIn('"nearby/vendors/all"', self.content)
 
     def test_show_all_creatures_not_restricted_by_query(self):
-        # Assert that showAllCreatures is true when cur == "nearby/creatures" regardless of q
-        m = re.search(r'local showAllCreatures\s*=\s*([^\n]+)', self.content)
-        self.assertIsNotNone(m, "showAllCreatures must be defined")
-        expr = m.group(1)
-        self.assertIn('cur == "nearby/creatures"', expr)
-        self.assertNotIn('cur == "nearby/creatures" and q ~= ""', expr)
+        # Assert that folder view renders subfolders without dumping raw rows, and shows creatures on subpath or search
+        self.assertIn('local showCreatures = (creatureSub ~= nil)', self.content)
+        self.assertIn('(cur == "nearby/creatures" and q ~= "")', self.content)
 
     def test_nearby_empty_state_zone_customization(self):
         # Assert that NoResultsState checks cur:find("^nearby")
@@ -40,13 +37,13 @@ class TestNearbyRadarQuality(unittest.TestCase):
         self.assertIn('No nearby intel found in', self.content)
 
     def test_nearby_breadcrumbs_contain_subcategories(self):
-        # Assert that UpdateDolphinBreadcrumbs maps all nearby subcategories
-        self.assertIn('elseif cur == "nearby/creatures/beasts" then', self.content)
-        self.assertIn('elseif cur == "nearby/creatures/humanoids" then', self.content)
-        self.assertIn('elseif cur == "nearby/creatures/rares" then', self.content)
-        self.assertIn('elseif cur == "nearby/creatures/all" then', self.content)
-        self.assertIn('elseif cur == "nearby/vendors/flight" then', self.content)
-        self.assertIn('elseif cur == "nearby/vendors/repairs" then', self.content)
+        # Assert that UpdateDolphinBreadcrumbs maps all nearby subcategories via lookup tables
+        self.assertIn('cur:find("^nearby/creatures/(.+)$")', self.content)
+        self.assertIn('beasts = "Beasts"', self.content)
+        self.assertIn('humanoids = "Humanoids"', self.content)
+        self.assertIn('cur:find("^nearby/vendors/(.+)$")', self.content)
+        self.assertIn('flight = "Flight Masters"', self.content)
+        self.assertIn('repairs = "Repairs & Armorers"', self.content)
 
     def test_navigate_up_hierarchical_for_nearby(self):
         # Assert that NavigateUpFolder correctly resolves nearby/creatures and nearby/vendors
