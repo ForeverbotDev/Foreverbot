@@ -25,8 +25,11 @@ local DEFAULT_CONFIG = {
   sharpText = true,
   pixelDensity = 1.0,
   activeFilter = "all",
-  showMapPins = true,
-  showMinimapPins = true,
+  showWorldMapPins = false,    -- Default FALSE as requested by user (keeps main WorldMap clean)
+  showZoneMapPins = true,      -- Default TRUE for small zone map (BattlefieldMinimap / BattlefieldMapFrame)
+  showMinimapPins = true,      -- Default TRUE for HUD minimap
+  showMapPins = false,         -- Legacy alias for showWorldMapPins (false)
+  zoneMapPinScale = 1.0,
   mapPinScale = 1.0,
   minimap = {
     hide = false,
@@ -1590,13 +1593,85 @@ function FG:GetMapCanvas()
   return WorldMapFrame
 end
 
-FG.MapPinPool = FG.MapPinPool or {}
-FG.MinimapPinPool = FG.MinimapPinPool or {}
-FG.ActiveMapPins = FG.ActiveMapPins or {}
-FG.ActiveMinimapPins = FG.ActiveMinimapPins or {}
+FG.PIN_TEXTURES = {
+  available = "Interface/AddOns/ForeverGuide/Media/pin_available.tga",
+  active    = "Interface/AddOns/ForeverGuide/Media/pin_active.tga",
+  turnin    = "Interface/AddOns/ForeverGuide/Media/pin_turnin.tga",
+  forever   = "Interface/AddOns/ForeverGuide/Media/pin_forever.tga",
+  halo      = "Interface/AddOns/ForeverGuide/Media/pin_glow_halo.tga",
+}
 
-local function AcquireMapPin(isMinimap)
-  local pool = isMinimap and FG.MinimapPinPool or FG.MapPinPool
+FG.ZoneMapPinPool = FG.ZoneMapPinPool or {}
+FG.MinimapPinPool = FG.MinimapPinPool or {}
+FG.WorldMapPinPool = FG.WorldMapPinPool or {}
+FG.ActiveZoneMapPins = FG.ActiveZoneMapPins or {}
+FG.ActiveMinimapPins = FG.ActiveMinimapPins or {}
+FG.ActiveWorldMapPins = FG.ActiveWorldMapPins or {}
+
+-- Backwards compatibility aliases
+FG.MapPinPool = FG.WorldMapPinPool
+FG.ActiveMapPins = FG.ActiveZoneMapPins
+
+function FG:GetZoneMapCanvas()
+  if BattlefieldMapFrame then
+    if BattlefieldMapFrame.GetCanvas then
+      local c = BattlefieldMapFrame:GetCanvas()
+      if c and c.GetWidth and c:GetWidth() > 0 then return c end
+    end
+    if BattlefieldMapFrame.ScrollContainer then
+      if BattlefieldMapFrame.ScrollContainer.GetCanvas then
+        local c = BattlefieldMapFrame.ScrollContainer:GetCanvas()
+        if c and c.GetWidth and c:GetWidth() > 0 then return c end
+      end
+      if BattlefieldMapFrame.ScrollContainer.Child then
+        return BattlefieldMapFrame.ScrollContainer.Child
+      end
+    end
+    return BattlefieldMapFrame
+  end
+  if BattlefieldMinimap then
+    return BattlefieldMinimap
+  end
+  return nil
+end
+
+function FG:GetZoneMapID()
+  if BattlefieldMapFrame and BattlefieldMapFrame.GetMapID then
+    local m = BattlefieldMapFrame:GetMapID()
+    if m and m > 0 then return m end
+  end
+  if C_Map and C_Map.GetBestMapForUnit then
+    local m = C_Map.GetBestMapForUnit("player")
+    if m and m > 0 then return m end
+  end
+  if GetCurrentMapAreaID then
+    local areaID = GetCurrentMapAreaID()
+    if areaID and areaID > 0 then return areaID end
+  end
+  return nil
+end
+
+local function AcquirePin(pinType)
+  local pool
+  local parent
+  local size, glowSize
+  if pinType == "minimap" then
+    pool = FG.MinimapPinPool
+    parent = Minimap
+    size = 12
+    glowSize = 18
+  elseif pinType == "world" then
+    pool = FG.WorldMapPinPool
+    parent = FG:GetMapCanvas() or UIParent
+    size = 13
+    glowSize = 19
+  else -- "zone" / BattlefieldMapFrame
+    pool = FG.ZoneMapPinPool
+    parent = FG:GetZoneMapCanvas() or UIParent
+    size = 12
+    glowSize = 18
+  end
+
   for _, pin in ipairs(pool) do
     if not pin.inUse then
       pin.inUse = true
@@ -1604,44 +1679,54 @@ local function AcquireMapPin(isMinimap)
     end
   end
 
-  local parent = isMinimap and Minimap or (FG:GetMapCanvas() or UIParent)
   local pin = CreateFrame("Button", nil, parent)
-  pin:SetSize(20, 20)
-  pin:SetFrameStrata(isMinimap and "MEDIUM" or "HIGH")
-  pin:SetFrameLevel((parent:GetFrameLevel() or 10) + (isMinimap and 15 or 30))
+  pin:SetSize(size, size)
+  pin:SetFrameStrata(pinType == "minimap" and "MEDIUM" or "HIGH")
+  pin:SetFrameLevel((parent:GetFrameLevel() or 10) + (pinType == "minimap" and 15 or 35))
   pin:EnableMouse(true)
   pin:RegisterForClicks("LeftButtonUp", "RightButtonUp")
 
+  -- Soft 3D Illumination Halo / Bloom (Lowkey but luminous)
   local glow = pin:CreateTexture(nil, "BACKGROUND")
-  glow:SetSize(28, 28)
+  glow:SetSize(glowSize, glowSize)
   glow:SetPoint("CENTER", pin, "CENTER", 0, 0)
-  glow:SetTexture("Interface\\Buttons\\WHITE8X8")
-  glow:SetVertexColor(0.05, 0.05, 0.1, 0.75)
+  glow:SetTexture(FG.PIN_TEXTURES.halo)
+  glow:SetBlendMode("ADD")
+  glow:SetVertexColor(1.0, 0.78, 0.20, 0.55)
   pin.Glow = glow
 
-  local halo = pin:CreateTexture(nil, "BORDER")
-  halo:SetSize(26, 26)
-  halo:SetPoint("CENTER", pin, "CENTER", 0, 0)
-  halo:SetTexture("Interface\\ItemSocketingFrame\\UI-ItemSockets")
-  halo:SetTexCoord(0.395, 0.585, 0.02, 0.40)
-  halo:SetVertexColor(0.85, 0.25, 1.0, 0.95)
-  halo:Hide()
-  pin.Halo = halo
-
+  -- 3D Illuminated HD Crystal Spherical Reference Point
   local icon = pin:CreateTexture(nil, "ARTWORK")
-  icon:SetSize(18, 18)
+  icon:SetSize(size, size)
   icon:SetPoint("CENTER", pin, "CENTER", 0, 0)
-  icon:SetTexture("Interface\\GossipFrame\\AvailableQuestIcon")
+  icon:SetTexture(FG.PIN_TEXTURES.available)
   pin.Icon = icon
 
+  -- Hover bloom highlight
+  local highlight = pin:CreateTexture(nil, "HIGHLIGHT")
+  highlight:SetSize(glowSize + 4, glowSize + 4)
+  highlight:SetPoint("CENTER", pin, "CENTER", 0, 0)
+  highlight:SetTexture(FG.PIN_TEXTURES.halo)
+  highlight:SetBlendMode("ADD")
+  highlight:SetVertexColor(1, 1, 1, 0.45)
+  pin.Highlight = highlight
+
+  -- Compatibility badge (hidden by default to keep reference points pristine)
   local badge = pin:CreateFontString(nil, "OVERLAY", "GameFontHighlightSmall")
-  badge:SetPoint("BOTTOMRIGHT", pin, "BOTTOMRIGHT", 4, -2)
-  badge:SetFont("Fonts\\FRIZQT__.TTF", 10, "OUTLINE")
+  badge:SetPoint("BOTTOMRIGHT", pin, "BOTTOMRIGHT", 3, -2)
+  badge:SetFont("Fonts/FRIZQT__.TTF", 9, "OUTLINE")
   badge:SetTextColor(1, 0.9, 0.2)
+  badge:Hide()
   pin.Badge = badge
+
+  -- Compatibility Halo
+  pin.Halo = glow
 
   pin:SetScript("OnEnter", function(self)
     if not self.questList or #self.questList == 0 then return end
+    if self._baseScale then
+      self:SetScale(self._baseScale * 1.3)
+    end
     GameTooltip:SetOwner(self, "ANCHOR_RIGHT")
     GameTooltip:ClearLines()
 
@@ -1703,6 +1788,9 @@ local function AcquireMapPin(isMinimap)
   end)
 
   pin:SetScript("OnLeave", function(self)
+    if self._baseScale then
+      self:SetScale(self._baseScale)
+    end
     GameTooltip:Hide()
   end)
 
@@ -1725,14 +1813,20 @@ local function AcquireMapPin(isMinimap)
   return pin
 end
 
-function FG:ReleaseMapPins()
-  for _, pin in ipairs(FG.ActiveMapPins) do
+local function AcquireMapPin(isMinimap)
+  return AcquirePin(isMinimap and "minimap" or "world")
+end
+
+function FG:ReleaseZoneMapPins()
+  for _, pin in ipairs(FG.ActiveZoneMapPins) do
     pin:Hide()
     pin:ClearAllPoints()
     pin.inUse = false
   end
-  wipe(FG.ActiveMapPins)
+  wipe(FG.ActiveZoneMapPins)
+end
 
+function FG:ReleaseMinimapPins()
   for _, pin in ipairs(FG.ActiveMinimapPins) do
     pin:Hide()
     pin:ClearAllPoints()
@@ -1742,13 +1836,55 @@ function FG:ReleaseMapPins()
 
   local HBDPins = LibStub and LibStub("HereBeDragons-Pins-2.0", true)
   if HBDPins then
-    HBDPins:RemoveAllWorldMapIcons("ForeverGuide")
     HBDPins:RemoveAllMinimapIcons("ForeverGuide")
   end
 end
 
-function FG:UpdateMapPinsScale()
-  if not FG.ActiveMapPins or #FG.ActiveMapPins == 0 then return end
+function FG:ReleaseWorldMapPins()
+  for _, pin in ipairs(FG.ActiveWorldMapPins) do
+    pin:Hide()
+    pin:ClearAllPoints()
+    pin.inUse = false
+  end
+  wipe(FG.ActiveWorldMapPins)
+
+  local HBDPins = LibStub and LibStub("HereBeDragons-Pins-2.0", true)
+  if HBDPins then
+    HBDPins:RemoveAllWorldMapIcons("ForeverGuide")
+  end
+end
+
+function FG:ReleaseMapPins()
+  FG:ReleaseZoneMapPins()
+  FG:ReleaseMinimapPins()
+  FG:ReleaseWorldMapPins()
+end
+
+function FG:UpdateZoneMapPinsScale()
+  if not FG.ActiveZoneMapPins or #FG.ActiveZoneMapPins == 0 then return end
+  local canvas = FG:GetZoneMapCanvas()
+  if not canvas then return end
+  local cw, ch = canvas:GetSize()
+  if not cw or not ch or cw <= 0 or ch <= 0 then return end
+
+  local scale = (BattlefieldMapFrame and BattlefieldMapFrame.GetCanvasScale and BattlefieldMapFrame:GetCanvasScale())
+             or (BattlefieldMapFrame and BattlefieldMapFrame.ScrollContainer and BattlefieldMapFrame.ScrollContainer.GetCanvasScale and BattlefieldMapFrame.ScrollContainer:GetCanvasScale())
+             or (canvas.GetScale and canvas:GetScale()) or 1
+  if scale <= 0 then scale = 1 end
+  local pinScale = (1.0 / scale) * (ForeverGuideDB.zoneMapPinScale or 1.0)
+
+  for _, pin in ipairs(FG.ActiveZoneMapPins) do
+    if pin:IsShown() and pin.cx and pin.cy then
+      pin:SetScale(pinScale)
+      pin._baseScale = pinScale
+      pin:ClearAllPoints()
+      pin:SetPoint("CENTER", canvas, "TOPLEFT", (cw * (pin.cx / 100)) / pinScale, -(ch * (pin.cy / 100)) / pinScale)
+    end
+  end
+end
+
+function FG:UpdateWorldMapPinsScale()
+  if not FG.ActiveWorldMapPins or #FG.ActiveWorldMapPins == 0 then return end
   local canvas = FG:GetMapCanvas()
   if not canvas then return end
   local cw, ch = canvas:GetSize()
@@ -1760,18 +1896,144 @@ function FG:UpdateMapPinsScale()
   if canvasScale <= 0 then canvasScale = 1 end
   local pinScale = (1.0 / canvasScale) * (ForeverGuideDB.mapPinScale or 1.0)
 
-  for _, pin in ipairs(FG.ActiveMapPins) do
+  for _, pin in ipairs(FG.ActiveWorldMapPins) do
     if pin:IsShown() and pin.cx and pin.cy then
       pin:SetScale(pinScale)
+      pin._baseScale = pinScale
       pin:ClearAllPoints()
       pin:SetPoint("CENTER", canvas, "TOPLEFT", (cw * (pin.cx / 100)) / pinScale, -(ch * (pin.cy / 100)) / pinScale)
     end
   end
 end
 
-function FG:UpdateMapPins(forcedMapID)
-  FG:ReleaseMapPins()
-  if not ForeverGuideDB or ForeverGuideDB.showMapPins == false then
+function FG:UpdateMapPinsScale()
+  FG:UpdateZoneMapPinsScale()
+  FG:UpdateWorldMapPinsScale()
+end
+
+function FG:UpdateZoneMapPins()
+  FG:ReleaseZoneMapPins()
+  if not ForeverGuideDB or ForeverGuideDB.showZoneMapPins == false then
+    return
+  end
+
+  local isZoneMapShown = (BattlefieldMapFrame and BattlefieldMapFrame:IsShown()) or (BattlefieldMinimap and BattlefieldMinimap:IsShown())
+  if not isZoneMapShown then
+    return
+  end
+
+  local canvas = FG:GetZoneMapCanvas()
+  if not canvas then return end
+  local cw, ch = canvas:GetSize()
+  if not cw or not ch or cw <= 0 or ch <= 0 then
+    C_Timer.After(0.05, function() FG:UpdateZoneMapPins() end)
+    return
+  end
+
+  local mapID = FG:GetZoneMapID()
+  local zoneName = FG:GetMapZoneName(mapID)
+  if not zoneName or zoneName == "" then return end
+  local zoneLower = zoneName:lower()
+
+  local pFaction = (UnitFactionGroup and UnitFactionGroup("player")) or "Alliance"
+  local pLevel = (UnitLevel and UnitLevel("player")) or 1
+
+  local coordGroups = {}
+  if FG.Data.Quests then
+    for _, q in pairs(FG.Data.Quests) do
+      local qZone = (q.zone or ""):lower()
+      if qZone == zoneLower or qZone:find(zoneLower, 1, true) or zoneLower:find(qZone, 1, true) then
+        local qFaction = q.faction
+        local factionMatch = (not qFaction or qFaction == "" or qFaction == "Both" or qFaction == pFaction)
+        local reqLvl = q.reqLevel or 0
+        local levelMatch = (pLevel >= reqLvl)
+        local status = FG:GetQuestStatus(q.id, q.title)
+
+        if factionMatch and levelMatch and status ~= "completed" then
+          local cx, cy = FG:GetQuestCoords(q)
+          if cx and cy and cx > 0 and cy > 0 and cx <= 100 and cy <= 100 then
+            local key = string.format("%0.1f,%0.1f", cx, cy)
+            coordGroups[key] = coordGroups[key] or { cx = cx, cy = cy, quests = {}, npc = q.npc }
+            q.status = status
+            table.insert(coordGroups[key].quests, q)
+          end
+        end
+      end
+    end
+  end
+
+  local scale = (BattlefieldMapFrame and BattlefieldMapFrame.GetCanvasScale and BattlefieldMapFrame:GetCanvasScale())
+             or (BattlefieldMapFrame and BattlefieldMapFrame.ScrollContainer and BattlefieldMapFrame.ScrollContainer.GetCanvasScale and BattlefieldMapFrame.ScrollContainer:GetCanvasScale())
+             or (canvas.GetScale and canvas:GetScale()) or 1
+  if scale <= 0 then scale = 1 end
+  local pinScale = (1.0 / scale) * (ForeverGuideDB.zoneMapPinScale or 1.0)
+
+  local HBDPins = LibStub and LibStub("HereBeDragons-Pins-2.0", true)
+  if HBDPins and ForeverGuideDB.showMinimapPins ~= false then
+    FG:ReleaseMinimapPins()
+  end
+
+  for key, grp in pairs(coordGroups) do
+    local pin = AcquirePin("zone")
+    pin:SetParent(canvas)
+    pin:SetScale(pinScale)
+    pin._baseScale = pinScale
+    pin:ClearAllPoints()
+    pin:SetPoint("CENTER", canvas, "TOPLEFT", (cw * (grp.cx / 100)) / pinScale, -(ch * (grp.cy / 100)) / pinScale)
+
+    pin.questList = grp.quests
+    pin.npcName = grp.npc
+    pin.cx = grp.cx
+    pin.cy = grp.cy
+
+    local topStatus = "uncompleted"
+    local hasForever = false
+    for _, q in ipairs(grp.quests) do
+      if q.isForever then hasForever = true end
+      if q.status == "ready_to_turn_in" then
+        topStatus = "ready_to_turn_in"
+        break
+      elseif q.status == "active" and topStatus ~= "ready_to_turn_in" then
+        topStatus = "active"
+      end
+    end
+
+    if hasForever then
+      pin.Icon:SetTexture(FG.PIN_TEXTURES.forever)
+      pin.Glow:SetVertexColor(0.85, 0.35, 1.0, 0.65)
+    elseif topStatus == "ready_to_turn_in" then
+      pin.Icon:SetTexture(FG.PIN_TEXTURES.turnin)
+      pin.Glow:SetVertexColor(0.20, 1.0, 0.40, 0.65)
+    elseif topStatus == "active" then
+      pin.Icon:SetTexture(FG.PIN_TEXTURES.active)
+      pin.Glow:SetVertexColor(0.20, 0.75, 1.0, 0.55)
+    else
+      pin.Icon:SetTexture(FG.PIN_TEXTURES.available)
+      pin.Glow:SetVertexColor(1.0, 0.78, 0.20, 0.55)
+    end
+
+    pin:Show()
+    table.insert(FG.ActiveZoneMapPins, pin)
+
+    if HBDPins and mapID and ForeverGuideDB.showMinimapPins ~= false then
+      local mPin = AcquirePin("minimap")
+      mPin.questList = grp.quests
+      mPin.npcName = grp.npc
+      mPin.cx = grp.cx
+      mPin.cy = grp.cy
+      mPin.Icon:SetTexture(pin.Icon:GetTexture())
+      mPin.Glow:SetVertexColor(pin.Glow:GetVertexColor())
+      mPin:Show()
+      HBDPins:AddMinimapIconMap("ForeverGuide", mPin, mapID, grp.cx / 100, grp.cy / 100, true)
+      table.insert(FG.ActiveMinimapPins, mPin)
+    end
+  end
+end
+
+function FG:UpdateWorldMapPins(forcedMapID)
+  FG:ReleaseWorldMapPins()
+  -- User requested NOT to display on WorldMapFrame by default
+  if not ForeverGuideDB or ForeverGuideDB.showWorldMapPins ~= true then
     return
   end
   if not WorldMapFrame or not WorldMapFrame:IsShown() then
@@ -1781,7 +2043,7 @@ function FG:UpdateMapPins(forcedMapID)
   if not canvas then return end
   local cw, ch = canvas:GetSize()
   if not cw or not ch or cw <= 0 or ch <= 0 then
-    C_Timer.After(0.05, function() FG:UpdateMapPins(forcedMapID) end)
+    C_Timer.After(0.05, function() FG:UpdateWorldMapPins(forcedMapID) end)
     return
   end
 
@@ -1792,12 +2054,6 @@ function FG:UpdateMapPins(forcedMapID)
 
   local pFaction = (UnitFactionGroup and UnitFactionGroup("player")) or "Alliance"
   local pLevel = (UnitLevel and UnitLevel("player")) or 1
-
-  local HBDPins = LibStub and LibStub("HereBeDragons-Pins-2.0", true)
-  if HBDPins then
-    HBDPins:RemoveAllWorldMapIcons("ForeverGuide")
-    HBDPins:RemoveAllMinimapIcons("ForeverGuide")
-  end
 
   local coordGroups = {}
   if FG.Data.Quests then
@@ -1830,9 +2086,10 @@ function FG:UpdateMapPins(forcedMapID)
   local pinScale = (1.0 / canvasScale) * (ForeverGuideDB.mapPinScale or 1.0)
 
   for key, grp in pairs(coordGroups) do
-    local pin = AcquireMapPin(false)
+    local pin = AcquirePin("world")
     pin:SetParent(canvas)
     pin:SetScale(pinScale)
+    pin._baseScale = pinScale
     pin:ClearAllPoints()
     pin:SetPoint("CENTER", canvas, "TOPLEFT", (cw * (grp.cx / 100)) / pinScale, -(ch * (grp.cy / 100)) / pinScale)
 
@@ -1853,48 +2110,28 @@ function FG:UpdateMapPins(forcedMapID)
       end
     end
 
-    if topStatus == "ready_to_turn_in" then
-      pin.Icon:SetTexture("Interface\\GossipFrame\\ActiveQuestIcon")
-      pin.Icon:SetVertexColor(1, 1, 1, 1)
-    elseif topStatus == "active" then
-      pin.Icon:SetTexture("Interface\\GossipFrame\\IncompleteQuestIcon")
-      pin.Icon:SetVertexColor(1, 1, 1, 1)
-    else
-      pin.Icon:SetTexture("Interface\\GossipFrame\\AvailableQuestIcon")
-      pin.Icon:SetVertexColor(1, 1, 1, 1)
-    end
-
     if hasForever then
-      pin.Halo:Show()
+      pin.Icon:SetTexture(FG.PIN_TEXTURES.forever)
+      pin.Glow:SetVertexColor(0.85, 0.35, 1.0, 0.65)
+    elseif topStatus == "ready_to_turn_in" then
+      pin.Icon:SetTexture(FG.PIN_TEXTURES.turnin)
+      pin.Glow:SetVertexColor(0.20, 1.0, 0.40, 0.65)
+    elseif topStatus == "active" then
+      pin.Icon:SetTexture(FG.PIN_TEXTURES.active)
+      pin.Glow:SetVertexColor(0.20, 0.75, 1.0, 0.55)
     else
-      pin.Halo:Hide()
-    end
-
-    if #grp.quests > 1 then
-      pin.Badge:SetText(#grp.quests)
-      pin.Badge:Show()
-    else
-      pin.Badge:Hide()
+      pin.Icon:SetTexture(FG.PIN_TEXTURES.available)
+      pin.Glow:SetVertexColor(1.0, 0.78, 0.20, 0.55)
     end
 
     pin:Show()
-    table.insert(FG.ActiveMapPins, pin)
-
-    if HBDPins and mapID and ForeverGuideDB.showMinimapPins ~= false then
-      local mPin = AcquireMapPin(true)
-      mPin.questList = grp.quests
-      mPin.npcName = grp.npc
-      mPin.cx = grp.cx
-      mPin.cy = grp.cy
-      mPin.Icon:SetTexture(pin.Icon:GetTexture())
-      mPin.Icon:SetVertexColor(pin.Icon:GetVertexColor())
-      if hasForever then mPin.Halo:Show() else mPin.Halo:Hide() end
-      if #grp.quests > 1 then mPin.Badge:SetText(#grp.quests) mPin.Badge:Show() else mPin.Badge:Hide() end
-      mPin:Show()
-      HBDPins:AddMinimapIconMap("ForeverGuide", mPin, mapID, grp.cx / 100, grp.cy / 100, true)
-      table.insert(FG.ActiveMinimapPins, mPin)
-    end
+    table.insert(FG.ActiveWorldMapPins, pin)
   end
+end
+
+function FG:UpdateMapPins(forcedMapID)
+  FG:UpdateZoneMapPins()
+  FG:UpdateWorldMapPins(forcedMapID)
 end
 
 function FG:HideMapPins()
@@ -1913,8 +2150,8 @@ function FG:CreateWorldMapToggleButton()
   btn:RegisterForClicks("LeftButtonUp", "RightButtonUp")
 
   btn:SetBackdrop({
-    bgFile = "Interface\\Buttons\\WHITE8X8",
-    edgeFile = "Interface\\Buttons\\WHITE8X8",
+    bgFile = "Interface/Buttons/WHITE8X8",
+    edgeFile = "Interface/Buttons/WHITE8X8",
     tile = false, tileSize = 0, edgeSize = 1,
     insets = { left = 1, right = 1, top = 1, bottom = 1 },
   })
@@ -1924,19 +2161,19 @@ function FG:CreateWorldMapToggleButton()
   local icon = btn:CreateTexture(nil, "ARTWORK")
   icon:SetSize(16, 16)
   icon:SetPoint("CENTER", btn, "CENTER", 0, 0)
-  icon:SetTexture("Interface\\GossipFrame\\AvailableQuestIcon")
+  icon:SetTexture(FG.PIN_TEXTURES.available)
   btn.Icon = icon
 
   local function UpdateVisual()
-    local enabled = ForeverGuideDB and (ForeverGuideDB.showMapPins ~= false)
+    local enabled = ForeverGuideDB and (ForeverGuideDB.showWorldMapPins == true)
     if enabled then
       icon:SetDesaturated(false)
       icon:SetVertexColor(1, 1, 1, 1)
       btn:SetBackdropBorderColor(0.85, 0.25, 1.0, 0.95)
     else
       icon:SetDesaturated(true)
-      icon:SetVertexColor(0.5, 0.5, 0.5, 0.6)
-      btn:SetBackdropBorderColor(0.4, 0.4, 0.4, 0.7)
+      icon:SetVertexColor(0.4, 0.4, 0.4, 0.6)
+      btn:SetBackdropBorderColor(0.3, 0.3, 0.3, 0.7)
     end
   end
 
@@ -1944,11 +2181,12 @@ function FG:CreateWorldMapToggleButton()
     self:SetBackdropColor(0.24, 0.16, 0.40, 0.98)
     GameTooltip:SetOwner(self, "ANCHOR_LEFT")
     GameTooltip:ClearLines()
-    local enabled = ForeverGuideDB and (ForeverGuideDB.showMapPins ~= false)
-    GameTooltip:AddLine("|cffcf52ffForever Guide: Quest Pins|r", 1, 1, 1)
-    GameTooltip:AddLine(string.format("Status: %s", enabled and "|cff20ff20Enabled (Showing Quests)|r" or "|cffff4040Disabled (Hidden)|r"))
+    local enabled = ForeverGuideDB and (ForeverGuideDB.showWorldMapPins == true)
+    GameTooltip:AddLine("|cffcf52ffForever Guide: World Map Pins|r", 1, 1, 1)
+    GameTooltip:AddLine(string.format("World Map Status: %s", enabled and "|cff20ff20Enabled|r" or "|cffaaaaaaDisabled (World Map Kept Clean)|r"))
+    GameTooltip:AddLine(string.format("Zone Minimap Status: %s", (ForeverGuideDB and ForeverGuideDB.showZoneMapPins ~= false) and "|cff20ff20Active (3D Illuminated)|r" or "|cffff4040Disabled|r"))
     GameTooltip:AddLine(" ")
-    GameTooltip:AddLine("|cffdf80ff<Left-Click>|r Toggle Quest Pins on World Map", 0.8, 0.8, 0.8)
+    GameTooltip:AddLine("|cffdf80ff<Left-Click>|r Toggle Pins on Big World Map", 0.8, 0.8, 0.8)
     GameTooltip:AddLine("|cffdf80ff<Right-Click>|r Open Forever Codex", 0.8, 0.8, 0.8)
     GameTooltip:Show()
   end)
@@ -1962,16 +2200,60 @@ function FG:CreateWorldMapToggleButton()
     if button == "RightButton" then
       FG:ToggleCodex()
     else
-      ForeverGuideDB.showMapPins = not (ForeverGuideDB.showMapPins ~= false)
+      ForeverGuideDB.showWorldMapPins = not (ForeverGuideDB.showWorldMapPins == true)
       UpdateVisual()
-      FG:PlaySparkSound(ForeverGuideDB.showMapPins and "shimmer" or "chirp")
-      FG:UpdateMapPins()
-      print(string.format("|cffdf80ff[Forever Guide]|r Quest map pins: %s.", ForeverGuideDB.showMapPins and "|cff20ff20Enabled|r" or "|cffff4040Disabled|r"))
+      FG:PlaySparkSound(ForeverGuideDB.showWorldMapPins and "shimmer" or "chirp")
+      FG:UpdateWorldMapPins()
+      print(string.format("|cffdf80ff[Forever Guide]|r World Map quest pins: %s.", ForeverGuideDB.showWorldMapPins and "|cff20ff20Enabled|r" or "|cffff4040Disabled (Kept Clean)|r"))
     end
   end)
 
   UpdateVisual()
   FG.WorldMapToggleBtn = btn
+end
+
+function FG:HookZoneMap()
+  if FG.ZoneMapHooked then return end
+
+  local hooked = false
+  if BattlefieldMapFrame then
+    BattlefieldMapFrame:HookScript("OnShow", function()
+      FG:UpdateZoneMapPins()
+    end)
+    BattlefieldMapFrame:HookScript("OnHide", function()
+      FG:ReleaseZoneMapPins()
+    end)
+    if BattlefieldMapFrame.OnMapChanged then
+      hooksecurefunc(BattlefieldMapFrame, "OnMapChanged", function()
+        FG:UpdateZoneMapPins()
+      end)
+    end
+    if BattlefieldMapFrame.OnCanvasScaleChanged then
+      hooksecurefunc(BattlefieldMapFrame, "OnCanvasScaleChanged", function()
+        FG:UpdateZoneMapPinsScale()
+      end)
+    end
+    if BattlefieldMapFrame.OnFrameSizeChanged then
+      hooksecurefunc(BattlefieldMapFrame, "OnFrameSizeChanged", function()
+        FG:UpdateZoneMapPinsScale()
+      end)
+    end
+    hooked = true
+  end
+
+  if BattlefieldMinimap then
+    BattlefieldMinimap:HookScript("OnShow", function()
+      FG:UpdateZoneMapPins()
+    end)
+    BattlefieldMinimap:HookScript("OnHide", function()
+      FG:ReleaseZoneMapPins()
+    end)
+    hooked = true
+  end
+
+  if hooked then
+    FG.ZoneMapHooked = true
+  end
 end
 
 function FG:HookWorldMap()
@@ -1980,34 +2262,34 @@ function FG:HookWorldMap()
   FG.WorldMapHooked = true
 
   WorldMapFrame:HookScript("OnShow", function()
-    FG:UpdateMapPins()
+    FG:UpdateWorldMapPins()
   end)
   WorldMapFrame:HookScript("OnHide", function()
-    FG:HideMapPins()
+    FG:ReleaseWorldMapPins()
   end)
 
   if WorldMapFrame.OnMapChanged then
     hooksecurefunc(WorldMapFrame, "OnMapChanged", function()
-      FG:UpdateMapPins()
+      FG:UpdateWorldMapPins()
     end)
   end
 
   if EventRegistry and EventRegistry.RegisterCallback then
     EventRegistry:RegisterCallback("MapCanvas.MapSet", function(_, mapID)
       if WorldMapFrame:IsShown() then
-        FG:UpdateMapPins(mapID)
+        FG:UpdateWorldMapPins(mapID)
       end
     end)
   end
 
   if WorldMapFrame.OnCanvasScaleChanged then
     hooksecurefunc(WorldMapFrame, "OnCanvasScaleChanged", function()
-      FG:UpdateMapPinsScale()
+      FG:UpdateWorldMapPinsScale()
     end)
   end
   if WorldMapFrame.OnFrameSizeChanged then
     hooksecurefunc(WorldMapFrame, "OnFrameSizeChanged", function()
-      FG:UpdateMapPinsScale()
+      FG:UpdateWorldMapPinsScale()
     end)
   end
 
@@ -2015,28 +2297,68 @@ function FG:HookWorldMap()
 end
 
 function FG:InitMapPins()
+  FG:HookZoneMap()
   FG:HookWorldMap()
+  FG:UpdateMapPins()
 end
 
 function FG:CmdMapPins(arg)
   arg = (arg or ""):lower():trim()
-  if arg == "on" or arg == "enable" or arg == "1" then
-    ForeverGuideDB.showMapPins = true
+  if arg:find("^world") then
+    local sub = arg:gsub("^world", ""):trim()
+    if sub == "on" or sub == "enable" or sub == "1" then
+      ForeverGuideDB.showWorldMapPins = true
+    elseif sub == "off" or sub == "disable" or sub == "0" then
+      ForeverGuideDB.showWorldMapPins = false
+    else
+      ForeverGuideDB.showWorldMapPins = not (ForeverGuideDB.showWorldMapPins == true)
+    end
+    print(string.format("|cffdf80ff[Forever Guide]|r World Map pins: %s.", ForeverGuideDB.showWorldMapPins and "|cff20ff20Enabled|r" or "|cffff4040Disabled (Clean Map)|r"))
+    if FG.WorldMapToggleBtn and FG.WorldMapToggleBtn.Icon then
+      FG.WorldMapToggleBtn.Icon:SetDesaturated(not ForeverGuideDB.showWorldMapPins)
+    end
+    FG:UpdateWorldMapPins()
+  elseif arg:find("^mini") then
+    local sub = arg:gsub("^mini%w*", ""):trim()
+    if sub == "on" or sub == "enable" or sub == "1" then
+      ForeverGuideDB.showMinimapPins = true
+    elseif sub == "off" or sub == "disable" or sub == "0" then
+      ForeverGuideDB.showMinimapPins = false
+    else
+      ForeverGuideDB.showMinimapPins = not (ForeverGuideDB.showMinimapPins ~= false)
+    end
+    print(string.format("|cffdf80ff[Forever Guide]|r HUD Minimap pins: %s.", ForeverGuideDB.showMinimapPins and "|cff20ff20Enabled|r" or "|cffff4040Disabled|r"))
+    if not ForeverGuideDB.showMinimapPins then FG:ReleaseMinimapPins() else FG:UpdateZoneMapPins() end
+  elseif arg:find("^zone") or arg:find("^small") then
+    local sub = arg:gsub("^zone%w*", ""):gsub("^small%w*", ""):trim()
+    if sub == "on" or sub == "enable" or sub == "1" then
+      ForeverGuideDB.showZoneMapPins = true
+    elseif sub == "off" or sub == "disable" or sub == "0" then
+      ForeverGuideDB.showZoneMapPins = false
+    else
+      ForeverGuideDB.showZoneMapPins = not (ForeverGuideDB.showZoneMapPins ~= false)
+    end
+    print(string.format("|cffdf80ff[Forever Guide]|r Zone Map pins: %s.", ForeverGuideDB.showZoneMapPins and "|cff20ff20Enabled|r" or "|cffff4040Disabled|r"))
+    FG:UpdateZoneMapPins()
+  elseif arg == "on" or arg == "enable" or arg == "1" then
+    ForeverGuideDB.showZoneMapPins = true
     ForeverGuideDB.showMinimapPins = true
-    print("|cffdf80ff[Forever Guide]|r Quest map pins: |cff20ff20Enabled|r on World Map & Minimap.")
+    print("|cffdf80ff[Forever Guide]|r Small Zone Map & HUD Minimap 3D illuminated pins: |cff20ff20Enabled|r.")
+    FG:UpdateZoneMapPins()
   elseif arg == "off" or arg == "disable" or arg == "0" then
-    ForeverGuideDB.showMapPins = false
+    ForeverGuideDB.showZoneMapPins = false
     ForeverGuideDB.showMinimapPins = false
-    print("|cffdf80ff[Forever Guide]|r Quest map pins: |cffff4040Disabled|r.")
+    ForeverGuideDB.showWorldMapPins = false
+    print("|cffdf80ff[Forever Guide]|r Quest map pins: |cffff4040Disabled|r across all maps.")
+    FG:ReleaseMapPins()
   else
-    ForeverGuideDB.showMapPins = not (ForeverGuideDB.showMapPins ~= false)
-    ForeverGuideDB.showMinimapPins = ForeverGuideDB.showMapPins
-    print(string.format("|cffdf80ff[Forever Guide]|r Quest map pins toggled: %s.", ForeverGuideDB.showMapPins and "|cff20ff20Enabled|r" or "|cffff4040Disabled|r"))
+    ForeverGuideDB.showZoneMapPins = not (ForeverGuideDB.showZoneMapPins ~= false)
+    ForeverGuideDB.showMinimapPins = ForeverGuideDB.showZoneMapPins
+    print(string.format("|cffdf80ff[Forever Guide]|r Small Zone Map pins toggled: %s. (World Map: %s)",
+      ForeverGuideDB.showZoneMapPins and "|cff20ff20Enabled|r" or "|cffff4040Disabled|r",
+      ForeverGuideDB.showWorldMapPins and "|cff20ff20Enabled|r" or "|cffaaaaaaDisabled / Clean|r"))
+    FG:UpdateMapPins()
   end
-  if FG.WorldMapToggleBtn and FG.WorldMapToggleBtn.Icon then
-    FG.WorldMapToggleBtn.Icon:SetDesaturated(not ForeverGuideDB.showMapPins)
-  end
-  FG:UpdateMapPins()
 end
 
 function FG:ShowCurrentZoneIntel()
@@ -8749,24 +9071,29 @@ EventFrame:RegisterEvent("QUEST_FINISHED")
 EventFrame:RegisterEvent("QUEST_WATCH_UPDATE")
 
 EventFrame:SetScript("OnEvent", function(self, event, arg1, ...)
-  if event == "ADDON_LOADED" and arg1 == ADDON_NAME then
-    ForeverGuideDB = ForeverGuideDB or {}
-    for k, v in pairs(DEFAULT_CONFIG) do
-      if ForeverGuideDB[k] == nil then
-        ForeverGuideDB[k] = v
+  if event == "ADDON_LOADED" then
+    if arg1 == ADDON_NAME then
+      ForeverGuideDB = ForeverGuideDB or {}
+      for k, v in pairs(DEFAULT_CONFIG) do
+        if ForeverGuideDB[k] == nil then
+          ForeverGuideDB[k] = v
+        end
       end
-    end
-    ForeverGuideDB.sparkLocked = false
-    ForeverGuideDB.sparkClickThrough = false
-    if ForeverGuideDB.minimap and (not ForeverGuideDB.minimap.radius or ForeverGuideDB.minimap.radius > 90 or ForeverGuideDB.minimap.radius < 70) then
-      ForeverGuideDB.minimap.radius = 80
-    end
+      ForeverGuideDB.sparkLocked = false
+      ForeverGuideDB.sparkClickThrough = false
+      if ForeverGuideDB.minimap and (not ForeverGuideDB.minimap.radius or ForeverGuideDB.minimap.radius > 90 or ForeverGuideDB.minimap.radius < 70) then
+        ForeverGuideDB.minimap.radius = 80
+      end
 
-    FG:CreateSparkFrame()
-    FG:CreateMinimapButton()
-    FG:InitMapPins()
+      FG:CreateSparkFrame()
+      FG:CreateMinimapButton()
+      FG:InitMapPins()
 
-    print("|cffcf52ffForever Guide|r |cffdf80ff(Sparky)|r |cff00ff00[Alpha v0.1.0]|r loaded! Type |cffdf80ff/sparky|r to open Codex or |cffdf80ff/sparky help|r for commands.")
+      print("|cffcf52ffForever Guide|r |cffdf80ff(Sparky)|r |cff00ff00[Alpha v0.1.0]|r loaded! Type |cffdf80ff/sparky|r to open Codex or |cffdf80ff/sparky help|r for commands.")
+    elseif arg1 == "Blizzard_BattlefieldMap" or arg1 == "Blizzard_BattlefieldMinimap" then
+      FG:HookZoneMap()
+      FG:UpdateZoneMapPins()
+    end
 
   elseif event == "PLAYER_ENTERING_WORLD" then
     -- Guarantee any stray cursor dragging state is stopped on world load
@@ -8778,6 +9105,7 @@ EventFrame:SetScript("OnEvent", function(self, event, arg1, ...)
     FG:UpdateSparkMouseState()
     local initZone = (GetRealZoneText and GetRealZoneText()) or (GetZoneText and GetZoneText()) or ""
     if initZone ~= "" then FG.lastKnownZone = initZone end
+    FG:HookZoneMap()
     FG:HookWorldMap()
     FG:UpdateMapPins()
 

@@ -7,6 +7,7 @@ class TestQuestMapPins(unittest.TestCase):
     def setUp(self):
         self.addon_lua_path = os.path.join(os.path.dirname(__file__), "..", "addon", "ForeverGuide", "ForeverGuide.lua")
         self.addon_toc_path = os.path.join(os.path.dirname(__file__), "..", "addon", "ForeverGuide", "ForeverGuide.toc")
+        self.media_dir = os.path.join(os.path.dirname(__file__), "..", "addon", "ForeverGuide", "Media")
         self.assertTrue(os.path.exists(self.addon_lua_path), "ForeverGuide.lua must exist")
         self.assertTrue(os.path.exists(self.addon_toc_path), "ForeverGuide.toc must exist")
         with open(self.addon_lua_path, "r", encoding="utf-8") as f:
@@ -15,8 +16,12 @@ class TestQuestMapPins(unittest.TestCase):
             self.toc_content = f.read()
 
     def test_default_config_has_map_pins(self):
-        self.assertIn("showMapPins = true,", self.content)
+        # World map is false by default to keep it completely clean per user request
+        self.assertIn("showWorldMapPins = false,", self.content)
+        # Zone minimap (BattlefieldMinimap) and HUD minimap are enabled by default
+        self.assertIn("showZoneMapPins = true,", self.content)
         self.assertIn("showMinimapPins = true,", self.content)
+        self.assertIn("zoneMapPinScale = 1.0,", self.content)
         self.assertIn("mapPinScale = 1.0,", self.content)
 
     def test_toc_includes_embedded_libs(self):
@@ -31,6 +36,31 @@ class TestQuestMapPins(unittest.TestCase):
         self.assertTrue(os.path.exists(os.path.join(base_dir, "CallbackHandler-1.0", "CallbackHandler-1.0.lua")))
         self.assertTrue(os.path.exists(os.path.join(base_dir, "HereBeDragons", "HereBeDragons-2.0.lua")))
         self.assertTrue(os.path.exists(os.path.join(base_dir, "HereBeDragons", "HereBeDragons-Pins-2.0.lua")))
+
+    def test_3d_illuminated_hd_textures_exist(self):
+        expected_textures = [
+            "pin_available.tga",
+            "pin_active.tga",
+            "pin_turnin.tga",
+            "pin_forever.tga",
+            "pin_glow_halo.tga"
+        ]
+        for tex in expected_textures:
+            tex_path = os.path.join(self.media_dir, tex)
+            self.assertTrue(os.path.exists(tex_path), f"Texture file {tex} must exist in Media/")
+
+    def test_pin_textures_table_defined_in_lua(self):
+        self.assertIn("FG.PIN_TEXTURES = {", self.content)
+        self.assertIn("pin_available.tga", self.content)
+        self.assertIn("pin_active.tga", self.content)
+        self.assertIn("pin_turnin.tga", self.content)
+        self.assertIn("pin_forever.tga", self.content)
+        self.assertIn("pin_glow_halo.tga", self.content)
+
+    def test_zone_minimap_canvas_resolver(self):
+        self.assertIn("function FG:GetZoneMapCanvas()", self.content)
+        self.assertIn("BattlefieldMapFrame", self.content)
+        self.assertIn("BattlefieldMinimap", self.content)
 
     def test_zone_name_to_map_id_mapping(self):
         self.assertIn('FG.ZONE_NAME_TO_MAP_ID = {', self.content)
@@ -61,13 +91,11 @@ class TestQuestMapPins(unittest.TestCase):
         self.assertIn("WorldMapFrame.ScrollContainer.Child", self.content)
         self.assertIn("WorldMapFrame:GetCanvas()", self.content)
 
-    def test_update_map_pins_engine(self):
-        self.assertIn("function FG:UpdateMapPins(forcedMapID)", self.content)
-        self.assertIn("FG:ReleaseMapPins()", self.content)
-        self.assertIn("FG:UpdateMapPinsScale()", self.content)
-        self.assertIn("Interface\\\\GossipFrame\\\\AvailableQuestIcon", self.content)
-        self.assertIn("Interface\\\\GossipFrame\\\\ActiveQuestIcon", self.content)
-        self.assertIn("Interface\\\\GossipFrame\\\\IncompleteQuestIcon", self.content)
+    def test_update_zone_map_pins_engine(self):
+        self.assertIn("function FG:UpdateZoneMapPins()", self.content)
+        self.assertIn("function FG:UpdateWorldMapPins(forcedMapID)", self.content)
+        self.assertIn("FG:ReleaseZoneMapPins()", self.content)
+        self.assertIn("FG:UpdateZoneMapPinsScale()", self.content)
 
     def test_world_map_toggle_button(self):
         self.assertIn("function FG:CreateWorldMapToggleButton()", self.content)
@@ -78,10 +106,9 @@ class TestQuestMapPins(unittest.TestCase):
         self.assertIn('cmd == "pins" or cmd == "mappins" or cmd == "pin"', self.content)
         self.assertIn("function FG:CmdMapPins(arg)", self.content)
 
-    def test_world_map_hooks_and_event_dispatch(self):
+    def test_hooks_and_event_dispatch(self):
+        self.assertIn("function FG:HookZoneMap()", self.content)
         self.assertIn("function FG:HookWorldMap()", self.content)
-        self.assertIn('WorldMapFrame:HookScript("OnShow"', self.content)
-        self.assertIn('WorldMapFrame:HookScript("OnHide"', self.content)
         self.assertIn("FG:InitMapPins()", self.content)
         self.assertIn("FG:UpdateMapPins()", self.content)
 
