@@ -9,6 +9,11 @@
 ## X-Website: https://github.com/ForeverbotDev/foreverbot
 ## X-License: MIT + Blizzard AddOn Policy
 
+Libs/LibStub/LibStub.lua
+Libs/CallbackHandler-1.0/CallbackHandler-1.0.lua
+Libs/HereBeDragons/HereBeDragons-2.0.lua
+Libs/HereBeDragons/HereBeDragons-Pins-2.0.lua
+
 ForeverGuide_Data.lua
 ForeverGuide.lua
 Bindings.xml

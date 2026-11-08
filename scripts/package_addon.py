@@ -45,6 +45,13 @@ def package():
         for mfile in sorted(os.listdir(media_folder)):
             files_to_pack.append(os.path.join("Media", mfile))
 
+    libs_folder = os.path.join(ADDON_DIR, "Libs")
+    if os.path.exists(libs_folder):
+        for root, _, files in os.walk(libs_folder):
+            for file in sorted(files):
+                rel_path = os.path.relpath(os.path.join(root, file), ADDON_DIR)
+                files_to_pack.append(rel_path)
+
     with zipfile.ZipFile(zip_path, "w", zipfile.ZIP_DEFLATED) as zf:
         for fname in files_to_pack:
             fpath = os.path.join(ADDON_DIR, fname)

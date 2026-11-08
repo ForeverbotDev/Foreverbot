@@ -25,6 +25,9 @@ local DEFAULT_CONFIG = {
   sharpText = true,
   pixelDensity = 1.0,
   activeFilter = "all",
+  showMapPins = true,
+  showMinimapPins = true,
+  mapPinScale = 1.0,
   minimap = {
     hide = false,
     minimapPos = 215,
@@ -301,6 +304,10 @@ SlashCmdList["FOREVERGUIDE"] = function(msg)
   elseif cmd == "forever" then
     FG:CmdForever(rest)
 
+  -- 22. Quest Map Pins (/spark pins [on|off] or /spark map)
+  elseif cmd == "pins" or cmd == "mappins" or cmd == "pin" then
+    FG:CmdMapPins(rest)
+
   -- Help Manual
   else
     FG:PrintHelpManual()
@@ -311,6 +318,7 @@ function FG:PrintHelpManual()
   print(" ")
   print("|cffdf80ff✨ [Forever Guide: Sparky] — In-Game Commands:|r")
   print("  |cffcf52ff/sparky|r or |cffcf52ff/spark|r - Open Forever Codex search window")
+  print("  |cffcf52ff/spark pins [on|off]|r - Toggle Quest Pins on Zone Map and Minimap")
   print("  |cffcf52ff/sparky scale [0.5-2.0]|r - Adjust UI pixel density & window scale")
   print("  |cffcf52ff/sparky sharp|r - Toggle razor-sharp font outlining mode")
   print("  |cffcf52ff/sparky lock / /sparky unlock|r - Lock or unlock Sparky's cursor movement")
@@ -1438,6 +1446,598 @@ function FG:TrackEntityCoords(name, zone, coords)
   end
 end
 
+--------------------------------------------------------------------------------
+-- Quest Map & Minimap Pins Engine (Blizzard MapCanvas & HereBeDragons)
+--------------------------------------------------------------------------------
+
+FG.ZONE_NAME_TO_MAP_ID = {
+  ["dun morogh"] = 1426,
+  ["elwynn forest"] = 1429,
+  ["durotar"] = 1411,
+  ["mulgore"] = 1412,
+  ["tirisfal glades"] = 1420,
+  ["teldrassil"] = 1438,
+  ["westfall"] = 1436,
+  ["loch modan"] = 1432,
+  ["darkshore"] = 1439,
+  ["silverpine forest"] = 1421,
+  ["the barrens"] = 1413,
+  ["redridge mountains"] = 1433,
+  ["stonetalon mountains"] = 1442,
+  ["ashenvale"] = 1440,
+  ["duskwood"] = 1431,
+  ["hillsbrad foothills"] = 1424,
+  ["wetlands"] = 1437,
+  ["thousand needles"] = 1441,
+  ["alterac mountains"] = 1416,
+  ["arathi highlands"] = 1417,
+  ["badlands"] = 1418,
+  ["swamp of sorrows"] = 1435,
+  ["dustwallow marsh"] = 1445,
+  ["desolace"] = 1443,
+  ["stranglethorn vale"] = 1434,
+  ["the hinterlands"] = 1425,
+  ["tanaris"] = 1446,
+  ["feralas"] = 1444,
+  ["searing gorge"] = 1427,
+  ["burning steppes"] = 1428,
+  ["felwood"] = 1448,
+  ["un'goro crater"] = 1449,
+  ["western plaguelands"] = 1422,
+  ["eastern plaguelands"] = 1423,
+  ["winterspring"] = 1452,
+  ["deadwind pass"] = 1430,
+  ["silithus"] = 1451,
+  ["moonglade"] = 1450,
+  ["stormwind city"] = 1453,
+  ["ironforge"] = 1455,
+  ["darnassus"] = 1457,
+  ["orgrimmar"] = 1454,
+  ["thunder bluff"] = 1456,
+  ["undercity"] = 1458,
+}
+
+FG.MAP_ID_TO_ZONE_NAME = {}
+for zName, mID in pairs(FG.ZONE_NAME_TO_MAP_ID) do
+  FG.MAP_ID_TO_ZONE_NAME[mID] = zName:gsub("(%a)([%w_']*)", function(first, rest) return first:upper() .. rest end)
+end
+
+function FG:GetZoneMapID(zoneName)
+  if not zoneName then return nil end
+  local zLower = zoneName:lower()
+  if FG.ZONE_NAME_TO_MAP_ID[zLower] then
+    return FG.ZONE_NAME_TO_MAP_ID[zLower]
+  end
+  for mapID, name in pairs(FG.MAP_ID_TO_ZONE_NAME) do
+    if name:lower():find(zLower, 1, true) or zLower:find(name:lower(), 1, true) then
+      return mapID
+    end
+  end
+  return nil
+end
+
+function FG:GetMapZoneName(mapID)
+  if not mapID then return nil end
+  if C_Map and C_Map.GetMapInfo then
+    local info = C_Map.GetMapInfo(mapID)
+    if info and info.name and info.name ~= "" then
+      return info.name
+    end
+  end
+  return FG.MAP_ID_TO_ZONE_NAME[mapID]
+end
+
+function FG:GetQuestCoords(q)
+  if not q then return nil end
+  if q._cachedX and q._cachedY then
+    return q._cachedX, q._cachedY
+  end
+  local cx, cy
+  if q.coords and q.coords ~= "" then
+    cx, cy = q.coords:match("(%d+%.?%d*)%s*,%s*(%d+%.?%d*)")
+  end
+  if (not cx or not cy) and q.npc and q.npc ~= "" then
+    local c = FG:FindCreatureByName(q.npc)
+    if c and c.coords and c.coords ~= "" then
+      cx, cy = c.coords:match("(%d+%.?%d*)%s*,%s*(%d+%.?%d*)")
+    end
+  end
+  if (not cx or not cy) and q.npc and q.npc ~= "" and FG.Data.Vendors then
+    for _, v in pairs(FG.Data.Vendors) do
+      if v.name and v.name:lower() == q.npc:lower() and v.coords and v.coords ~= "" then
+        cx, cy = v.coords:match("(%d+%.?%d*)%s*,%s*(%d+%.?%d*)")
+        if cx and cy then break end
+      end
+    end
+  end
+  if (not cx or not cy) and q.tip and q.tip ~= "" then
+    cx, cy = q.tip:match("%((%d+%.?%d*)%s*,%s*(%d+%.?%d*)%)")
+  end
+  if cx and cy then
+    q._cachedX = tonumber(cx)
+    q._cachedY = tonumber(cy)
+    return q._cachedX, q._cachedY
+  end
+  return nil
+end
+
+function FG:GetQuestDifficultyColor(qLevel, pLevel)
+  local diff = (qLevel or 0) - (pLevel or 1)
+  if diff >= 5 then
+    return "|cffff2020" -- Red
+  elseif diff >= 3 then
+    return "|cffff7c0a" -- Orange
+  elseif diff >= -2 then
+    return "|cffffd100" -- Yellow
+  elseif diff >= -7 then
+    return "|cff20ff20" -- Green
+  else
+    return "|cff808080" -- Gray (Trivial)
+  end
+end
+
+function FG:GetMapCanvas()
+  if not WorldMapFrame then return nil end
+  if WorldMapFrame.ScrollContainer and WorldMapFrame.ScrollContainer.Child then
+    return WorldMapFrame.ScrollContainer.Child
+  elseif WorldMapFrame.GetCanvas then
+    return WorldMapFrame:GetCanvas()
+  elseif WorldMapFrame.GetCanvasContainer then
+    return WorldMapFrame:GetCanvasContainer()
+  elseif WorldMapButton then
+    return WorldMapButton
+  end
+  return WorldMapFrame
+end
+
+FG.MapPinPool = FG.MapPinPool or {}
+FG.MinimapPinPool = FG.MinimapPinPool or {}
+FG.ActiveMapPins = FG.ActiveMapPins or {}
+FG.ActiveMinimapPins = FG.ActiveMinimapPins or {}
+
+local function AcquireMapPin(isMinimap)
+  local pool = isMinimap and FG.MinimapPinPool or FG.MapPinPool
+  for _, pin in ipairs(pool) do
+    if not pin.inUse then
+      pin.inUse = true
+      return pin
+    end
+  end
+
+  local parent = isMinimap and Minimap or (FG:GetMapCanvas() or UIParent)
+  local pin = CreateFrame("Button", nil, parent)
+  pin:SetSize(20, 20)
+  pin:SetFrameStrata(isMinimap and "MEDIUM" or "HIGH")
+  pin:SetFrameLevel((parent:GetFrameLevel() or 10) + (isMinimap and 15 or 30))
+  pin:EnableMouse(true)
+  pin:RegisterForClicks("LeftButtonUp", "RightButtonUp")
+
+  local glow = pin:CreateTexture(nil, "BACKGROUND")
+  glow:SetSize(28, 28)
+  glow:SetPoint("CENTER", pin, "CENTER", 0, 0)
+  glow:SetTexture("Interface\\Buttons\\WHITE8X8")
+  glow:SetVertexColor(0.05, 0.05, 0.1, 0.75)
+  pin.Glow = glow
+
+  local halo = pin:CreateTexture(nil, "BORDER")
+  halo:SetSize(26, 26)
+  halo:SetPoint("CENTER", pin, "CENTER", 0, 0)
+  halo:SetTexture("Interface\\ItemSocketingFrame\\UI-ItemSockets")
+  halo:SetTexCoord(0.395, 0.585, 0.02, 0.40)
+  halo:SetVertexColor(0.85, 0.25, 1.0, 0.95)
+  halo:Hide()
+  pin.Halo = halo
+
+  local icon = pin:CreateTexture(nil, "ARTWORK")
+  icon:SetSize(18, 18)
+  icon:SetPoint("CENTER", pin, "CENTER", 0, 0)
+  icon:SetTexture("Interface\\GossipFrame\\AvailableQuestIcon")
+  pin.Icon = icon
+
+  local badge = pin:CreateFontString(nil, "OVERLAY", "GameFontHighlightSmall")
+  badge:SetPoint("BOTTOMRIGHT", pin, "BOTTOMRIGHT", 4, -2)
+  badge:SetFont("Fonts\\FRIZQT__.TTF", 10, "OUTLINE")
+  badge:SetTextColor(1, 0.9, 0.2)
+  pin.Badge = badge
+
+  pin:SetScript("OnEnter", function(self)
+    if not self.questList or #self.questList == 0 then return end
+    GameTooltip:SetOwner(self, "ANCHOR_RIGHT")
+    GameTooltip:ClearLines()
+
+    local pLevel = (UnitLevel and UnitLevel("player")) or 1
+    local npcName = self.npcName or (self.questList[1] and self.questList[1].npc) or "Quest Location"
+    local qCount = #self.questList
+
+    if qCount > 1 then
+      GameTooltip:AddLine(string.format("|cffcf52ff✨ %s|r |cffffffff(%d Quests)|r", npcName, qCount), 1, 1, 1)
+      GameTooltip:AddLine(string.format("|cff888899Coordinates: [%0.1f, %0.1f]|r", self.cx or 0, self.cy or 0), 0.8, 0.8, 0.8)
+      GameTooltip:AddLine(" ")
+      for i, q in ipairs(self.questList) do
+        local diffColor = FG:GetQuestDifficultyColor(q.questLevel or pLevel, pLevel)
+        local statusText = ""
+        if q.status == "ready_to_turn_in" then
+          statusText = " |cff20ff20[Ready to Turn In]|r"
+        elseif q.status == "active" then
+          statusText = " |cff38bdf8[Active / In Progress]|r"
+        else
+          statusText = " |cffffd24d[Available]|r"
+        end
+        local foreverTag = q.isForever and " |cffe6cc80[Forever]|r" or ""
+        GameTooltip:AddLine(string.format("  • %s%s|r%s |cffaaaaaa(Lvl %d)|r%s", diffColor, q.title or "Quest", foreverTag, q.questLevel or 0, statusText))
+      end
+    else
+      local q = self.questList[1]
+      local diffColor = FG:GetQuestDifficultyColor(q.questLevel or pLevel, pLevel)
+      local foreverTag = q.isForever and " |cffe6cc80[Forever Exclusive]|r" or ""
+      GameTooltip:AddLine(string.format("%s%s|r%s", diffColor, q.title or "Quest", foreverTag), 1, 1, 1)
+      GameTooltip:AddLine(string.format("|cff38bdf8Level:|r %d |cff888899(Req %d)|r", q.questLevel or 0, q.reqLevel or 0), 0.9, 0.9, 0.9)
+      if npcName and npcName ~= "" then
+        GameTooltip:AddLine(string.format("|cffffffffQuest Giver:|r %s", npcName), 0.9, 0.9, 0.9)
+      end
+      if self.cx and self.cy then
+        GameTooltip:AddLine(string.format("|cff888899Coordinates:|r |cff38bdf8[%0.1f, %0.1f]|r in %s", self.cx, self.cy, q.zone or "Current Zone"), 0.8, 0.8, 0.8)
+      end
+      if q.status == "ready_to_turn_in" then
+        GameTooltip:AddLine("|cff20ff20Status: Ready to Complete & Turn In!|r", 0.2, 1.0, 0.2)
+      elseif q.status == "active" then
+        GameTooltip:AddLine("|cff38bdf8Status: In Progress (Active in Quest Log)|r", 0.2, 0.8, 1.0)
+      else
+        GameTooltip:AddLine("|cffffd24dStatus: Available to Accept|r", 1.0, 0.85, 0.2)
+      end
+      if q.objectives and q.objectives ~= "" then
+        GameTooltip:AddLine(" ")
+        GameTooltip:AddLine("|cffffffffObjectives:|r", 1, 1, 1)
+        GameTooltip:AddLine(q.objectives, 0.85, 0.85, 0.85, true)
+      end
+      if q.rewards and q.rewards ~= "" then
+        GameTooltip:AddLine(" ")
+        GameTooltip:AddLine("|cffffaa00Rewards:|r " .. q.rewards, 1, 0.85, 0.2, true)
+      end
+    end
+
+    GameTooltip:AddLine(" ")
+    GameTooltip:AddLine("|cffdf80ff<Left-Click>|r Track in Sparky Radar & Waypoints", 0.7, 0.7, 0.7)
+    GameTooltip:AddLine("|cffdf80ff<Shift-Left-Click>|r Inspect Quest in Forever Codex", 0.7, 0.7, 0.7)
+    GameTooltip:Show()
+  end)
+
+  pin:SetScript("OnLeave", function(self)
+    GameTooltip:Hide()
+  end)
+
+  pin:SetScript("OnClick", function(self, button)
+    if not self.questList or #self.questList == 0 then return end
+    local q = self.questList[1]
+    if IsShiftKeyDown() then
+      FG:OpenCodex("quests")
+      FG:ShowDetailPanel("quest", q)
+      FG:PlaySparkSound("shimmer")
+    else
+      local targetName = self.npcName or q.npc or q.title
+      FG:TrackEntityCoords(targetName, q.zone, string.format("%0.1f, %0.1f", self.cx, self.cy))
+      FG:PlaySparkSound("pulse")
+    end
+  end)
+
+  pin.inUse = true
+  table.insert(pool, pin)
+  return pin
+end
+
+function FG:ReleaseMapPins()
+  for _, pin in ipairs(FG.ActiveMapPins) do
+    pin:Hide()
+    pin:ClearAllPoints()
+    pin.inUse = false
+  end
+  wipe(FG.ActiveMapPins)
+
+  for _, pin in ipairs(FG.ActiveMinimapPins) do
+    pin:Hide()
+    pin:ClearAllPoints()
+    pin.inUse = false
+  end
+  wipe(FG.ActiveMinimapPins)
+
+  local HBDPins = LibStub and LibStub("HereBeDragons-Pins-2.0", true)
+  if HBDPins then
+    HBDPins:RemoveAllWorldMapIcons("ForeverGuide")
+    HBDPins:RemoveAllMinimapIcons("ForeverGuide")
+  end
+end
+
+function FG:UpdateMapPinsScale()
+  if not FG.ActiveMapPins or #FG.ActiveMapPins == 0 then return end
+  local canvas = FG:GetMapCanvas()
+  if not canvas then return end
+  local cw, ch = canvas:GetSize()
+  if not cw or not ch or cw <= 0 or ch <= 0 then return end
+
+  local canvasScale = (WorldMapFrame.GetCanvasScale and WorldMapFrame:GetCanvasScale())
+                   or (WorldMapFrame.ScrollContainer and WorldMapFrame.ScrollContainer.GetCanvasScale and WorldMapFrame.ScrollContainer:GetCanvasScale())
+                   or (canvas.GetScale and canvas:GetScale()) or 1
+  if canvasScale <= 0 then canvasScale = 1 end
+  local pinScale = (1.0 / canvasScale) * (ForeverGuideDB.mapPinScale or 1.0)
+
+  for _, pin in ipairs(FG.ActiveMapPins) do
+    if pin:IsShown() and pin.cx and pin.cy then
+      pin:SetScale(pinScale)
+      pin:ClearAllPoints()
+      pin:SetPoint("CENTER", canvas, "TOPLEFT", (cw * (pin.cx / 100)) / pinScale, -(ch * (pin.cy / 100)) / pinScale)
+    end
+  end
+end
+
+function FG:UpdateMapPins(forcedMapID)
+  FG:ReleaseMapPins()
+  if not ForeverGuideDB or ForeverGuideDB.showMapPins == false then
+    return
+  end
+  if not WorldMapFrame or not WorldMapFrame:IsShown() then
+    return
+  end
+  local canvas = FG:GetMapCanvas()
+  if not canvas then return end
+  local cw, ch = canvas:GetSize()
+  if not cw or not ch or cw <= 0 or ch <= 0 then
+    C_Timer.After(0.05, function() FG:UpdateMapPins(forcedMapID) end)
+    return
+  end
+
+  local mapID = forcedMapID or (WorldMapFrame.GetMapID and WorldMapFrame:GetMapID()) or (C_Map and C_Map.GetBestMapForUnit and C_Map.GetBestMapForUnit("player"))
+  local zoneName = FG:GetMapZoneName(mapID)
+  if not zoneName or zoneName == "" then return end
+  local zoneLower = zoneName:lower()
+
+  local pFaction = (UnitFactionGroup and UnitFactionGroup("player")) or "Alliance"
+  local pLevel = (UnitLevel and UnitLevel("player")) or 1
+
+  local HBDPins = LibStub and LibStub("HereBeDragons-Pins-2.0", true)
+  if HBDPins then
+    HBDPins:RemoveAllWorldMapIcons("ForeverGuide")
+    HBDPins:RemoveAllMinimapIcons("ForeverGuide")
+  end
+
+  local coordGroups = {}
+  if FG.Data.Quests then
+    for _, q in pairs(FG.Data.Quests) do
+      local qZone = (q.zone or ""):lower()
+      if qZone == zoneLower or qZone:find(zoneLower, 1, true) or zoneLower:find(qZone, 1, true) then
+        local qFaction = q.faction
+        local factionMatch = (not qFaction or qFaction == "" or qFaction == "Both" or qFaction == pFaction)
+        local reqLvl = q.reqLevel or 0
+        local levelMatch = (pLevel >= reqLvl)
+        local status = FG:GetQuestStatus(q.id, q.title)
+
+        if factionMatch and levelMatch and status ~= "completed" then
+          local cx, cy = FG:GetQuestCoords(q)
+          if cx and cy and cx > 0 and cy > 0 and cx <= 100 and cy <= 100 then
+            local key = string.format("%0.1f,%0.1f", cx, cy)
+            coordGroups[key] = coordGroups[key] or { cx = cx, cy = cy, quests = {}, npc = q.npc }
+            q.status = status
+            table.insert(coordGroups[key].quests, q)
+          end
+        end
+      end
+    end
+  end
+
+  local canvasScale = (WorldMapFrame.GetCanvasScale and WorldMapFrame:GetCanvasScale())
+                   or (WorldMapFrame.ScrollContainer and WorldMapFrame.ScrollContainer.GetCanvasScale and WorldMapFrame.ScrollContainer:GetCanvasScale())
+                   or (canvas.GetScale and canvas:GetScale()) or 1
+  if canvasScale <= 0 then canvasScale = 1 end
+  local pinScale = (1.0 / canvasScale) * (ForeverGuideDB.mapPinScale or 1.0)
+
+  for key, grp in pairs(coordGroups) do
+    local pin = AcquireMapPin(false)
+    pin:SetParent(canvas)
+    pin:SetScale(pinScale)
+    pin:ClearAllPoints()
+    pin:SetPoint("CENTER", canvas, "TOPLEFT", (cw * (grp.cx / 100)) / pinScale, -(ch * (grp.cy / 100)) / pinScale)
+
+    pin.questList = grp.quests
+    pin.npcName = grp.npc
+    pin.cx = grp.cx
+    pin.cy = grp.cy
+
+    local topStatus = "uncompleted"
+    local hasForever = false
+    for _, q in ipairs(grp.quests) do
+      if q.isForever then hasForever = true end
+      if q.status == "ready_to_turn_in" then
+        topStatus = "ready_to_turn_in"
+        break
+      elseif q.status == "active" and topStatus ~= "ready_to_turn_in" then
+        topStatus = "active"
+      end
+    end
+
+    if topStatus == "ready_to_turn_in" then
+      pin.Icon:SetTexture("Interface\\GossipFrame\\ActiveQuestIcon")
+      pin.Icon:SetVertexColor(1, 1, 1, 1)
+    elseif topStatus == "active" then
+      pin.Icon:SetTexture("Interface\\GossipFrame\\IncompleteQuestIcon")
+      pin.Icon:SetVertexColor(1, 1, 1, 1)
+    else
+      pin.Icon:SetTexture("Interface\\GossipFrame\\AvailableQuestIcon")
+      pin.Icon:SetVertexColor(1, 1, 1, 1)
+    end
+
+    if hasForever then
+      pin.Halo:Show()
+    else
+      pin.Halo:Hide()
+    end
+
+    if #grp.quests > 1 then
+      pin.Badge:SetText(#grp.quests)
+      pin.Badge:Show()
+    else
+      pin.Badge:Hide()
+    end
+
+    pin:Show()
+    table.insert(FG.ActiveMapPins, pin)
+
+    if HBDPins and mapID and ForeverGuideDB.showMinimapPins ~= false then
+      local mPin = AcquireMapPin(true)
+      mPin.questList = grp.quests
+      mPin.npcName = grp.npc
+      mPin.cx = grp.cx
+      mPin.cy = grp.cy
+      mPin.Icon:SetTexture(pin.Icon:GetTexture())
+      mPin.Icon:SetVertexColor(pin.Icon:GetVertexColor())
+      if hasForever then mPin.Halo:Show() else mPin.Halo:Hide() end
+      if #grp.quests > 1 then mPin.Badge:SetText(#grp.quests) mPin.Badge:Show() else mPin.Badge:Hide() end
+      mPin:Show()
+      HBDPins:AddMinimapIconMap("ForeverGuide", mPin, mapID, grp.cx / 100, grp.cy / 100, true)
+      table.insert(FG.ActiveMinimapPins, mPin)
+    end
+  end
+end
+
+function FG:HideMapPins()
+  FG:ReleaseMapPins()
+end
+
+function FG:CreateWorldMapToggleButton()
+  if not WorldMapFrame or FG.WorldMapToggleBtn then return end
+
+  local btn = CreateFrame("Button", "ForeverGuideWorldMapToggle", WorldMapFrame, "BackdropTemplate")
+  btn:SetSize(22, 22)
+  btn:SetPoint("TOPRIGHT", WorldMapFrame, "TOPRIGHT", -36, -3)
+  btn:SetFrameStrata("HIGH")
+  btn:SetFrameLevel((WorldMapFrame:GetFrameLevel() or 10) + 15)
+  btn:EnableMouse(true)
+  btn:RegisterForClicks("LeftButtonUp", "RightButtonUp")
+
+  btn:SetBackdrop({
+    bgFile = "Interface\\Buttons\\WHITE8X8",
+    edgeFile = "Interface\\Buttons\\WHITE8X8",
+    tile = false, tileSize = 0, edgeSize = 1,
+    insets = { left = 1, right = 1, top = 1, bottom = 1 },
+  })
+  btn:SetBackdropColor(0.12, 0.08, 0.22, 0.92)
+  btn:SetBackdropBorderColor(0.85, 0.25, 1.0, 0.90)
+
+  local icon = btn:CreateTexture(nil, "ARTWORK")
+  icon:SetSize(16, 16)
+  icon:SetPoint("CENTER", btn, "CENTER", 0, 0)
+  icon:SetTexture("Interface\\GossipFrame\\AvailableQuestIcon")
+  btn.Icon = icon
+
+  local function UpdateVisual()
+    local enabled = ForeverGuideDB and (ForeverGuideDB.showMapPins ~= false)
+    if enabled then
+      icon:SetDesaturated(false)
+      icon:SetVertexColor(1, 1, 1, 1)
+      btn:SetBackdropBorderColor(0.85, 0.25, 1.0, 0.95)
+    else
+      icon:SetDesaturated(true)
+      icon:SetVertexColor(0.5, 0.5, 0.5, 0.6)
+      btn:SetBackdropBorderColor(0.4, 0.4, 0.4, 0.7)
+    end
+  end
+
+  btn:SetScript("OnEnter", function(self)
+    self:SetBackdropColor(0.24, 0.16, 0.40, 0.98)
+    GameTooltip:SetOwner(self, "ANCHOR_LEFT")
+    GameTooltip:ClearLines()
+    local enabled = ForeverGuideDB and (ForeverGuideDB.showMapPins ~= false)
+    GameTooltip:AddLine("|cffcf52ffForever Guide: Quest Pins|r", 1, 1, 1)
+    GameTooltip:AddLine(string.format("Status: %s", enabled and "|cff20ff20Enabled (Showing Quests)|r" or "|cffff4040Disabled (Hidden)|r"))
+    GameTooltip:AddLine(" ")
+    GameTooltip:AddLine("|cffdf80ff<Left-Click>|r Toggle Quest Pins on World Map", 0.8, 0.8, 0.8)
+    GameTooltip:AddLine("|cffdf80ff<Right-Click>|r Open Forever Codex", 0.8, 0.8, 0.8)
+    GameTooltip:Show()
+  end)
+
+  btn:SetScript("OnLeave", function(self)
+    self:SetBackdropColor(0.12, 0.08, 0.22, 0.92)
+    GameTooltip:Hide()
+  end)
+
+  btn:SetScript("OnClick", function(self, button)
+    if button == "RightButton" then
+      FG:ToggleCodex()
+    else
+      ForeverGuideDB.showMapPins = not (ForeverGuideDB.showMapPins ~= false)
+      UpdateVisual()
+      FG:PlaySparkSound(ForeverGuideDB.showMapPins and "shimmer" or "chirp")
+      FG:UpdateMapPins()
+      print(string.format("|cffdf80ff[Forever Guide]|r Quest map pins: %s.", ForeverGuideDB.showMapPins and "|cff20ff20Enabled|r" or "|cffff4040Disabled|r"))
+    end
+  end)
+
+  UpdateVisual()
+  FG.WorldMapToggleBtn = btn
+end
+
+function FG:HookWorldMap()
+  if not WorldMapFrame then return end
+  if FG.WorldMapHooked then return end
+  FG.WorldMapHooked = true
+
+  WorldMapFrame:HookScript("OnShow", function()
+    FG:UpdateMapPins()
+  end)
+  WorldMapFrame:HookScript("OnHide", function()
+    FG:HideMapPins()
+  end)
+
+  if WorldMapFrame.OnMapChanged then
+    hooksecurefunc(WorldMapFrame, "OnMapChanged", function()
+      FG:UpdateMapPins()
+    end)
+  end
+
+  if EventRegistry and EventRegistry.RegisterCallback then
+    EventRegistry:RegisterCallback("MapCanvas.MapSet", function(_, mapID)
+      if WorldMapFrame:IsShown() then
+        FG:UpdateMapPins(mapID)
+      end
+    end)
+  end
+
+  if WorldMapFrame.OnCanvasScaleChanged then
+    hooksecurefunc(WorldMapFrame, "OnCanvasScaleChanged", function()
+      FG:UpdateMapPinsScale()
+    end)
+  end
+  if WorldMapFrame.OnFrameSizeChanged then
+    hooksecurefunc(WorldMapFrame, "OnFrameSizeChanged", function()
+      FG:UpdateMapPinsScale()
+    end)
+  end
+
+  FG:CreateWorldMapToggleButton()
+end
+
+function FG:InitMapPins()
+  FG:HookWorldMap()
+end
+
+function FG:CmdMapPins(arg)
+  arg = (arg or ""):lower():trim()
+  if arg == "on" or arg == "enable" or arg == "1" then
+    ForeverGuideDB.showMapPins = true
+    ForeverGuideDB.showMinimapPins = true
+    print("|cffdf80ff[Forever Guide]|r Quest map pins: |cff20ff20Enabled|r on World Map & Minimap.")
+  elseif arg == "off" or arg == "disable" or arg == "0" then
+    ForeverGuideDB.showMapPins = false
+    ForeverGuideDB.showMinimapPins = false
+    print("|cffdf80ff[Forever Guide]|r Quest map pins: |cffff4040Disabled|r.")
+  else
+    ForeverGuideDB.showMapPins = not (ForeverGuideDB.showMapPins ~= false)
+    ForeverGuideDB.showMinimapPins = ForeverGuideDB.showMapPins
+    print(string.format("|cffdf80ff[Forever Guide]|r Quest map pins toggled: %s.", ForeverGuideDB.showMapPins and "|cff20ff20Enabled|r" or "|cffff4040Disabled|r"))
+  end
+  if FG.WorldMapToggleBtn and FG.WorldMapToggleBtn.Icon then
+    FG.WorldMapToggleBtn.Icon:SetDesaturated(not ForeverGuideDB.showMapPins)
+  end
+  FG:UpdateMapPins()
+end
 
 function FG:ShowCurrentZoneIntel()
   local currentZone = FG:GetCurrentZone()
@@ -8164,6 +8764,7 @@ EventFrame:SetScript("OnEvent", function(self, event, arg1, ...)
 
     FG:CreateSparkFrame()
     FG:CreateMinimapButton()
+    FG:InitMapPins()
 
     print("|cffcf52ffForever Guide|r |cffdf80ff(Sparky)|r |cff00ff00[Alpha v0.1.0]|r loaded! Type |cffdf80ff/sparky|r to open Codex or |cffdf80ff/sparky help|r for commands.")
 
@@ -8177,6 +8778,8 @@ EventFrame:SetScript("OnEvent", function(self, event, arg1, ...)
     FG:UpdateSparkMouseState()
     local initZone = (GetRealZoneText and GetRealZoneText()) or (GetZoneText and GetZoneText()) or ""
     if initZone ~= "" then FG.lastKnownZone = initZone end
+    FG:HookWorldMap()
+    FG:UpdateMapPins()
 
   -- NPC Interaction: Auto-hide Codex window so NPC quest dialogue is 100% visible and accessible
   elseif event == "GOSSIP_SHOW" or event == "QUEST_GREETING" or event == "QUEST_DETAIL" or
@@ -8189,6 +8792,7 @@ EventFrame:SetScript("OnEvent", function(self, event, arg1, ...)
   elseif event == "ZONE_CHANGED_NEW_AREA" or event == "ZONE_CHANGED" or event == "ZONE_CHANGED_INDOORS" then
     local newZone = (GetRealZoneText and GetRealZoneText()) or (GetZoneText and GetZoneText()) or ""
     if newZone ~= "" then FG.lastKnownZone = newZone end
+    FG:UpdateMapPins()
     if FG.CodexWindow and FG.CodexWindow:IsShown() then
       if FG.activeCategory == "nearby" or (FG.currentFolder == "root" and (not ForeverGuideSearchBox or ForeverGuideSearchBox:GetText():trim() == "")) then
         FG:PopulateCodexResults(ForeverGuideSearchBox and ForeverGuideSearchBox:GetText():trim() or "")
@@ -8231,11 +8835,13 @@ EventFrame:SetScript("OnEvent", function(self, event, arg1, ...)
     if FG.SparkFrame and FG.SparkFrame.TransitionTo then
       FG.SparkFrame:TransitionTo("CELEBRATE")
     end
+    FG:UpdateMapPins()
     if FG.CodexWindow and FG.CodexWindow:IsShown() and FG.activeCategory == "upgrades" then
       FG:PopulateCodexResults(ForeverGuideSearchBox and ForeverGuideSearchBox:GetText():trim() or "")
     end
 
   elseif event == "QUEST_LOG_UPDATE" or event == "QUEST_TURNED_IN" or event == "QUEST_FINISHED" or event == "QUEST_WATCH_UPDATE" then
+    FG:UpdateMapPins()
     if FG.CodexWindow and FG.CodexWindow:IsShown() then
       local cat = FG.activeCategory
       local cur = FG.currentFolder
