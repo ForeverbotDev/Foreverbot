@@ -1724,10 +1724,18 @@ local function AcquirePin(pinType)
 
   pin:SetScript("OnEnter", function(self)
     if not self.questList or #self.questList == 0 then return end
-    if self._baseScale then
-      self:SetScale(self._baseScale * 1.3)
+
+    -- Smooth visual bloom without altering button frame scale or screen position
+    if self.Glow then
+      self.Glow:SetSize(glowSize + 4, glowSize + 4)
+      self.Glow:SetAlpha(0.95)
     end
-    GameTooltip:SetOwner(self, "ANCHOR_RIGHT")
+
+    -- Smart tooltip anchoring away from cursor to prevent hover jitter on edge-docked minimaps
+    local screenWidth = (GetScreenWidth and GetScreenWidth()) or 1920
+    local pinX = self:GetCenter()
+    local anchor = (pinX and pinX > (screenWidth * 0.55)) and "ANCHOR_LEFT" or "ANCHOR_RIGHT"
+    GameTooltip:SetOwner(self, anchor, (anchor == "ANCHOR_LEFT" and -4 or 4), 0)
     GameTooltip:ClearLines()
 
     local pLevel = (UnitLevel and UnitLevel("player")) or 1
@@ -1735,7 +1743,7 @@ local function AcquirePin(pinType)
     local qCount = #self.questList
 
     if qCount > 1 then
-      GameTooltip:AddLine(string.format("|cffcf52ff✨ %s|r |cffffffff(%d Quests)|r", npcName, qCount), 1, 1, 1)
+      GameTooltip:AddLine(string.format("|cffdf80ff%s|r |cffffffff(%d Quests)|r", npcName, qCount), 1, 1, 1)
       GameTooltip:AddLine(string.format("|cff888899Coordinates: [%0.1f, %0.1f]|r", self.cx or 0, self.cy or 0), 0.8, 0.8, 0.8)
       GameTooltip:AddLine(" ")
       for i, q in ipairs(self.questList) do
@@ -1788,8 +1796,9 @@ local function AcquirePin(pinType)
   end)
 
   pin:SetScript("OnLeave", function(self)
-    if self._baseScale then
-      self:SetScale(self._baseScale)
+    if self.Glow then
+      self.Glow:SetSize(glowSize, glowSize)
+      self.Glow:SetAlpha(0.55)
     end
     GameTooltip:Hide()
   end)
